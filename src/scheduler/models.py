@@ -12,7 +12,7 @@ DEFAULT_PRIORITY = 10
 class ScheduleEntry(models.Model):
     id = models.SlugField(primary_key=True)
     action_name = models.CharField(max_length=50)
-    action_parameters = JSONField(default=dict)
+    action_parameters = models.TextField()
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
     start = models.BigIntegerField(default=utils.timefn, blank=True)
     stop = models.BigIntegerField(null=True, blank=True)
