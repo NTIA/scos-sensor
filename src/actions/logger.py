@@ -2,7 +2,6 @@
 
 import logging
 import operator
-from collections import OrderedDict
 
 from rest_framework import serializers
 
@@ -17,8 +16,8 @@ names, lvls = zip(*sorted(VALID_LOGLEVELS.items(), key=operator.itemgetter(1)))
 LOGLVL_CHOICES = list(zip(lvls, names))
 DEFAULT_LOGLVL = 20
 
-msg_help = ("Any occurance of `{seid}` in `msg` will be replaced with the"
-            "parent schedule entry's id. Any occurance of `{tid}` in `msg`"
+msg_help = ("Any occurance of `{seid}` in `msg` will be replaced with the "
+            "parent schedule entry's id. Any occurance of `{tid}` in `msg` "
             "will be replaced with the sequential task id.")
 
 lvl_help = ("Log level to use, where 50=CRITICAL, 40=ERROR, "
