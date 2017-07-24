@@ -3,6 +3,7 @@ from typing import Iterable
 
 from django.db import models
 
+import actions
 from . import utils
 
 
@@ -10,9 +11,8 @@ DEFAULT_PRIORITY = 10
 
 
 class ScheduleEntry(models.Model):
-    id = models.SlugField(primary_key=True)
-    action_name = models.CharField(max_length=50)
-    action_parameters = models.TextField()
+    name = models.SlugField(primary_key=True)
+    action = models.CharField(choices=actions.ACTION_CHOICES, max_length=50)
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
     start = models.BigIntegerField(default=utils.timefn, blank=True)
     stop = models.BigIntegerField(null=True, blank=True)

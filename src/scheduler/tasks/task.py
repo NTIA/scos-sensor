@@ -6,12 +6,13 @@ See https://hg.python.org/cpython/file/3.5/Lib/sched.py#l42.
 
 from collections import namedtuple
 
+import actions
+
 
 attributes = (
     "time",
     "priority",
-    "action_name",
-    "action_parameters",
+    "action",
     "schedule_entry_id",
     "task_id"
 )
@@ -20,13 +21,10 @@ TaskTuple = namedtuple("Event", attributes)
 
 class Task(TaskTuple):
     @property
-    def action(self):
+    def action_fn(self):
         """Action function with curried keyword arguments"""
-        from commsensor import actions
-
-        action = actions.getbyname(self.action_name)
-        action.set_properties(self.action_parameters)
-        return action
+        action_fn = actions.by_name[self.action]
+        return action_fn
 
     def __eq__(s, o):
         return (s.time, s.priority) == (o.time, o.priority)

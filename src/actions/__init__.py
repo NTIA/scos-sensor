@@ -1,0 +1,35 @@
+from typing import Callable
+
+from . import logger
+
+
+by_name = {
+    "logger": logger.Logger(),
+    "logger2": logger.Logger()
+}
+
+
+def get_action_with_summary(action: str):
+    action_fn = by_name[action]
+    summary = get_summary(action_fn)
+    action_with_summary = action
+    if summary:
+        action_with_summary += " - {}".format(summary)
+
+    return action_with_summary
+
+
+def get_summary(action_fn: Callable):
+    """Extract the first line of the action's docstring as a summary."""
+    docstring = action_fn.__doc__
+    summary = None
+    if docstring:
+        summary = docstring.splitlines()[0]
+
+    return summary
+
+
+VALID_ACTIONS = sorted(by_name.keys())
+ACTION_CHOICES = []
+for action in VALID_ACTIONS:
+    ACTION_CHOICES.append((action, get_action_with_summary(action)))

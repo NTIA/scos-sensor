@@ -2,11 +2,8 @@
 
 Example usage:
     >>> from scheduler import Scheduler, ScheduleEntry
-    >>> e1 = ScheduleEntry(id='oneshot', priority=10, action_name='logger',
-    ...                    action_parameters={'msg': 'oneshot'})
-    >>> e2 = ScheduleEntry(id='fivetimes', priority=20,
-    ...                    action_name='logger',
-    ...                    action_parameters={'msg': 'fivetimes'}, stop=5,
+    >>> e1 = ScheduleEntry(id='oneshot', priority=10, action='logger')
+    >>> e2 = ScheduleEntry(id='fivetimes', priority=20, action='logger',
     ...                    interval=1, relative_stop=True)
     >>> # 'oneshot' has no interval and higher priority, so it will go first
     ... # and then 'fivetimes' will get called five times and then exit
@@ -23,12 +20,15 @@ Example usage:
     [...] INFO in scheduler: all scheduled tasks completed
 """
 
+import logging
 import threading
 
 from . import utils
 from .models import ScheduleEntry
 from .tasks import TaskQueue
-from .logging import log
+
+
+logger = logging.getLogger(__name__)
 
 
 class Scheduler(threading.Thread):
@@ -45,7 +45,7 @@ class Scheduler(threading.Thread):
         self.interval_multiplier = 10
         self.name = "Scheduler"
         self.running = False
-        self.interrupt_flag = threading.Task()
+        self.interrupt_flag = threading.Event()
 
         self.app = None
 
@@ -95,7 +95,7 @@ class Scheduler(threading.Thread):
         else:
             self.task_queue.clear()
             if self.running:
-                log.info("all scheduled tasks completed")
+                logger.info("all scheduled tasks completed")
 
         self.running = False
 
@@ -111,11 +111,11 @@ class Scheduler(threading.Thread):
             entry_id = next_task.schedule_entry_id
             task_id = next_task.task_id
             try:
-                log.debug("running task {}/{}".format(entry_id, task_id))
-                next_task.action(entry_id, task_id)
+                logger.debug("running task {}/{}".format(entry_id, task_id))
+                next_task.action_fn(entry_id, task_id)
                 self.delayfn(0)  # let other threads run
             except:
-                log.exception("action failed")
+                logger.exception("action failed")
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()
@@ -127,9 +127,8 @@ class Scheduler(threading.Thread):
 
             task_id = entry.get_next_task_id()
             pri = entry.priority
-            cbname = entry.action_name
-            kw = entry.action_parameters
-            pending_queue.enter(task_time, pri, cbname, kw, entry.id, task_id)
+            action = entry.action
+            pending_queue.enter(task_time, pri, action, entry.name, task_id)
 
         return pending_queue
 
@@ -139,7 +138,7 @@ class Scheduler(threading.Thread):
         if not task_times:
             return None
 
-        most_recent = self._compress_past_task_times(task_times, entry.id)
+        most_recent = self._compress_past_task_times(task_times, entry.name)
         return most_recent
 
     @staticmethod
@@ -147,7 +146,7 @@ class Scheduler(threading.Thread):
         npast = len(past)
         if npast > 1:
             msg = "skipping {} {} tasks with times in the past"
-            log.warning(msg.format(npast - 1, schedule_entry_id))
+            logger.warning(msg.format(npast - 1, schedule_entry_id))
 
         most_recent = past[-1]
         return most_recent
@@ -156,13 +155,11 @@ class Scheduler(threading.Thread):
         upcoming_queue = TaskQueue()
         upcoming_task_times = self._get_upcoming_task_times(schedule_snapshot)
         for entry, task_times in upcoming_task_times.items():
-            entry_id = entry.id
             task_id = None
             pri = entry.priority
-            cbname = entry.action_name
-            kw = entry.action_parameters
+            action = entry.action
             for t in task_times:
-                upcoming_queue.enter(t, pri, cbname, kw, entry_id, task_id)
+                upcoming_queue.enter(t, pri, action, entry.name, task_id)
 
         return upcoming_queue
 
@@ -183,7 +180,8 @@ class Scheduler(threading.Thread):
 
     def _cancel_if_completed(self, entry):
         if not entry.has_remaining_times():
-            log.debug("no times remaining in {}, removing".format(entry.id))
+            msg = "no times remaining in {}, removing".format(entry.name)
+            logger.debug(msg)
             self.cancel(entry)
 
     def __repr__(self):
