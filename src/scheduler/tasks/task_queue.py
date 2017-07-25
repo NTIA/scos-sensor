@@ -10,12 +10,7 @@ from . import Task
 
 
 class TaskQueue(list):
-    """A priority queue for tasks.
-
-    `self._queue` isn't a `persistent.list.PersistentList` because `heapq` is
-    implemented in C and won't recognize it as a list.
-
-    """
+    """A priority queue for tasks."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         heapq.heapify(self)

@@ -2,8 +2,8 @@
 
 Example usage:
     >>> from scheduler import Scheduler, ScheduleEntry
-    >>> e1 = ScheduleEntry(id='oneshot', priority=10, action='logger')
-    >>> e2 = ScheduleEntry(id='fivetimes', priority=20, action='logger',
+    >>> e1 = ScheduleEntry(name='oneshot', priority=10, action='logger')
+    >>> e2 = ScheduleEntry(name='fivetimes', priority=20, action='logger',
     ...                    interval=1, relative_stop=True)
     >>> # 'oneshot' has no interval and higher priority, so it will go first
     ... # and then 'fivetimes' will get called five times and then exit
@@ -92,7 +92,7 @@ class Scheduler(threading.Thread):
             if not blocking or self.interrupt_flag.is_set():
                 break
 
-            self.delayfn(0.1)
+            self.delayfn(0.25)
         else:
             self.task_queue.clear()
             if self.running:

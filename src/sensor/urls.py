@@ -18,18 +18,17 @@ Including another URLconf
 """
 
 from django.conf.urls import include, url
-from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 
-from scheduler.views import ScheduleEntryViewSet, TaskQueueViewSet
+from scheduler.views import ScheduleEntryViewSet, SchedulerViewSet
 
 
 api_v1_router = DefaultRouter()
-api_v1_router.register(r'schedule', ScheduleEntryViewSet)
-api_v1_router.register(r'task_queue', TaskQueueViewSet, base_name='task_queue')
-
+api_v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
+api_v1_router.register(r'scheduler', SchedulerViewSet, base_name='scheduler')
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/v1/', include(api_v1_router.urls, namespace='api_v1'))
+    url(r'^api/v1/', include(api_v1_router.urls, namespace='api_v1')),
+    url(r'^api/auth/', include('rest_framework.urls',
+                               namespace='rest_framework'))
 ]

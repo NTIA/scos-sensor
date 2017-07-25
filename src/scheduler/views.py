@@ -11,8 +11,13 @@ class ScheduleEntryViewSet(ModelViewSet):
     serializer_class = ScheduleEntrySerializer
 
 
-class TaskQueueViewSet(ViewSet):
+class SchedulerViewSet(ViewSet):
     def list(self, request, format=None):
         queue = scheduler.thread.task_queue.to_list()
-        serializer = TaskSerializer(queue, many=True)
-        return Response(serializer.data)
+        serializer = TaskSerializer(queue,
+                                    many=True,
+                                    context={'request': request})
+        return Response({
+            'status': 'running' if scheduler.thread.running else 'idle',
+            'task_queue': serializer.data
+        })
