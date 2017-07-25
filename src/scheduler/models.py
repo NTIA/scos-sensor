@@ -12,7 +12,8 @@ DEFAULT_PRIORITY = 10
 
 class ScheduleEntry(models.Model):
     name = models.SlugField(primary_key=True)
-    action = models.CharField(choices=actions.ACTION_CHOICES, max_length=50)
+    action = models.CharField(choices=actions.CHOICES,
+                              max_length=actions.MAX_LENGTH)
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
     start = models.BigIntegerField(default=utils.timefn, blank=True)
     stop = models.BigIntegerField(null=True, blank=True)

@@ -20,9 +20,9 @@ class TaskQueue(list):
         super().__init__(*args, **kwargs)
         heapq.heapify(self)
 
-    def enter(self, time, priority, action, schedule_entry_id, task_id):
+    def enter(self, time, priority, action, schedule_entry_name, task_id):
         """Enter an task into the queue and return the unique task id."""
-        evt = Task(time, priority, action, schedule_entry_id, task_id)
+        evt = Task(time, priority, action, schedule_entry_name, task_id)
         heapq.heappush(self, evt)
 
     def to_list(self):

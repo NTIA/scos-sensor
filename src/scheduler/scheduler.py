@@ -20,6 +20,7 @@ Example usage:
     [...] INFO in scheduler: all scheduled tasks completed
 """
 
+import atexit
 import logging
 import threading
 
@@ -79,7 +80,7 @@ class Scheduler(threading.Thread):
             if not blocking or self.interrupt_flag.is_set():
                 break
 
-            self.delayfn(0.1)
+            self.delayfn(0.25)
 
     def _consume_schedule(self, blocking):
         while self.schedule:
@@ -91,7 +92,7 @@ class Scheduler(threading.Thread):
             if not blocking or self.interrupt_flag.is_set():
                 break
 
-            self.delayfn(0.25)
+            self.delayfn(0.1)
         else:
             self.task_queue.clear()
             if self.running:
@@ -108,11 +109,11 @@ class Scheduler(threading.Thread):
 
     def _call_task_actions(self, pending_task_queue):
         for next_task in pending_task_queue.to_list():
-            entry_id = next_task.schedule_entry_id
+            entry_name = next_task.schedule_entry_name
             task_id = next_task.task_id
             try:
-                logger.debug("running task {}/{}".format(entry_id, task_id))
-                next_task.action_fn(entry_id, task_id)
+                logger.debug("running task {}/{}".format(entry_name, task_id))
+                next_task.action_fn(entry_name, task_id)
                 self.delayfn(0)  # let other threads run
             except:
                 logger.exception("action failed")
@@ -142,11 +143,11 @@ class Scheduler(threading.Thread):
         return most_recent
 
     @staticmethod
-    def _compress_past_task_times(past, schedule_entry_id):
+    def _compress_past_task_times(past, schedule_entry_name):
         npast = len(past)
         if npast > 1:
             msg = "skipping {} {} tasks with times in the past"
-            logger.warning(msg.format(npast - 1, schedule_entry_id))
+            logger.warning(msg.format(npast - 1, schedule_entry_name))
 
         most_recent = past[-1]
         return most_recent
@@ -187,3 +188,18 @@ class Scheduler(threading.Thread):
     def __repr__(self):
         s = "running" if self.running else "stopped"
         return "<{} status={}>".format(self.__class__.__name__, s)
+
+
+# The (small) price we pay for putting the scheduler thread right here instead
+# of running it in its own microservice is that we _must not_ run the
+# application server in multiple processes (multiple threads are fine).
+thread = Scheduler()
+
+
+def stop_scheduler(*args):
+    if thread.is_alive():
+        logger.info("Stopping scheduler")
+        thread.stop()
+
+
+atexit.register(stop_scheduler)

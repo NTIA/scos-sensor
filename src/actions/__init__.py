@@ -29,7 +29,8 @@ def get_summary(action_fn: Callable):
     return summary
 
 
+MAX_LENGTH = 50
 VALID_ACTIONS = sorted(by_name.keys())
-ACTION_CHOICES = []
+CHOICES = []
 for action in VALID_ACTIONS:
-    ACTION_CHOICES.append((action, get_action_with_summary(action)))
+    CHOICES.append((action, get_action_with_summary(action)))

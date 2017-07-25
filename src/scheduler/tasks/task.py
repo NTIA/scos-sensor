@@ -13,7 +13,7 @@ attributes = (
     "time",
     "priority",
     "action",
-    "schedule_entry_id",
+    "schedule_entry_name",
     "task_id"
 )
 TaskTuple = namedtuple("Event", attributes)

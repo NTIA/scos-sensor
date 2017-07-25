@@ -21,11 +21,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 
-from scheduler.views import ScheduleEntryViewSet
+from scheduler.views import ScheduleEntryViewSet, TaskQueueViewSet
 
 
 api_v1_router = DefaultRouter()
 api_v1_router.register(r'schedule', ScheduleEntryViewSet)
+api_v1_router.register(r'task_queue', TaskQueueViewSet, base_name='task_queue')
 
 
 urlpatterns = [
