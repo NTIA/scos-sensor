@@ -10,13 +10,13 @@ import actions
 
 
 attributes = (
-    "time",
-    "priority",
-    "action",
-    "schedule_entry_name",
-    "task_id"
+    'time',
+    'priority',
+    'action',
+    'schedule_entry_name',
+    'task_id'
 )
-TaskTuple = namedtuple("Event", attributes)
+TaskTuple = namedtuple('Event', attributes)
 
 
 class Task(TaskTuple):

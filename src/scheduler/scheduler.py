@@ -86,7 +86,8 @@ class Scheduler(threading.Thread):
         while self.schedule:
             self.running = True
 
-            pending_task_queue = self._queue_tasks()
+            schedule_snapshot = self.schedule
+            pending_task_queue = self._queue_tasks(schedule_snapshot)
             self._call_task_actions(pending_task_queue)
 
             if not blocking or self.interrupt_flag.is_set():
@@ -100,8 +101,7 @@ class Scheduler(threading.Thread):
 
         self.running = False
 
-    def _queue_tasks(self):
-        schedule_snapshot = self.schedule
+    def _queue_tasks(self, schedule_snapshot):
         pending_task_queue = self._queue_pending_tasks(schedule_snapshot)
         self.task_queue = self._queue_upcoming_tasks(schedule_snapshot)
 
@@ -127,6 +127,7 @@ class Scheduler(threading.Thread):
                 continue
 
             task_id = entry.get_next_task_id()
+            entry.save()
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)

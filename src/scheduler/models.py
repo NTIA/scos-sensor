@@ -11,6 +11,52 @@ DEFAULT_PRIORITY = 10
 
 
 class ScheduleEntry(models.Model):
+    """Describes an series of scheduler tasks.
+
+    An schedule entry is at minimum a human readable name and an associated
+    action. Combining different values of `start`, `stop`, `interval`, and
+    `priority` allows for flexible task scheduling. If no start time is given,
+    the scheduler begins scheduling tasks immediately. If no stop time is
+    given, the scheduler continues scheduling tasks until the schedule entry's
+    :attr:`canceled` flag is set. If no interval is given, the scheduler will
+    schedule exactly one task and then set :attr:`canceled`. `interval=None`
+    can be used with either an immediate or future start time. If two tasks are
+    scheduled to run at the same time, they will be run in order of `priority`.
+    If two tasks are scheduled to run at the same time and have the same
+    `priority`, execution order is undefined.
+
+    """
+
+    # Implementation notes:
+    #
+    # Large series of tasks are possible due to the "laziness" of the internal
+    # `range`-based representation of task times:
+    #
+    #     >>> sys.getsizeof(range(1, 2))
+    #     48
+    #     >>> sys.getsizeof(range(1, 20000000000000))
+    #     48
+    #
+    # `take_until` consumes times up to `t` from the internal range by moving
+    # `start` forward in time and returning a `range` representing the taken
+    # time slice. No other methods or properties actually consume times.
+    #
+    #     >>> entry = ScheduleEntry(name='test', start=5, stop=10, interval=1,
+    #     ...                       action='logger')
+    #     >>> list(entry.take_until(7))
+    #     [5, 6]
+    #     >>> list(entry.get_remaining_times())
+    #     [7, 8, 9]
+    #     >>> entry.take_until(9)
+    #     range(7, 9)
+    #     >>> list(_)
+    #     [7, 8]
+    #
+    # When `stop` is `None`, the schedule entry replaces `range` with
+    #  `itertools.count`. A `count` provides an interface compatible with a
+    #  range iterator, but it's best not to do something like
+    #  `list(e.get_remaining_times())` from the example above on one.
+
     name = models.SlugField(primary_key=True)
     action = models.CharField(choices=actions.CHOICES,
                               max_length=actions.MAX_LENGTH)
@@ -26,8 +72,8 @@ class ScheduleEntry(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "schedule"
-        ordering = ("created_at",)
+        db_table = 'schedule'
+        ordering = ('created_at',)
 
     def take_pending(self):
         """Take the range of times up to and including now."""
@@ -81,3 +127,14 @@ class ScheduleEntry(models.Model):
         next_task_id = self.next_task_id
         self.next_task_id += 1
         return next_task_id
+
+    def __str__(self):
+        fmtstr = 'name={}, pri={}, start={}, stop={}, ival={}, action={}>'
+        return fmtstr.format(
+            self.name,
+            self.priority,
+            self.start,
+            ('+' * self.relative_stop + '{}').format(self.stop),
+            self.interval,
+            self.action
+        )
