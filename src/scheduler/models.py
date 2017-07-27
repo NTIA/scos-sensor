@@ -1,7 +1,9 @@
 from itertools import count
 from typing import Iterable
 
+from django.core.validators import MinValueValidator
 from django.db import models
+
 
 import actions
 from . import utils
@@ -64,7 +66,8 @@ class ScheduleEntry(models.Model):
     start = models.BigIntegerField(default=utils.timefn, blank=True)
     stop = models.BigIntegerField(null=True, blank=True)
     relative_stop = models.BooleanField(default=False)
-    interval = models.IntegerField(null=True, blank=True)
+    interval = models.PositiveIntegerField(null=True, blank=True,
+                                           validators=(MinValueValidator(1),))
     canceled = models.BooleanField(default=False, editable=False)
     next_task_id = models.IntegerField(default=1, editable=False)
 

@@ -10,7 +10,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         model = ScheduleEntry
         fields = ('name', 'action', 'priority', 'start', 'stop',
                   'relative_stop', 'interval', 'canceled', 'created_at',
-                  'last_modified', 'url')
+                  'last_modified', 'url', 'acquisitions')
         extra_kwargs = {
             'url': {'view_name': 'api_v1:schedule-detail'}
         }
