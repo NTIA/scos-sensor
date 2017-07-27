@@ -21,11 +21,13 @@ from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
 
 from scheduler.views import ScheduleEntryViewSet, SchedulerViewSet
+from acquisitions.views import AcquisitionViewSet
 
 
 api_v1_router = DefaultRouter()
 api_v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
 api_v1_router.register(r'scheduler', SchedulerViewSet, base_name='scheduler')
+api_v1_router.register(r'acquisitions', AcquisitionViewSet, base_name='acquisitions')
 
 urlpatterns = [
     url(r'^api/v1/', include(api_v1_router.urls, namespace='api_v1')),

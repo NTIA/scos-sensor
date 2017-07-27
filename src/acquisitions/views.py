@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ViewSet
 
-# Create your views here.
+from .models import Acquisition
+from .serializers import AcquisitionSerializer
+
+
+class AcquisitionViewSet(ViewSet):
+    def list(self, request):
+        pass
+
+    def retrieve(self, request, entry):
+        pass
+
+    def destroy(self, request, entry):
+        pass
