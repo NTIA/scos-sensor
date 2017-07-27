@@ -36,6 +36,7 @@ class Scheduler(threading.Thread):
     """A memory-friendly task scheduler."""
     def __init__(self):
         threading.Thread.__init__(self)
+
         self.timefn = utils.timefn
         self.delayfn = utils.delayfn
 
@@ -54,6 +55,10 @@ class Scheduler(threading.Thread):
     def schedule(self):
         """An updated view of the current schedule"""
         return ScheduleEntry.objects.filter(canceled=False).all()
+
+    @property
+    def schedule_has_entries(self):
+        return ScheduleEntry.objects.filter(canceled=False).exists()
 
     def stop(self):
         """Complete the current task, then return control."""
@@ -83,7 +88,7 @@ class Scheduler(threading.Thread):
             self.delayfn(0.25)
 
     def _consume_schedule(self, blocking):
-        while self.schedule:
+        while self.schedule_has_entries:
             self.running = True
 
             schedule_snapshot = self.schedule

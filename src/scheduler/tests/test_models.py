@@ -1,8 +1,8 @@
 import itertools
 from itertools import count
 
-from django.core.exceptions import ValidationError
 import pytest
+from django.core.exceptions import ValidationError
 
 from .utils import flatten
 from scheduler import utils

@@ -59,14 +59,17 @@ class ScheduleEntry(models.Model):
     #  range iterator, but it's best not to do something like
     #  `list(e.get_remaining_times())` from the example above on one.
 
+    def timefn():
+        return utils.timefn()
+
     name = models.SlugField(primary_key=True)
     action = models.CharField(choices=actions.CHOICES,
                               max_length=actions.MAX_LENGTH)
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
-    start = models.BigIntegerField(default=utils.timefn, blank=True)
-    stop = models.BigIntegerField(null=True, blank=True)
+    start = models.BigIntegerField(default=timefn, blank=True)
+    stop = models.BigIntegerField(default=None, null=True, blank=True)
     relative_stop = models.BooleanField(default=False)
-    interval = models.PositiveIntegerField(null=True, blank=True,
+    interval = models.PositiveIntegerField(default=None, null=True, blank=True,
                                            validators=(MinValueValidator(1),))
     canceled = models.BooleanField(default=False, editable=False)
     next_task_id = models.IntegerField(default=1, editable=False)
@@ -86,7 +89,7 @@ class ScheduleEntry(models.Model):
     def take_until(self, t: int = None) -> range:
         """Take the range of times before `t`.
 
-        :param t: a :func:`utils.timefn`
+        :param t: a :func:`timefn` timestamp
 
         """
         times = self.get_remaining_times(until=t)

@@ -9,19 +9,23 @@ from scheduler.scheduler import Scheduler
 from .utils import advance_testclock
 
 
-def create_entry(name, pri, start, stop, step, cb):
-    return ScheduleEntry.objects.create(
-        name=name,
-        action=cb,
-        priority=pri,
-        start=start,
-        stop=stop,
-        interval=step
-    )
+def create_entry(name, priority, start, stop, interval, action):
+    kwargs = {
+        'name': name,
+        'priority': priority,
+        'stop': stop,
+        'interval': interval,
+        'action': action
+    }
+
+    if start is not None:
+        kwargs['start'] = start
+
+    return ScheduleEntry.objects.create(**kwargs)
 
 
 def create_action():
-    flag = threading.Task()
+    flag = threading.Event()
     cb = lambda edid, eid: flag.set()  # noqa: E731
     cb.__name__ = 'testcb' + str(create_action.counter)
     actions.by_name[cb.__name__] = cb
@@ -77,10 +81,8 @@ def test_calls_actions(testclock):
     """Register a few test actions and ensure the scheduler calls them."""
     test_actions = dict(create_action() for _ in range(3))
 
-    entries = []
     for i, cb in enumerate(test_actions):
-        e = create_entry('test' + str(i), 1, 0, 3, 1, cb.__name__)
-        entries.append(e)
+        create_entry('test' + str(i), 1, 0, 3, 1, cb.__name__)
 
     s = Scheduler()
     s.run(blocking=False)
@@ -140,7 +142,7 @@ def test_run_completes(testclock):
 
 
 @pytest.mark.django_db
-def test_survives_failed_test(testclock):
+def test_survives_failed_action(testclock):
     cb1 = create_bad_action()
     create_entry('t1', 10, None, None, None, cb1.__name__)
     cb2, flag = create_action()
@@ -194,6 +196,7 @@ def test_task_queue(testclock):
     advance_testclock(s.timefn, 10)
     s.run(blocking=False)  # consume 2 tasks and queue 2 more tasks
     assert len(s.task_queue) == 10
+    e.refresh_from_db()
     assert len(e.get_remaining_times()) == 100/5 - 2
 
     # canceled tasks are removed from task queue
