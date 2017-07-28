@@ -8,11 +8,23 @@ from .models import ScheduleEntry
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ScheduleEntry
-        fields = ('name', 'action', 'priority', 'start', 'stop',
-                  'relative_stop', 'interval', 'canceled', 'created_at',
-                  'last_modified', 'url', 'acquisitions')
+        fields = (
+            'name',
+            'action',
+            'priority',
+            'start',
+            'stop',
+            'relative_stop',
+            'interval',
+            'canceled',
+            'created_at',
+            'last_modified',
+            'url'
+        )
         extra_kwargs = {
-            'url': {'view_name': 'api_v1:schedule-detail'}
+            'url': {
+                'view_name': 'api_v1:schedule-detail'
+            }
         }
 
 
