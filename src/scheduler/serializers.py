@@ -23,7 +23,8 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'api_v1:schedule-detail'
+                'view_name': 'v1:schedule-detail',
+                'lookup_field': 'name'
             }
         }
 
@@ -38,6 +39,6 @@ class TaskSerializer(serializers.Serializer):
 
     def get_schedule_entry_url(self, obj):
         request = self.context['request']
-        return reverse('api_v1:schedule-detail',
+        return reverse('v1:schedule-detail',
                        args=(obj.schedule_entry_name,),
                        request=request)

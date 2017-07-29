@@ -23,6 +23,7 @@ Example usage:
 import atexit
 import logging
 import threading
+from contextlib import contextmanager
 
 from . import utils
 from .models import ScheduleEntry
@@ -80,25 +81,22 @@ class Scheduler(threading.Thread):
 
         """
         while True:
-            self._consume_schedule(blocking)
+            with minimum_duration(blocking):
+                self._consume_schedule(blocking)
 
             if not blocking or self.interrupt_flag.is_set():
                 break
-
-            self.delayfn(0.25)
 
     def _consume_schedule(self, blocking):
         while self.schedule_has_entries:
-            self.running = True
-
-            schedule_snapshot = self.schedule
-            pending_task_queue = self._queue_tasks(schedule_snapshot)
-            self._call_task_actions(pending_task_queue)
+            with minimum_duration(blocking):
+                self.running = True
+                schedule_snapshot = self.schedule
+                pending_task_queue = self._queue_tasks(schedule_snapshot)
+                self._call_task_actions(pending_task_queue)
 
             if not blocking or self.interrupt_flag.is_set():
                 break
-
-            self.delayfn(0.25)
         else:
             self.task_queue.clear()
             if self.running:
@@ -194,6 +192,19 @@ class Scheduler(threading.Thread):
     def __repr__(self):
         s = "running" if self.running else "stopped"
         return "<{} status={}>".format(self.__class__.__name__, s)
+
+
+@contextmanager
+def minimum_duration(blocking):
+    """Ensure a code block is entered at most once per timefn rising edge.
+
+    :param blocking: if False, minimum duration is 0
+
+    """
+    start_time = utils.timefn()
+    yield
+    while blocking and utils.timefn() == start_time:
+        utils.delayfn(0.01)
 
 
 # The (small) price we pay for putting the scheduler thread right here instead

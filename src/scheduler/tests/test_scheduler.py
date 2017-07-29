@@ -5,7 +5,7 @@ import pytest
 
 import actions
 from scheduler.models import ScheduleEntry
-from scheduler.scheduler import Scheduler
+from scheduler.scheduler import Scheduler, minimum_duration
 from .utils import advance_testclock
 
 
@@ -218,6 +218,27 @@ def test_clear_schedule_clears_task_queue(testclock):
 
     s.run(blocking=False)
     assert len(s.task_queue) == 0
+
+
+def test_minimum_duration_blocking():
+    start = int(time.time())
+    blocking = True
+    with minimum_duration(blocking):
+        pass
+
+    stop = int(time.time())
+    assert start != stop
+
+
+def test_minimum_duration_non_blocking():
+    start = time.time()
+    blocking = False
+    with minimum_duration(blocking):
+        pass
+
+    stop = time.time()
+    one_ms = 0.001
+    assert (stop - start) <= one_ms
 
 
 def test_str():

@@ -9,6 +9,7 @@ from .serializers import ScheduleEntrySerializer, TaskSerializer
 class ScheduleEntryViewSet(ModelViewSet):
     queryset = ScheduleEntry.objects.filter(canceled=False)
     serializer_class = ScheduleEntrySerializer
+    lookup_field = 'name'
 
 
 class SchedulerViewSet(ViewSet):

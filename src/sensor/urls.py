@@ -24,13 +24,12 @@ from scheduler.views import ScheduleEntryViewSet, SchedulerViewSet
 from acquisitions.views import AcquisitionViewSet
 
 
-api_v1_router = DefaultRouter()
-api_v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
-api_v1_router.register(r'scheduler', SchedulerViewSet, base_name='scheduler')
-api_v1_router.register(r'acquisitions', AcquisitionViewSet, base_name='acquisitions')
+v1_router = DefaultRouter()
+v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
+v1_router.register(r'scheduler', SchedulerViewSet, base_name='scheduler')
+v1_router.register(r'acquisitions', AcquisitionViewSet, base_name='acquisitions')
 
 urlpatterns = [
-    url(r'^api/v1/', include(api_v1_router.urls, namespace='api_v1')),
-    url(r'^api/auth/', include('rest_framework.urls',
-                               namespace='rest_framework'))
+    url(r'^v1/', include(v1_router.urls, namespace='v1')),
+    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

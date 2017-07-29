@@ -23,7 +23,7 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_schedule_entry_url(self, obj):
         request = self.context['request']
-        return reverse('api_v1:schedule-detail',
+        return reverse('v1:schedule-detail',
                        args=(obj.name,),
                        request=request)
 
