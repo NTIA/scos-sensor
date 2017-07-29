@@ -74,7 +74,7 @@ class Scheduler(threading.Thread):
         entry.canceled = True
         entry.save()
 
-    def run(self, blocking: bool = True):
+    def run(self, blocking=True):
         """Run the scheduler in the current thread.
 
         :param blocking: block until stopped or return control after each task
@@ -180,8 +180,8 @@ class Scheduler(threading.Thread):
         return upcoming_task_times
 
     def _get_min_interval(self, schedule_snapshot):
-        intervals = (e.interval for e in schedule_snapshot if e.interval)
-        return min(intervals, default=1)
+        intervals = [e.interval for e in schedule_snapshot if e.interval]
+        return min(intervals or (1,))  # py2.7 compat -> min(ivals, default=1)
 
     def _cancel_if_completed(self, entry):
         if not entry.has_remaining_times():
@@ -196,7 +196,7 @@ class Scheduler(threading.Thread):
 
 @contextmanager
 def minimum_duration(blocking):
-    """Ensure a code block is entered at most once per timefn rising edge.
+    """Ensure a code block is entered at most once per timefn rollover.
 
     :param blocking: if False, minimum duration is 0
 

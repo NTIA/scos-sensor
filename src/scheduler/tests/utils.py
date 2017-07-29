@@ -20,6 +20,9 @@ class TestClock(object):
         return self.t
 
 
+TestClock.next = TestClock.__next__  # py2.7 compat
+
+
 def delayfn(t):
     """Delay fn that doesn't delay"""
     time.sleep(0)

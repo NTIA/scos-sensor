@@ -1,5 +1,4 @@
 from itertools import count
-from typing import Iterable
 
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -86,7 +85,7 @@ class ScheduleEntry(models.Model):
         now = utils.timefn()
         return self.take_until(now+1)
 
-    def take_until(self, t: int = None) -> range:
+    def take_until(self, t=None):
         """Take the range of times before `t`.
 
         :param t: a :func:`timefn` timestamp
@@ -103,11 +102,11 @@ class ScheduleEntry(models.Model):
 
         return times
 
-    def has_remaining_times(self) -> bool:
+    def has_remaining_times(self):
         """Return :obj:`True` if task times remain, else :obj:`False`."""
         return self.start in self.get_remaining_times()
 
-    def get_remaining_times(self, until: int = None) -> Iterable[int]:
+    def get_remaining_times(self, until=None):
         """Get a potentially infinite iterator of remaining task times."""
         if self.canceled:
             return range(0)

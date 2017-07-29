@@ -41,7 +41,7 @@ def validate_response(response, expected_code=None):
 
 def test_index(client):
     rjson = validate_response(client.get(reverse('v1:api-root')))
-    assert rjson.keys() == API_ROOT_ENDPOINTS
+    assert set(rjson.keys()) == API_ROOT_ENDPOINTS  # py2.7 compat, set(keys)
 
 
 @pytest.mark.django_db

@@ -12,7 +12,7 @@ from . import Task
 class TaskQueue(list):
     """A priority queue for tasks."""
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(TaskQueue, self).__init__(*args, **kwargs)
         heapq.heapify(self)
 
     def enter(self, time, priority, action, schedule_entry_name, task_id):
@@ -32,6 +32,18 @@ class TaskQueue(list):
 
     def pop(self):
         return heapq.heappop(self)
+
+    def copy(self):  # py2.7 compat
+        try:
+            return super(TaskQueue, self).copy()
+        except AttributeError:
+            return self[:]
+
+    def clear(self):  # py2.7 compat
+        try:
+            super(TaskQueue, self).clear()
+        except AttributeError:
+            del self[:]
 
     @property
     def next_task(self):

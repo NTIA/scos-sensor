@@ -1,5 +1,3 @@
-from typing import Callable
-
 from . import logger
 
 
@@ -9,7 +7,7 @@ by_name = {
 }
 
 
-def get_action_with_summary(action: str):
+def get_action_with_summary(action):
     action_fn = by_name[action]
     summary = get_summary(action_fn)
     action_with_summary = action
@@ -19,7 +17,7 @@ def get_action_with_summary(action: str):
     return action_with_summary
 
 
-def get_summary(action_fn: Callable):
+def get_summary(action_fn):
     """Extract the first line of the action's docstring as a summary."""
     docstring = action_fn.__doc__
     summary = None
