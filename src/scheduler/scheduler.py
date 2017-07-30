@@ -25,8 +25,8 @@ import logging
 import threading
 from contextlib import contextmanager
 
+from schedule.models import ScheduleEntry
 from . import utils
-from .models import ScheduleEntry
 from .tasks import TaskQueue
 
 
@@ -46,7 +46,7 @@ class Scheduler(threading.Thread):
         # scheduler looks ahead `interval_multiplier` times the shortest
         # interval in the schedule in order to keep memory-usage low
         self.interval_multiplier = 10
-        self.name = "Scheduler"
+        self.name = 'Scheduler'
         self.running = False
         self.interrupt_flag = threading.Event()
 
@@ -189,9 +189,15 @@ class Scheduler(threading.Thread):
             logger.debug(msg)
             self.cancel(entry)
 
+    @property
+    def status(self):
+        if self.is_alive():
+            return 'running' if self.running else 'idle'
+        return 'dead'
+
     def __repr__(self):
-        s = "running" if self.running else "stopped"
-        return "<{} status={}>".format(self.__class__.__name__, s)
+        s = 'running' if self.running else 'stopped'
+        return '<{} status={}>'.format(self.__class__.__name__, s)
 
 
 @contextmanager

@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from scheduler.models import ScheduleEntry
+from schedule.models import ScheduleEntry
 from .models import Acquisition
 from .serializers import AcquisitionSerializer, AcquisitionsOverviewSerializer
 

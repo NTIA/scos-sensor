@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 from .utils import flatten
 from scheduler import utils
-from scheduler.models import ScheduleEntry, DEFAULT_PRIORITY
+from schedule.models import ScheduleEntry, DEFAULT_PRIORITY
 
 
 @pytest.mark.parametrize('test_input,future_t,expected', [

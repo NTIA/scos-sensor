@@ -18,18 +18,21 @@ Including another URLconf
 """
 
 from django.conf.urls import include, url
+from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
 
-from scheduler.views import ScheduleEntryViewSet, SchedulerViewSet
 from acquisitions.views import AcquisitionViewSet
+from schedule.views import ScheduleEntryViewSet
+from status.views import StatusViewSet
 
 
 v1_router = DefaultRouter()
 v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
-v1_router.register(r'scheduler', SchedulerViewSet, base_name='scheduler')
+v1_router.register(r'status', StatusViewSet, base_name='status')
 v1_router.register(r'acquisitions', AcquisitionViewSet, base_name='acquisitions')
 
-urlpatterns = [
-    url(r'^v1/', include(v1_router.urls, namespace='v1')),
-    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+urlpatterns = (
+    url(r'^$', RedirectView.as_view(url='/api/v1/')),
+    url(r'^api/v1/', include(v1_router.urls, namespace='v1')),
+    url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework'))
+)

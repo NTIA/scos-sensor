@@ -1,7 +1,7 @@
 from django.db import models
 from jsonfield import JSONField
 
-from scheduler.models import ScheduleEntry
+from schedule.models import ScheduleEntry
 
 
 class Acquisition(models.Model):

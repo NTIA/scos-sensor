@@ -5,7 +5,7 @@ from django.db import models
 
 
 import actions
-from . import utils
+from scheduler import utils
 
 
 DEFAULT_PRIORITY = 10

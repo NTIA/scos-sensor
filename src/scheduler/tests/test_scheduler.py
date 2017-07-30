@@ -4,7 +4,7 @@ import threading
 import pytest
 
 import actions
-from scheduler.models import ScheduleEntry
+from schedule.models import ScheduleEntry
 from scheduler.scheduler import Scheduler, minimum_duration
 from .utils import advance_testclock
 
@@ -119,25 +119,30 @@ def test_remove_entry(testclock):
     assert e2 in s.schedule
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_start_stop(testclock):
     create_entry('t', 1, 1, 100, 5, 'logger')
     s = Scheduler()
     s.start()
-    time.sleep(0.02)  # hit delayfn
+    time.sleep(0.02)  # hit minimum_duration
+    advance_testclock(s.timefn, 1)
     s.stop()
+    advance_testclock(s.timefn, 1)
     s.join()
     assert not s.running
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_run_completes(testclock):
     create_entry('t', 1, None, None, None, 'logger')
     s = Scheduler()
     s.start()
+    time.sleep(0.1)  # hit minimum_duration
+    advance_testclock(s.timefn, 1)
     time.sleep(0.1)
     assert s.running is False
     s.stop()
+    advance_testclock(s.timefn, 1)
     s.join()
 
 
@@ -179,7 +184,7 @@ def test_one_shot(testclock):
     s = Scheduler()
     s.run(blocking=False)
     assert len(s.task_queue) == 0
-    assert len(s.schedule) == 0
+    assert not s.schedule_has_entries
 
 
 @pytest.mark.django_db

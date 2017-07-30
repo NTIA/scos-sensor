@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from scheduler.models import ScheduleEntry
+from schedule.models import ScheduleEntry
 from .models import Acquisition
 
 
