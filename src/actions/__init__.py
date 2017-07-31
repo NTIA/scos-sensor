@@ -1,9 +1,10 @@
 from . import logger
+from . import mock_acquire
 
 
 by_name = {
     "logger": logger.Logger(),
-    "logger2": logger.Logger()
+    "mock_acquire": mock_acquire.TestAcquisition()
 }
 
 

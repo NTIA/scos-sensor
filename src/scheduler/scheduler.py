@@ -1,24 +1,4 @@
-"""Schedule and run tasks.
-
-Example usage:
-    >>> from scheduler import Scheduler, ScheduleEntry
-    >>> e1 = ScheduleEntry(name='oneshot', priority=10, action='logger')
-    >>> e2 = ScheduleEntry(name='fivetimes', priority=20, action='logger',
-    ...                    interval=1, relative_stop=True)
-    >>> # 'oneshot' has no interval and higher priority, so it will go first
-    ... # and then 'fivetimes' will get called five times and then exit
-    ... s = Scheduler()
-    >>> s.schedule.add(e1)
-    >>> s.schedule.add(e2)
-    >>> s.run()
-    [...] INFO in actions: oneshot
-    [...] INFO in actions: fivetimes
-    [...] INFO in actions: fivetimes
-    [...] INFO in actions: fivetimes
-    [...] INFO in actions: fivetimes
-    [...] INFO in actions: fivetimes
-    [...] INFO in scheduler: all scheduled tasks completed
-"""
+"""Schedule and run tasks."""
 
 import atexit
 import logging
@@ -61,6 +41,11 @@ class Scheduler(threading.Thread):
     def schedule_has_entries(self):
         return ScheduleEntry.objects.filter(canceled=False).exists()
 
+    @staticmethod
+    def cancel(entry):
+        entry.canceled = True
+        entry.save()
+
     def stop(self):
         """Complete the current task, then return control."""
         self.interrupt_flag.set()
@@ -68,11 +53,6 @@ class Scheduler(threading.Thread):
     def start(self):
         """Run the scheduler in its own thread and return control."""
         threading.Thread.start(self)
-
-    @staticmethod
-    def cancel(entry):
-        entry.canceled = True
-        entry.save()
 
     def run(self, blocking=True):
         """Run the scheduler in the current thread.
