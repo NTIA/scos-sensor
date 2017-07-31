@@ -22,3 +22,7 @@ if __name__ == "__main__":
             )
         raise
     execute_from_command_line(sys.argv)
+
+    if os.getenv('INSIDE_EMACS'):
+        # runserver turns on term echo, which echoes twice in emacs shell
+        os.system('stty -echo')
