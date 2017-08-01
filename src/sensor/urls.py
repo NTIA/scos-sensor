@@ -21,7 +21,8 @@ from django.conf.urls import include, url
 from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
 
-from acquisitions.views import AcquisitionViewSet
+from sensor import settings
+from acquisitions.views import AcquisitionsOverviewViewSet, AcquisitionViewSet
 from schedule.views import ScheduleEntryViewSet
 from status.views import StatusViewSet
 
@@ -29,10 +30,23 @@ from status.views import StatusViewSet
 v1_router = DefaultRouter()
 v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
 v1_router.register(r'status', StatusViewSet, base_name='status')
-v1_router.register(r'acquisitions', AcquisitionViewSet, base_name='acquisitions')
+v1_router.register(r'acquisitions',
+                   AcquisitionsOverviewViewSet,
+                   base_name='acquisitions')
 
 urlpatterns = (
     url(r'^$', RedirectView.as_view(url='/api/v1/')),
     url(r'^api/v1/', include(v1_router.urls, namespace='v1')),
+    url(r'^api/v1/acquisitions/(?P<schedule_entry_name>[\w-])/(?P<task_id>\d+)/$',
+        view=AcquisitionViewSet.as_view({
+            'get': 'retrieve',
+            'delete': 'destroy'
+        }),
+        name='acquisition-metadata'),
+    url(r'^api/v1/acquisitions/(?P<schedule_entry_name>[\w-])/(?P<task_id>\d+)/sigmf$',
+        view=AcquisitionViewSet.as_view({
+            'get': 'sigmf',
+        }),
+        name='acquisition-data'),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework'))
 )

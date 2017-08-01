@@ -1,9 +1,12 @@
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from .models import ScheduleEntry
 
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
+    acquisitions_url = serializers.SerializerMethodField()
+
     class Meta:
         model = ScheduleEntry
         fields = (
@@ -17,6 +20,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'canceled',
             'created_at',
             'last_modified',
+            'acquisitions_url',
             'url'
         )
         extra_kwargs = {
@@ -25,3 +29,9 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'lookup_field': 'name'
             }
         }
+
+    def get_acquisitions_url(self, obj):
+        request = self.context['request']
+        return reverse('v1:acquisitions-detail',
+                       args=(obj.name,),
+                       request=request)

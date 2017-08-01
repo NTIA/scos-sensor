@@ -48,10 +48,8 @@ class TestAcquisition(Action):
         nffts = 1
         detector = 'mean'  # TODO: enum
 
-        parent_entry = ScheduleEntry.objects.get(schedule_entry_name)
-
-        warning = "parent schedule entry {} doesn't exist - canceling action"
-        assert parent_entry, warning.format(schedule_entry_name)
+        # raises ScheduleEntry.DoesNotExist if no matching schedule entry
+        parent_entry = ScheduleEntry.objects.get(name=schedule_entry_name)
 
         sigmf_md = SigMFFile()
         sigmf_md.set_global_field("core:datatype", "rf32_le")
@@ -84,6 +82,6 @@ class TestAcquisition(Action):
         Acquisition(
             schedule_entry=parent_entry,
             task_id=task_id,
-            metadata_=sigmf_md,
+            metadata=sigmf_md._metadata,
             data=data
         ).save()
