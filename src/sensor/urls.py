@@ -17,36 +17,37 @@ Including another URLconf
 
 """
 
+from functools import partial
+
 from django.conf.urls import include, url
 from django.views.generic import RedirectView
-from rest_framework.routers import DefaultRouter
-
-from sensor import settings
-from acquisitions.views import AcquisitionsOverviewViewSet, AcquisitionViewSet
-from schedule.views import ScheduleEntryViewSet
-from status.views import StatusViewSet
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.urlpatterns import format_suffix_patterns
 
 
-v1_router = DefaultRouter()
-v1_router.register(r'schedule', ScheduleEntryViewSet, base_name='schedule')
-v1_router.register(r'status', StatusViewSet, base_name='status')
-v1_router.register(r'acquisitions',
-                   AcquisitionsOverviewViewSet,
-                   base_name='acquisitions')
+@api_view(('GET',))
+def api_v1_root(request, format=None):
+    reverse_ = partial(reverse, request=request, format=format)
+    return Response({
+        'schedule': reverse_('v1:schedule-list'),
+        'acquisitions': reverse_('v1:acquisitions-list'),
+        'status': reverse_('v1:status-list')
+
+    })
+
+
+api_v1_urlpatterns = format_suffix_patterns((
+    url(r'^$', api_v1_root, name='api-root'),
+    url(r'^acquisitions/', include('acquisitions.urls')),
+    url(r'^schedule/', include('schedule.urls')),
+    url(r'^status/', include('status.urls'))
+))
 
 urlpatterns = (
-    url(r'^$', RedirectView.as_view(url='/api/v1/')),
-    url(r'^api/v1/', include(v1_router.urls, namespace='v1')),
-    url(r'^api/v1/acquisitions/(?P<schedule_entry_name>[\w-])/(?P<task_id>\d+)/$',
-        view=AcquisitionViewSet.as_view({
-            'get': 'retrieve',
-            'delete': 'destroy'
-        }),
-        name='acquisition-metadata'),
-    url(r'^api/v1/acquisitions/(?P<schedule_entry_name>[\w-])/(?P<task_id>\d+)/sigmf$',
-        view=AcquisitionViewSet.as_view({
-            'get': 'sigmf',
-        }),
-        name='acquisition-data'),
+    url(r'^$', RedirectView.as_view(url='/api/')),
+    url(r'^api/$', RedirectView.as_view(url='/api/v1/')),
+    url(r'^api/v1/', include(api_v1_urlpatterns, namespace='v1')),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework'))
 )

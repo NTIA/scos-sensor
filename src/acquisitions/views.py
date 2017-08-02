@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import detail_route
-from rest_framework.generics import RetrieveDestroyAPIView
+from rest_framework import mixins
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import GenericViewSet, ViewSet
 
 from schedule.models import ScheduleEntry
 from .models import Acquisition
@@ -14,10 +14,10 @@ class MultipleFieldLookupMixin(object):
     def get_object(self):
         queryset = self.get_queryset()             # Get the base queryset
         queryset = self.filter_queryset(queryset)  # Apply any filter backends
-        filter = {}
-        for field in self.lookup_fields:
-            if self.kwargs[field]:  # Ignore empty fields.
-                filter[field] = self.kwargs[field]
+        filter = {
+            'schedule_entry__name': self.kwargs['schedule_entry_name'],
+            'task_id': self.kwargs['task_id']
+        }
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
 
@@ -38,7 +38,7 @@ class AcquisitionsOverviewViewSet(ViewSet):
                                 .filter(name=schedule_entry_name)
         entry = get_object_or_404(queryset, name=schedule_entry_name)
         context = {'request': request}
-        serializer = AcquisitionSerializer(entry.acquisitions,
+        serializer = AcquisitionSerializer(entry.acquisitions.all(),
                                            many=True,
                                            context=context)
         return Response(serializer.data)
@@ -47,12 +47,14 @@ class AcquisitionsOverviewViewSet(ViewSet):
         raise NotImplemented
 
 
-class AcquisitionViewSet(MultipleFieldLookupMixin, ViewSet):
+class AcquisitionViewSet(MultipleFieldLookupMixin,
+                         mixins.RetrieveModelMixin,
+                         mixins.DestroyModelMixin,
+                         GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
-    lookup_fields = ('schedule_entry_name', 'task_id')
-    #download_sigmf_url =
+    lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route
-    def sigmf(self, request, schedule_entry_name, task_id):
+    def sigmf(self, request, schedule_entry__name, task_id):
         pass
