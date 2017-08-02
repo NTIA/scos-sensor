@@ -32,7 +32,7 @@ def api_v1_root(request, format=None):
     reverse_ = partial(reverse, request=request, format=format)
     return Response({
         'schedule': reverse_('v1:schedule-list'),
-        'acquisitions': reverse_('v1:acquisitions-list'),
+        'acquisitions': reverse_('v1:acquisitions-overview'),
         'status': reverse_('v1:status-list')
 
     })

@@ -12,6 +12,7 @@ class Acquisition(models.Model):
     task_id = models.IntegerField()
     metadata = JSONField()
     data = models.BinaryField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'acquisitions'

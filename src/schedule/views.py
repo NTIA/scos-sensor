@@ -5,6 +5,6 @@ from .serializers import ScheduleEntrySerializer
 
 
 class ScheduleEntryViewSet(ModelViewSet):
-    queryset = ScheduleEntry.objects.filter(canceled=False)
+    queryset = ScheduleEntry.objects.all()
     serializer_class = ScheduleEntrySerializer
     lookup_field = 'name'

@@ -6,7 +6,9 @@ from rest_framework.viewsets import GenericViewSet, ViewSet
 
 from schedule.models import ScheduleEntry
 from .models import Acquisition
-from .serializers import AcquisitionSerializer, AcquisitionsOverviewSerializer
+from .serializers import (AcquisitionsOverviewSerializer,
+                          AcquisitionPreviewSerializer,
+                          AcquisitionMetadataSerializer)
 
 
 class MultipleFieldLookupMixin(object):
@@ -21,38 +23,51 @@ class MultipleFieldLookupMixin(object):
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
 
-class AcquisitionsOverviewViewSet(ViewSet):
+class AcquisitionsOverviewViewSet(mixins.ListModelMixin, GenericViewSet):
     lookup_field = 'schedule_entry_name'
+    queryset = ScheduleEntry.objects.all()
+    serializer_class = AcquisitionsOverviewSerializer
 
-    def list(self, request):
-        queryset = ScheduleEntry.objects.all()
-        context = {'request': request}
-        serializer = AcquisitionsOverviewSerializer(queryset,
-                                                    many=True,
-                                                    context=context)
-        return Response(serializer.data)
+    # def list(self, request):
+    #     queryset = self.get_queryset()
+    #     context = {'request': request}
+    #     serializer_class = self.get_serializer_class()
+    #     serializer = serializer_class(queryset, many=True, context=context)
+    #     return Response(serializer.data)
+
+
+class AcquisitionsPreviewViewSet(GenericViewSet):
+    lookup_field = 'schedule_entry_name'
+    serializer_class = AcquisitionPreviewSerializer
+    queryset = ScheduleEntry.objects.select_related()
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        queryset = self.filter_queryset(queryset)  # Apply any filter backends
+        filter = {'name': self.kwargs['schedule_entry_name']}
+        return get_object_or_404(queryset, **filter)
 
     def retrieve(self, request, schedule_entry_name):
-        queryset = ScheduleEntry.objects\
-                                .select_related()\
-                                .filter(name=schedule_entry_name)
-        entry = get_object_or_404(queryset, name=schedule_entry_name)
+        entry = self.get_object()
         context = {'request': request}
-        serializer = AcquisitionSerializer(entry.acquisitions.all(),
-                                           many=True,
-                                           context=context)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(entry.acquisitions.all(),
+                                      many=True,
+                                      context=context)
         return Response(serializer.data)
 
     def destroy(self, request, schedule_entry_name):
-        raise NotImplemented
+        entry = self.get_object()
+        entry.acquisitions.delete()
+        # TODO: what reponse to return?
 
 
-class AcquisitionViewSet(MultipleFieldLookupMixin,
-                         mixins.RetrieveModelMixin,
-                         mixins.DestroyModelMixin,
-                         GenericViewSet):
+class AcquisitionMetadataViewSet(MultipleFieldLookupMixin,
+                                 mixins.RetrieveModelMixin,
+                                 mixins.DestroyModelMixin,
+                                 GenericViewSet):
     queryset = Acquisition.objects.all()
-    serializer_class = AcquisitionSerializer
+    serializer_class = AcquisitionMetadataSerializer
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route

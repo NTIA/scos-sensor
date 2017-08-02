@@ -6,38 +6,30 @@ from .models import Acquisition
 
 
 class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
-    schedule_entry_name = serializers.SerializerMethodField()
+    schedule_entry = serializers.SerializerMethodField()
     acquisitions_available = serializers.SerializerMethodField()
-    schedule_entry_url = serializers.SerializerMethodField()
 
     class Meta:
         model = ScheduleEntry
         fields = (
-            'schedule_entry_name',
+            'schedule_entry',
             'acquisitions_available',
-            'created_at',
-            'schedule_entry_url',
             'url'
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'v1:acquisitions-detail',
+                'view_name': 'v1:acquisitions-preview',
                 'lookup_field': 'name',
                 'lookup_url_kwarg': 'schedule_entry_name'
             }
         }
 
-    def get_schedule_entry_name(self, obj):
-        return obj.name
-
     def get_acquisitions_available(self, obj):
         return obj.acquisitions.count()
 
-    def get_schedule_entry_url(self, obj):
+    def get_schedule_entry(self, obj):
         request = self.context['request']
-        return reverse('v1:schedule-detail',
-                       args=(obj.name,),
-                       request=request)
+        return reverse('v1:schedule-detail', args=(obj.name,), request=request)
 
 
 class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
@@ -51,7 +43,7 @@ class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
         return reverse(view_name, kwargs=kw, request=request, format=format)
 
 
-class AcquisitionSerializer(serializers.Serializer):
+class AcquisitionPreviewSerializer(serializers.ModelSerializer):
     metadata = AcquisitionHyperlinkedRelatedField(
         view_name='v1:acquisition-metadata',
         read_only=True,
@@ -62,7 +54,26 @@ class AcquisitionSerializer(serializers.Serializer):
         read_only=True,
         source='*'  # pass whole object
     )
+    metadata_global = serializers.DictField(source='metadata.global',
+                                            read_only=True)
 
     class Meta:
         model = Acquisition
-        fields = '__all__'
+        fields = (
+            'task_id',
+            'created_at',
+            'metadata',
+            'data',
+            'metadata_global'
+        )
+        extra_kwargs = {
+            'schedule_entry': {
+                'view_name': 'v1:schedule-detail',
+                'lookup_field': 'name'
+            }
+        }
+
+
+class AcquisitionMetadataSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        return value.metadata

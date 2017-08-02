@@ -5,7 +5,7 @@ from .models import ScheduleEntry
 
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
-    acquisitions_url = serializers.SerializerMethodField()
+    acquisitions = serializers.SerializerMethodField()
 
     class Meta:
         model = ScheduleEntry
@@ -20,7 +20,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'canceled',
             'created_at',
             'last_modified',
-            'acquisitions_url',
+            'acquisitions',
             'url'
         )
         extra_kwargs = {
@@ -30,7 +30,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             }
         }
 
-    def get_acquisitions_url(self, obj):
+    def get_acquisitions(self, obj):
         request = self.context['request']
         return reverse('v1:acquisitions-detail',
                        args=(obj.name,),
