@@ -10,12 +10,13 @@ class Acquisition(models.Model):
                                        on_delete=models.PROTECT,
                                        related_name='acquisitions')
     task_id = models.IntegerField()
-    metadata = JSONField()
+    sigmf_metadata = JSONField()
     data = models.BinaryField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'acquisitions'
+        ordering = ('created',)
         unique_together = (('schedule_entry', 'task_id'),)
 
     def __str__(self):

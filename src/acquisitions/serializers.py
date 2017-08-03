@@ -33,38 +33,44 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
-    # http://www.django-rest-framework.org/api-guide/relations/#custom-hyperlinked-fields
-
+    # django-rest-framework.org/api-guide/relations/#custom-hyperlinked-fields
     def get_url(self, obj, view_name, request, format):
-        kw = {
+        kws = {
             'schedule_entry_name': obj.schedule_entry.name,
             'task_id': obj.task_id
         }
-        return reverse(view_name, kwargs=kw, request=request, format=format)
+        return reverse(view_name, kwargs=kws, request=request, format=format)
+
+
+class SigMFMetadataPreviewField(serializers.DictField):
+    def to_representation(self, value):
+        value['captures_available'] = len(value.pop('captures', 0))
+        value['has_annotations'] = bool(value.pop('annotations'))
+        return value
 
 
 class AcquisitionPreviewSerializer(serializers.ModelSerializer):
-    metadata = AcquisitionHyperlinkedRelatedField(
+    sigmf_metadata = AcquisitionHyperlinkedRelatedField(
         view_name='v1:acquisition-metadata',
         read_only=True,
         source='*'  # pass whole object
     )
-    data = AcquisitionHyperlinkedRelatedField(
-        view_name='v1:acquisition-data',
+    archive = AcquisitionHyperlinkedRelatedField(
+        view_name='v1:acquisition-archive',
         read_only=True,
         source='*'  # pass whole object
     )
-    metadata_global = serializers.DictField(source='metadata.global',
-                                            read_only=True)
+    sigmf_metadata_preview = SigMFMetadataPreviewField(source='sigmf_metadata',
+                                                       read_only=True)
 
     class Meta:
         model = Acquisition
         fields = (
             'task_id',
-            'created_at',
-            'metadata',
-            'data',
-            'metadata_global'
+            'created',
+            'archive',
+            'sigmf_metadata',
+            'sigmf_metadata_preview'
         )
         extra_kwargs = {
             'schedule_entry': {
@@ -76,4 +82,4 @@ class AcquisitionPreviewSerializer(serializers.ModelSerializer):
 
 class AcquisitionMetadataSerializer(serializers.Serializer):
     def to_representation(self, value):
-        return value.metadata
+        return value.sigmf_metadata

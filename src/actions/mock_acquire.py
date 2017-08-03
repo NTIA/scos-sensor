@@ -82,6 +82,6 @@ class TestAcquisition(Action):
         Acquisition(
             schedule_entry=parent_entry,
             task_id=task_id,
-            metadata=sigmf_md._metadata,
+            sigmf_metadata=sigmf_md._metadata,
             data=data
         ).save()

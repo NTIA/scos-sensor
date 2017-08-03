@@ -12,7 +12,7 @@ DEFAULT_PRIORITY = 10
 
 
 class ScheduleEntry(models.Model):
-    """Describes an series of scheduler tasks.
+    """Describes a series of scheduler tasks.
 
     An schedule entry is at minimum a human readable name and an associated
     action. Combining different values of `start`, `stop`, `interval`, and
@@ -54,9 +54,9 @@ class ScheduleEntry(models.Model):
     #     [7, 8]
     #
     # When `stop` is `None`, the schedule entry replaces `range` with
-    #  `itertools.count`. A `count` provides an interface compatible with a
-    #  range iterator, but it's best not to do something like
-    #  `list(e.get_remaining_times())` from the example above on one.
+    # `itertools.count`. A `count` provides an interface compatible with a
+    # range iterator, but it's best not to do something like
+    # `list(e.get_remaining_times())` from the example above on one.
 
     def timefn():
         return utils.timefn()
@@ -70,15 +70,15 @@ class ScheduleEntry(models.Model):
     relative_stop = models.BooleanField(default=False)
     interval = models.PositiveIntegerField(default=None, null=True, blank=True,
                                            validators=(MinValueValidator(1),))
-    canceled = models.BooleanField(default=False, editable=False)
+    canceled = models.BooleanField(default=False, editable=True)
     next_task_id = models.IntegerField(default=1, editable=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'schedule'
-        ordering = ('created_at',)
+        ordering = ('created',)
 
     def take_pending(self):
         """Take the range of times up to and including now."""

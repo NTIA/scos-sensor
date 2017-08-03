@@ -23,9 +23,9 @@ urlpatterns = (
             'delete': 'destroy'
         }),
         name='acquisition-metadata'),
-    url(r'^(?P<schedule_entry_name>[\w-]+)/(?P<task_id>\d+)/sigmf$',
+    url(r'^(?P<schedule_entry_name>[\w-]+)/(?P<task_id>\d+)/archive$',
         view=AcquisitionMetadataViewSet.as_view({
-            'get': 'sigmf',
+            'get': 'archive',
         }),
-        name='acquisition-data')
+        name='acquisition-archive')
 )

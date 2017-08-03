@@ -1,8 +1,9 @@
+from functools import partial
+
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import detail_route
 from rest_framework import mixins
-from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from schedule.models import ScheduleEntry
 from .models import Acquisition
@@ -28,38 +29,20 @@ class AcquisitionsOverviewViewSet(mixins.ListModelMixin, GenericViewSet):
     queryset = ScheduleEntry.objects.all()
     serializer_class = AcquisitionsOverviewSerializer
 
-    # def list(self, request):
-    #     queryset = self.get_queryset()
-    #     context = {'request': request}
-    #     serializer_class = self.get_serializer_class()
-    #     serializer = serializer_class(queryset, many=True, context=context)
-    #     return Response(serializer.data)
 
-
-class AcquisitionsPreviewViewSet(GenericViewSet):
+class AcquisitionsPreviewViewSet(mixins.RetrieveModelMixin,
+                                 mixins.DestroyModelMixin,
+                                 GenericViewSet):
     lookup_field = 'schedule_entry_name'
-    serializer_class = AcquisitionPreviewSerializer
+    serializer_class = partial(AcquisitionPreviewSerializer, many=True)
     queryset = ScheduleEntry.objects.select_related()
 
     def get_object(self):
         queryset = self.get_queryset()
         queryset = self.filter_queryset(queryset)  # Apply any filter backends
         filter = {'name': self.kwargs['schedule_entry_name']}
-        return get_object_or_404(queryset, **filter)
-
-    def retrieve(self, request, schedule_entry_name):
-        entry = self.get_object()
-        context = {'request': request}
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(entry.acquisitions.all(),
-                                      many=True,
-                                      context=context)
-        return Response(serializer.data)
-
-    def destroy(self, request, schedule_entry_name):
-        entry = self.get_object()
-        entry.acquisitions.delete()
-        # TODO: what reponse to return?
+        entry = get_object_or_404(queryset, **filter)
+        return entry.acquisitions.all()
 
 
 class AcquisitionMetadataViewSet(MultipleFieldLookupMixin,
@@ -71,5 +54,5 @@ class AcquisitionMetadataViewSet(MultipleFieldLookupMixin,
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route
-    def sigmf(self, request, schedule_entry__name, task_id):
+    def archive(self, request, schedule_entry__name, task_id):
         pass
