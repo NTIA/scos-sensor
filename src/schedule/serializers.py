@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 from .models import ScheduleEntry
 
 
-class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
+class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField()
 
     class Meta:
@@ -29,9 +29,23 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'lookup_field': 'name'
             }
         }
+        read_only_fields = ('canceled',)
 
     def get_acquisitions(self, obj):
         request = self.context['request']
-        return reverse('v1:acquisitions-preview',
-                       args=(obj.name,),
-                       request=request)
+        kws = {'schedule_entry_name': obj.name}
+        return reverse('v1:acquisition-list', kwargs=kws, request=request)
+
+    def to_internal_value(self, data):
+        """Strip incoming start=None so that model uses default start value."""
+        if 'start' in data and data['start'] is None:
+            data.pop('start')
+
+        # py2.7 compat -> super().to_rep...
+        cls = CreateScheduleEntrySerializer
+        return super(cls, self).to_internal_value(data)
+
+
+class UpdateScheduleEntrySerializer(CreateScheduleEntrySerializer):
+    class Meta(CreateScheduleEntrySerializer.Meta):
+        read_only_fields = ()  # allow setting 'canceled' after creation

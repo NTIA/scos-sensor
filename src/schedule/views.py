@@ -1,10 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
 
 from .models import ScheduleEntry
-from .serializers import ScheduleEntrySerializer
+from .serializers import (CreateScheduleEntrySerializer,
+                          UpdateScheduleEntrySerializer)
 
 
 class ScheduleEntryViewSet(ModelViewSet):
     queryset = ScheduleEntry.objects.all()
-    serializer_class = ScheduleEntrySerializer
     lookup_field = 'name'
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateScheduleEntrySerializer
+        else:
+            return UpdateScheduleEntrySerializer

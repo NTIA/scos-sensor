@@ -2,6 +2,8 @@ import collections
 import time
 from itertools import chain, count, islice
 
+from scheduler.scheduler import Scheduler
+
 
 class TestClock(object):
     """Manually-incremented clock counter"""
@@ -47,6 +49,13 @@ def advance_testclock(iterator, n):
     else:
         # advance to the empty slice starting at position n
         next(islice(iterator, n, n), None)
+
+
+def simulate_scheduler_run(n=1):
+    s = Scheduler()
+    for _ in range(n):
+        s.run(blocking=False)
+        advance_testclock(s.timefn, 1)
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes

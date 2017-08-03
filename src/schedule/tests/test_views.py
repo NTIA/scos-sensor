@@ -1,47 +1,11 @@
-import json
-
 import pytest
 
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-
-EMPTY_SCHEDULE_REPONSE = []
-
-TEST_SCHEDULE_ENTRY = {'name': 'test', 'action': 'logger'}
-
-API_ROOT_ENDPOINTS = {
-    'acquisitions',
-    'schedule',
-    'status',
-    # 'capabilities'
-}
-
-
-def post_schedule(client, entry):
-    r = client.post(reverse('v1:schedule-list'),
-                    data=json.dumps(entry),
-                    content_type='application/json')
-    rjson = r.json()
-    assert r.status_code == status.HTTP_201_CREATED, rjson
-    return rjson
-
-
-def validate_response(response, expected_code=None):
-    actual_code = response.status_code
-    if expected_code is None:
-        assert status.is_success(actual_code)
-    else:
-        assert actual_code == expected_code, response.context
-
-    if actual_code not in (status.HTTP_204_NO_CONTENT,):
-        rjson = response.json()
-        return rjson
-
-
-def test_index(client):
-    rjson = validate_response(client.get(reverse('v1:api-root')))
-    assert set(rjson.keys()) == API_ROOT_ENDPOINTS  # py2.7 compat, set(keys)
+from schedule.tests import EMPTY_SCHEDULE_REPONSE, TEST_SCHEDULE_ENTRY
+from schedule.tests.utils import post_schedule
+from sensor.tests.utils import validate_response
 
 
 @pytest.mark.django_db

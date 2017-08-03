@@ -1,15 +1,28 @@
-from functools import partial
+import tempfile
 
+from django.core.files import File
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import detail_route
-from rest_framework import mixins
+from rest_framework import status
+from rest_framework.decorators import list_route, detail_route
+from rest_framework.mixins import (ListModelMixin,
+                                   RetrieveModelMixin,
+                                   DestroyModelMixin)
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+
+import sigmf.sigmffile
 
 from schedule.models import ScheduleEntry
 from .models import Acquisition
 from .serializers import (AcquisitionsOverviewSerializer,
-                          AcquisitionPreviewSerializer,
-                          AcquisitionMetadataSerializer)
+                          AcquisitionSerializer)
+
+
+class AcquisitionsOverviewViewSet(ListModelMixin, GenericViewSet):
+    lookup_field = 'schedule_entry_name'
+    queryset = ScheduleEntry.objects.all()
+    serializer_class = AcquisitionsOverviewSerializer
 
 
 class MultipleFieldLookupMixin(object):
@@ -24,35 +37,42 @@ class MultipleFieldLookupMixin(object):
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
 
-class AcquisitionsOverviewViewSet(mixins.ListModelMixin, GenericViewSet):
-    lookup_field = 'schedule_entry_name'
-    queryset = ScheduleEntry.objects.all()
-    serializer_class = AcquisitionsOverviewSerializer
-
-
-class AcquisitionsPreviewViewSet(mixins.RetrieveModelMixin,
-                                 mixins.DestroyModelMixin,
-                                 GenericViewSet):
-    lookup_field = 'schedule_entry_name'
-    serializer_class = partial(AcquisitionPreviewSerializer, many=True)
-    queryset = ScheduleEntry.objects.select_related()
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        queryset = self.filter_queryset(queryset)  # Apply any filter backends
-        filter = {'name': self.kwargs['schedule_entry_name']}
-        entry = get_object_or_404(queryset, **filter)
-        return entry.acquisitions.all()
-
-
-class AcquisitionMetadataViewSet(MultipleFieldLookupMixin,
-                                 mixins.RetrieveModelMixin,
-                                 mixins.DestroyModelMixin,
-                                 GenericViewSet):
+class AcquisitionViewSet(MultipleFieldLookupMixin,
+                         ListModelMixin,
+                         RetrieveModelMixin,
+                         DestroyModelMixin,
+                         GenericViewSet):
     queryset = Acquisition.objects.all()
-    serializer_class = AcquisitionMetadataSerializer
+    serializer_class = AcquisitionSerializer
     lookup_fields = ('schedule_entry__name', 'task_id')
 
-    @detail_route
-    def archive(self, request, schedule_entry__name, task_id):
-        pass
+    @list_route(methods=('DELETE'))
+    def destroy_all(self, request, schedule_entry_name):
+        queryset = self.get_queryset()
+        queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
+        if not queryset.exists():
+            raise Http404
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @detail_route()
+    def archive(self, request, schedule_entry_name, task_id):
+        entry_name = schedule_entry_name
+        acq = self.get_object()
+
+        with tempfile.NamedTemporaryFile() as tempdatafile:
+            tempdatafile.write(acq.data)
+            tempdatafile.seek(0)  # move fd ptr to start of data for reading
+
+            sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.sigmf_metadata)
+            sigmf_file.set_data_file(tempdatafile.name)
+
+            with tempfile.TemporaryFile() as t:
+                # FIXME: prefix filename with sensor_id when that is available
+                filename = entry_name + '_' + str(task_id) + '.sigmf'
+                sigmf_file.archive(name=filename, fileobj=t)
+                content_type = 'application/x-tar'
+                response = HttpResponse(File(t), content_type=content_type)
+                content_disp = 'attachment; filename="{}"'.format(filename)
+                response['Content-Disposition'] = content_disp
+                return response

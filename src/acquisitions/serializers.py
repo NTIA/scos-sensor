@@ -12,13 +12,13 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ScheduleEntry
         fields = (
-            'schedule_entry',
+            'url',
             'acquisitions_available',
-            'url'
+            'schedule_entry'
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'v1:acquisitions-preview',
+                'view_name': 'v1:acquisition-list',
                 'lookup_field': 'name',
                 'lookup_url_kwarg': 'schedule_entry_name'
             }
@@ -42,16 +42,9 @@ class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
         return reverse(view_name, kwargs=kws, request=request, format=format)
 
 
-class SigMFMetadataPreviewField(serializers.DictField):
-    def to_representation(self, value):
-        value['captures_available'] = len(value.pop('captures', 0))
-        value['has_annotations'] = bool(value.pop('annotations'))
-        return value
-
-
-class AcquisitionPreviewSerializer(serializers.ModelSerializer):
-    sigmf_metadata = AcquisitionHyperlinkedRelatedField(
-        view_name='v1:acquisition-metadata',
+class AcquisitionSerializer(serializers.ModelSerializer):
+    url = AcquisitionHyperlinkedRelatedField(
+        view_name='v1:acquisition-detail',
         read_only=True,
         source='*'  # pass whole object
     )
@@ -60,17 +53,16 @@ class AcquisitionPreviewSerializer(serializers.ModelSerializer):
         read_only=True,
         source='*'  # pass whole object
     )
-    sigmf_metadata_preview = SigMFMetadataPreviewField(source='sigmf_metadata',
-                                                       read_only=True)
+    sigmf_metadata = serializers.DictField()
 
     class Meta:
         model = Acquisition
         fields = (
+            'url',
             'task_id',
             'created',
             'archive',
-            'sigmf_metadata',
-            'sigmf_metadata_preview'
+            'sigmf_metadata'
         )
         extra_kwargs = {
             'schedule_entry': {
@@ -78,8 +70,3 @@ class AcquisitionPreviewSerializer(serializers.ModelSerializer):
                 'lookup_field': 'name'
             }
         }
-
-
-class AcquisitionMetadataSerializer(serializers.Serializer):
-    def to_representation(self, value):
-        return value.sigmf_metadata
