@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
-from .views import (AcquisitionsOverviewViewSet, AcquisitionViewSet)
+from .views import (AcquisitionsOverviewViewSet,
+                    AcquisitionListViewSet,
+                    AcquisitionInstanceViewSet)
 
 
 urlpatterns = (
@@ -10,21 +12,19 @@ urlpatterns = (
         }),
         name='acquisitions-overview'),
     url(r'^(?P<schedule_entry_name>[\w-]+)/$',
-        view=AcquisitionViewSet.as_view({
+        view=AcquisitionListViewSet.as_view({
             'get': 'list',
             'delete': 'destroy_all'
         }),
-        name='acquisition-list',
-        initkwargs={'suffix': 'List'}),
+        name='acquisition-list'),
     url(r'^(?P<schedule_entry_name>[\w-]+)/(?P<task_id>\d+)/$',
-        view=AcquisitionViewSet.as_view({
+        view=AcquisitionInstanceViewSet.as_view({
             'get': 'retrieve',
             'delete': 'destroy'
         }),
-        name='acquisition-detail',
-        initkwargs={'suffix': 'Detail'}),
+        name='acquisition-detail'),
     url(r'^(?P<schedule_entry_name>[\w-]+)/(?P<task_id>\d+)/archive$',
-        view=AcquisitionViewSet.as_view({
+        view=AcquisitionInstanceViewSet.as_view({
             'get': 'archive',
         }),
         name='acquisition-archive')

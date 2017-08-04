@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
+    'django_extensions',  # XXX: not used in production
     'rest_framework',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
@@ -73,6 +73,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sensor.wsgi.application'
+
+
+# Django Rest Framework
+# http://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'sensor.exceptions.exception_handler'
+}
 
 
 # Database
@@ -159,7 +167,19 @@ LOGGING = {
         }
     },
     'loggers': {
-        'sensor': {
+        'actions': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO'
+        },
+        'acquisitions': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO'
+        },
+        'capabilities': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO'
+        },
+        'schedule': {
             'handlers': ['console', 'file'],
             'level': 'INFO'
         },
@@ -167,11 +187,11 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'INFO'
         },
-        'actions': {
+        'sensor': {
             'handlers': ['console', 'file'],
             'level': 'INFO'
         },
-        'acquisitions': {
+        'status': {
             'handlers': ['console', 'file'],
             'level': 'INFO'
         }

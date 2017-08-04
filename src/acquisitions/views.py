@@ -37,16 +37,14 @@ class MultipleFieldLookupMixin(object):
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
 
-class AcquisitionViewSet(MultipleFieldLookupMixin,
-                         ListModelMixin,
-                         RetrieveModelMixin,
-                         DestroyModelMixin,
-                         GenericViewSet):
+class AcquisitionListViewSet(MultipleFieldLookupMixin,
+                             ListModelMixin,
+                             GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
     lookup_fields = ('schedule_entry__name', 'task_id')
 
-    @list_route(methods=('DELETE'))
+    @list_route(methods=('DELETE',))
     def destroy_all(self, request, schedule_entry_name):
         queryset = self.get_queryset()
         queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
@@ -54,6 +52,15 @@ class AcquisitionViewSet(MultipleFieldLookupMixin,
             raise Http404
         queryset.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
+                                 RetrieveModelMixin,
+                                 DestroyModelMixin,
+                                 GenericViewSet):
+    queryset = Acquisition.objects.all()
+    serializer_class = AcquisitionSerializer
+    lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route()
     def archive(self, request, schedule_entry_name, task_id):
