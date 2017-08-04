@@ -1,5 +1,6 @@
 from django.test import RequestFactory
 from rest_framework.reverse import reverse
+from rest_framework import status
 
 from acquisitions.tests import SINGLE_ACQUISITION, MULTIPLE_ACQUISITIONS
 from schedule.tests.utils import post_schedule
@@ -8,7 +9,7 @@ from sensor.tests.utils import validate_response
 
 
 def simulate_acquisitions(client, n=1):
-    assert 1 < n <= 10
+    assert 0 < n <= 10
 
     if n == 1:
         schedule_entry = SINGLE_ACQUISITION
@@ -27,20 +28,44 @@ def reverse_acquisitions_overview():
     return reverse('v1:acquisitions-overview', request=request)
 
 
-def reverse_acquisitions_preview(schedule_entry_name):
+def reverse_acquisition_list(schedule_entry_name):
     rf = RequestFactory()
     request = rf.get('/acquisitions/' + schedule_entry_name)
     kws = {'schedule_entry_name': schedule_entry_name}
-    return reverse('v1:acquisitions-preview', kwargs=kws, request=request)
+    return reverse('v1:acquisition-list', kwargs=kws, request=request)
+
+
+def reverse_acquisition_detail(schedule_entry_name, task_id):
+    rf = RequestFactory()
+    task_str = str(task_id)
+    request = rf.get('/acquisitions/' + schedule_entry_name + '/' + task_str)
+    kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
+    return reverse('v1:acquisition-detail', kwargs=kws, request=request)
+
+
+def reverse_acquisition_archive(schedule_entry_name, task_id):
+    rf = RequestFactory()
+    entry_name = schedule_entry_name
+    task_str = str(task_id)
+    url_str = '/'.join(['/acquisitions', entry_name, task_str, 'archive'])
+    request = rf.get(url_str)
+    kws = {'schedule_entry_name': entry_name, 'task_id': task_id}
+    return reverse('v1:acquisition-archive', kwargs=kws, request=request)
 
 
 def get_acquisitions_overview(client):
     url = reverse_acquisitions_overview()
     response = client.get(url)
-    return validate_response(response, 200)
+    return validate_response(response, status.HTTP_200_OK)
 
 
-def get_acquisitions_preview(client, schedule_entry_name):
-    url = reverse_acquisitions_preview(schedule_entry_name)
+def get_acquisition_list(client, schedule_entry_name):
+    url = reverse_acquisition_list(schedule_entry_name)
     response = client.get(url)
-    return validate_response(response, 200)
+    return validate_response(response, status.HTTP_200_OK)
+
+
+def get_acquisition_detail(client, schedule_entry_name, task_id):
+    url = reverse_acquisition_detail(schedule_entry_name, task_id)
+    response = client.get(url)
+    return validate_response(response, status.HTTP_200_OK)

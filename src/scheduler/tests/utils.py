@@ -48,7 +48,11 @@ def advance_testclock(iterator, n):
         collections.deque(iterator, maxlen=0)
     else:
         # advance to the empty slice starting at position n
-        next(islice(iterator, n, n), None)
+        try:
+            next(islice(iterator, n, n), None)
+        except:
+            err = "The calling test case requires the 'testclock' fixture."
+            raise TypeError(err)
 
 
 def simulate_scheduler_run(n=1):

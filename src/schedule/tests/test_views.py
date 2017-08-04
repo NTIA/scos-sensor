@@ -3,6 +3,7 @@ import pytest
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from acquisitions.tests.utils import simulate_acquisitions
 from schedule.tests import EMPTY_SCHEDULE_REPONSE, TEST_SCHEDULE_ENTRY
 from schedule.tests.utils import post_schedule
 from sensor.tests.utils import validate_response
@@ -45,3 +46,14 @@ def test_delete_entry(client):
     url = reverse('v1:schedule-detail', kwargs={'name': entry_name})
     validate_response(client.delete(url), status.HTTP_204_NO_CONTENT)
     validate_response(client.delete(url), status.HTTP_404_NOT_FOUND)
+
+
+@pytest.mark.django_db
+def test_delete_entry_with_acquisitions_fails(client, testclock):
+    entry_name = simulate_acquisitions(client, n=1)
+    entry_url = reverse('v1:schedule-detail', kwargs={'name': entry_name})
+    rjson = validate_response(client.delete(entry_url),
+                              status.HTTP_400_BAD_REQUEST)
+    for acq_url in rjson['protected_objects']:
+        validate_response(client.delete(acq_url), status.HTTP_204_NO_CONTENT)
+    validate_response(client.delete(entry_url), status.HTTP_204_NO_CONTENT)

@@ -27,14 +27,20 @@ class AcquisitionsOverviewViewSet(ListModelMixin, GenericViewSet):
 
 class MultipleFieldLookupMixin(object):
     """Get multiple field filtering based on a `lookup_fields` attribute."""
+    def get_queryset(self):
+        base_queryset = super(MultipleFieldLookupMixin, self).get_queryset()
+        base_queryset = self.filter_queryset(base_queryset)
+        filter = {'schedule_entry__name': self.kwargs['schedule_entry_name']}
+        queryset = base_queryset.filter(**filter)
+        if not queryset.exists():
+            raise Http404
+
+        return queryset
+
     def get_object(self):
-        queryset = self.get_queryset()             # Get the base queryset
-        queryset = self.filter_queryset(queryset)  # Apply any filter backends
-        filter = {
-            'schedule_entry__name': self.kwargs['schedule_entry_name'],
-            'task_id': self.kwargs['task_id']
-        }
-        return get_object_or_404(queryset, **filter)  # Lookup the object
+        queryset = self.get_queryset()
+        filter = {'task_id': self.kwargs['task_id']}
+        return get_object_or_404(queryset, **filter)
 
 
 class AcquisitionListViewSet(MultipleFieldLookupMixin,
