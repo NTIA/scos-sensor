@@ -39,8 +39,8 @@ class ScheduleEntry(models.Model):
     #     48
     #
     # `take_until` consumes times up to `t` from the internal range by moving
-    # `start` forward in time and returning a `range` representing the taken
-    # time slice. No other methods or properties actually consume times.
+    # `next_task_time` forward in time and returning a `range` representing the
+    # taken time slice. No other methods or properties actually consume times.
     #
     #     >>> entry = ScheduleEntry(name='test', start=5, stop=10, interval=1,
     #     ...                       action='logger')
@@ -59,6 +59,7 @@ class ScheduleEntry(models.Model):
     # `list(e.get_remaining_times())` from the example above on one.
 
     def timefn():
+        """Make `start` time default to upcoming second."""
         return utils.timefn()
 
     name = models.SlugField(primary_key=True)
@@ -71,6 +72,7 @@ class ScheduleEntry(models.Model):
     interval = models.PositiveIntegerField(default=None, null=True, blank=True,
                                            validators=(MinValueValidator(1),))
     canceled = models.BooleanField(default=False, editable=True)
+    next_task_time = models.BigIntegerField(default=timefn, editable=False)
     next_task_id = models.IntegerField(default=1, editable=False)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -80,10 +82,20 @@ class ScheduleEntry(models.Model):
         db_table = 'schedule'
         ordering = ('created',)
 
+    def __init__(self, *args, **kwargs):
+        super(ScheduleEntry, self).__init__(*args, **kwargs)
+        self._make_relative_stop_absolute()
+
+    def _make_relative_stop_absolute(self):
+        """After model fields are initialized, ensure `stop` is absolute."""
+        if self.relative_stop:
+            self.stop = self.start + self.stop
+            self.relative_stop = False
+
     def take_pending(self):
         """Take the range of times up to and including now."""
         now = utils.timefn()
-        return self.take_until(now+1)
+        return self.take_until(now)
 
     def take_until(self, t=None):
         """Take the range of times before `t`.
@@ -94,8 +106,7 @@ class ScheduleEntry(models.Model):
         times = self.get_remaining_times(until=t)
         if times:
             if self.interval:
-                next_t = times[-1] + self.interval
-                self.start = next_t
+                self.next_task_time = times[-1] + self.interval
             else:
                 # interval is None and time consumed
                 self.canceled = True
@@ -104,28 +115,26 @@ class ScheduleEntry(models.Model):
 
     def has_remaining_times(self):
         """Return :obj:`True` if task times remain, else :obj:`False`."""
-        return self.start in self.get_remaining_times()
+        return self.next_task_time in self.get_remaining_times()
 
     def get_remaining_times(self, until=None):
         """Get a potentially infinite iterator of remaining task times."""
         if self.canceled:
             return range(0)
 
+        next_time = self.next_task_time
         stop = self.stop
 
         if until is None and stop is None:
             if self.interval:
-                return count(self.start, self.interval)         # infinite
+                return count(next_time, self.interval)         # infinite
             else:
-                return iter(range(self.start, self.start + 1))  # one-shot
-
-        if self.relative_stop and stop:
-            stop = self.start + stop
+                return iter(range(next_time, next_time + 1))   # one-shot
 
         stop = min(t for t in (until, stop) if t is not None)
 
-        interval = self.interval or abs(stop - self.start)
-        times = range(self.start, stop, interval)
+        interval = self.interval or abs(stop - next_time)
+        times = range(next_time, stop, interval)
         return times
 
     def get_next_task_id(self):

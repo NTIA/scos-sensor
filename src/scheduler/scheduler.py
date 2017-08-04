@@ -70,6 +70,7 @@ class Scheduler(threading.Thread):
     def _consume_schedule(self, blocking):
         while self.schedule_has_entries:
             with minimum_duration(blocking):
+                # import pdb; pdb.set_trace()
                 self.running = True
                 schedule_snapshot = self.schedule
                 pending_task_queue = self._queue_tasks(schedule_snapshot)

@@ -41,15 +41,18 @@ def test_undefined_stop_is_never():
     assert type(entry.get_remaining_times()) is itertools.count
 
 
-def test_relative_stop():
-    # relative stop
-    e1 = ScheduleEntry(name='t', start=20, stop=+10, interval=1,
-                       relative_stop=True, action='logger')
-    assert list(e1.get_remaining_times()) == list(range(20, 30, 1))
-    # absolute stop
-    e2 = ScheduleEntry(name='t', start=20, stop=10, interval=1,
-                       action='logger')
-    assert list(e2.get_remaining_times()) == list(range(0))
+def test_relative_stop_becomes_absolute():
+    e = ScheduleEntry(name='t', start=20, stop=+10, interval=1,
+                      relative_stop=True, action='logger')
+    assert e.start == 20
+    assert e.stop == 30
+    assert e.relative_stop is False
+    assert list(e.get_remaining_times()) == list(range(20, 30, 1))
+
+
+def test_stop_before_start():
+    e = ScheduleEntry(name='t', start=20, stop=10, interval=1, action='logger')
+    assert list(e.get_remaining_times()) == list(range(0))
 
 
 def test_no_interval():
