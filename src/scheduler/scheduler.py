@@ -30,8 +30,6 @@ class Scheduler(threading.Thread):
         self.running = False
         self.interrupt_flag = threading.Event()
 
-        self.app = None
-
     @property
     def schedule(self):
         """An updated view of the current schedule"""
@@ -44,7 +42,7 @@ class Scheduler(threading.Thread):
     @staticmethod
     def cancel(entry):
         entry.canceled = True
-        entry.save()
+        entry.save(update_fields=('canceled',))
 
     def stop(self):
         """Complete the current task, then return control."""
@@ -111,7 +109,7 @@ class Scheduler(threading.Thread):
                 continue
 
             task_id = entry.get_next_task_id()
-            entry.save()
+            entry.save(update_fields=('next_task_id',))
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
@@ -120,7 +118,7 @@ class Scheduler(threading.Thread):
 
     def _take_pending_task_time(self, entry):
         task_times = entry.take_pending()
-        entry.save()
+        entry.save(update_fields=('next_task_time', 'canceled'))
         if not task_times:
             return None
 

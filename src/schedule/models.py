@@ -3,7 +3,6 @@ from itertools import count
 from django.core.validators import MinValueValidator
 from django.db import models
 
-
 import actions
 from scheduler import utils
 
@@ -14,7 +13,7 @@ DEFAULT_PRIORITY = 10
 class ScheduleEntry(models.Model):
     """Describes a series of scheduler tasks.
 
-    An schedule entry is at minimum a human readable name and an associated
+    A schedule entry is at minimum a human readable name and an associated
     action. Combining different values of `start`, `stop`, `interval`, and
     `priority` allows for flexible task scheduling. If no start time is given,
     the scheduler begins scheduling tasks immediately. If no stop time is
@@ -60,19 +59,19 @@ class ScheduleEntry(models.Model):
 
     def timefn():
         """Make `start` time default to upcoming second."""
-        return utils.timefn()
+        return utils.timefn() + 1
 
     name = models.SlugField(primary_key=True)
     action = models.CharField(choices=actions.CHOICES,
                               max_length=actions.MAX_LENGTH)
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
     start = models.BigIntegerField(default=timefn, blank=True)
-    stop = models.BigIntegerField(default=None, null=True, blank=True)
+    stop = models.BigIntegerField(null=True, blank=True)
     relative_stop = models.BooleanField(default=False)
-    interval = models.PositiveIntegerField(default=None, null=True, blank=True,
+    interval = models.PositiveIntegerField(null=True, blank=True,
                                            validators=(MinValueValidator(1),))
     canceled = models.BooleanField(default=False, editable=True)
-    next_task_time = models.BigIntegerField(default=timefn, editable=False)
+    next_task_time = models.BigIntegerField(null=True, editable=False)
     next_task_id = models.IntegerField(default=1, editable=False)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -84,18 +83,21 @@ class ScheduleEntry(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(ScheduleEntry, self).__init__(*args, **kwargs)
-        self._make_relative_stop_absolute()
 
-    def _make_relative_stop_absolute(self):
-        """After model fields are initialized, ensure `stop` is absolute."""
         if self.relative_stop:
             self.stop = self.start + self.stop
             self.relative_stop = False
 
+        if self.next_task_time is None:
+            self.next_task_time = self.start
+
+    def _make_relative_stop_absolute(self):
+        """After model fields are initialized, ensure `stop` is absolute."""
+
     def take_pending(self):
         """Take the range of times up to and including now."""
         now = utils.timefn()
-        return self.take_until(now)
+        return self.take_until(now + 1)
 
     def take_until(self, t=None):
         """Take the range of times before `t`.
@@ -134,8 +136,10 @@ class ScheduleEntry(models.Model):
         stop = min(t for t in (until, stop) if t is not None)
 
         interval = self.interval or abs(stop - next_time)
-        times = range(next_time, stop, interval)
-        return times
+        if interval:
+            return range(next_time, stop, interval)
+        else:
+            return range(next_time, next_time + 1)
 
     def get_next_task_id(self):
         next_task_id = self.next_task_id

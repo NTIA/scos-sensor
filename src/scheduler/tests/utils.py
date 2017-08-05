@@ -58,8 +58,8 @@ def advance_testclock(iterator, n):
 def simulate_scheduler_run(n=1):
     s = Scheduler()
     for _ in range(n):
-        s.run(blocking=False)
         advance_testclock(s.timefn, 1)
+        s.run(blocking=False)
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
