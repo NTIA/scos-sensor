@@ -18,7 +18,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'stop',
             'relative_stop',
             'interval',
-            'canceled',
+            'active',
             'created',
             'modified',
             'acquisitions'
@@ -29,7 +29,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'lookup_field': 'name'
             }
         }
-        read_only_fields = ('canceled',)
+        read_only_fields = ('active',)
 
     def get_acquisitions(self, obj):
         request = self.context['request']
@@ -48,4 +48,4 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
 class UpdateScheduleEntrySerializer(CreateScheduleEntrySerializer):
     class Meta(CreateScheduleEntrySerializer.Meta):
-        read_only_fields = ()  # allow setting 'canceled' after creation
+        read_only_fields = ()  # allow changine 'active' after creation

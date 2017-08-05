@@ -63,8 +63,8 @@ def test_no_interval():
     times = list(e1.take_until(remaining_times[0]+1000))
     assert len(times) == 1
 
-    # when interval is None, consuming the single task time sets `canceled`
-    assert e1.canceled
+    # when interval is None, consuming the single task time unsets `active`
+    assert not e1.active
     assert not list(e1.get_remaining_times())
     assert not list(e1.take_until(remaining_times[0]+1000))
 
@@ -75,8 +75,8 @@ def test_no_interval():
     times = list(e2.take_until(remaining_times[0]+1000))
     assert len(times) == 1
 
-    # when interval is None, consuming the single task time sets `canceled`
-    assert e2.canceled
+    # when interval is None, consuming the single task time unsets `active`
+    assert not e2.active
     assert not list(e2.get_remaining_times())
     assert not list(e2.take_until(remaining_times[0]+1000))
 
@@ -120,7 +120,7 @@ def test_defaults():
     assert entry.stop is None
     assert entry.interval is None
     assert entry.relative_stop is False
-    assert entry.canceled is False
+    assert entry.active is True
 
 
 def test_str():

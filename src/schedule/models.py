@@ -18,8 +18,8 @@ class ScheduleEntry(models.Model):
     `priority` allows for flexible task scheduling. If no start time is given,
     the scheduler begins scheduling tasks immediately. If no stop time is
     given, the scheduler continues scheduling tasks until the schedule entry's
-    :attr:`canceled` flag is set. If no interval is given, the scheduler will
-    schedule exactly one task and then set :attr:`canceled`. `interval=None`
+    :attr:`active` flag is unset. If no interval is given, the scheduler will
+    schedule exactly one task and then unset :attr:`active`. `interval=None`
     can be used with either an immediate or future start time. If two tasks are
     scheduled to run at the same time, they will be run in order of `priority`.
     If two tasks are scheduled to run at the same time and have the same
@@ -70,7 +70,7 @@ class ScheduleEntry(models.Model):
     relative_stop = models.BooleanField(default=False)
     interval = models.PositiveIntegerField(null=True, blank=True,
                                            validators=(MinValueValidator(1),))
-    canceled = models.BooleanField(default=False, editable=True)
+    active = models.BooleanField(default=True, editable=True)
     next_task_time = models.BigIntegerField(null=True, editable=False)
     next_task_id = models.IntegerField(default=1, editable=False)
 
@@ -111,7 +111,7 @@ class ScheduleEntry(models.Model):
                 self.next_task_time = times[-1] + self.interval
             else:
                 # interval is None and time consumed
-                self.canceled = True
+                self.active = False
 
         return times
 
@@ -121,7 +121,7 @@ class ScheduleEntry(models.Model):
 
     def get_remaining_times(self, until=None):
         """Get a potentially infinite iterator of remaining task times."""
-        if self.canceled:
+        if not self.active:
             return range(0)
 
         next_time = self.next_task_time

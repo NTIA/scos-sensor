@@ -33,16 +33,16 @@ class Scheduler(threading.Thread):
     @property
     def schedule(self):
         """An updated view of the current schedule"""
-        return ScheduleEntry.objects.filter(canceled=False).all()
+        return ScheduleEntry.objects.filter(active=True).all()
 
     @property
     def schedule_has_entries(self):
-        return ScheduleEntry.objects.filter(canceled=False).exists()
+        return ScheduleEntry.objects.filter(active=True).exists()
 
     @staticmethod
     def cancel(entry):
-        entry.canceled = True
-        entry.save(update_fields=('canceled',))
+        entry.active = False
+        entry.save(update_fields=('active',))
 
     def stop(self):
         """Complete the current task, then return control."""
@@ -118,7 +118,7 @@ class Scheduler(threading.Thread):
 
     def _take_pending_task_time(self, entry):
         task_times = entry.take_pending()
-        entry.save(update_fields=('next_task_time', 'canceled'))
+        entry.save(update_fields=('next_task_time', 'active'))
         if not task_times:
             return None
 
