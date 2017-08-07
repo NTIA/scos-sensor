@@ -92,7 +92,14 @@ WSGI_APPLICATION = 'sensor.wsgi.application'
 # http://www.django-rest-framework.org/
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'sensor.exceptions.exception_handler'
+    'EXCEPTION_HANDLER': 'sensor.exceptions.exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 
