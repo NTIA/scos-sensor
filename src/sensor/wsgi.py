@@ -7,6 +7,8 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 """
 
+from __future__ import absolute_import
+
 import logging
 import os
 import signal
@@ -32,6 +34,7 @@ def stop_scheduler(*args):
     if scheduler.thread.is_alive():
         logger.info("Stopping scheduler")
         scheduler.thread.stop()
+
 
 try:
     signal.signal(signal.SIGINT, stop_scheduler)

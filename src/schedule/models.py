@@ -10,6 +10,11 @@ from scheduler import utils
 DEFAULT_PRIORITY = 10
 
 
+def default_start_timefn():
+    """Make `start` time default to upcoming second."""
+    return utils.timefn() + 1
+
+
 class ScheduleEntry(models.Model):
     """Describes a series of scheduler tasks.
 
@@ -57,15 +62,11 @@ class ScheduleEntry(models.Model):
     # range iterator, but it's best not to do something like
     # `list(e.get_remaining_times())` from the example above on one.
 
-    def timefn():
-        """Make `start` time default to upcoming second."""
-        return utils.timefn() + 1
-
     name = models.SlugField(primary_key=True)
     action = models.CharField(choices=actions.CHOICES,
                               max_length=actions.MAX_LENGTH)
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
-    start = models.BigIntegerField(default=timefn, blank=True)
+    start = models.BigIntegerField(default=default_start_timefn, blank=True)
     stop = models.BigIntegerField(null=True, blank=True)
     relative_stop = models.BooleanField(default=False)
     interval = models.PositiveIntegerField(null=True, blank=True,
