@@ -16,9 +16,11 @@ import signal
 import django
 from django.core.wsgi import get_wsgi_application
 
+# django's dev server seems to ignore this but it gets picked up by gunicorn
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.production_settings")
 django.setup()  # this is necessary because we need to handle our own thread
 
+# import of django app must happen after setup call
 from scheduler import scheduler  # noqa
 
 
@@ -39,5 +41,5 @@ def stop_scheduler(*args):
 try:
     signal.signal(signal.SIGINT, stop_scheduler)
 except:
-    # django's development server owns main thread
+    # django's dev server owns main thread
     pass
