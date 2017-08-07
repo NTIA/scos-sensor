@@ -1,6 +1,5 @@
 """Schedule and run tasks."""
 
-import atexit
 import logging
 import threading
 from contextlib import contextmanager
@@ -196,12 +195,3 @@ def minimum_duration(blocking):
 # of running it in its own microservice is that we _must not_ run the
 # application server in multiple processes (multiple threads are fine).
 thread = Scheduler()
-
-
-def stop_scheduler(*args):
-    if thread.is_alive():
-        logger.info("Stopping scheduler")
-        thread.stop()
-
-
-atexit.register(stop_scheduler)

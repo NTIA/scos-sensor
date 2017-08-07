@@ -1,0 +1,51 @@
+# -*- conf -*-
+
+upstream wsgi_server {
+    # fail_timeout=0 means we always retry an upstream even if it failed
+    # to return a good HTTP response (in case the gunicorn master nukes a
+    # single worker for timing out).
+
+    server unix:/tmp/gunicorn-scos-sensor.sock fail_timeout=0;
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    # Redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
+    return 301 https://$host$request_uri;
+}
+
+server {
+    # SSL configuration
+    server_name localhost;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    ssl on;
+    ssl_certificate /etc/nginx/ssl/ssl.crt;
+    ssl_certificate_key /etc/nginx/ssl/ssl.key;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+    # location /static/ {
+    #     alias   /var/www/{{ project }}_static/;
+    #     expires 30d;
+    #     add_header Pragma public;
+    #     add_header Cache-Control "public";
+    # }
+
+    location / {
+        # Try your static files first, then redirect to Gunicorn
+        try_files $uri @proxy_to_wsgi_server;
+    }
+
+    # Pass off requests to Gunicorn
+    location @proxy_to_wsgi_server {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass   http://wsgi_server;
+    }
+
+}

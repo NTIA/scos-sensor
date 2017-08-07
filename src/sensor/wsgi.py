@@ -9,13 +9,16 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 import logging
 import os
+import signal
 
+import django
 from django.core.wsgi import get_wsgi_application
 
-from scheduler import scheduler
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.production_settings")
+django.setup()  # this is necessary because we need to handle our own thread
 
+from scheduler import scheduler  # noqa
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scos_sensor.settings")
 
 application = get_wsgi_application()
 
@@ -23,3 +26,15 @@ logger = logging.getLogger(__name__)
 
 logger.info("Starting scheduler")
 scheduler.thread.start()
+
+
+def stop_scheduler(*args):
+    if scheduler.thread.is_alive():
+        logger.info("Stopping scheduler")
+        scheduler.thread.stop()
+
+try:
+    signal.signal(signal.SIGINT, stop_scheduler)
+except:
+    # django's development server owns main thread
+    pass
