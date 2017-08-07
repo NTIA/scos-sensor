@@ -48,4 +48,4 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
 class UpdateScheduleEntrySerializer(CreateScheduleEntrySerializer):
     class Meta(CreateScheduleEntrySerializer.Meta):
-        read_only_fields = ()  # allow changine 'active' after creation
+        read_only_fields = ()  # allow changing 'active' after creation
