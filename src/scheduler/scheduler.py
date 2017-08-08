@@ -1,4 +1,4 @@
-"""Schedule and run tasks."""
+"""Queue and run tasks."""
 
 import logging
 import threading
@@ -36,10 +36,12 @@ class Scheduler(threading.Thread):
 
     @property
     def schedule_has_entries(self):
+        """True if active events exist in the schedule, otherwise False."""
         return ScheduleEntry.objects.filter(active=True).exists()
 
     @staticmethod
     def cancel(entry):
+        """Remove an entry from the scheduler without deleting it."""
         entry.active = False
         entry.save(update_fields=('active',))
 
@@ -67,7 +69,6 @@ class Scheduler(threading.Thread):
     def _consume_schedule(self, blocking):
         while self.schedule_has_entries:
             with minimum_duration(blocking):
-                # import pdb; pdb.set_trace()
                 self.running = True
                 schedule_snapshot = self.schedule
                 pending_task_queue = self._queue_tasks(schedule_snapshot)

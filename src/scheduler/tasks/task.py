@@ -16,7 +16,7 @@ attributes = (
     'schedule_entry_name',
     'task_id'
 )
-TaskTuple = namedtuple('Event', attributes)
+TaskTuple = namedtuple('Task', attributes)
 
 
 class Task(TaskTuple):

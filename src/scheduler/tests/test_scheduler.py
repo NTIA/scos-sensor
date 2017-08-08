@@ -26,7 +26,7 @@ def create_entry(name, priority, start, stop, interval, action):
 
 def create_action():
     flag = threading.Event()
-    cb = lambda edid, eid: flag.set()  # noqa: E731
+    cb = lambda entry, task_id: flag.set()  # noqa: E731
     cb.__name__ = 'testcb' + str(create_action.counter)
     actions.by_name[cb.__name__] = cb
     create_action.counter += 1
@@ -45,7 +45,8 @@ def create_bad_action():
 
 
 @pytest.mark.django_db
-def test_populates_queue(testclock):
+def test_populate_queue(testclock):
+    """An entry in the schedule should be added to a read-only task queue."""
     create_entry('test', 1, 0, 5, 1, 'logger')
     s = Scheduler()
     s.run(blocking=False)  # now=0, so task with time 0 is run
@@ -54,6 +55,7 @@ def test_populates_queue(testclock):
 
 @pytest.mark.django_db
 def test_priority(testclock):
+    """A task with lower priority number should sort higher in task queue."""
     lopri = 20
     hipri = 10
     create_entry('lopri', lopri, 0, 5, 1, 'logger')
@@ -68,7 +70,7 @@ def test_priority(testclock):
 
 @pytest.mark.django_db
 def test_future_start(testclock):
-    """Don't remove an entry that starts in the future"""
+    """An entry with start time in future should remain in schedule."""
     create_entry('t', 1, 50, 100, 1, 'logger')
     s = Scheduler()
     s.run(blocking=False)
@@ -78,7 +80,9 @@ def test_future_start(testclock):
 
 @pytest.mark.django_db
 def test_calls_actions(testclock):
-    """Register a few test actions and ensure the scheduler calls them."""
+    """The scheduler should call task's action function at the right time."""
+    # This test works by registering a few test actions and ensuring the
+    # scheduler calls them.
     test_actions = dict(create_action() for _ in range(3))
 
     for i, cb in enumerate(test_actions):
@@ -96,6 +100,7 @@ def test_calls_actions(testclock):
 
 @pytest.mark.django_db
 def test_add_entry(testclock):
+    """Creating a new entry instance adds it to the current schedule."""
     create_entry('t1', 10, 1, 100, 5, 'logger')
     s = Scheduler()
     s.run(blocking=False)
@@ -107,7 +112,8 @@ def test_add_entry(testclock):
 
 
 @pytest.mark.django_db
-def test_remove_entry(testclock):
+def test_remove_entry_by_delete(testclock):
+    """An entry is removed from schedule if it's deleted."""
     e1 = create_entry('t1', 10, 1, 300, 5, 'logger')
     e2 = create_entry('t2', 20, 50, 300, 5, 'logger')
     s = Scheduler()
@@ -119,8 +125,23 @@ def test_remove_entry(testclock):
     assert e2 in s.schedule
 
 
+@pytest.mark.django_db
+def test_remove_entry_by_cancel(testclock):
+    """scheduler.cancel removes an entry from schedule without deleting it."""
+    e1 = create_entry('t1', 10, 1, 300, 5, 'logger')
+    e2 = create_entry('t2', 20, 50, 300, 5, 'logger')
+    s = Scheduler()
+    s.run(blocking=False)
+    advance_testclock(s.timefn, 10)
+    s.cancel(e1)
+    s.run(blocking=False)
+    assert len(s.schedule) == 1
+    assert e2 in s.schedule
+
+
 @pytest.mark.django_db(transaction=True)
 def test_start_stop(testclock):
+    """Calling stop on started scheduler thread should cause thread exit."""
     create_entry('t', 1, 1, 100, 5, 'logger')
     s = Scheduler()
     s.start()
@@ -134,13 +155,14 @@ def test_start_stop(testclock):
 
 @pytest.mark.django_db(transaction=True)
 def test_run_completes(testclock):
+    """The scheduler should return to idle state after schedule completes."""
     create_entry('t', 1, None, None, None, 'logger')
     s = Scheduler()
     s.start()
     time.sleep(0.1)  # hit minimum_duration
     advance_testclock(s.timefn, 1)
     time.sleep(0.1)
-    assert s.running is False
+    assert not s.running
     s.stop()
     advance_testclock(s.timefn, 1)
     s.join()
@@ -148,6 +170,7 @@ def test_run_completes(testclock):
 
 @pytest.mark.django_db
 def test_survives_failed_action(testclock):
+    """An action throwing an exception should be survivable."""
     cb1 = create_bad_action()
     create_entry('t1', 10, None, None, None, cb1.__name__)
     cb2, flag = create_action()
@@ -160,6 +183,7 @@ def test_survives_failed_action(testclock):
 
 @pytest.mark.django_db
 def test_compress_past_times(testclock):
+    """Multiple task times in the past should be compressed to one."""
     create_entry('t', 1, -10, 5, 1, 'logger')
     s = Scheduler()
     s.run(blocking=False)
@@ -170,6 +194,7 @@ def test_compress_past_times(testclock):
 
 @pytest.mark.django_db
 def test_compress_past_times_offset(testclock):
+    """Multiple task times in the past should be compressed to one."""
     create_entry('t', 1, -2, 14, 4, 'logger')
     s = Scheduler()
     s.run(blocking=False)
@@ -178,8 +203,72 @@ def test_compress_past_times_offset(testclock):
     assert len(s.task_queue) == 3
 
 
+# XXX: refactor
+@pytest.mark.django_db
+def test_next_task_time_value_when_start_changes(testclock):
+    entry = create_entry('t', 1, 1, 10, 1, 'logger')
+    s = Scheduler()
+    s.run(blocking=False)
+    assert entry.next_task_time == 1
+    assert [task.time for task in s.task_queue[:5]] == [1, 2, 3, 4, 5]
+    # recall now == 0, so default_start_timefn() => 1
+    # set start before default_start_timefn value
+    entry.start = 0
+    entry.save()
+    s.run(blocking=False)
+    # expect no change
+    entry.refresh_from_db()
+    assert entry.next_task_time == 1
+    assert [task.time for task in s.task_queue[:5]] == [1, 2, 3, 4, 5]
+    # set start same as default_start_timefn value
+    entry.start = 1
+    entry.save()
+    s.run(blocking=False)
+    # expect no change
+    entry.refresh_from_db()
+    assert entry.next_task_time == 1
+    assert [task.time for task in s.task_queue[:5]] == [1, 2, 3, 4, 5]
+    # set start same ahead of default_start_timefn value
+    entry.start = 2
+    entry.save()
+    s.run(blocking=False)
+    # expect next_task_time to be start
+    entry.refresh_from_db()
+    assert entry.next_task_time == 2
+    assert [task.time for task in s.task_queue[:5]] == [2, 3, 4, 5, 6]
+
+
+# XXX: refactor
+@pytest.mark.django_db
+def test_next_task_time_value_when_interval_changes(testclock):
+    entry = create_entry('t', 1, 1, 100, 1, 'logger')
+    s = Scheduler()
+    s.run(blocking=False)
+    assert entry.next_task_time == 1
+    assert [task.time for task in s.task_queue[:5]] == [1, 2, 3, 4, 5]
+    # recall now == 0, so default_start_timefn() => 1
+    entry.interval = 5
+    entry.save()
+    s.run(blocking=False)
+    entry.refresh_from_db()
+    assert entry.start == 1
+    assert entry.next_task_time == 1
+    assert [task.time for task in s.task_queue[:5]] == [1, 6, 11, 16, 21]
+    advance_testclock(s.timefn, 2)
+    # now == 2, so default_start_timefn() => 3
+    assert entry.start == entry.next_task_time == 1
+    entry.interval = 10
+    entry.save()
+    s.run(blocking=False)
+    entry.refresh_from_db()
+    assert entry.start == 1
+    assert entry.next_task_time == 3
+    assert [task.time for task in s.task_queue[:5]] == [3, 13, 23, 33, 43]
+
+
 @pytest.mark.django_db
 def test_one_shot(testclock):
+    """If no start or interval given, entry should be run once and removed."""
     create_entry('t', 1, None, None, None, 'logger')
     s = Scheduler()
     s.run(blocking=False)
@@ -212,20 +301,19 @@ def test_task_queue(testclock):
 
 
 @pytest.mark.django_db
-def test_clear_schedule_clears_task_queue(testclock):
+def test_clearing_schedule_clears_task_queue(testclock):
+    """The scheduler should empty task_queue when schedule is deleted."""
     create_entry('t', 1, 1, 100, 5, 'logger')
     s = Scheduler()
-
     s.run(blocking=False)  # queue first 10 tasks
     assert len(s.task_queue) == 10
-
     s.schedule.delete()
-
     s.run(blocking=False)
     assert len(s.task_queue) == 0
 
 
 def test_minimum_duration_blocking():
+    """minimum_duration should block until start of next second."""
     start = int(time.time())
     blocking = True
     with minimum_duration(blocking):
@@ -236,6 +324,7 @@ def test_minimum_duration_blocking():
 
 
 def test_minimum_duration_non_blocking():
+    """blocking=False should make minimum_duration return immediately."""
     start = time.time()
     blocking = False
     with minimum_duration(blocking):

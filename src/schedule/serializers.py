@@ -19,6 +19,8 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'relative_stop',
             'interval',
             'active',
+            'next_task_time',
+            'next_task_id',
             'created',
             'modified',
             'acquisitions'

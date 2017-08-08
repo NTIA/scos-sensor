@@ -10,8 +10,7 @@ from scheduler import utils
 DEFAULT_PRIORITY = 10
 
 
-def default_start_timefn():
-    """Make `start` time default to upcoming second."""
+def next_schedulable_timefn():
     return utils.timefn() + 1
 
 
@@ -66,7 +65,7 @@ class ScheduleEntry(models.Model):
     action = models.CharField(choices=actions.CHOICES,
                               max_length=actions.MAX_LENGTH)
     priority = models.SmallIntegerField(default=DEFAULT_PRIORITY)
-    start = models.BigIntegerField(default=default_start_timefn, blank=True)
+    start = models.BigIntegerField(default=next_schedulable_timefn, blank=True)
     stop = models.BigIntegerField(null=True, blank=True)
     relative_stop = models.BooleanField(default=False)
     interval = models.PositiveIntegerField(null=True, blank=True,
@@ -92,8 +91,17 @@ class ScheduleEntry(models.Model):
         if self.next_task_time is None:
             self.next_task_time = self.start
 
-    def _make_relative_stop_absolute(self):
-        """After model fields are initialized, ensure `stop` is absolute."""
+        # used by .save to detect whether to reset .next_task_time
+        self.__start = self.start
+        self.__interval = self.interval
+
+    def save(self, *args, **kwargs):
+        if self.start != self.__start or self.interval != self.__interval:
+            self.next_task_time = max(self.start, next_schedulable_timefn())
+            self.__start = self.start
+            self.__interval = self.interval
+
+        super(ScheduleEntry, self).save(*args, **kwargs)
 
     def take_pending(self):
         """Take the range of times up to and including now."""
