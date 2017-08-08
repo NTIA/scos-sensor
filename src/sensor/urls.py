@@ -47,6 +47,7 @@ api_v1_urlpatterns = format_suffix_patterns((
 
 urlpatterns = (
     url(r'^$', RedirectView.as_view(url='/api/')),
+    url(r'^', include('authentication.urls')),
     url(r'^api/$', RedirectView.as_view(url='/api/v1/')),
     url(r'^api/v1/', include(api_v1_urlpatterns, namespace='v1')),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework'))

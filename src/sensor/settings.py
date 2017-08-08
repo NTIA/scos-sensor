@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',  # XXX: not used in production
     'rest_framework',
+    # project-local apps
+    'acquisitions.apps.AcquisitionsConfig',
+    'authentication.apps.AuthenticationConfig',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
     'status.apps.StatusConfig',
-    'acquisitions.apps.AcquisitionsConfig'
 ]
 
 MIDDLEWARE = [
