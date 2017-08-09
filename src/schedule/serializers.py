@@ -23,6 +23,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'next_task_id',
             'created',
             'modified',
+            'owner',
             'acquisitions'
         )
         extra_kwargs = {

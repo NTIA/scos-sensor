@@ -76,6 +76,8 @@ class ScheduleEntry(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey('auth.User', related_name='schedule_entries',
+                              on_delete=models.CASCADE, editable=False)
 
     class Meta:
         db_table = 'schedule'
@@ -156,7 +158,7 @@ class ScheduleEntry(models.Model):
         return next_task_id
 
     def __str__(self):
-        fmtstr = 'name={}, pri={}, start={}, stop={}, ival={}, action={}>'
+        fmtstr = 'name={}, pri={}, start={}, stop={}, ival={}, action={}'
         return fmtstr.format(
             self.name,
             self.priority,
