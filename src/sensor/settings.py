@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',  # XXX: not used in production
     'rest_framework',
+    'rest_framework.authtoken',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
