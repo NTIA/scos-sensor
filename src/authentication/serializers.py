@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
+
+from .models import User
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -11,9 +12,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'url',
             'username',
+            'email',
+            'server_url',
             'auth_token',
             'has_usable_password',
             'is_active',
+            'is_admin',
             'date_joined',
             'last_login',
             'schedule_entries'

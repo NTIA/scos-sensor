@@ -76,8 +76,9 @@ class ScheduleEntry(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey('auth.User', related_name='schedule_entries',
-                              on_delete=models.CASCADE, editable=False)
+    owner = models.ForeignKey('authentication.User', editable=False,
+                              related_name='schedule_entries',
+                              on_delete=models.CASCADE, )
 
     class Meta:
         db_table = 'schedule'

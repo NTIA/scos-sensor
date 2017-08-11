@@ -30,12 +30,18 @@ from rest_framework.urlpatterns import format_suffix_patterns
 @api_view(('GET',))
 def api_v1_root(request, format=None):
     reverse_ = partial(reverse, request=request, format=format)
-    return Response({
+    list_endpoints = {
         'schedule': reverse_('v1:schedule-list'),
         'acquisitions': reverse_('v1:acquisitions-overview'),
         'status': reverse_('v1:status-list'),
-        'users': reverse_('user-list'),
-    })
+    }
+    if request.user.is_admin:
+        # insert admin sub-menu
+        list_endpoints['admin'] = {
+            'users': reverse_('user-list')
+        }
+
+    return Response(list_endpoints)
 
 
 api_v1_urlpatterns = format_suffix_patterns((
