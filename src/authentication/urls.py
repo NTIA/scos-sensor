@@ -1,13 +1,10 @@
-from rest_framework.routers import SimpleRouter
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf.urls import url
 
-from .views import UserViewSet
+from .views import UserListView, UserInstanceView
 
-
-router = SimpleRouter()
-router.register('users', UserViewSet)
 
 urlpatterns = (
-
+    url(r'^$', UserListView.as_view(), name='user-list'),
+    url(r'^me/$', UserInstanceView.as_view(), name='user-detail'),
+    url(r'^(?P<pk>\d+)$', UserInstanceView.as_view(), name='user-detail'),
 )
-router.urls

@@ -30,6 +30,9 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'url': {
                 'view_name': 'v1:schedule-detail',
                 'lookup_field': 'name'
+            },
+            'owner': {
+                'view_name': 'v1:user-detail'
             }
         }
         read_only_fields = ('active',)

@@ -34,12 +34,13 @@ def api_v1_root(request, format=None):
         'schedule': reverse_('v1:schedule-list'),
         'acquisitions': reverse_('v1:acquisitions-overview'),
         'status': reverse_('v1:status-list'),
+        'users': reverse_('v1:user-list')
     }
-    if request.user.is_admin:
-        # insert admin sub-menu
-        list_endpoints['admin'] = {
-            'users': reverse_('user-list')
-        }
+    # if request.user.is_staff:
+    #     # insert admin sub-menu
+    #     list_endpoints['admin'] = {
+    #         'users': reverse_('user-list')
+    #     }
 
     return Response(list_endpoints)
 
@@ -48,13 +49,13 @@ api_v1_urlpatterns = format_suffix_patterns((
     url(r'^$', api_v1_root, name='api-root'),
     url(r'^acquisitions/', include('acquisitions.urls')),
     url(r'^schedule/', include('schedule.urls')),
-    url(r'^status/', include('status.urls'))
+    url(r'^status/', include('status.urls')),
+    url(r'^users/', include('authentication.urls'))
 ))
 
 urlpatterns = (
     url(r'^$', RedirectView.as_view(url='/api/')),
     url(r'^api/$', RedirectView.as_view(url='/api/v1/')),
-    url(r'^api/', include('authentication.urls')),
     url(r'^api/v1/', include(api_v1_urlpatterns, namespace='v1')),
     url(r'^api/auth/', include('rest_framework.urls'))
 )

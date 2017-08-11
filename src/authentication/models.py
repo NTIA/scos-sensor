@@ -13,10 +13,6 @@ class User(AbstractUser):
     server_url = models.URLField(null=True, verbose_name="Server URL",
                                  help_text=server_url_help)
 
-    @property
-    def is_admin(self):
-        return self.is_staff
-
 
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

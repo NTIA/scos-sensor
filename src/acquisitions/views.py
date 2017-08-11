@@ -2,12 +2,13 @@ import tempfile
 
 from django.core.files import File
 from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import list_route, detail_route
+from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import (ListModelMixin,
                                    RetrieveModelMixin,
                                    DestroyModelMixin)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -15,6 +16,7 @@ import sigmf.sigmffile
 
 from schedule.models import ScheduleEntry
 from .models import Acquisition
+from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers import (AcquisitionsOverviewSerializer,
                           AcquisitionSerializer)
 
@@ -48,6 +50,7 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
                              GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
+    permission_classes = (IsAuthenticated, IsAdminOrOwnerOrReadOnly)
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @list_route(methods=('DELETE',))
@@ -66,6 +69,7 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
                                  GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
+    permission_classes = (IsAuthenticated, IsAdminOrOwnerOrReadOnly)
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route()

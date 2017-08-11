@@ -3,26 +3,23 @@ from rest_framework import serializers
 from .models import User
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    auth_token = serializers.SerializerMethodField()
-    has_usable_password = serializers.SerializerMethodField()
+class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+    """Public user account view."""
 
     class Meta:
         model = User
         fields = (
             'url',
             'username',
-            'email',
-            'server_url',
-            'auth_token',
-            'has_usable_password',
             'is_active',
-            'is_admin',
             'date_joined',
             'last_login',
             'schedule_entries'
         )
         extra_kwargs = {
+            'url': {
+                'view_name': 'v1:user-detail'
+            },
             'is_active': {
                 'initial': True
             },
@@ -32,10 +29,31 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             },
         }
         read_only_fields = (
-            'auth_token',
             'schedule_entries',
             'date_joined',
             'last_login'
+        )
+
+
+class UserDetailsSerializer(UserProfileSerializer):
+    """Private user account view."""
+    auth_token = serializers.SerializerMethodField()
+    has_usable_password = serializers.SerializerMethodField()
+    is_admin = serializers.SerializerMethodField()
+
+    def get_is_admin(self, obj):
+        return obj.is_staff
+
+    class Meta(UserProfileSerializer.Meta):
+        fields = UserProfileSerializer.Meta.fields + (
+            'email',
+            'server_url',
+            'auth_token',
+            'has_usable_password',
+            'is_admin'
+        )
+        read_only_fields = UserProfileSerializer.Meta.read_only_fields + (
+            'auth_token',
         )
 
     def get_auth_token(self, obj):
