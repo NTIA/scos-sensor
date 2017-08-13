@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-from django.shortcuts import redirect
-from rest_framework.decorators import list_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
                                      RetrieveAPIView,
