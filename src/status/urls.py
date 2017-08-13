@@ -1,9 +1,8 @@
-from rest_framework.routers import SimpleRouter
+from django.conf.urls import url
 
-from .views import StatusViewSet
+from .views import status_view
 
 
-router = SimpleRouter()
-router.register('', StatusViewSet, base_name='status')
-
-urlpatterns = router.urls
+urlpatterns = (
+    url(r'^$', status_view, name='status'),
+)
