@@ -32,7 +32,7 @@ def get_capabilities():
 
 
 @api_view()
-def capabilities_view(request, format=None):
+def capabilities(request, format=None):
     capabilities = get_capabilities()
     capabilities['actions'] = get_actions()
     return Response(capabilities)

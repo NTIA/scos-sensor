@@ -6,7 +6,7 @@ from scheduler.serializers import TaskSerializer
 
 
 @api_view()
-def status_view(request, format=None):
+def status(request, format=None):
     context = {'request': request}
     taskq = scheduler.thread.task_queue.to_list()
     task_serializer = TaskSerializer(taskq, many=True, context=context)

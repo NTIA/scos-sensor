@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
-from .views import capabilities_view
+from .views import capabilities
 
 
 urlpatterns = (
-    url(r'^$', capabilities_view, name='capabilities'),
+    url(r'^$', capabilities, name='capabilities'),
 )
