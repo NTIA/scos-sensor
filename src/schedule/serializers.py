@@ -18,7 +18,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'stop',
             'relative_stop',
             'interval',
-            'active',
+            'is_active',
             'next_task_time',
             'next_task_id',
             'created',
@@ -35,7 +35,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'view_name': 'v1:user-detail'
             }
         }
-        read_only_fields = ('active',)
+        read_only_fields = ('is_active',)
 
     def get_acquisitions(self, obj):
         request = self.context['request']
@@ -54,4 +54,4 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
 class UpdateScheduleEntrySerializer(CreateScheduleEntrySerializer):
     class Meta(CreateScheduleEntrySerializer.Meta):
-        read_only_fields = ()  # allow changing 'active' after creation
+        read_only_fields = ()  # allow changing 'is_active' after creation

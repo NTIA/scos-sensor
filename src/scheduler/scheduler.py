@@ -32,18 +32,18 @@ class Scheduler(threading.Thread):
     @property
     def schedule(self):
         """An updated view of the current schedule"""
-        return ScheduleEntry.objects.filter(active=True).all()
+        return ScheduleEntry.objects.filter(is_active=True).all()
 
     @property
     def schedule_has_entries(self):
         """True if active events exist in the schedule, otherwise False."""
-        return ScheduleEntry.objects.filter(active=True).exists()
+        return ScheduleEntry.objects.filter(is_active=True).exists()
 
     @staticmethod
     def cancel(entry):
         """Remove an entry from the scheduler without deleting it."""
-        entry.active = False
-        entry.save(update_fields=('active',))
+        entry.is_active = False
+        entry.save(update_fields=('is_active',))
 
     def stop(self):
         """Complete the current task, then return control."""
@@ -118,7 +118,7 @@ class Scheduler(threading.Thread):
 
     def _take_pending_task_time(self, entry):
         task_times = entry.take_pending()
-        entry.save(update_fields=('next_task_time', 'active'))
+        entry.save(update_fields=('next_task_time', 'is_active'))
         if not task_times:
             return None
 
