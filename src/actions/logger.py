@@ -1,6 +1,10 @@
 """A simple example action that logs a message."""
 
+from __future__ import absolute_import
+
 import logging
+
+from .base import Action
 
 
 logger = logging.getLogger(__name__)
@@ -8,7 +12,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_LOGLVL = 20
 
 
-class Logger(object):
+class Logger(Action):
     """Log the message "running test {name}/{tid}" at log level INFO.
 
     This is useful for testing and debugging.

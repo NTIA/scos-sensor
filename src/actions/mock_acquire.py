@@ -1,5 +1,7 @@
 """Take an acquisition."""
 
+from __future__ import absolute_import
+
 import logging
 from datetime import datetime
 
@@ -45,7 +47,7 @@ class TestAcquisition(Action):
         frequency = 700e6
         sample_rate = 10e6
         fft_size = 1024
-        nffts = 1
+        # nffts = 1
         detector = 'mean'  # TODO: enum
 
         # raises ScheduleEntry.DoesNotExist if no matching schedule entry

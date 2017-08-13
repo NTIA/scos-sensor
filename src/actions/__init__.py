@@ -19,11 +19,11 @@ def get_action_with_summary(action):
 
 
 def get_summary(action_fn):
-    """Extract the first line of the action's docstring as a summary."""
-    docstring = action_fn.__doc__
+    """Extract the first line of the action's description as a summary."""
+    description = action_fn.description
     summary = None
-    if docstring:
-        summary = docstring.splitlines()[0]
+    if description:
+        summary = description.splitlines()[0]
 
     return summary
 
