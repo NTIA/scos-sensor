@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+  sensor:
+    restart: always
+    build: .
+    environment:
+      - SECRET_KEY
+    expose:
+      - '8000'
+    volumes:
+      - .:/code
+    command: gunicorn -b :8000 --log-level debug sensor.wsgi
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./src/static:/var/www/scos-sensor:ro
+      - /etc/ssl/certs/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem:ro
+      - /etc/ssl/private/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert-snakeoil.key:ro
