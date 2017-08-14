@@ -22,3 +22,6 @@ WORKDIR /usr/src/app
 COPY ./src/requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 COPY ./src/ /usr/src/app
+
+# Initialize database
+RUN python2 manage.py makemigrations && python2 manage.py migrate

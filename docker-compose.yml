@@ -21,5 +21,5 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./src/static:/var/www/scos-sensor/static:ro
-      - /etc/ssl/certs/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem:ro
-      - /etc/ssl/private/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert-snakeoil.key:ro
+      - /etc/ssl/certs/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert.pem:ro
+      - /etc/ssl/private/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert.key:ro
