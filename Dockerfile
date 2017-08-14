@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 # Update Ubuntu image
 RUN apt-get update && \
-    apt-get dist-upgrade && \
+    apt-get dist-upgrade -y && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install GNURadio and UHD
