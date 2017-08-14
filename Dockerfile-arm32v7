@@ -12,7 +12,7 @@ RUN apt-get update && \
 
 # Install python prerequisites
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python-setuptools python-pip && \
+    apt-get install -y python-setuptools python-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copied from python:onbuild
