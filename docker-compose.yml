@@ -10,15 +10,16 @@ services:
       - '8000'
     volumes:
       - .:/code
-    command: gunicorn -b :8000 --log-level debug sensor.wsgi
+    command: gunicorn -b :8000 --log-level info "sensor.wsgi"
 
   nginx:
     restart: always
     build: ./nginx/
     ports:
       - '80:80'
+      - '443:443'
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./src/static:/var/www/scos-sensor:ro
+      - ./src/static:/var/www/scos-sensor/static:ro
       - /etc/ssl/certs/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem:ro
       - /etc/ssl/private/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert-snakeoil.key:ro

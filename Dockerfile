@@ -1,14 +1,19 @@
 FROM ubuntu:latest
 
-# Install GNURadio and UHD
+# Update Ubuntu image
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnuradio uhd-host && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get dist-upgrade && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install pip
+# Install GNURadio and UHD
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends gnuradio uhd-host && \
+#     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install python prerequisites
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python-pip && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends python-setuptools python-pip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copied from python:onbuild
 ENV PYTHONUNBUFFERED 1
