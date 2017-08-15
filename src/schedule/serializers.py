@@ -36,6 +36,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             }
         }
         read_only_fields = ('is_active',)
+        write_only_fields = ('relative_stop',)
 
     def get_acquisitions(self, obj):
         request = self.context['request']
