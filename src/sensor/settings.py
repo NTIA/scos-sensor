@@ -12,20 +12,30 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+
+# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    ('js', os.path.join(STATIC_ROOT, 'js')),
+    ('css', os.path.join(STATIC_ROOT, 'css')),
+    ('images', os.path.join(STATIC_ROOT, 'images')),
+    ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
+)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
+# See scripts/setevn.template
+SECRET_KEY = os.environ['SECRET_KEY']
+DEBUG = bool(os.environ['DEBUG'])
+ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 # Application definition
@@ -36,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',  # XXX: not used in production
+    'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
     # project-local apps

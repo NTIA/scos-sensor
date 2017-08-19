@@ -4,10 +4,7 @@ upstream wsgi-server {
     # fail_timeout=0 means we always retry an upstream even if it failed
     # to return a good HTTP response (in case the gunicorn master nukes a
     # single worker for timing out).
-
-    # server 127.0.0.1:8000 fail_timeout=0;
-    # server unix:/tmp/gunicorn-scos-sensor.sock fail_timeout=0;
-    server sensor:8000 fail_timeout=0;
+    server api:8000 fail_timeout=0;
 }
 
 server {
@@ -24,7 +21,7 @@ server {
     # SSL configuration
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name _;
+    server_name ${DOMAINS};
 
     # reduce "upstream response is buffered to a temporary file" warnings
     proxy_buffers 16 16k;
