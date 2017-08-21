@@ -6,8 +6,8 @@ set -e  # exit on error
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
-# variables defined in setenv.local will be exported into this script's environment:
+# variables defined in env file will be exported into this script's environment:
 set -a
-source ${REPO_ROOT}/.env
+source ${REPO_ROOT}/env
 
-docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor_ up
+docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor up

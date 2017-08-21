@@ -16,8 +16,7 @@ import signal
 import django
 from django.core.wsgi import get_wsgi_application
 
-# django's dev server seems to ignore this but it gets picked up by gunicorn
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.production_settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()  # this is necessary because we need to handle our own thread
 
 # import of django app must happen after setup call
