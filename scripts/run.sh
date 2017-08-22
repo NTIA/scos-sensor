@@ -6,8 +6,9 @@ set -e  # exit on error
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
-# variables defined in env file will be exported into this script's environment:
+# Inherit environment variables from env:
 set -a
 source ${REPO_ROOT}/env
 
-docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor up
+# Build out and run in background
+docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor up -d

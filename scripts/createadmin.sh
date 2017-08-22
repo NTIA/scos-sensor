@@ -13,7 +13,3 @@ source ${REPO_ROOT}/env
 docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml \
                -p scossensor exec api \
                python manage.py createsuperuser
-
-if [[ $? == 0 ]]; then
-    docker commit $(docker ps -ql) scos-sensor
-fi

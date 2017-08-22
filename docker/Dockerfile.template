@@ -20,15 +20,11 @@ RUN apt-get update && \
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY ./src/requirements.txt /usr/src/app/
+COPY ./src /usr/src/app
 RUN pip install --no-cache-dir -r requirements.txt
-COPY ./src/ /usr/src/app
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG
 ARG DOMAINS
 ARG IPS
 ARG SECRET_KEY
-
-# Initialize database
-RUN python manage.py makemigrations && python manage.py migrate

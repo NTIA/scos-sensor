@@ -20,7 +20,8 @@ services:
     expose:
       - '8000'
     volumes:
-      - ../:/code
+      - ../src:/code:ro
+      - ../db.sqlite3:/tmp/db.sqlite3
     command: gunicorn -b :8000 --log-level ${GUNICORN_LOG_LEVEL} "sensor.wsgi"
 
   nginx:
