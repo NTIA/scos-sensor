@@ -7,7 +7,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 APIDOCS_ROOT="${REPO_ROOT}/docs/api"
 
 # FIXME: this is using a dummy swagger.json: change input
-# swagger.json -> swagger.adoc
+# swagger.json -> openapi.adoc
 docker run --rm -v ${APIDOCS_ROOT}:/opt swagger2markup/swagger2markup \
        convert \
        -i http://petstore.swagger.io/v2/swagger.json \

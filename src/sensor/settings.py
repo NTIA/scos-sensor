@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
@@ -101,6 +102,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+
+# Django Rest Swagger
+# http://marcgibbons.github.io/django-rest-swagger/
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': '/api/auth/login',
+    'LOGOUT_URL': '/api/auth/logout'
 }
 
 

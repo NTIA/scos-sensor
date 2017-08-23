@@ -25,6 +25,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework_swagger.views import get_swagger_view
 
 
 @api_view(('GET',))
@@ -47,11 +48,11 @@ api_v1_urlpatterns = format_suffix_patterns((
     url(r'^capabilities/', include('capabilities.urls')),
     url(r'^schedule/', include('schedule.urls')),
     url(r'^status/', include('status.urls')),
-    url(r'^users/', include('authentication.urls'))
+    url(r'^users/', include('authentication.urls')),
 ))
 
 urlpatterns = (
-    url(r'^$', RedirectView.as_view(url='/api/')),
+    url(r'^$', get_swagger_view(title='SCOS Sensor API V1')),
     url(r'^api/$', RedirectView.as_view(url='/api/v1/')),
     url(r'^api/v1/', include(api_v1_urlpatterns, namespace='v1')),
     url(r'^api/auth/', include('rest_framework.urls'))

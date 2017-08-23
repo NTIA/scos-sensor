@@ -25,8 +25,22 @@ $ ./scripts/run.sh
 $ ./scripts/createadmin.sh
 ```
 
-RESTful API Reference
----------------------
+Using Django's `manage.py` Outside of Docker
+--------------------------------------------
+
+I recommend using `virtualenvwrapper` when developing and managing the sensor, but it's not strictly necessary. If you plan to use it, you need to install it and set it up before doing the following:
+
+```bash
+$ mkvirtualenv scos-sensor  # (`workon scos-sensor` hereafter)
+$ set -a
+$ source ./env
+$ cd src
+$ pip install -r requirements-dev.txt
+$ python manage.py
+```
+
+REST API Reference
+------------------
 
  - [View PDF](docs/api/openapi.pdf)
  - [View HTML](https://rawgit.com/NTIA/scos-sensor/master/docs/api/openapi.html)
