@@ -24,3 +24,9 @@ $ ./scripts/build.sh
 $ ./scripts/run.sh
 $ ./scripts/createadmin.sh
 ```
+
+RESTful API Reference
+---------------------
+
+ - [View PDF](docs/api/openapi.pdf)
+ - [View HTML](https://rawgit.com/NTIA/scos-sensor/master/docs/api/openapi.html)
