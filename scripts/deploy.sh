@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# This script is idempotent, meaning it will remove state from previous
-# deployments. That includes resetting containers and the database.
-
 set -e  # exit on error
 
 echo "Removing containers from previous deploys"
@@ -12,9 +9,6 @@ if [[ -n $EXISTING_CONTAINERS ]]; then
 fi
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
-
-echo "Resetting database"
-truncate -s 0 ${REPO_ROOT}/db.sqlite3
 
 # Inherit environment variables from env:
 set -a
@@ -33,11 +27,3 @@ echo "Modifying Dockerfile with base image ${UBUNTU_IMAGE}"
 envsubst '$UBUNTU_IMAGE' \
          < ${REPO_ROOT}/docker/Dockerfile.template \
          > ${REPO_ROOT}/Dockerfile
-
-echo "Calling docker-compose build"
-docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor build
-
-echo "Initializing database schema"
-docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor \
-               run api bash -c "python manage.py makemigrations && \
-                                python manage.py migrate"

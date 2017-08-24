@@ -27,10 +27,10 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'acquisitions'
         )
         extra_kwargs = {
-            'url': {
-                'view_name': 'v1:schedule-detail',
-                'lookup_field': 'name'
-            },
+            # 'url': {
+            #     'view_name': 'v1:schedule-detail',
+            #     'lookup_field': 'name'
+            # },
             'owner': {
                 'view_name': 'v1:user-detail'
             }

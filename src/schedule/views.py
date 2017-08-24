@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
 from .models import ScheduleEntry
@@ -9,8 +9,9 @@ from .serializers import (CreateScheduleEntrySerializer,
 
 class ScheduleEntryViewSet(ModelViewSet):
     queryset = ScheduleEntry.objects.all()
-    lookup_field = 'name'
-    permission_classes = (IsAuthenticated, IsAdminOrOwnerOrReadOnly)
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
+        IsAdminOrOwnerOrReadOnly,
+    ]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

@@ -1,7 +1,10 @@
 Django==1.11.3
+Pygments==2.2.0
+Markdown==2.6.9
+coreapi==2.3.1
 django-extensions==1.8.1
-djangorestframework==3.6.3
 django-rest-swagger==2.1.2
+djangorestframework==3.6.3
 gunicorn==19.7.1
 jsonfield==2.0.2
 numpy==1.13.1

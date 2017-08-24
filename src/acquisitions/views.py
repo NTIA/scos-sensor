@@ -8,8 +8,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import (ListModelMixin,
                                    RetrieveModelMixin,
                                    DestroyModelMixin)
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework.viewsets import GenericViewSet
 
 import sigmf.sigmffile
@@ -50,7 +50,9 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
                              GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
-    permission_classes = (IsAuthenticated, IsAdminOrOwnerOrReadOnly)
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
+        IsAdminOrOwnerOrReadOnly,
+    ]
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @list_route(methods=('DELETE',))
@@ -69,7 +71,9 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
                                  GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
-    permission_classes = (IsAuthenticated, IsAdminOrOwnerOrReadOnly)
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
+        IsAdminOrOwnerOrReadOnly,
+    ]
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route()

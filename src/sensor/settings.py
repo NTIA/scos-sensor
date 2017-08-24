@@ -11,12 +11,14 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_ROOT = os.path.dirname(BASE_DIR)
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
@@ -27,15 +29,23 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
 )
 
-# See scripts/setevn.template
-SECRET_KEY = os.environ['SECRET_KEY']
-DEBUG = bool(os.environ['DEBUG'])
-ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
+RUNNING_DEVSERVER = 'runserver' in sys.argv
+
+# See /evn.template
+if RUNNING_DEVSERVER:
+    SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
+    DEBUG = True
+    ALLOWED_HOSTS = []
+else:
+    SECRET_KEY = os.environ['SECRET_KEY']
+    DEBUG = bool(os.environ['DEBUG'] == "true")
+    ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
 
 
 # Application definition
@@ -102,14 +112,41 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_swagger.renderers.OpenAPIRenderer'
+    )
 }
 
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ()
+
+
+API_TITLE = "SCOS Sensor API"
+API_DESCRIPTION = "..."
 
 # Django Rest Swagger
 # http://marcgibbons.github.io/django-rest-swagger/
 SWAGGER_SETTINGS = {
-    'LOGIN_URL': '/api/auth/login',
-    'LOGOUT_URL': '/api/auth/logout'
+    'SECURITY_DEFINITIONS': {
+        'token': {
+            'type': 'apiKey',
+            'description': (
+                "Tokens are automatically generated for all users. You can "
+                "view yours by going to your User Details view in the "
+                "browsable API at `/api/v1/users/me` and looking for the "
+                "`auth_token` key. Non-admin user accounts do not initially "
+                "have a password and so can not log in to the browsable API. "
+                "To set a password for a user (for testing purposes), an "
+                "admin can use `manage.py changepassword <username>`, but "
+                "only the account's token should be stored and used for "
+                "general purpose API access."
+            ),
+            'name': 'Token',
+            'in': 'header'
+        }
+    }
 }
 
 
@@ -119,7 +156,7 @@ SWAGGER_SETTINGS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join('/tmp', 'db.sqlite3'),
+        'NAME': os.path.join(REPO_ROOT, 'db.sqlite3'),
         'OPTIONS': {
             'timeout': 20
         }
@@ -190,7 +227,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'verbose',
-            'filename': 'scos-sensor.log'
+            'filename': os.path.join(REPO_ROOT, 'scos-sensor.log')
         }
     },
     'loggers': {

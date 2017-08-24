@@ -4,7 +4,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
                                      RetrieveAPIView,
                                      RetrieveUpdateDestroyAPIView)
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser
+from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 
 from .models import User
@@ -23,14 +24,15 @@ class UserDetailsListView(ListCreateAPIView):
     """View user details and create users."""
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserDetailsSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser)
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
+        IsAdminUser,
+    ]
 
 
 class UserProfilesListView(ListAPIView):
     """View public profiles of all registered users."""
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserProfileSerializer
-    permission_classes = (IsAuthenticated,)
 
 
 class UserInstanceView(APIView):
@@ -48,10 +50,8 @@ class UserInstanceView(APIView):
 class UserDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailsSerializer
-    permission_classes = (IsAuthenticated,)
 
 
 class UserProfileView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = (IsAuthenticated,)

@@ -12,31 +12,24 @@ It provides:
 Quickstart
 ----------
 
-(See INSTALL for step-by-step instructions)
+(See [INSTALL](INSTALL.md) for step-by-step instructions)
 
-  - Install `git`, `Docker` and `docker-compose`
+  - Install `git`, `Docker`, `docker-compose`, and `virtualenvwrapper` (optional)
 
 ```bash
 $ git clone https://github.com/NTIA/scos-sensor
 $ cd scos-sensor
-$ cp env.template env
-$ ./scripts/build.sh
-$ ./scripts/run.sh
-$ ./scripts/createadmin.sh
-```
+$ mkvirtualenv scos-sensor  # `workon scos-sensor` hereafter
+$ cp env.template env       # modify env
+$ ./scripts/deploy.sh       # `deploy.sh` uses `env` to modify other templates
+$ pip install -r ./src/requirements-dev.txt
+$ python ./src/manage.py makemigrations && ./src/manage.py migrate
+$ python ./src/manage.py createsuperuser
+# now, to run a production-grade stack:
+$ ./scripts/run.sh          # this make take a while the first time
+# or, for development:
+$ ./src/manage.py runserver
 
-Using Django's `manage.py` Outside of Docker
---------------------------------------------
-
-I recommend using `virtualenvwrapper` when developing and managing the sensor, but it's not strictly necessary. If you plan to use it, you need to install it and set it up before doing the following:
-
-```bash
-$ mkvirtualenv scos-sensor  # (`workon scos-sensor` hereafter)
-$ set -a
-$ source ./env
-$ cd src
-$ pip install -r requirements-dev.txt
-$ python manage.py
 ```
 
 REST API Reference
