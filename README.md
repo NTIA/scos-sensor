@@ -36,9 +36,6 @@ $ ./src/manage.py runserver
 REST API Reference
 ------------------
 
- - View on GitHub
-   - [Overview](docs/api/openapi/overview.adoc)
-   - [Paths](docs/api/openapi/paths.adoc)
-   - [Definitions](docs/api/openapi/definitions.adoc)
-   - [Security](docs/api/openapi/security.adoc)
+ - [View on GitHub](docs/api/openapi.adoc)
+
  - [View PDF](docs/api/openapi.pdf)

@@ -1,3 +1,20 @@
+= SCOS Sensor API
+:toc:
+:toc-placement: preable
+
+
+[[_overview]]
+== Overview
+…
+
+
+=== URI scheme
+[%hardbreaks]
+__Host__ : localhost:8000
+__Schemes__ : HTTP
+
+
+
 
 [[_paths]]
 == Paths
@@ -543,6 +560,21 @@ __optional__|absolute time (epoch) to stop, or leave blank for 'never' +
 ----
 /api/v1/status
 ----
+
+
+
+
+
+
+[[_securityscheme]]
+== Security
+
+[[_token]]
+=== token
+[%hardbreaks]
+__Type__ : apiKey
+__Name__ : Token
+__In__ : HEADER
 
 
 
