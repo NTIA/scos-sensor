@@ -1,0 +1,389 @@
+{
+    "host": "localhost:8000",
+    "info": {
+        "description": "...",
+        "title": "SCOS Sensor API",
+        "version": ""
+    },
+    "paths": {
+        "/api/v1/": {
+            "get": {
+                "operationId": "list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/acquisitions/{schedule_entry_name}/": {
+            "get": {
+                "operationId": "acquisitions_list",
+                "parameters": [
+                    {
+                        "description": "",
+                        "in": "path",
+                        "name": "schedule_entry_name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/": {
+            "get": {
+                "operationId": "acquisitions_read",
+                "parameters": [
+                    {
+                        "description": "",
+                        "in": "path",
+                        "name": "schedule_entry_name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "",
+                        "in": "path",
+                        "name": "task_id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/archive": {
+            "get": {
+                "operationId": "acquisitions_archive",
+                "parameters": [
+                    {
+                        "description": "",
+                        "in": "path",
+                        "name": "schedule_entry_name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "",
+                        "in": "path",
+                        "name": "task_id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/capabilities/": {
+            "get": {
+                "operationId": "capabilities_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/schedule/": {
+            "get": {
+                "operationId": "schedule_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "operationId": "schedule_create",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "schema": {
+                            "properties": {
+                                "action": {
+                                    "description": "action to be scheduled",
+                                    "type": "string"
+                                },
+                                "interval": {
+                                    "description": "seconds between events, or leave blank to run once",
+                                    "type": "integer"
+                                },
+                                "name": {
+                                    "description": "unique identifier used in URLs and filenames",
+                                    "type": "string"
+                                },
+                                "priority": {
+                                    "description": "lower number is higher priority (default=10)",
+                                    "type": "integer"
+                                },
+                                "relative_stop": {
+                                    "description": "stop should be interpreted as seconds after start",
+                                    "type": "boolean"
+                                },
+                                "start": {
+                                    "description": "absolute time (epoch) to start, or leave blank for 'now'",
+                                    "type": "integer"
+                                },
+                                "stop": {
+                                    "description": "absolute time (epoch) to stop, or leave blank for 'never'",
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "action"
+                            ],
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/schedule/{name}/": {
+            "delete": {
+                "operationId": "schedule_delete",
+                "parameters": [
+                    {
+                        "description": "unique identifier used in URLs and filenames",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "get": {
+                "operationId": "schedule_read",
+                "parameters": [
+                    {
+                        "description": "unique identifier used in URLs and filenames",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "operationId": "schedule_partial_update",
+                "parameters": [
+                    {
+                        "description": "unique identifier used in URLs and filenames",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "schema": {
+                            "properties": {
+                                "action": {
+                                    "description": "action to be scheduled",
+                                    "type": "string"
+                                },
+                                "interval": {
+                                    "description": "seconds between events, or leave blank to run once",
+                                    "type": "integer"
+                                },
+                                "is_active": {
+                                    "description": "deactivate an entry to remove it from the scheduler without removing it from the system",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "description": "unique identifier used in URLs and filenames",
+                                    "type": "string"
+                                },
+                                "priority": {
+                                    "description": "lower number is higher priority (default=10)",
+                                    "type": "integer"
+                                },
+                                "relative_stop": {
+                                    "description": "stop should be interpreted as seconds after start",
+                                    "type": "boolean"
+                                },
+                                "start": {
+                                    "description": "absolute time (epoch) to start, or leave blank for 'now'",
+                                    "type": "integer"
+                                },
+                                "stop": {
+                                    "description": "absolute time (epoch) to stop, or leave blank for 'never'",
+                                    "type": "integer"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "operationId": "schedule_update",
+                "parameters": [
+                    {
+                        "description": "unique identifier used in URLs and filenames",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "schema": {
+                            "properties": {
+                                "action": {
+                                    "description": "action to be scheduled",
+                                    "type": "string"
+                                },
+                                "interval": {
+                                    "description": "seconds between events, or leave blank to run once",
+                                    "type": "integer"
+                                },
+                                "is_active": {
+                                    "description": "deactivate an entry to remove it from the scheduler without removing it from the system",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "description": "unique identifier used in URLs and filenames",
+                                    "type": "string"
+                                },
+                                "priority": {
+                                    "description": "lower number is higher priority (default=10)",
+                                    "type": "integer"
+                                },
+                                "relative_stop": {
+                                    "description": "stop should be interpreted as seconds after start",
+                                    "type": "boolean"
+                                },
+                                "start": {
+                                    "description": "absolute time (epoch) to start, or leave blank for 'now'",
+                                    "type": "integer"
+                                },
+                                "stop": {
+                                    "description": "absolute time (epoch) to stop, or leave blank for 'never'",
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "action"
+                            ],
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        },
+        "/api/v1/status": {
+            "get": {
+                "operationId": "status_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            }
+        }
+    },
+    "schemes": [
+        "http"
+    ],
+    "securityDefinitions": {
+        "token": {
+            "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. Non-admin user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can use `manage.py changepassword <username>`, but only the account's token should be stored and used for general purpose API access.",
+            "in": "header",
+            "name": "Token",
+            "type": "apiKey"
+        }
+    },
+    "swagger": "2.0"
+}

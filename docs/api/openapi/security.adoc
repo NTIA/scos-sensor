@@ -1,0 +1,13 @@
+
+[[_securityscheme]]
+== Security
+
+[[_token]]
+=== token
+[%hardbreaks]
+__Type__ : apiKey
+__Name__ : Token
+__In__ : HEADER
+
+
+

@@ -53,9 +53,9 @@ api_v1_urlpatterns = format_suffix_patterns((
     url(r'^acquisitions/', include('acquisitions.urls')),
     url(r'^capabilities/', include('capabilities.urls')),
     url(r'^schedule/', include('schedule.urls')),
-    url(r'^status/', include('status.urls')),
+    url(r'^status', include('status.urls')),
     url(r'^users/', include('authentication.urls')),
-    url(r'^schema/', get_schema_view(
+    url(r'^schema', get_schema_view(
         title=API_TITLE,
         description=API_DESCRIPTION,
         renderer_classes=(

@@ -36,5 +36,9 @@ $ ./src/manage.py runserver
 REST API Reference
 ------------------
 
+ - View on GitHub
+   - [Overview](docs/api/openapi/overview.adoc)
+   - [Paths](docs/api/openapi/paths.adoc)
+   - [Definitions](docs/api/openapi/definitions.adoc)
+   - [Security](docs/api/openapi/security.adoc)
  - [View PDF](docs/api/openapi.pdf)
- - [View HTML](https://rawgit.com/NTIA/scos-sensor/master/docs/api/openapi.html)
