@@ -10,10 +10,6 @@ fi
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
-# Inherit environment variables from env:
-set -a
-source ${REPO_ROOT}/env
-
 # To avoid substituting nginx variables, which also use the shell syntax,
 # specify only the variables that will be used in our nginx config: Populate
 # nginx config template to get an actual nginx config

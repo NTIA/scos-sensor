@@ -6,10 +6,6 @@ set -e  # exit on error
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
-# Inherit environment variables from env:
-set -a
-source ${REPO_ROOT}/env
-
 # Stop running services
 echo "Bringing down running services"
 docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor stop

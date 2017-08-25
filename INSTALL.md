@@ -46,21 +46,24 @@ Install Necessary Software
     - Now is a good time to modify local settings
       - `cp env.template env`
       - Open `env` in your favorite editor and modify it with your sensor's actual domain name and IP. The file is designed to make its best guess, but it's better to hardcode the values if you know them.
-      - Carefully note the items marked **SECUIRTY WARNING**
+      - Carefully note the items marked **SECURITY WARNING**
+    - the following step modifies other template files with the changes you made to `env`
+      - `./scripts/deploy.sh`
+ - set up the database outside the container so it persists
+   - source ./env
+   - ./scripts/deploy.sh       # `deploy.sh` uses `env` to modify other templates
+   - sudo pip install -r ./src/requirements-dev.txt  (or use a virtualenv)
+   - python ./src/manage.py makemigrations && ./src/manage.py migrate
+   - python ./src/manage.py createsuperuser
  - build the containers (this may take some to start up)
-   - `./scripts/build.sh`
 
 
 Start Sensor
 ------------
 
- - `./scripts/run.sh`
+ - `./scripts/run.sh`  (this may take some time the first time)
 
- At this point, the sensor should be running, but you need to create an admin user:
-
- - `./scripts/createadmin.sh`
-
-You should now be able to navigate to `localhost` in your browser to use the browsable API.
+ At this point, the sensor should be running. You should now be able to navigate to `localhost` in your browser to use the browsable API.
 
  - Some helpful debugging commands (from the docker directory):
    - `docker-compose -p scossensor logs -f` (watch logs)

@@ -21,6 +21,7 @@ $ git clone https://github.com/NTIA/scos-sensor
 $ cd scos-sensor
 $ mkvirtualenv scos-sensor  # `workon scos-sensor` hereafter
 $ cp env.template env       # modify env
+$ source ./env
 $ ./scripts/deploy.sh       # `deploy.sh` uses `env` to modify other templates
 $ pip install -r ./src/requirements-dev.txt
 $ python ./src/manage.py makemigrations && ./src/manage.py migrate
