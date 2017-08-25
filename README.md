@@ -42,4 +42,4 @@ REST API Reference
    - [Definitions](docs/api/openapi.adoc#definitions)
    - [Security](docs/api/openapi.adoc#_securityscheme)
 
- - [View PDF](docs/api/openapi.pdf)
+ - [Download PDF](https://github.com/NTIA/scos-sensor/raw/master/docs/api/openapi.pdf)
