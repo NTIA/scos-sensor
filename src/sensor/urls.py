@@ -17,6 +17,8 @@ Including another URLconf
 
 """
 
+from __future__ import absolute_import
+
 from functools import partial
 
 from django.conf.urls import include, url
@@ -27,9 +29,9 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.schemas import get_schema_view
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework_swagger.renderers import OpenAPIRenderer
 
-from sensor.settings import API_TITLE, API_DESCRIPTION
+from .schema import OpenAPIRenderer
+from .settings import API_TITLE, API_DESCRIPTION
 
 
 @api_view(('GET',))
