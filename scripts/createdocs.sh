@@ -42,4 +42,4 @@ docker run --rm -v ${APIDOCS_ROOT}:/documents asciidoctor/docker-asciidoctor \
 echo "wrote ${APIDOCS_ROOT}/openapi.pdf"
 
 echo "cleaning up ${APIDOCS_ROOT}/openapi.adoc"
-rm -f ${APIDOCS_ROOT}/singlepage.adoc
+rm -f ${APIDOCS_ROOT}/openapi.adoc
