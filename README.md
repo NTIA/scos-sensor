@@ -7,7 +7,7 @@ It provides:
   - ready-made containers for x86 and arm32v7 hardware
   - TODO
 
-![Browsable API Screenshot](docs/api_root.png)
+![Browsable API Screenshot](docs/img/browsable_api_screenshot.png)
 
 Quickstart
 ----------
