@@ -1,5 +1,6 @@
 -rrequirements.txt
 
+mkdocs==0.16.3
 pytest-cov==2.5.1
 pytest-django==3.1.2
 tox==2.7.0
