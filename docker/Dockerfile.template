@@ -11,6 +11,12 @@ RUN apt-get update && \
             python-setuptools python-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install numpy build requirements
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+            python-all-dev libblas-dev liblapack-dev libatlas-base-dev gfortran && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Install GNURadio and UHD
 # RUN apt-get update && \
 #     apt-get install -y --no-install-recommends gnuradio uhd-host && \

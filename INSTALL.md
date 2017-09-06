@@ -20,6 +20,27 @@ From this point on, unplug debug monitor, keyboard, and mouse, and work remotely
   - `sudo systemctl enable multi-user.target`  (multi-user is like server-mode)
   - `sudo systemctl set-default multi-user.target`  (disable GUI on startup)
   - `sudo systemctl isolate multi-user.target`  (shutdown GUI)
+  - `sudo sed -i 's/#kernel.printk.*$/kernel.printk = 3 4 1 3/' /etc/sysctl.conf`
+  - `sudo apt-get purge network-manager`
+  - `sudo vim /etc/network/interfaces`
+  **Add** the following lines
+  ```
+  auto eth0
+  iface eth0 inet static
+    address xxx.xxx.x.xx
+    gateway xxx.xxx.x.x
+    netmask xxx.xxx.xxx.x
+    dns-nameservers x.x.x.x x.x.x.x
+  ```
+  - `sudo vim /etc/hosts`
+  It should look something like:
+  ```
+  127.0.0.1        localhost
+  127.0.1.1        your-hostname
+  xxx.xxx.xxx.xxx  your-hostname
+  ```
+  - `sudo systemctl restart networking`
+
 
 Install Necessary Software
 --------------------------
@@ -47,16 +68,16 @@ Install Necessary Software
       - `cp env.template env`
       - Open `env` in your favorite editor and modify it with your sensor's actual domain name and IP. The file is designed to make its best guess, but it's better to hardcode the values if you know them.
       - Carefully note the items marked **SECURITY WARNING**
-    - the following step modifies other template files with the changes you made to `env`
-      - `./scripts/deploy.sh`
  - set up the database outside the container so it persists
-   - source ./env
+   - `source ./env`
    - ./scripts/deploy.sh       # `deploy.sh` uses `env` to modify other templates
    - sudo pip install -r ./src/requirements-dev.txt  (or use a virtualenv)
    - python ./src/manage.py makemigrations && ./src/manage.py migrate
    - python ./src/manage.py createsuperuser
  - build the containers (this may take some to start up)
 
+EXTRAS:
+ - echo source /home/deploy/scos-sensor/env >> $VIRTUAL_ENV/bin/postactivate
 
 Start Sensor
 ------------
