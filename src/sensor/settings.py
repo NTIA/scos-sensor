@@ -31,7 +31,7 @@ STATICFILES_DIRS = (
 
 RUNNING_DEVSERVER = 'runserver' in sys.argv
 
-# See /evn.template
+# See /env.template
 if RUNNING_DEVSERVER:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
     DEBUG = True
@@ -49,6 +49,9 @@ if not DEBUG:
 
 
 # Application definition
+
+API_TITLE = "SCOS Sensor API"
+API_DESCRIPTION = "A RESTful API for controlling a SCOS-compatible sensor."
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -200,15 +203,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+LOGLEVEL = 'DEBUG' if DEBUG else 'INFO'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
         'simple': {
-            'format': '[%(asctime)s] %(levelname)s %(message)s'
+            'format': '[%(asctime)s] [%(levelname)s] %(message)s'
         },
     },
     'filters': {
@@ -218,46 +219,38 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'verbose',
-            'filename': os.path.join(REPO_ROOT, 'scos-sensor.log')
-        }
     },
     'loggers': {
         'actions': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         },
         'acquisitions': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         },
         'capabilities': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         },
         'schedule': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         },
         'scheduler': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         },
         'sensor': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         },
         'status': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO'
+            'handlers': ['console'],
+            'level': LOGLEVEL
         }
     }
 }

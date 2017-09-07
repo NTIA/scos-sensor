@@ -1,11 +1,18 @@
 """Provides custom exception handing."""
 
+from __future__ import absolute_import
+
+import logging
+
 from django import db
 from django.db.models.deletion import ProtectedError
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import exception_handler as default_exception_handler
+
+
+logger = logging.getLogger(__name__)
 
 
 def exception_handler(exc, context):
@@ -19,6 +26,8 @@ def exception_handler(exc, context):
             response = Response({
                 'detail': str(exc)
             }, status=status.HTTP_409_CONFLICT)
+        else:
+            logger.exception("Caught unhandled exception", exc_info=exc)
 
     return response
 
