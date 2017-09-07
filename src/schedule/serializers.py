@@ -27,10 +27,9 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'acquisitions'
         )
         extra_kwargs = {
-            # 'url': {
-            #     'view_name': 'v1:schedule-detail',
-            #     'lookup_field': 'name'
-            # },
+            'url': {
+                'view_name': 'v1:schedule-detail'
+            },
             'owner': {
                 'view_name': 'v1:user-detail'
             }
@@ -48,7 +47,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         if 'start' in data and data['start'] is None:
             data.pop('start')
 
-        # py2.7 compat -> super().to_rep...
+        # py2.7 compat -> super().to_internal...
         cls = CreateScheduleEntrySerializer
         return super(cls, self).to_internal_value(data)
 
