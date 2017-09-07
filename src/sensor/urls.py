@@ -24,6 +24,7 @@ from functools import partial
 from django.conf.urls import include, url
 from django.views.generic import RedirectView
 from rest_framework.decorators import api_view
+from rest_framework.documentation import include_docs_urls
 from rest_framework.renderers import BrowsableAPIRenderer, CoreJSONRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -70,6 +71,9 @@ urlpatterns = (
     # TODO: root should be mkdocs page
     url(r'^$', RedirectView.as_view(url='/api/')),
     url(r'^api/$', RedirectView.as_view(url='/api/v1/')),
+    # FIXME: docs not detecting routes
+    url(r'^api/docs/', include_docs_urls(title=API_TITLE,
+                                         description=API_DESCRIPTION)),
     url(r'^api/v1/', include(api_v1_urlpatterns, namespace='v1')),
     url(r'^api/auth/', include('rest_framework.urls')),
 )
