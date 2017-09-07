@@ -24,8 +24,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
                 'initial': True
             },
             'schedule_entries': {
-                'view_name': 'v1:schedule-detail',
-                'lookup_field': 'name'
+                'view_name': 'v1:schedule-detail'
             },
         }
         read_only_fields = (
