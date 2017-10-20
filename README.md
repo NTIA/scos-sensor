@@ -1,4 +1,4 @@
-NTIA/ITS SCOS Sensor
+NTIA/ITS SCOS Sensor.
 ====================
 
 The SCOS sensor is a RESTful API for any sensor that can be controlled via python.
