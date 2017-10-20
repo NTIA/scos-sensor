@@ -23,6 +23,8 @@ services:
       - ../src:/src:ro
       - ../db.sqlite3:/db.sqlite3
       - ../scos-sensor.log:/scos-sensor.log
+    devices:
+      - "$(readlink -f /dev/B200)":/dev/B200
     command: gunicorn -b :8000 --log-level ${GUNICORN_LOG_LEVEL} "sensor.wsgi"
 
   nginx:
