@@ -9,18 +9,17 @@ from schedule.models import ScheduleEntry
 from scheduler.scheduler import Scheduler, minimum_duration
 from .utils import advance_testclock
 
-def create_user(username):
-    return User.objects.create_user(username)
-
 
 def create_entry(name, priority, start, stop, interval, action):
+    temp_user = User.objects.get_or_create(email='iwork@ntia.doc.gov')[0]
+
     kwargs = {
         'name': name,
         'priority': priority,
         'stop': stop,
         'interval': interval,
         'action': action,
-        'owner': create_user('test_scheduler_dummy_' + name)
+        'owner': temp_user
     }
 
     if start is not None:
