@@ -4,9 +4,13 @@ import threading
 import pytest
 
 import actions
+from authentication.models import User
 from schedule.models import ScheduleEntry
 from scheduler.scheduler import Scheduler, minimum_duration
 from .utils import advance_testclock
+
+def create_user(username):
+    return User.objects.create_user(username)
 
 
 def create_entry(name, priority, start, stop, interval, action):
@@ -15,7 +19,8 @@ def create_entry(name, priority, start, stop, interval, action):
         'priority': priority,
         'stop': stop,
         'interval': interval,
-        'action': action
+        'action': action,
+        'owner': create_user('test_scheduler_dummy_' + name)
     }
 
     if start is not None:
