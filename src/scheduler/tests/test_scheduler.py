@@ -11,15 +11,13 @@ from .utils import advance_testclock
 
 
 def create_entry(name, priority, start, stop, interval, action):
-    temp_user = User.objects.get_or_create(email='iwork@ntia.doc.gov')[0]
-
     kwargs = {
         'name': name,
         'priority': priority,
         'stop': stop,
         'interval': interval,
         'action': action,
-        'owner': temp_user
+        'owner': User.objects.get_or_create(username='test')[0]
     }
 
     if start is not None:
