@@ -6,9 +6,13 @@ from rest_framework.reverse import reverse
 
 
 def post_schedule(client, entry):
-    r = client.post(reverse('v1:schedule-list'),
-                    data=json.dumps(entry),
-                    content_type='application/json')
+    kwargs = {
+        'data': json.dumps(entry),
+        'content_type': 'application/json',
+        'wsgi.url_scheme': 'https'
+    }
+
+    r = client.post(reverse('v1:schedule-list'), **kwargs)
     rjson = r.json()
     assert r.status_code == status.HTTP_201_CREATED, rjson
     return rjson

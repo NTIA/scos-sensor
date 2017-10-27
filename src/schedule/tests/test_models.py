@@ -4,6 +4,8 @@ from itertools import count
 import pytest
 from django.core.exceptions import ValidationError
 
+from authentication.models import User
+
 from .utils import flatten
 from scheduler import utils
 from schedule.models import ScheduleEntry, DEFAULT_PRIORITY
@@ -64,7 +66,7 @@ def test_no_interval():
     assert len(times) == 1
 
     # when interval is None, consuming the single task time unsets `active`
-    assert not e1.active
+    assert not e1.is_active
     assert not list(e1.get_remaining_times())
     assert not list(e1.take_until(remaining_times[0]+1000))
 
@@ -76,7 +78,7 @@ def test_no_interval():
     assert len(times) == 1
 
     # when interval is None, consuming the single task time unsets `active`
-    assert not e2.active
+    assert not e2.is_active
     assert not list(e2.get_remaining_times())
     assert not list(e2.take_until(remaining_times[0]+1000))
 
@@ -106,21 +108,21 @@ def test_bad_name_raises():
 
 
 @pytest.mark.django_db
-def test_non_unique_name_raises():
-    ScheduleEntry(name='t', action='logger').save()
+def test_non_unique_name_raises(test_user):
+    ScheduleEntry(name='t', action='logger', owner=test_user).save()
     with pytest.raises(ValidationError):
-        ScheduleEntry(name='t', action='logger').full_clean()
+        ScheduleEntry(name='t', action='logger', owner=test_user).full_clean()
 
 
 def test_defaults():
     entry = ScheduleEntry(name='t', action='logger')
     assert entry.priority == DEFAULT_PRIORITY
-    # assert entry.action_parameters == {}
     assert entry.start is not None
     assert entry.stop is None
     assert entry.interval is None
     assert entry.relative_stop is False
-    assert entry.active is True
+    assert entry.is_active is True
+    # assert entry.action_parameters == {}
 
 
 def test_str():

@@ -33,7 +33,11 @@ def exception_handler(exc, context):
 
 
 def handle_protected_error(exc, context):
-    entry_name = context['kwargs']['name']
+    if 'name' in context['kwargs']:
+        entry_name = context['kwargs']['name']
+    else:
+        entry_name = context['kwargs']['pk']
+
     request = context['request']
 
     protected_object_urls = []
