@@ -108,9 +108,7 @@ def test_bad_name_raises():
 
 
 @pytest.mark.django_db
-def test_non_unique_name_raises():
-    test_user = User.objects.get_or_create(username='test')[0]
-
+def test_non_unique_name_raises(test_user):
     ScheduleEntry(name='t', action='logger', owner=test_user).save()
     with pytest.raises(ValidationError):
         ScheduleEntry(name='t', action='logger', owner=test_user).full_clean()
