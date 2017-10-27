@@ -3,28 +3,12 @@ import pytest
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from authentication.models import User
-
 from acquisitions.tests.utils import simulate_acquisitions
 from schedule.tests import EMPTY_SCHEDULE_REPONSE, TEST_SCHEDULE_ENTRY
 from schedule.tests.utils import post_schedule
 from sensor.tests.utils import validate_response
 
 HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
-
-
-@pytest.fixture
-def test_user():
-    user_name, password = 'test', ''
-
-    user, created = User.objects.get_or_create(username=user_name)
-
-    if created:
-        user.set_password(password)
-
-        user.save()
-
-    return user_name, password
 
 
 @pytest.mark.django_db
