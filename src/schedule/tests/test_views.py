@@ -13,7 +13,7 @@ HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 
 @pytest.mark.django_db
 def test_post_schedule(client, test_user):
-    client.login(username=test_user[0], password=test_user[1])
+    client.login(username=test_user.username, password=test_user.password)
 
     rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
 
@@ -23,7 +23,7 @@ def test_post_schedule(client, test_user):
 
 @pytest.mark.django_db
 def test_get_schedule(client, test_user):
-    client.login(username=test_user[0], password=test_user[1])
+    client.login(username=test_user.username, password=test_user.password)
 
     url = reverse('v1:schedule-list')
 
@@ -44,7 +44,7 @@ def test_get_schedule(client, test_user):
 
 @pytest.mark.django_db
 def test_get_entry(client, test_user):
-    client.login(username=test_user[0], password=test_user[1])
+    client.login(username=test_user.username, password=test_user.password)
 
     rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
 
@@ -61,7 +61,7 @@ def test_get_entry(client, test_user):
 
 @pytest.mark.django_db
 def test_delete_entry(client, test_user):
-    client.login(username=test_user[0], password=test_user[1])
+    client.login(username=test_user.username, password=test_user.password)
 
     rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
 
@@ -78,7 +78,7 @@ def test_delete_entry(client, test_user):
 
 @pytest.mark.django_db
 def test_delete_entry_with_acquisitions_fails(client, testclock, test_user):
-    client.login(username=test_user[0], password=test_user[1])
+    client.login(username=test_user.username, password=test_user.password)
 
     entry_name = simulate_acquisitions(client, n=1)
 
