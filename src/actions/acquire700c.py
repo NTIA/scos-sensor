@@ -95,7 +95,7 @@ def apply_detector(array, detector):
 
 
 class LTE700cAcquisition(Action):
-    """Acquire 700c LTE band (751 MHz center frequency)."""
+    """Acquire 700c LTE band with m4s detector over 30 consecutive FFTs."""
     def __call__(self, schedule_entry_name, task_id):
         from acquisitions.models import Acquisition
         from schedule.models import ScheduleEntry
