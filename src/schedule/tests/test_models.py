@@ -4,8 +4,6 @@ from itertools import count
 import pytest
 from django.core.exceptions import ValidationError
 
-from authentication.models import User
-
 from .utils import flatten
 from scheduler import utils
 from schedule.models import ScheduleEntry, DEFAULT_PRIORITY
@@ -122,7 +120,6 @@ def test_defaults():
     assert entry.interval is None
     assert entry.relative_stop is False
     assert entry.is_active is True
-    # assert entry.action_parameters == {}
 
 
 def test_str():
