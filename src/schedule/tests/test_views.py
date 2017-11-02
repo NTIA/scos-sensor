@@ -8,13 +8,13 @@ from schedule.tests import EMPTY_SCHEDULE_REPONSE, TEST_SCHEDULE_ENTRY
 from schedule.tests.utils import post_schedule
 from sensor.tests.utils import validate_response
 
+
 HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 
 
 @pytest.mark.django_db
 def test_post_schedule(client, test_user):
     client.login(username=test_user.username, password=test_user.password)
-
     rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
@@ -24,72 +24,55 @@ def test_post_schedule(client, test_user):
 @pytest.mark.django_db
 def test_get_schedule(client, test_user):
     client.login(username=test_user.username, password=test_user.password)
-
     url = reverse('v1:schedule-list')
-
     rjson = validate_response(client.get(url, **HTTPS_KWARG))
-
     assert rjson == EMPTY_SCHEDULE_REPONSE
 
     post_schedule(client, TEST_SCHEDULE_ENTRY)
     rjson = validate_response(client.get(url, **HTTPS_KWARG))
-
     assert len(rjson) == 1
 
     expected_name = TEST_SCHEDULE_ENTRY['name']
     actual_name = rjson[0]['name']
-
     assert expected_name == actual_name
 
 
 @pytest.mark.django_db
 def test_get_entry(client, test_user):
     client.login(username=test_user.username, password=test_user.password)
-
     rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
-
     entry_name = rjson['name']
-
     bad_url = reverse('v1:schedule-detail', ['doesntexist'])
     good_url = reverse('v1:schedule-detail', [entry_name])
-
-    validate_response(
-        client.get(bad_url, **HTTPS_KWARG), status.HTTP_404_NOT_FOUND)
-
+    expected_status = status.HTTP_404_NOT_FOUND
+    validate_response(client.get(bad_url, **HTTPS_KWARG), expected_status)
     validate_response(client.get(good_url, **HTTPS_KWARG))
 
 
 @pytest.mark.django_db
 def test_delete_entry(client, test_user):
     client.login(username=test_user.username, password=test_user.password)
-
     rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
-
     entry_name = rjson['name']
-
     url = reverse('v1:schedule-detail', [entry_name])
-
-    validate_response(
-        client.delete(url, **HTTPS_KWARG), status.HTTP_204_NO_CONTENT)
-
-    validate_response(
-        client.delete(url, **HTTPS_KWARG), status.HTTP_404_NOT_FOUND)
+    expected_status = status.HTTP_204_NO_CONTENT
+    validate_response(client.delete(url, **HTTPS_KWARG), expected_status)
+    expected_status = status.HTTP_404_NOT_FOUND
+    validate_response(client.delete(url, **HTTPS_KWARG), expected_status)
 
 
 @pytest.mark.django_db
 def test_delete_entry_with_acquisitions_fails(client, testclock, test_user):
     client.login(username=test_user.username, password=test_user.password)
-
     entry_name = simulate_acquisitions(client, n=1)
-
     entry_url = reverse('v1:schedule-detail', [entry_name])
-
-    rjson = validate_response(client.delete(entry_url, **HTTPS_KWARG),
-                              status.HTTP_400_BAD_REQUEST)
+    response = client.delete(entry_url, **HTTPS_KWARG)
+    rjson = validate_response(response, status.HTTP_400_BAD_REQUEST)
+    expected_status = status.HTTP_204_NO_CONTENT
 
     for acq_url in rjson['protected_objects']:
-        validate_response(
-            client.delete(acq_url, **HTTPS_KWARG), status.HTTP_204_NO_CONTENT)
+        response = client.delete(acq_url, **HTTPS_KWARG)
+        validate_response(response, expected_status)
 
-    validate_response(
-        client.delete(entry_url, **HTTPS_KWARG), status.HTTP_204_NO_CONTENT)
+    response = client.delete(entry_url, **HTTPS_KWARG)
+    validate_response(response, expected_status)
