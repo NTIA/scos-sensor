@@ -1,8 +1,10 @@
+from . import acquire700c
 from . import logger
 from . import mock_acquire
 
 
 by_name = {
+    "acquire700c": acquire700c.LTE700cAcquisition(),
     "logger": logger.Logger(),
     "mock_acquire": mock_acquire.TestAcquisition()
 }
