@@ -14,7 +14,9 @@ def post_schedule(client, entry):
 
     r = client.post(reverse('v1:schedule-list'), **kwargs)
     rjson = r.json()
+
     assert r.status_code == status.HTTP_201_CREATED, rjson
+
     return rjson
 
 
