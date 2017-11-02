@@ -96,11 +96,17 @@ def apply_detector(array, detector):
 
 class LTE700cAcquisition(Action):
     """Acquire 700c LTE band with m4s detector over 30 consecutive FFTs."""
+    def __init__(self):
+        self.usrp = usrp
+
     def __call__(self, schedule_entry_name, task_id):
         from acquisitions.models import Acquisition
         from schedule.models import ScheduleEntry
 
-        required_components = (usrp.uhd_is_available, usrp.is_available,)
+        required_components = (
+            self.usrp.uhd_is_available,
+            self.usrp.is_available
+        )
         component_names = ("UHD", "USRP")
         missing_components = (not rc for rc in required_components)
         if any(missing_components):
@@ -119,9 +125,9 @@ class LTE700cAcquisition(Action):
         logger.debug("tuning USRP to {} MHz".format(frequency_MHz))
 
         # set USRP with desired parameters
-        usrp.radio.frequency = frequency_Hz
-        usrp.radio.clock_rate = clock_rate
-        usrp.radio.sample_rate = sample_rate
+        self.usrp.radio.frequency = frequency_Hz
+        self.usrp.radio.clock_rate = clock_rate
+        self.usrp.radio.sample_rate = sample_rate
 
         # raises ScheduleEntry.DoesNotExist if no matching schedule entry
         parent_entry = ScheduleEntry.objects.get(name=schedule_entry_name)
@@ -143,7 +149,7 @@ class LTE700cAcquisition(Action):
             "core:time": get_sigmf_iso8601_datetime_now()
         }
 
-        data = usrp.radio.finite_acquisition(nffts * fft_size)
+        data = self.usrp.radio.finite_acquisition(nffts * fft_size)
         data.resize((nffts, fft_size))
 
         # Apply voltage scale factor
