@@ -9,9 +9,11 @@ class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner or an admin
+        # or if the aquisition doesn't exists (leading to 404).
         user = request.user
         acquisition = view.queryset.first()
-        if acquisition and acquisition.schedule_entry.owner == user:
+
+        if (acquisition is None) or (acquisition.schedule_entry.owner == user):
             return True
 
         return user.is_staff

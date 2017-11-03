@@ -32,8 +32,11 @@ class MultipleFieldLookupMixin(object):
     def get_queryset(self):
         base_queryset = super(MultipleFieldLookupMixin, self).get_queryset()
         base_queryset = self.filter_queryset(base_queryset)
+
         filter = {'schedule_entry__name': self.kwargs['schedule_entry_name']}
+
         queryset = base_queryset.filter(**filter)
+
         if not queryset.exists():
             raise Http404
 
@@ -42,6 +45,7 @@ class MultipleFieldLookupMixin(object):
     def get_object(self):
         queryset = self.get_queryset()
         filter = {'task_id': self.kwargs['task_id']}
+
         return get_object_or_404(queryset, **filter)
 
 
@@ -50,18 +54,20 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
                              GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly,
-    ]
+    permission_classes = (
+        api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
     lookup_fields = ('schedule_entry__name', 'task_id')
 
-    @list_route(methods=('DELETE',))
+    @list_route(methods=('delete',))
     def destroy_all(self, request, schedule_entry_name):
         queryset = self.get_queryset()
         queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
+
         if not queryset.exists():
             raise Http404
+
         queryset.delete()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -71,9 +77,8 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
                                  GenericViewSet):
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly,
-    ]
+    permission_classes = (
+        api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route()
