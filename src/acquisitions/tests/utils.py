@@ -45,7 +45,8 @@ def reverse_acquisition_list(schedule_entry_name):
 def reverse_acquisition_detail(schedule_entry_name, task_id):
     rf = RequestFactory()
     task_str = str(task_id)
-    request = rf.get('/acquisitions/' + schedule_entry_name + '/' + task_str)
+    request = rf.get(
+        '/acquisitions/' + schedule_entry_name + '/' + task_str, **HTTPS_KWARG)
     kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
 
     return reverse('v1:acquisition-detail', kwargs=kws, request=request)
@@ -56,7 +57,7 @@ def reverse_acquisition_archive(schedule_entry_name, task_id):
     entry_name = schedule_entry_name
     task_str = str(task_id)
     url_str = '/'.join(['/acquisitions', entry_name, task_str, 'archive'])
-    request = rf.get(url_str)
+    request = rf.get(url_str, **HTTPS_KWARG)
     kws = {'schedule_entry_name': entry_name, 'task_id': task_id}
 
     return reverse('v1:acquisition-archive', kwargs=kws, request=request)
@@ -71,13 +72,13 @@ def get_acquisitions_overview(client):
 
 def get_acquisition_list(client, schedule_entry_name):
     url = reverse_acquisition_list(schedule_entry_name)
-    response = client.get(url)
+    response = client.get(url, **HTTPS_KWARG)
 
     return validate_response(response, status.HTTP_200_OK)
 
 
 def get_acquisition_detail(client, schedule_entry_name, task_id):
     url = reverse_acquisition_detail(schedule_entry_name, task_id)
-    response = client.get(url)
+    response = client.get(url, **HTTPS_KWARG)
 
     return validate_response(response, status.HTTP_200_OK)
