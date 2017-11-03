@@ -12,9 +12,7 @@ class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
         user = request.user
         acquisition = view.queryset.first()
 
-        if acquisition and acquisition.schedule_entry.owner == user:
-            return True
-        elif acquisition is None:
+        if (acquisition is None) or (acquisition.schedule_entry.owner == user):
             return True
 
         return user.is_staff
