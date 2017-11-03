@@ -1,5 +1,6 @@
 from rest_framework import status
 
+HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 
 def validate_response(response, expected_code=None):
     actual_code = response.status_code
