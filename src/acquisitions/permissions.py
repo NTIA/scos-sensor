@@ -11,7 +11,10 @@ class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
         # Write permissions are only allowed to the owner or an admin
         user = request.user
         acquisition = view.queryset.first()
+
         if acquisition and acquisition.schedule_entry.owner == user:
+            return True
+        elif acquisition is None:
             return True
 
         return user.is_staff
