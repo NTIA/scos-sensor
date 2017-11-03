@@ -9,6 +9,7 @@ class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner or an admin
+        # or if the aquisition doesn't exists (leading to 404).
         user = request.user
         acquisition = view.queryset.first()
 
