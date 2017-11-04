@@ -1,3 +1,4 @@
+import sys
 from itertools import count
 
 from django.core.validators import MinValueValidator
@@ -5,6 +6,10 @@ from django.db import models
 
 import actions
 from scheduler import utils
+
+
+if sys.version_info.major == 2:
+    range = xrange  # noqa
 
 
 DEFAULT_PRIORITY = 10
