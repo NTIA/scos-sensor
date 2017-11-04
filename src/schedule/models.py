@@ -91,10 +91,10 @@ class ScheduleEntry(models.Model):
         blank=True,
         help_text="absolute time (epoch) to stop, or leave blank for 'never'"
     )
-    relative_stop = models.BooleanField(
-        default=False,
-        help_text="stop should be interpreted as seconds after start"
-    )
+    # relative_stop = models.BooleanField(
+    #     default=False,
+    #     help_text="stop should be interpreted as seconds after start"
+    # )
     interval = models.PositiveIntegerField(
         null=True,
         blank=True,
@@ -125,11 +125,12 @@ class ScheduleEntry(models.Model):
         ordering = ('created',)
 
     def __init__(self, *args, **kwargs):
+        relative_stop = kwargs.pop('relative_stop', False)
+
         super(ScheduleEntry, self).__init__(*args, **kwargs)
 
-        if self.relative_stop:
+        if relative_stop:
             self.stop = self.start + self.stop
-            self.relative_stop = False
 
         if self.next_task_time is None:
             self.next_task_time = self.start
@@ -202,7 +203,7 @@ class ScheduleEntry(models.Model):
             self.name,
             self.priority,
             self.start,
-            ('+' * self.relative_stop + '{}').format(self.stop),
+            self.stop,
             self.interval,
             self.action
         )

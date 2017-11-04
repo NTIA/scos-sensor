@@ -6,6 +6,7 @@ from .models import ScheduleEntry
 
 class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField()
+    relative_stop = serializers.BooleanField(required=False)
 
     class Meta:
         model = ScheduleEntry

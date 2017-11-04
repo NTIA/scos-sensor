@@ -46,7 +46,6 @@ def test_relative_stop_becomes_absolute():
                       relative_stop=True, action='logger')
     assert e.start == 20
     assert e.stop == 30
-    assert e.relative_stop is False
     assert list(e.get_remaining_times()) == list(range(20, 30, 1))
 
 
@@ -117,7 +116,6 @@ def test_defaults():
     assert entry.start is not None
     assert entry.stop is None
     assert entry.interval is None
-    assert entry.relative_stop is False
     assert entry.is_active is True
 
 
