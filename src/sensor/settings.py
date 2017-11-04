@@ -29,7 +29,7 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
 )
 
-RUNNING_DEVSERVER = 'runserver' in sys.argv
+RUNNING_DEVSERVER = 'runsslserver' in sys.argv
 
 # See /env.template
 if RUNNING_DEVSERVER:
@@ -44,8 +44,7 @@ else:
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True
 
 
 # Application definition
@@ -63,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'sslserver',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
@@ -121,9 +121,6 @@ REST_FRAMEWORK = {
         'rest_framework_swagger.renderers.OpenAPIRenderer'
     )
 }
-
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ()
 
 
 API_TITLE = "SCOS Sensor API"

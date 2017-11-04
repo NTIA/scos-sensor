@@ -5,6 +5,7 @@ coreapi==2.3.1
 docker-compose==1.16.1
 django-extensions==1.8.1
 django-rest-swagger==2.1.2
+django-sslserver==0.20
 djangorestframework==3.6.3
 gunicorn==19.7.1
 jsonfield==2.0.2
