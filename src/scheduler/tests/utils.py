@@ -50,7 +50,7 @@ def advance_testclock(iterator, n):
         # advance to the empty slice starting at position n
         try:
             next(islice(iterator, n, n), None)
-        except:
+        except TypeError:
             err = "The calling test case requires the 'testclock' fixture."
             raise TypeError(err)
 

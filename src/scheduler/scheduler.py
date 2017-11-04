@@ -97,7 +97,7 @@ class Scheduler(threading.Thread):
                 logger.debug("running task {}/{}".format(entry_name, task_id))
                 next_task.action_fn(entry_name, task_id)
                 self.delayfn(0)  # let other threads run
-            except:
+            except Exception:
                 logger.exception("action failed")
 
     def _queue_pending_tasks(self, schedule_snapshot):

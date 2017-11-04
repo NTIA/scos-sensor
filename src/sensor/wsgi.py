@@ -37,6 +37,6 @@ def stop_scheduler(*args):
 
 try:
     signal.signal(signal.SIGINT, stop_scheduler)
-except:
+except ValueError:
     # django's dev server owns main thread
     pass
