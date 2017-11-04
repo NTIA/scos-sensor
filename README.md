@@ -26,10 +26,10 @@ $ ./scripts/deploy.sh       # `deploy.sh` uses `env` to modify other templates
 $ pip install -r ./src/requirements-dev.txt
 $ python ./src/manage.py makemigrations && ./src/manage.py migrate
 $ python ./src/manage.py createsuperuser
-# now, to run a production-grade stack:
+# now, to run a Dockerized production-grade stack:
 $ ./scripts/run.sh          # this make take a while the first time
-# or, for development:
-$ ./src/manage.py runserver
+# or, for a local development:
+$ ./src/manage.py runsslserver
 
 ```
 
