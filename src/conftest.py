@@ -1,4 +1,5 @@
 import pytest
+from django.test.client import Client
 
 import scheduler
 from authentication.models import User
@@ -26,10 +27,12 @@ def testclock():
 
 
 @pytest.fixture
-def test_user():
-    user_name, password = 'test', ''
+def user(db):
+    """A normal user."""
+    username = 'test'
+    password = 'password'
 
-    user, created = User.objects.get_or_create(username=user_name)
+    user, created = User.objects.get_or_create(username=username)
 
     if created:
         user.set_password(password)
@@ -38,3 +41,11 @@ def test_user():
     user.password = password
 
     return user
+
+
+@pytest.fixture
+def user_client(db, user):
+    """A Django test client logged in as a normal user"""
+    client = Client()
+    client.login(username=user.username, password=user.password)
+    return client

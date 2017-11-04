@@ -2,32 +2,32 @@ import os
 import tempfile
 
 import numpy as np
-import pytest
 from rest_framework import status
 
 import sigmf.sigmffile
 
+from actions.mock_acquire import TEST_DATA_SHA512
 from acquisitions.tests.utils import (
-    reverse_acquisition_archive, simulate_acquisitions, HTTPS_KWARG)
+    reverse_acquisition_archive,
+    simulate_acquisitions,
+    HTTPS_KWARG
+)
 
 
-@pytest.mark.django_db
-def test_archive_download(client, testclock, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-
-    entry_name = simulate_acquisitions(client, n=1)
+def test_archive_download(user_client, testclock):
+    entry_name = simulate_acquisitions(user_client, n=1)
     task_id = 1
     url = reverse_acquisition_archive(entry_name, task_id)
-    r = client.get(url, **HTTPS_KWARG)
+    disposition = 'attachment; filename="test_acq_1.sigmf"'
+    response = user_client.get(url, **HTTPS_KWARG)
 
-    assert r.status_code == status.HTTP_200_OK
-    assert r['content-disposition'] == (
-        'attachment; filename="test_acq_1.sigmf"')
-    assert r['content-type'] == 'application/x-tar'
-    assert r['content-length'] == '10240'
+    assert response.status_code == status.HTTP_200_OK
+    assert response['content-disposition'] == disposition
+    assert response['content-type'] == 'application/x-tar'
+    assert response['content-length'] == '10240'
 
     with tempfile.NamedTemporaryFile() as tf:
-        tf.write(r.content)
+        tf.write(response.content)
         sigmf_archive_contents = sigmf.sigmffile.fromarchive(tf.name)
         md = sigmf_archive_contents._metadata
         datafile = sigmf_archive_contents.data_file
@@ -36,3 +36,7 @@ def test_archive_download(client, testclock, test_user):
         datafile_expected_size = nsamples * np.float32().nbytes
 
         assert datafile_actual_size == datafile_expected_size
+
+        claimed_sha512 = md['global']['core:sha512']
+        actual_sha512 = sigmf.sigmf_hash.calculate_sha512(datafile)
+        assert claimed_sha512 == actual_sha512 == TEST_DATA_SHA512

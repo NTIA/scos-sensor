@@ -1,43 +1,37 @@
-import pytest
 from rest_framework import status
 
 from acquisitions.tests import SINGLE_ACQUISITION, EMPTY_ACQUISITIONS_RESPONSE
 from acquisitions.tests.utils import (
-    reverse_acquisitions_overview, reverse_acquisition_list,
-    simulate_acquisitions, get_acquisitions_overview, HTTPS_KWARG)
+    reverse_acquisitions_overview,
+    reverse_acquisition_list,
+    simulate_acquisitions,
+    get_acquisitions_overview,
+    HTTPS_KWARG
+)
 from schedule.tests.utils import post_schedule
 from sensor.tests.utils import validate_response
 
 
-@pytest.mark.django_db
-def test_empty_overview_response(client, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-
-    assert get_acquisitions_overview(client) == EMPTY_ACQUISITIONS_RESPONSE
+def test_empty_overview_response(user_client):
+    response = get_acquisitions_overview(user_client)
+    assert response == EMPTY_ACQUISITIONS_RESPONSE
 
 
-@pytest.mark.django_db
-def test_overview_exists_when_entry_created(client, testclock, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-
-    post_schedule(client, SINGLE_ACQUISITION)
-    overview, = get_acquisitions_overview(client)
-
+def test_overview_exists_when_entry_created(user_client, testclock):
+    post_schedule(user_client, SINGLE_ACQUISITION)
+    overview, = get_acquisitions_overview(user_client)
     assert overview['acquisitions_available'] == 0
 
 
-@pytest.mark.django_db
-def test_get_overview(client, testclock, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-
-    entry1_name = simulate_acquisitions(client)
-    overview, = get_acquisitions_overview(client)
+def test_get_overview(user_client, testclock):
+    entry1_name = simulate_acquisitions(user_client)
+    overview, = get_acquisitions_overview(user_client)
 
     assert overview['url'] == reverse_acquisition_list(entry1_name)
     assert overview['acquisitions_available'] == 1
 
-    entry2_name = simulate_acquisitions(client, n=3)
-    overview_list = get_acquisitions_overview(client)
+    entry2_name = simulate_acquisitions(user_client, n=3)
+    overview_list = get_acquisitions_overview(user_client)
 
     assert len(overview_list) == 2
 
@@ -48,11 +42,7 @@ def test_get_overview(client, testclock, test_user):
     assert overview2['acquisitions_available'] == 3
 
 
-@pytest.mark.django_db
-def test_delete_overview_not_allowed(client, testclock, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-
+def test_delete_overview_not_allowed(user_client, testclock):
     url = reverse_acquisitions_overview()
-
-    assert validate_response(
-        client.delete(url, **HTTPS_KWARG), status.HTTP_405_METHOD_NOT_ALLOWED)
+    response = user_client.delete(url, **HTTPS_KWARG)
+    assert validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)

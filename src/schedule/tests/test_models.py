@@ -105,11 +105,10 @@ def test_bad_name_raises():
     ScheduleEntry(name='_test-Stuff123', action='logger').clean_fields()
 
 
-@pytest.mark.django_db
-def test_non_unique_name_raises(test_user):
-    ScheduleEntry(name='t', action='logger', owner=test_user).save()
+def test_non_unique_name_raises(user):
+    ScheduleEntry(name='t', action='logger', owner=user).save()
     with pytest.raises(ValidationError):
-        ScheduleEntry(name='t', action='logger', owner=test_user).full_clean()
+        ScheduleEntry(name='t', action='logger', owner=user).full_clean()
 
 
 def test_defaults():

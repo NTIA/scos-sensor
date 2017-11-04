@@ -1,5 +1,3 @@
-import pytest
-
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -12,24 +10,20 @@ from sensor.tests.utils import validate_response
 HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 
 
-@pytest.mark.django_db
-def test_post_schedule(client, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-    rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
+def test_post_schedule(user_client):
+    rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
         rjson[k] == v
 
 
-@pytest.mark.django_db
-def test_get_schedule(client, test_user):
-    client.login(username=test_user.username, password=test_user.password)
+def test_get_schedule(user_client):
     url = reverse('v1:schedule-list')
-    rjson = validate_response(client.get(url, **HTTPS_KWARG))
+    rjson = validate_response(user_client.get(url, **HTTPS_KWARG))
     assert rjson == EMPTY_SCHEDULE_REPONSE
 
-    post_schedule(client, TEST_SCHEDULE_ENTRY)
-    rjson = validate_response(client.get(url, **HTTPS_KWARG))
+    post_schedule(user_client, TEST_SCHEDULE_ENTRY)
+    rjson = validate_response(user_client.get(url, **HTTPS_KWARG))
     assert len(rjson) == 1
 
     expected_name = TEST_SCHEDULE_ENTRY['name']
@@ -37,42 +31,40 @@ def test_get_schedule(client, test_user):
     assert expected_name == actual_name
 
 
-@pytest.mark.django_db
-def test_get_entry(client, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-    rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
+def test_get_entry(user_client):
+    rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     bad_url = reverse('v1:schedule-detail', ['doesntexist'])
     good_url = reverse('v1:schedule-detail', [entry_name])
-    expected_status = status.HTTP_404_NOT_FOUND
-    validate_response(client.get(bad_url, **HTTPS_KWARG), expected_status)
-    validate_response(client.get(good_url, **HTTPS_KWARG))
+
+    response = user_client.get(bad_url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
+
+    validate_response(user_client.get(good_url, **HTTPS_KWARG))
 
 
-@pytest.mark.django_db
-def test_delete_entry(client, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-    rjson = post_schedule(client, TEST_SCHEDULE_ENTRY)
+def test_delete_entry(user_client):
+    rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     url = reverse('v1:schedule-detail', [entry_name])
-    expected_status = status.HTTP_204_NO_CONTENT
-    validate_response(client.delete(url, **HTTPS_KWARG), expected_status)
-    expected_status = status.HTTP_404_NOT_FOUND
-    validate_response(client.delete(url, **HTTPS_KWARG), expected_status)
+
+    response = user_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_204_NO_CONTENT)
+
+    response = user_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
 
 
-@pytest.mark.django_db
-def test_delete_entry_with_acquisitions_fails(client, testclock, test_user):
-    client.login(username=test_user.username, password=test_user.password)
-    entry_name = simulate_acquisitions(client, n=1)
+def test_delete_entry_with_acquisitions_fails(user_client, testclock):
+    entry_name = simulate_acquisitions(user_client, n=1)
     entry_url = reverse('v1:schedule-detail', [entry_name])
-    response = client.delete(entry_url, **HTTPS_KWARG)
+    response = user_client.delete(entry_url, **HTTPS_KWARG)
     rjson = validate_response(response, status.HTTP_400_BAD_REQUEST)
     expected_status = status.HTTP_204_NO_CONTENT
 
     for acq_url in rjson['protected_objects']:
-        response = client.delete(acq_url, **HTTPS_KWARG)
+        response = user_client.delete(acq_url, **HTTPS_KWARG)
         validate_response(response, expected_status)
 
-    response = client.delete(entry_url, **HTTPS_KWARG)
+    response = user_client.delete(entry_url, **HTTPS_KWARG)
     validate_response(response, expected_status)
