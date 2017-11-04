@@ -28,7 +28,7 @@ $ python ./src/manage.py makemigrations && ./src/manage.py migrate
 $ python ./src/manage.py createsuperuser
 # now, to run a Dockerized production-grade stack:
 $ ./scripts/run.sh          # this make take a while the first time
-# or, for a local development:
+# or, for a local development server:
 $ ./src/manage.py runsslserver
 
 ```
