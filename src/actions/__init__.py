@@ -1,12 +1,15 @@
-from . import acquire700c
+from . import acquire_single_freq_fft
 from . import logger
-from . import mock_acquire
 
 
 by_name = {
-    "acquire700c": acquire700c.LTE700cAcquisition(),
-    "logger": logger.Logger(),
-    "mock_acquire": mock_acquire.TestAcquisition()
+    "acquire700c": acquire_single_freq_fft.SingleFrequencyFFTAcquisition(
+        frequency=751e6,
+        sample_rate=15.36e6,
+        fft_size=1024,
+        nffts=300
+    ),
+    "logger": logger.Logger()
 }
 
 

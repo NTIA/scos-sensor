@@ -31,13 +31,13 @@ radio = None
 is_available = False
 
 
-def connect(usrp_serial):  # -> bool:
+def connect():  # -> bool:
     if not uhd_is_available:
         logger.warning("gnuradio.uhd not available - disabling radio")
         return False
 
     try:
-        radio_iface = RadioInterface(usrp_serial)
+        radio_iface = RadioInterface()
         global is_available
         global radio
         is_available = True
@@ -49,12 +49,9 @@ def connect(usrp_serial):  # -> bool:
 
 
 class RadioInterface(object):
-    def __init__(self, serial):
+    def __init__(self):
         search_criteria = uhd.device_addr_t()
-
-        if serial:
-            search_criteria['serial'] = serial
-
+        search_criteria['type'] = 'b200'  # ensure we don't find networked usrp
         available_devices = list(uhd.find_devices(search_criteria))
         ndevices_found = len(available_devices)
 
