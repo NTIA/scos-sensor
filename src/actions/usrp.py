@@ -85,7 +85,7 @@ class RadioInterface(object):
     def sample_rate(self, rate):
         self.usrp.set_samp_rate(rate)
         fs_MHz = self.sample_rate / 1e6
-        logger.debug("set USRP sample rate: {} MS/s".format(fs_MHz))
+        logger.debug("set USRP sample rate: {:.2f} MS/s".format(fs_MHz))
 
     @property
     def clock_rate(self):  # -> float:
@@ -95,7 +95,7 @@ class RadioInterface(object):
     def clock_rate(self, rate):
         self.usrp.set_clock_rate(rate)
         clk_MHz = self.clock_rate / 1e6
-        logger.debug("set USRP clock rate: {} MHz".format(clk_MHz))
+        logger.debug("set USRP clock rate: {:.2f} MHz".format(clk_MHz))
 
     @property
     def frequency(self):  # -> float:
@@ -114,7 +114,7 @@ class RadioInterface(object):
     @gain.setter
     def gain(self, gain):
         self.usrp.set_gain(gain)
-        logger.debug("set USRP gain: {} dB".format(self.usrp.get_gain()))
+        logger.debug("set USRP gain: {:.2f} dB".format(self.usrp.get_gain()))
 
     def acquire_samples(self, n, nskip=1000):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""

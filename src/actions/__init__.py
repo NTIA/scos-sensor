@@ -3,7 +3,7 @@ from . import logger
 
 
 by_name = {
-    "acquire700c": acquire_single_freq_fft.SingleFrequencyFFTAcquisition(
+    "acquire700c": acquire_single_freq_fft.SingleFrequencyFftAcquisition(
         frequency=751e6,
         sample_rate=15.36e6,
         fft_size=1024,
@@ -34,7 +34,18 @@ def get_summary(action_fn):
 
 
 MAX_LENGTH = 50
-VALID_ACTIONS = sorted(by_name.keys())
+VALID_ACTIONS = []
 CHOICES = []
-for action in VALID_ACTIONS:
-    CHOICES.append((action, get_action_with_summary(action)))
+
+
+def init():
+    """Allows re-initing VALID_ACTIONS if `by_name` is modified."""
+    global VALID_ACTIONS
+    global CHOICES
+
+    VALID_ACTIONS = sorted(by_name.keys())
+    for action in VALID_ACTIONS:
+        CHOICES.append((action, get_action_with_summary(action)))
+
+
+init()

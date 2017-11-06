@@ -67,7 +67,7 @@ def m4s_detector(array):
     return m4s
 
 
-class SingleFrequencyFFTAcquisition(Action):
+class SingleFrequencyFftAcquisition(Action):
     """Perform m4s detection over requested number of single-frequency FFTs.
 
     :param frequency: center frequency in Hz
@@ -106,7 +106,7 @@ class SingleFrequencyFFTAcquisition(Action):
             self.usrp.is_available
         )
         component_names = ("UHD", "USRP")
-        missing_components = (not rc for rc in required_components)
+        missing_components = [not rc for rc in required_components]
         if any(missing_components):
             missing = tuple(compress(component_names, missing_components))
             msg = "acquisition failed: {} required but not available"
@@ -119,10 +119,7 @@ class SingleFrequencyFFTAcquisition(Action):
 
     def set_usrp_sample_rate(self):
         self.usrp.radio.sample_rate = self.sample_rate
-        actual_sample_rate = self.sample_rate = self.usrp.radio.sample_rate
-
-        msg = "Set USRP sample rate to {:.2f} MHz"
-        logger.debug(msg.format(actual_sample_rate / 1e6))
+        self.sample_rate = self.usrp.radio.sample_rate
 
     def set_usrp_clock_rate(self):
         clock_rate = self.sample_rate
@@ -134,10 +131,7 @@ class SingleFrequencyFFTAcquisition(Action):
     def set_usrp_frequency(self):
         requested_frequency = self.frequency
         self.usrp.radio.frequency = requested_frequency
-        actual_frequency = self.frequency = self.usrp.radio.frequency
-
-        msg = "Tuned USRP to frequency {:.2f} MHz"
-        logger.debug(msg.format(actual_frequency / 1e6))
+        self.frequency = self.usrp.radio.frequency
 
     def acquire_data(self, parent_entry, task_id):
         msg = "Acquiring {} FFTs at {} MHz"
