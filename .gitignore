@@ -96,3 +96,9 @@ ENV/
 system.json
 node_modules
 swagger.json
+
+# vscode
+.vscode/
+
+# auto migrations
+**/migrations/*auto*
