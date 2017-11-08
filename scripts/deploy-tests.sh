@@ -23,7 +23,3 @@ echo "Modifying Dockerfile with base image ${UBUNTU_IMAGE}"
 envsubst '$UBUNTU_IMAGE' \
          < ${REPO_ROOT}/docker-test/Dockerfile.template \
          > ${REPO_ROOT}/Dockerfile
-
-envsubst '$UBUNTU_IMAGE' \
-         < ${REPO_ROOT}/docker-test/.dockerignore \
-         > ${REPO_ROOT}/.dockerignore
