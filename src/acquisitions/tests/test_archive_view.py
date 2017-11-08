@@ -35,7 +35,7 @@ def test_archive_download(user_client, testclock):
         claimed_sha512 = md['global']['core:sha512']
         number_of_sample_arrays = len(md['annotations'])
         samples_per_array = md['annotations'][0]['core:sample_count']
-        sample_array_size = samples_per_array * np.float64(0.0).nbytes
+        sample_array_size = samples_per_array * np.float32(0.0).nbytes
         datafile_expected_size = number_of_sample_arrays * sample_array_size
         actual_sha512 = sigmf.sigmf_hash.calculate_sha512(datafile)
 

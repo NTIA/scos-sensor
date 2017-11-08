@@ -120,7 +120,7 @@ class RadioInterface(object):
         """Aquire nskip+n samples and return the last n"""
         total_samples = nskip + n
         acquired_samples = self.usrp.finite_acquisition(total_samples)
-        data = np.array(acquired_samples[nskip:])
+        data = np.array(acquired_samples[nskip:], dtype=np.float32)
         nreceived = len(data)
         if nreceived != n:
             err = "Requested {} samples, but received {}"
