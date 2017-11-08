@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  api:
+    #restart: always
+    build:
+      args:
+        # must explicitely pass environment as arguments for build-time use
+        - DEBUG
+        - DOMAINS
+        - IPS
+        - SECRET_KEY
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      - DEBUG
+      - DOMAINS
+      - IPS
+      - SECRET_KEY
+    # expose:
+    #   - '8000'
+    volumes:
+       - ../src:/src:ro
+       - ../test-results:/test-results
+       - ../db.sqlite3:/db.sqlite3
+    #   - ../scos-sensor.log:/scos-sensor.log
+    tmpfs: /run
+    # devices:
+    #   - "/dev/bus/usb:/dev/bus/usb:rw"
+    # command: gunicorn -b :8000 --log-level ${GUNICORN_LOG_LEVEL} "sensor.wsgi"
+
+  # nginx:
+  #   image: ${NGINX_IMAGE}
+  #   restart: always
+  #   ports:
+  #     - '80:80'
+  #     - '443:443'
+  #   volumes:
+  #     - ../nginx/conf.d:/etc/nginx/conf.d:ro
+  #     - ../src/static:/var/www/scos-sensor/static:ro
+  #     - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
+  #     - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
