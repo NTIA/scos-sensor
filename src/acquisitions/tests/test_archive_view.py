@@ -32,11 +32,12 @@ def test_archive_download(user_client, testclock):
         md = sigmf_archive_contents._metadata
         datafile = sigmf_archive_contents.data_file
         datafile_actual_size = os.stat(datafile).st_size
-        nsamples = md['annotations'][0]['core:sample_count']
-        datafile_expected_size = nsamples * np.float32().nbytes
+        claimed_sha512 = md['global']['core:sha512']
+        number_of_sample_arrays = len(md['annotations'])
+        samples_per_array = md['annotations'][0]['core:sample_count']
+        sample_array_size = samples_per_array * np.float32(0.0).nbytes
+        datafile_expected_size = number_of_sample_arrays * sample_array_size
+        actual_sha512 = sigmf.sigmf_hash.calculate_sha512(datafile)
 
         assert datafile_actual_size == datafile_expected_size
-
-        #claimed_sha512 = md['global']['core:sha512']
-        #actual_sha512 = sigmf.sigmf_hash.calculate_sha512(datafile)
-        #assert claimed_sha512 == actual_sha512 == TEST_DATA_SHA512
+        assert claimed_sha512 == actual_sha512
