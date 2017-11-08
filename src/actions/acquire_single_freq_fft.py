@@ -62,7 +62,8 @@ def m4s_detector(array):
     mean = np.mean(array, axis=0)
     median = np.median(array, axis=0)
     random_sample = array[np.random.randint(0, array.shape[0], 1)][0]
-    m4s = np.array([amin, amax, mean, median, random_sample])
+    m4s = np.array(
+        [amin, amax, mean, median, random_sample], dtype=np.float32)
 
     return m4s
 
