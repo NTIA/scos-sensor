@@ -17,6 +17,7 @@ services:
       - DOMAINS
       - IPS
       - SECRET_KEY
+      - GUNICORN_LOG_LEVEL
     expose:
       - '8000'
     volumes:
