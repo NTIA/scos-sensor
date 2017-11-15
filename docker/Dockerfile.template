@@ -78,6 +78,7 @@ WORKDIR /src
 COPY ./src/requirements.txt /src
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY ./scripts /scripts
 COPY ./src /src
 
 RUN /usr/lib/uhd/utils/uhd_images_downloader.py
