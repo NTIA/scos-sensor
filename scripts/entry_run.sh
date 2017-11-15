@@ -8,4 +8,4 @@ echo 'Starting Migrations'
 python manage.py migrate
 
 echo 'Starting Gunicorn'
-gunicorn --bind :8000 sensor.wsgi --log-level ${GUNICORN_LOG_LEVEL}
+exec gunicorn --bind :8000 sensor.wsgi --log-level ${GUNICORN_LOG_LEVEL}
