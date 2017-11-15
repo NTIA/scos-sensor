@@ -91,10 +91,6 @@ class ScheduleEntry(models.Model):
         blank=True,
         help_text="absolute time (epoch) to stop, or leave blank for 'never'"
     )
-    # relative_stop = models.BooleanField(
-    #     default=False,
-    #     help_text="stop should be interpreted as seconds after start"
-    # )
     interval = models.PositiveIntegerField(
         null=True,
         blank=True,
@@ -106,6 +102,11 @@ class ScheduleEntry(models.Model):
         editable=True,
         help_text=("deactivate an entry to remove it from the scheduler "
                    "without removing it from the system")
+    )
+    is_private = models.BooleanField(
+        default=False,
+        editable=True,
+        help_text="entry and resulting data are only visible to admin"
     )
 
     # read-only fields

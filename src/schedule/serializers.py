@@ -20,6 +20,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'relative_stop',
             'interval',
             'is_active',
+            'is_private',
             'next_task_time',
             'next_task_id',
             'created',
@@ -35,7 +36,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'view_name': 'v1:user-detail'
             }
         }
-        read_only_fields = ('is_active',)
+        read_only_fields = ('is_active', 'is_private')
         write_only_fields = ('relative_stop',)
 
     def get_acquisitions(self, obj):
@@ -51,6 +52,11 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         # py2.7 compat -> super().to_internal...
         cls = CreateScheduleEntrySerializer
         return super(cls, self).to_internal_value(data)
+
+
+class AdminCreateScheduleEntrySerializer(CreateScheduleEntrySerializer):
+    class Meta(CreateScheduleEntrySerializer.Meta):
+        read_only_fields = ('is_active',)  # allow setting 'is_private'
 
 
 class UpdateScheduleEntrySerializer(CreateScheduleEntrySerializer):

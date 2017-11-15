@@ -3,8 +3,11 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import ScheduleEntry
 from .permissions import IsAdminOrOwnerOrReadOnly
-from .serializers import (CreateScheduleEntrySerializer,
-                          UpdateScheduleEntrySerializer)
+from .serializers import (
+    CreateScheduleEntrySerializer,
+    AdminCreateScheduleEntrySerializer,
+    UpdateScheduleEntrySerializer
+)
 
 
 class ScheduleEntryViewSet(ModelViewSet):
@@ -18,6 +21,9 @@ class ScheduleEntryViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return CreateScheduleEntrySerializer
+            if self.request.user.is_staff:
+                return AdminCreateScheduleEntrySerializer
+            else:
+                return CreateScheduleEntrySerializer
         else:
             return UpdateScheduleEntrySerializer
