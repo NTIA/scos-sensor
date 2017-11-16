@@ -17,15 +17,14 @@ services:
       - DOMAINS
       - IPS
       - SECRET_KEY
+      - GUNICORN_LOG_LEVEL
     expose:
       - '8000'
     volumes:
-      - ../src:/src:ro
       - ../db.sqlite3:/db.sqlite3
-      - ../scos-sensor.log:/scos-sensor.log
     devices:
       - "/dev/bus/usb:/dev/bus/usb:rw"
-    command: gunicorn -b :8000 --log-level ${GUNICORN_LOG_LEVEL} "sensor.wsgi"
+    command: /scripts/entry_run.sh
 
   nginx:
     image: ${NGINX_IMAGE}

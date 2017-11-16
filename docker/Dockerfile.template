@@ -78,7 +78,12 @@ WORKDIR /src
 COPY ./src/requirements.txt /src
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY ./src /src
+
 RUN /usr/lib/uhd/utils/uhd_images_downloader.py
+
+COPY ./scripts /scripts
+RUN chmod +x /scripts/entry_run.sh
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG
