@@ -2,8 +2,6 @@
 
 set -e  # exit on error
 
-# GUNICORN_LOG_LEVEL='info'
-
 echo 'Starting Migrations'
 python manage.py migrate
 
