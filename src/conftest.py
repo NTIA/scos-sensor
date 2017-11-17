@@ -54,35 +54,6 @@ def user_client(db, user):
     return client
 
 
-@pytest.fixture
-def admin_user(db):
-    """ An admin user.
-    """
-    username = 'test_admin'
-    password = 'password'
-
-    user, created = User.objects.get_or_create(
-        username=username, is_staff=True)
-
-    if created:
-        user.set_password(password)
-        user.save()
-
-    user.password = password
-
-    return user
-
-
-@pytest.fixture
-def admin_user_client(db, admin_user):
-    """A Django test client logged in as an admin user"""
-    client = Client()
-    client.login(username=admin_user.username, password=admin_user.password)
-
-    return client
-
-
-
 # Add mock acquisitions for tests
 mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
     frequency=1e9,    # 1 GHz
