@@ -38,11 +38,11 @@ def test_post_nonsense_schedule(user_client):
     assert 'nonsense' not in user_respose.data
 
 
-def test_post_admin_private_schedule(admin_user_client):
-    rjson = post_schedule(admin_user_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+def test_post_admin_private_schedule(admin_client):
+    rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse('v1:schedule-detail', [entry_name])
-    admin_user_respose = admin_user_client.get(entry_url, **HTTPS_KWARG)
+    admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
         rjson[k] == v
@@ -63,13 +63,13 @@ def test_post_user_private_schedule(user_client):
     assert user_respose.data['is_private'] == False
 
 
-def test_private_schedule_is_private(admin_user_client, user_client):
-    rjson = post_schedule(admin_user_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+def test_private_schedule_is_private(admin_client, user_client):
+    rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse('v1:schedule-detail', [entry_name])
 
     user_respose = user_client.get(entry_url, **HTTPS_KWARG)
-    admin_user_respose = admin_user_client.get(entry_url, **HTTPS_KWARG)
+    admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
 
     validate_response(user_respose, status.HTTP_403_FORBIDDEN)
     validate_response(admin_user_respose, status.HTTP_200_OK)
