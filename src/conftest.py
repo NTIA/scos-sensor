@@ -50,7 +50,37 @@ def user_client(db, user):
     """A Django test client logged in as a normal user"""
     client = Client()
     client.login(username=user.username, password=user.password)
+
     return client
+
+
+@pytest.fixture
+def admin_user(db):
+    """ An admin user.
+    """
+    username = 'test_admin'
+    password = 'password'
+
+    user, created = User.objects.get_or_create(
+        username=username, is_staff=True)
+
+    if created:
+        user.set_password(password)
+        user.save()
+
+    user.password = password
+
+    return user
+
+
+@pytest.fixture
+def admin_user_client(db, admin_user):
+    """A Django test client logged in as an admin user"""
+    client = Client()
+    client.login(username=admin_user.username, password=admin_user.password)
+
+    return client
+
 
 
 # Add mock acquisitions for tests
