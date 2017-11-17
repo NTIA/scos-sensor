@@ -21,6 +21,9 @@ class Logger(Action):
     `{tid}` will be replaced with the sequential task id.
 
     """
+    def __init__(self, is_private=False):
+        super(Logger, self).__init__(admin_only=admin_only)
+
     def __call__(self, name, tid):
         msg = "running test {name}/{tid}"
         logger.log(level=DEFAULT_LOGLVL, msg=msg.format(name=name, tid=tid))

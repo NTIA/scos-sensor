@@ -9,7 +9,8 @@ by_name = {
         fft_size=1024,
         nffts=300
     ),
-    "logger": logger.Logger()
+    "logger": logger.Logger(),
+    "admin_logger": logger.Logger(admin_only=True)
 }
 
 
