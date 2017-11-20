@@ -50,6 +50,7 @@ def user_client(db, user):
     """A Django test client logged in as a normal user"""
     client = Client()
     client.login(username=user.username, password=user.password)
+
     return client
 
 
