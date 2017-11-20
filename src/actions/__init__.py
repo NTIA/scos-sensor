@@ -10,7 +10,7 @@ by_name = {
         nffts=300
     ),
     "logger": logger.Logger(),
-    "admin_logger": logger.Logger(admin_only=True)
+    "admin_logger": logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True)
 }
 
 
@@ -37,6 +37,7 @@ def get_summary(action_fn):
 MAX_LENGTH = 50
 VALID_ACTIONS = []
 CHOICES = []
+ADMIN_CHOICES = []
 
 
 def init():
@@ -46,7 +47,10 @@ def init():
 
     VALID_ACTIONS = sorted(by_name.keys())
     for action in VALID_ACTIONS:
-        CHOICES.append((action, get_action_with_summary(action)))
+        if by_name[action].admin_only:
+            ADMIN_CHOICES.append((action, get_action_with_summary(action)))
+        else:
+            CHOICES.append((action, get_action_with_summary(action)))
 
 
 init()
