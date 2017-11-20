@@ -78,6 +78,8 @@ class SingleFrequencyFftAcquisition(Action):
 
     """
     def __init__(self, frequency, sample_rate, fft_size, nffts):
+        super(SingleFrequencyFftAcquisition, self).__init__()
+
         self.frequency = frequency
         self.sample_rate = sample_rate
         self.fft_size = fft_size

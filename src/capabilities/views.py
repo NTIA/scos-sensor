@@ -11,9 +11,12 @@ from rest_framework.response import Response
 import actions
 
 
-def get_actions():
+def get_actions(include_admin_actions=False):
     serialized_actions = []
     for action in actions.by_name:
+        if actions.by_name[action].admin_only and not include_admin_actions:
+            continue
+
         serialized_actions.append({
             'name': action,
             'summary': actions.get_summary(actions.by_name[action]),
@@ -34,5 +37,6 @@ def get_capabilities():
 @api_view()
 def capabilities(request, format=None):
     capabilities = get_capabilities()
-    capabilities['actions'] = get_actions()
+    filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
+    capabilities['actions'] = filtered_actions
     return Response(capabilities)

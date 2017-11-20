@@ -9,11 +9,12 @@ from .base import Action
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_LOGLVL = 20
+LOGLVL_INFO = 20
+LOGLVL_ERROR = 40
 
 
 class Logger(Action):
-    """Log the message "running test {name}/{tid}" at log level INFO.
+    """Log the message "running test {name}/{tid}".
 
     This is useful for testing and debugging.
 
@@ -21,6 +22,10 @@ class Logger(Action):
     `{tid}` will be replaced with the sequential task id.
 
     """
+    def __init__(self, loglvl=LOGLVL_INFO, admin_only=False):
+        super(Logger, self).__init__(admin_only=admin_only)
+        self.loglvl = loglvl
+
     def __call__(self, name, tid):
         msg = "running test {name}/{tid}"
-        logger.log(level=DEFAULT_LOGLVL, msg=msg.format(name=name, tid=tid))
+        logger.log(level=self.loglvl, msg=msg.format(name=name, tid=tid))

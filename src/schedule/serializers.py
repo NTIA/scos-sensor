@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+import actions
 from .models import ScheduleEntry
 
 
 class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField()
     relative_stop = serializers.BooleanField(required=False)
+    action = serializers.ChoiceField(choices=actions.CHOICES)
 
     class Meta:
         model = ScheduleEntry
@@ -55,6 +57,10 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AdminCreateScheduleEntrySerializer(CreateScheduleEntrySerializer):
+    action = serializers.ChoiceField(
+        choices=(actions.CHOICES + actions.ADMIN_CHOICES)
+    )
+
     class Meta(CreateScheduleEntrySerializer.Meta):
         read_only_fields = ('is_active',)  # allow setting 'is_private'
 
