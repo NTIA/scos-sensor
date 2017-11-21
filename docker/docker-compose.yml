@@ -22,6 +22,7 @@ services:
       - '8000'
     volumes:
       - ../db.sqlite3:/db.sqlite3
+      - /var/run/docker.sock:/var/run/docker.sock
     devices:
       - "/dev/bus/usb:/dev/bus/usb:rw"
     command: /scripts/entry_run.sh

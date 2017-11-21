@@ -1,5 +1,6 @@
 from . import acquire_single_freq_fft
 from . import logger
+from . import monitor_usrp
 
 
 by_name = {
@@ -10,7 +11,8 @@ by_name = {
         nffts=300
     ),
     "logger": logger.Logger(),
-    "admin_logger": logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True)
+    "admin_logger": logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),
+    "monitor_usrp": monitor_usrp.USRPMonitor(admin_only=True)
 }
 
 
