@@ -6,13 +6,13 @@ TEST_SCHEDULE_ENTRY = {
 }
 
 TEST_PRIVATE_SCHEDULE_ENTRY = {
-    'name': 'test',
+    'name': 'test_private',
     'action': 'logger',
     'is_private': True
 }
 
 TEST_NONSENSE_SCHEDULE_ENTRY = {
-    'name': 'test',
+    'name': 'test_nonsense',
     'action': 'logger',
     'nonsense': True
 }
