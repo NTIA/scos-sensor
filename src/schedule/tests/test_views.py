@@ -113,6 +113,24 @@ def test_delete_entry(user_client):
     validate_response(response, status.HTTP_404_NOT_FOUND)
 
 
+def test_user_cant_delete_admin_entry(admin_client, user_client):
+    rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+    entry_name = rjson['name']
+    url = reverse('v1:schedule-detail', [entry_name])
+
+    response = user_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_403_FORBIDDEN)
+
+    response = admin_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_204_NO_CONTENT)
+
+    response = user_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
+
+    response = admin_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
+
+
 def test_delete_entry_with_acquisitions_fails(user_client, testclock):
     entry_name = simulate_acquisitions(user_client, n=1)
     entry_url = reverse('v1:schedule-detail', [entry_name])
