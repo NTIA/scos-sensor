@@ -20,6 +20,17 @@ def post_schedule(client, entry):
     return rjson
 
 
+def update_schedule(client, entry_name, new_entry):
+    url = reverse('v1:schedule-detail', [entry_name])
+
+    kwargs = {
+        'data': json.dumps(new_entry),
+        'content_type': 'application/json',
+        'wsgi.url_scheme': 'https'
+    }
+
+    return client.put(url, **kwargs)
+
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
 def flatten(list_of_lists):
     "Flatten one level of nesting"

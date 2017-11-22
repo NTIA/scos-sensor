@@ -38,31 +38,6 @@ def test_post_nonsense_schedule(user_client):
     assert 'nonsense' not in user_respose.data
 
 
-def test_post_admin_private_schedule(admin_client):
-    rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
-    entry_name = rjson['name']
-    entry_url = reverse('v1:schedule-detail', [entry_name])
-    admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
-
-    for k, v in TEST_SCHEDULE_ENTRY.items():
-        rjson[k] == v
-
-    assert rjson['is_private'] == True
-    validate_response(admin_user_respose, status.HTTP_200_OK)
-    assert admin_user_respose.data['is_private'] == True
-
-
-def test_post_user_private_schedule(user_client):
-    rjson = post_schedule(user_client, TEST_PRIVATE_SCHEDULE_ENTRY)
-    entry_name = rjson['name']
-    entry_url = reverse('v1:schedule-detail', [entry_name])
-    user_respose = user_client.get(entry_url, **HTTPS_KWARG)
-
-    assert rjson['is_private'] == False
-    validate_response(user_respose, status.HTTP_200_OK)
-    assert user_respose.data['is_private'] == False
-
-
 def test_private_schedule_is_private(admin_client, user_client):
     rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
@@ -110,24 +85,6 @@ def test_delete_entry(user_client):
     validate_response(response, status.HTTP_204_NO_CONTENT)
 
     response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_404_NOT_FOUND)
-
-
-def test_user_cant_delete_admin_entry(admin_client, user_client):
-    rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
-    entry_name = rjson['name']
-    url = reverse('v1:schedule-detail', [entry_name])
-
-    response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_403_FORBIDDEN)
-
-    response = admin_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_204_NO_CONTENT)
-
-    response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_404_NOT_FOUND)
-
-    response = admin_client.delete(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_404_NOT_FOUND)
 
 

@@ -2,17 +2,18 @@ EMPTY_SCHEDULE_REPONSE = []
 
 TEST_SCHEDULE_ENTRY = {
     'name': 'test',
-    'action': 'logger'
+    'action': 'logger',
+    'is_private': False
 }
 
 TEST_PRIVATE_SCHEDULE_ENTRY = {
-    'name': 'test',
+    'name': 'test_private',
     'action': 'logger',
     'is_private': True
 }
 
 TEST_NONSENSE_SCHEDULE_ENTRY = {
-    'name': 'test',
+    'name': 'test_nonsense',
     'action': 'logger',
     'nonsense': True
 }
