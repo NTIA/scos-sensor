@@ -1,13 +1,12 @@
-"""A simple example action that logs a message."""
+"""Monitor the on-board USRP and touch or remove an indicator file."""
 
 from __future__ import absolute_import
 
+import os
 import logging
-import platform
 from itertools import compress
 
-import docker
-
+from sensor.settings import USRP_HEALTHCHECK_FILE
 from .base import Action
 from . import usrp
 
@@ -15,7 +14,10 @@ from . import usrp
 logger = logging.getLogger(__name__)
 
 
-docker_client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+def touch(fname, times=None):
+    """Emulates unix `touch` utility."""
+    with open(fname, 'a'):
+        os.utime(fname, times)
 
 
 class USRPMonitor(Action):
@@ -27,7 +29,6 @@ class USRPMonitor(Action):
 
     def __call__(self, name, tid):
         healthy = True
-        this_container = docker_client.containers.get(platform.node())
 
         logger.debug("Performing USRP health check")
 
@@ -59,6 +60,12 @@ class USRPMonitor(Action):
                 logger.warn("USRP data doesn't match request")
                 healthy = False
 
-        if not healthy:
-            logger.warn("Restarting container")
-            this_container.restart()
+        if healthy:
+            try:
+                os.remove(USRP_HEALTHCHECK_FILE)
+                logger.info("USRP healthy")
+            except OSError:
+                pass
+        else:
+            logger.warn("USRP unhealthy")
+            touch(USRP_HEALTHCHECK_FILE)

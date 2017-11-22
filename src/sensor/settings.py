@@ -31,6 +31,15 @@ STATICFILES_DIRS = (
 
 RUNNING_DEVSERVER = 'runsslserver' in sys.argv
 
+# Healthchecks - the existance of any of these indicates an unhealth state
+USRP_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'usrp_unhealthy')
+
+# Cleanup any existing healtcheck files
+try:
+    os.remove(USRP_HEALTHCHECK_FILE)
+except OSError:
+    pass
+
 # See /env.template
 if RUNNING_DEVSERVER:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
