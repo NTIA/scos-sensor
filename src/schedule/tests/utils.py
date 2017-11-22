@@ -31,6 +31,7 @@ def update_schedule(client, entry_name, new_entry):
 
     return client.put(url, **kwargs)
 
+
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
 def flatten(list_of_lists):
     "Flatten one level of nesting"
