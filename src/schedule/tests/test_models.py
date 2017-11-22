@@ -116,7 +116,7 @@ def test_defaults():
     assert entry.start is not None
     assert entry.stop is None
     assert entry.interval is None
-    assert entry.is_active is True
+    assert entry.is_active
 
 
 def test_str():

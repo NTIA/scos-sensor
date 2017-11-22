@@ -6,6 +6,13 @@ TEST_SCHEDULE_ENTRY = {
     'is_private': False
 }
 
+TEST_ALTERNATE_SCHEDULE_ENTRY = {
+    'name': 'test_alternate',
+    'action': 'logger',
+    'is_private': False,
+    'priority': 5
+}
+
 TEST_PRIVATE_SCHEDULE_ENTRY = {
     'name': 'test_private',
     'action': 'logger',

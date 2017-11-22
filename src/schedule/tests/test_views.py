@@ -76,18 +76,6 @@ def test_get_entry(user_client):
     validate_response(user_client.get(good_url, **HTTPS_KWARG))
 
 
-def test_delete_entry(user_client):
-    rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
-    entry_name = rjson['name']
-    url = reverse('v1:schedule-detail', [entry_name])
-
-    response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_204_NO_CONTENT)
-
-    response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_404_NOT_FOUND)
-
-
 def test_delete_entry_with_acquisitions_fails(user_client, testclock):
     entry_name = simulate_acquisitions(user_client, n=1)
     entry_url = reverse('v1:schedule-detail', [entry_name])
