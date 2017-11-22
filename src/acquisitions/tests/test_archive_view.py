@@ -6,7 +6,7 @@ from rest_framework import status
 
 import sigmf.sigmffile
 
-#from actions.mock_acquire import TEST_DATA_SHA512
+
 from acquisitions.tests.utils import (
     reverse_acquisition_archive,
     simulate_acquisitions,
