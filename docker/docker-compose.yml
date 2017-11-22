@@ -2,7 +2,14 @@ version: '3'
 
 services:
   api:
+    healthcheck:
+      test: test ! -e /usrp_unhealthy
+      interval: 10s
+      timeout: 1s
+      retries: 1
     restart: always
+    labels:
+      autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     build:
       args:
         # must explicitely pass environment as arguments for build-time use
@@ -23,7 +30,7 @@ services:
     volumes:
       - ../db.sqlite3:/db.sqlite3
     devices:
-      - "/dev/bus/usb:/dev/bus/usb:rw"
+      - /dev/bus/usb:/dev/bus/usb:rw
     command: /scripts/entry_run.sh
 
   nginx:
@@ -37,3 +44,20 @@ services:
       - ../src/static:/var/www/scos-sensor/static:ro
       - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
+
+  # This is a stop-gap until Docker adds the capability to restart unhealthy
+  # containers natively. This container mounts the host's docker unix socket,
+  # which in theory introduces a root privilege escalation vector, but since
+  # this image isn't internet-facing, it's Probably Okay (tm), and definitely
+  # a better temporary solution than mounting the socket directly in the api
+  # container.
+  #
+  # https://github.com/moby/moby/issues/28400
+  # https://github.com/willfarrell/docker-autoheal
+  autoheal:
+    restart: always
+    image: willfarrell/autoheal
+    depends_on:
+      - api
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock

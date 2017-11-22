@@ -72,6 +72,8 @@ RUN apt-get update -q \
         gnuradio uhd-host \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN /usr/lib/uhd/utils/uhd_images_downloader.py
+
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /src
 WORKDIR /src
@@ -79,8 +81,6 @@ COPY ./src/requirements.txt /src
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src /src
-
-RUN /usr/lib/uhd/utils/uhd_images_downloader.py
 
 COPY ./scripts /scripts
 RUN chmod +x /scripts/entry_run.sh
