@@ -17,9 +17,9 @@ def test_post_user_private_schedule(user_client):
     entry_url = reverse('v1:schedule-detail', [entry_name])
     user_respose = user_client.get(entry_url, **HTTPS_KWARG)
 
-    assert rjson['is_private'] is False
+    assert not rjson['is_private']
     validate_response(user_respose, status.HTTP_200_OK)
-    assert user_respose.data['is_private'] is False
+    assert not user_respose.data['is_private']
 
 
 def test_user_cant_delete_admin_entry(admin_client, user_client):

@@ -18,9 +18,9 @@ def test_post_admin_private_schedule(admin_client):
     for k, v in TEST_SCHEDULE_ENTRY.items():
         rjson[k] == v
 
-    assert rjson['is_private'] is True
+    assert rjson['is_private']
     validate_response(admin_user_respose, status.HTTP_200_OK)
-    assert admin_user_respose.data['is_private'] is True
+    assert admin_user_respose.data['is_private']
 
 
 def test_admin_can_view_all_entries(admin_client, user_client):
@@ -79,6 +79,6 @@ def test_admin_can_modify_all_entries(admin_client, user_client):
         admin_client, admin_entry_name, TEST_SCHEDULE_ENTRY)
 
     validate_response(admin_adjust_user_response, status.HTTP_200_OK)
-    assert admin_adjust_user_response.data['is_private'] is True
+    assert admin_adjust_user_response.data['is_private']
     validate_response(admin_adjust_admin_response, status.HTTP_200_OK)
-    assert admin_adjust_admin_response.data['is_private'] is False
+    assert not admin_adjust_admin_response.data['is_private']
