@@ -31,6 +31,18 @@ def test_user_cant_delete_admin_entry(admin_client, user_client):
     validate_response(response, status.HTTP_403_FORBIDDEN)
 
 
+def test_user_can_modify_their_entry(user_client):
+    rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
+    entry_name = rjson['name']
+
+    user_adjust_repose = update_schedule(
+        user_client, entry_name, TEST_ALTERNATE_SCHEDULE_ENTRY)
+
+    validate_response(user_adjust_repose, status.HTTP_200_OK)
+    assert rjson['priority'] == 10
+    assert user_adjust_repose.data['priority'] == 5
+
+
 def test_user_cant_modify_any_other_entry(admin_client, user_client,
                                           alternate_user_client):
     # alternate user schedule entry
