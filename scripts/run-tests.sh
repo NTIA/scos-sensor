@@ -1,10 +1,8 @@
-
-
 #!/bin/bash
 
 set -e  # exit on error
 
-# You must run ./deploy.sh once before calling this script
+# You must run ./deploy-tests.sh once before calling this script
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 

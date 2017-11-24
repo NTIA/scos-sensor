@@ -73,15 +73,11 @@ RUN apt-get update -q \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONUNBUFFERED 1
-#RUN mkdir -p /src
+# Using /app working directory since /src is readonly
 WORKDIR /app
-#COPY ./src/requirements-dev.txt /src
 COPY ./src /app
 RUN pip install --no-cache-dir -r requirements-dev.txt
 CMD tox -e jenkins
-
-
-# RUN /usr/lib/uhd/utils/uhd_images_downloader.py
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG
