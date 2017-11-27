@@ -13,6 +13,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 # To avoid substituting nginx variables, which also use the shell syntax,
 # specify only the variables that will be used in our nginx config: Populate
 # nginx config template to get an actual nginx config
+
 echo "Writing ${REPO_ROOT}/nginx/conf.d/scos-sensor.conf"
 mkdir -p ${REPO_ROOT}/nginx/conf.d
 envsubst '$DOMAINS' \
