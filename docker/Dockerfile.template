@@ -84,6 +84,7 @@ COPY ./src /src
 
 COPY ./scripts /scripts
 RUN chmod +x /scripts/entry_run.sh
+RUN chmod +x /scripts/run_tests_in_docker.sh # for jenkins CI
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG
