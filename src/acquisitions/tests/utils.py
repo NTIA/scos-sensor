@@ -10,12 +10,16 @@ from sensor.tests.utils import validate_response
 HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 
 
-def simulate_acquisitions(client, n=1):
+def simulate_acquisitions(client, n=1, is_private=False):
     assert 0 < n <= 10
 
     if n == 1:
+        SINGLE_ACQUISITION['is_private'] = is_private
+
         schedule_entry = SINGLE_ACQUISITION
     else:
+        MULTIPLE_ACQUISITIONS['is_private'] = is_private
+
         schedule_entry = MULTIPLE_ACQUISITIONS
         schedule_entry['stop'] = n + 1
 
