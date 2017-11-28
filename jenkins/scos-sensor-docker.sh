@@ -1,8 +1,9 @@
+export UBUNTU_IMAGE="ubuntu" &> export_ubuntu.txt
 if [ "$(docker ps -q -f name=testscossensor_1)" ]; then
     docker rm testscossensor_1 &> docker_rm_1_out.txt
 fi
 if [ -d "test_results" ]; then
-    rm "test_results" &> rm_out.txt
+    rm -r "test_results" &> rm_out.txt
 fi
 scripts/deploy.sh &> deploy_out.txt
 docker build -f Dockerfile -t testscossensor . &> docker_build_out.txt
