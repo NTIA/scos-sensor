@@ -62,5 +62,5 @@ services:
       - api
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./autoheal-entrypoint:/autoheal-entrypoint:ro
-    command: /autoheal-entrypoint
+      - ./autohealentrypoint:/autoheal-entrypoint:ro
+    command: /autoheal_entrypoint.sh
