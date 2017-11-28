@@ -81,9 +81,11 @@ COPY ./src/requirements.txt /src
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src /src
+COPY ./docker/api_entrypoint.sh /
+COPY ./docker/testing_entrypoint.sh /
 
-COPY ./scripts /scripts
-RUN chmod +x /scripts/entry_run.sh
+RUN chmod +x /api_entrypoint.sh
+RUN chmod +x /testing_entrypoint.sh # for jenkins CI
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG

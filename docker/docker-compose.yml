@@ -31,7 +31,7 @@ services:
       - ../db.sqlite3:/db.sqlite3
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
-    command: /scripts/entry_run.sh
+    command: /api_entrypoint.sh
 
   nginx:
     image: ${NGINX_IMAGE}
