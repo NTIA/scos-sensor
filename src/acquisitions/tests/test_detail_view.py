@@ -1,5 +1,6 @@
 import pytest
 from rest_framework import status
+from rest_framework.reverse import reverse
 
 from acquisitions.tests.utils import (
     get_acquisition_detail,
@@ -52,3 +53,18 @@ def test_delete_single(user_client, testclock):
     # other 2 acquisitions should be unaffected
     get_acquisition_detail(user_client, entry_name, 1)
     get_acquisition_detail(user_client, entry_name, 3)
+
+
+def test_private_entries_have_private_acquisitons(admin_client, user_client,
+                                                  testclock):
+    entry_name = simulate_acquisitions(admin_client, is_private=True)
+    entry_url = reverse('v1:schedule-detail', [entry_name])
+
+    admin_response = admin_client.get(entry_url, **HTTPS_KWARG)
+    admin_acquisition_url = admin_response.data['acquisitions']
+
+    user_respose = user_client.get(admin_acquisition_url, **HTTPS_KWARG)
+    admin_respose = admin_client.get(admin_acquisition_url, **HTTPS_KWARG)
+
+    validate_response(user_respose, status.HTTP_403_FORBIDDEN)
+    validate_response(admin_respose, status.HTTP_200_OK)

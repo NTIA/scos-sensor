@@ -89,18 +89,3 @@ def test_delete_entry_with_acquisitions_fails(user_client, testclock):
 
     response = user_client.delete(entry_url, **HTTPS_KWARG)
     validate_response(response, expected_status)
-
-
-def test_private_entries_have_private_acquisitons(admin_client, user_client,
-                                                  testclock):
-    entry_name = simulate_acquisitions(admin_client, is_private=True)
-    entry_url = reverse('v1:schedule-detail', [entry_name])
-
-    admin_response = admin_client.get(entry_url, **HTTPS_KWARG)
-    admin_acquisition_url = admin_response.data['acquisitions']
-
-    user_respose = user_client.get(admin_acquisition_url, **HTTPS_KWARG)
-    admin_respose = admin_client.get(admin_acquisition_url, **HTTPS_KWARG)
-
-    validate_response(user_respose, status.HTTP_403_FORBIDDEN)
-    validate_response(admin_respose, status.HTTP_200_OK)
