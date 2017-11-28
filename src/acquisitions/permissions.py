@@ -8,7 +8,7 @@ class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
         user = request.user
         acquisition = view.queryset.first()
 
-        if (acquisition.schedule_entry.is_private) and (not user.is_staff):
+        if acquisition.schedule_entry.is_private and not user.is_staff:
             return False
 
         if request.method in permissions.SAFE_METHODS:
