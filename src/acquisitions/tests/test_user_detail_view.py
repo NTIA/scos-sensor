@@ -2,6 +2,7 @@ from rest_framework import status
 
 from acquisitions.tests.utils import (
     reverse_acquisition_detail,
+    update_acquisition_detail,
     simulate_acquisitions,
     HTTPS_KWARG
 )
@@ -79,8 +80,18 @@ def test_user_cant_delete_other_acquisitions(admin_client, user_client,
         user_delete_alternate_user_response, status.HTTP_403_FORBIDDEN)
 
 
-def test_user_can_modify_their_acquisition(user_client, testclock):
-    pass
+def test_user_cant_modify_their_acquisition(user_client, testclock):
+    entry_name = simulate_acquisitions(user_client)
+    acq_url = reverse_acquisition_detail(entry_name, 1)
+
+    new_acquisition_detail = user_client.get(acq_url, **HTTPS_KWARG).data
+
+    new_acquisition_detail['task_id'] = 2
+
+    response = update_acquisition_detail(
+        user_client, entry_name, 1, new_acquisition_detail)
+
+    validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 def test_user_cant_modify_other_acquisitions(admin_client, user_client,
