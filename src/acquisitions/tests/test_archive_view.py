@@ -25,7 +25,7 @@ def test_archive_download(user_client, testclock):
     assert response['content-disposition'] == disposition
     assert response['content-type'] == 'application/x-tar'
     #assert response['content-length'] == '10240'
-    assert response['content-length'] == '89'
+    assert response['content-length'] == '90'
 
     with tempfile.NamedTemporaryFile() as tf:
         tf.write(response.content)
