@@ -1,3 +1,4 @@
+import json
 from django.test import RequestFactory
 from rest_framework.reverse import reverse
 from rest_framework import status
@@ -87,3 +88,16 @@ def get_acquisition_detail(client, schedule_entry_name, task_id):
     response = client.get(url, **HTTPS_KWARG)
 
     return validate_response(response, status.HTTP_200_OK)
+
+
+def update_acquisition_detail(client, schedule_entry_name, task_id,
+                              new_acquisition):
+    url = reverse_acquisition_detail(schedule_entry_name, task_id)
+
+    kwargs = {
+        'data': json.dumps(new_acquisition),
+        'content_type': 'application/json',
+        'wsgi.url_scheme': 'https'
+    }
+
+    return client.put(url, **kwargs)
