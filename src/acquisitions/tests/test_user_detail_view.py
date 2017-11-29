@@ -9,12 +9,27 @@ from acquisitions.tests.utils import (
 from sensor.tests.utils import validate_response
 
 
-def test_user_can_post_nonprivate_acquisition(user_client, testclock):
-    pass
+def test_user_can_create_nonprivate_acquisition(user_client, testclock):
+    entry_name = simulate_acquisitions(user_client)
+    acq_url = reverse_acquisition_detail(entry_name, 1)
+    response = user_client.get(acq_url, **HTTPS_KWARG)
+
+    validate_response(response, status.HTTP_200_OK)
 
 
-def test_user_cant_post_private_acquisition(user_client, testclock):
-    pass
+def test_user_cant_create_private_acquisition(user_client,
+                                              alternate_user_client,
+                                              testclock):
+    # The alternate user attempts to create a private acquisition.
+    entry_name = simulate_acquisitions(alternate_user_client, is_private=True)
+    acq_url = reverse_acquisition_detail(entry_name, 1)
+
+    # The user attempts to GET the acquisition that the alternate user created.
+    response = user_client.get(acq_url, **HTTPS_KWARG)
+
+    # The user successfully GETs the acquistion that the alternate user
+    # created; meaning that the acquisition was not, in fact, private.
+    validate_response(response, status.HTTP_200_OK)
 
 
 def test_user_can_view_other_nonprivate_acquisitions(admin_client, user_client,
