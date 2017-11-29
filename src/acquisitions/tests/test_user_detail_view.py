@@ -23,11 +23,11 @@ def test_user_can_view_other_nonprivate_acquisitions(admin_client, user_client,
         alternate_user_acq_url, **HTTPS_KWARG)
 
     # admin user schedule entry
-    admin_entry_name = simulate_acquisitions(
+    admin_acq_name = simulate_acquisitions(
         admin_client, name='admin_single_acq')
-    admin_entry_url = reverse_acquisition_detail(admin_entry_name, 1)
+    admin_acq_url = reverse_acquisition_detail(admin_acq_name, 1)
 
-    user_view_admin_response = user_client.get(admin_entry_url, **HTTPS_KWARG)
+    user_view_admin_response = user_client.get(admin_acq_url, **HTTPS_KWARG)
 
     validate_response(user_view_alternate_user_response, status.HTTP_200_OK)
     validate_response(user_view_admin_response, status.HTTP_200_OK)
