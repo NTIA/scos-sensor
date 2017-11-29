@@ -1,9 +1,7 @@
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from acquisitions.tests.utils import (
     reverse_acquisition_detail,
-    get_acquisition_detail,
     simulate_acquisitions,
     HTTPS_KWARG
 )
