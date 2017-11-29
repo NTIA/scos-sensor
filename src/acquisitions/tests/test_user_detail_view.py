@@ -96,4 +96,34 @@ def test_user_cant_modify_their_acquisition(user_client, testclock):
 
 def test_user_cant_modify_other_acquisitions(admin_client, user_client,
                                              alternate_user_client, testclock):
-    pass
+    # alternate user schedule entry
+    alternate_user_entry_name = simulate_acquisitions(
+        alternate_user_client, name='alternate_user_single_acq')
+    alternate_user_acq_url = reverse_acquisition_detail(
+        alternate_user_entry_name, 1)
+
+    new_acquisition_detail = user_client.get(
+        alternate_user_acq_url, **HTTPS_KWARG)
+
+    new_acquisition_detail = new_acquisition_detail.data
+
+    new_acquisition_detail['task_id'] = 2
+
+    user_modify_alternate_user_response = update_acquisition_detail(
+        user_client, alternate_user_entry_name, 1, new_acquisition_detail)
+
+    # admin user schedule entry
+    admin_entry_name = simulate_acquisitions(
+        admin_client, name='admin_single_acq')
+    admin_acq_url = reverse_acquisition_detail(admin_entry_name, 1)
+
+    new_acquisition_detail = user_client.get(admin_acq_url, **HTTPS_KWARG).data
+
+    new_acquisition_detail['task_id'] = 2
+
+    user_modify_admin_response = update_acquisition_detail(
+        user_client, admin_entry_name, 1, new_acquisition_detail)
+
+    validate_response(
+        user_modify_alternate_user_response, status.HTTP_403_FORBIDDEN)
+    validate_response(user_modify_admin_response, status.HTTP_403_FORBIDDEN)
