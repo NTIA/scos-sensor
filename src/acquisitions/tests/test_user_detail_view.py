@@ -45,12 +45,38 @@ def test_user_cant_view_private_acquisitions(admin_client, user_client,
 
 
 def test_user_can_delete_their_acquisition(user_client, testclock):
-    pass
+    entry_name = simulate_acquisitions(user_client)
+    acq_url = reverse_acquisition_detail(entry_name, 1)
+
+    first_response = user_client.delete(acq_url, **HTTPS_KWARG)
+    second_response = user_client.delete(acq_url, **HTTPS_KWARG)
+
+    validate_response(first_response, status.HTTP_204_NO_CONTENT)
+    validate_response(second_response, status.HTTP_404_NOT_FOUND)
 
 
 def test_user_cant_delete_other_acquisitions(admin_client, user_client,
                                              alternate_user_client, testclock):
-    pass
+    # alternate user schedule entry
+    alternate_user_entry_name = simulate_acquisitions(
+        alternate_user_client, name='alternate_user_single_acq')
+    alternate_user_acq_url = reverse_acquisition_detail(
+        alternate_user_entry_name, 1)
+
+    user_delete_alternate_user_response = user_client.delete(
+        alternate_user_acq_url, **HTTPS_KWARG)
+
+    # admin user schedule entry
+    admin_acq_name = simulate_acquisitions(
+        admin_client, name='admin_single_acq')
+    admin_acq_url = reverse_acquisition_detail(admin_acq_name, 1)
+
+    user_delete_admin_response = user_client.delete(
+        admin_acq_url, **HTTPS_KWARG)
+
+    validate_response(user_delete_admin_response, status.HTTP_403_FORBIDDEN)
+    validate_response(
+        user_delete_alternate_user_response, status.HTTP_403_FORBIDDEN)
 
 
 def test_user_can_modify_their_acquisition(user_client, testclock):
