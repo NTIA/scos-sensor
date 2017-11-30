@@ -84,6 +84,9 @@ COPY ./src /src
 COPY ./docker/api_entrypoint.sh /
 COPY ./docker/testing_entrypoint.sh /
 
+RUN mkdir -p /scripts
+COPY ./scripts/create_superuser.py /scripts
+
 RUN chmod +x /api_entrypoint.sh
 RUN chmod +x /testing_entrypoint.sh # for jenkins CI
 

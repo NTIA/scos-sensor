@@ -57,7 +57,12 @@ def test_user_can_view_other_nonprivate_acquisitions(admin_client, user_client,
 
 def test_user_cant_view_private_acquisitions(admin_client, user_client,
                                              testclock):
-    pass
+    private_entry_name = simulate_acquisitions(admin_client, is_private=True)
+    private_acq_url = reverse_acquisition_detail(private_entry_name, 1)
+
+    response = user_client.get(private_acq_url, **HTTPS_KWARG)
+
+    validate_response(response, status.HTTP_403_FORBIDDEN)
 
 
 def test_user_can_delete_their_acquisition(user_client, testclock):
