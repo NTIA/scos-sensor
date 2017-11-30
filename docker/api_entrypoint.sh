@@ -5,7 +5,7 @@ set -e  # exit on error
 echo 'Starting Migrations'
 python manage.py migrate
 
-echo 'Attempting to Create Superuser'
+echo 'Creating Superuser'
 python /scripts/create_superuser.py
 
 echo 'Starting Gunicorn'
