@@ -8,7 +8,7 @@ set -e
 DOCKER_SOCK=${DOCKER_SOCK:-/var/run/docker.sock}
 TMP_DIR=/tmp/restart
 
-apt-get update && apt-get install -y curl jq
+apt-get install -y curl jq || (apt-get update && apt-get install -y curl jq)
 
 if [ -e ${DOCKER_SOCK} ]; then
 
@@ -28,9 +28,17 @@ if [ -e ${DOCKER_SOCK} ]; then
         }
     fi
 
+    interruptable_sleep() {
+        pid=
+        trap '[[ $pid ]] && kill $pid; exit 0' TERM  # Kill sleep and exit if caught SIGTERM from Docker
+        sleep ${AUTOHEAL_INTERVAL:=5} & pid=$!
+        wait
+        pid=
+    }
+
     echo "Monitoring containers for unhealthy status"
     while true; do
-        sleep ${AUTOHEAL_INTERVAL:=5}
+        interruptable_sleep
 
         CONTAINERS=$(curl --no-buffer -s -XGET --unix-socket ${DOCKER_SOCK} http://localhost/containers/json | selector)
         for CONTAINER in $CONTAINERS; do

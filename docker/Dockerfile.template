@@ -81,14 +81,17 @@ COPY ./src/requirements.txt /src
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src /src
-COPY ./docker/api_entrypoint.sh /
-COPY ./docker/testing_entrypoint.sh /
+COPY ./gunicorn /gunicorn
+
+RUN mkdir -p /docker
+COPY ./docker/api_entrypoint.sh /docker
+COPY ./docker/testing_entrypoint.sh /docker
 
 RUN mkdir -p /scripts
 COPY ./scripts/create_superuser.py /scripts
 
-RUN chmod +x /api_entrypoint.sh
-RUN chmod +x /testing_entrypoint.sh # for jenkins CI
+RUN chmod +x /docker/api_entrypoint.sh
+RUN chmod +x /docker/testing_entrypoint.sh # for jenkins CI
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG

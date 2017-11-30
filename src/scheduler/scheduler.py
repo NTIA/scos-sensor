@@ -64,6 +64,7 @@ class Scheduler(threading.Thread):
                 self._consume_schedule(blocking)
 
             if not blocking or self.interrupt_flag.is_set():
+                logger.info("scheduler interrupted")
                 break
 
     def _consume_schedule(self, blocking):

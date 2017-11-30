@@ -32,7 +32,7 @@ services:
       - /opt/scos:/opt/scos
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
-    command: /api_entrypoint.sh
+    command: /docker/api_entrypoint.sh
 
   nginx:
     image: ${NGINX_IMAGE}
@@ -62,5 +62,5 @@ services:
       - api
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./autohealentrypoint:/autoheal-entrypoint:ro
-    command: /autoheal_entrypoint.sh
+      - ./autoheal_entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
+    command: /docker/autoheal_entrypoint.sh

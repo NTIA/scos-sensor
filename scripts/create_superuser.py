@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import os
 import sys
@@ -11,10 +11,15 @@ sys.path.append(PATH)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model  # noqa
 
-with open('/opt/scos/.db_superuser', 'r') as superuser_file:
-    password = superuser_file.readline().rstrip()
+try:
+    with open('/opt/scos/.db_superuser', 'r') as superuser_file:
+        password = superuser_file.readline().rstrip()
+except IOError:
+    print("Not on a managed sensor, so not auto-generating admin account.")
+    print("You can add an admin later with `./manage.py createsuperuser")
+    sys.exit(0)
 
 UserModel = get_user_model()
 
