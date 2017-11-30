@@ -13,10 +13,13 @@ django.setup()
 
 from django.contrib.auth import get_user_model
 
+with open('/opt/scos/.db_superuser', 'r') as superuser_file:
+    password = superuser_file.readline().rstrip()
+
 UserModel = get_user_model()
 
 try:
     admin_user = UserModel._default_manager.get(username='admin')
 except UserModel.DoesNotExist:
     UserModel._default_manager.create_superuser(
-        'admin', 'admin@example.com', 'password')
+        'admin', 'sms@ntia.doc.gov', password)
