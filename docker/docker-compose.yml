@@ -29,6 +29,7 @@ services:
       - '8000'
     volumes:
       - ../db.sqlite3:/db.sqlite3
+      - /opt/scos:/opt/scos
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
     command: /api_entrypoint.sh
