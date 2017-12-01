@@ -9,4 +9,4 @@ echo 'Creating Superuser'
 python /scripts/create_superuser.py
 
 echo 'Starting Gunicorn'
-exec gunicorn --bind :8000 sensor.wsgi --log-level ${GUNICORN_LOG_LEVEL}
+exec gunicorn sensor.wsgi -c ../gunicorn/config.py
