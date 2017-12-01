@@ -116,8 +116,8 @@ class SingleFrequencyFftAcquisition(Action):
             raise RuntimeError(msg.format(missing))
 
     def configure_usrp(self):
-        self.set_usrp_sample_rate()
         self.set_usrp_clock_rate()
+        self.set_usrp_sample_rate()
         self.set_usrp_frequency()
 
     def set_usrp_sample_rate(self):
