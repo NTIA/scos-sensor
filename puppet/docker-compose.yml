@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  api:
+    healthcheck:
+      test: test ! -e /usrp_unhealthy
+      interval: 10s
+      timeout: 1s
+      retries: 1
+    restart: always
+    labels:
+        autoheal: "true"
+    image: ntiaits/test_scossensor_api
+    environment:
+      - DEBUG
+      - DOMAINS
+      - IPS
+      - SECRET_KEY
+      - GUNICORN_LOG_LEVEL
+    expose:
+      - '8000'
+    volumes:
+      - ./db.sqlite3:/db.sqlite3
+      - /opt/scos:/opt/scos
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb:rw"
+    command: /docker/api_entrypoint.sh
+
+  nginx:
+    image: nginx
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /home/dhicks/Documents/scos-sensor/nginx/conf.d:/etc/nginx/conf.d:ro
+      - /home/dhicks/Documents/scos-sensor/src/static:/var/www/scos-sensor/static:ro
+      - /home/dhicks/Documents/scos-sensor/nginx/certs/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert.pem:ro
+      - /home/dhicks/Documents/scos-sensor/nginx/certs/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert.key:ro
+
+  autoheal:
+    image: ubuntu
+    restart: on-failure
+    depends_on:
+      - api
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./autoheal-entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
+    command: /docker/autoheal_entrypoint.sh
