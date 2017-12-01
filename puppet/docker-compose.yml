@@ -27,19 +27,19 @@ services:
     command: /docker/api_entrypoint.sh
 
   nginx:
-    image: nginx
+    image: ${NGINX_IMAGE}
     restart: always
     ports:
       - '80:80'
       - '443:443'
     volumes:
-      - /home/dhicks/Documents/scos-sensor/nginx/conf.d:/etc/nginx/conf.d:ro
-      - /home/dhicks/Documents/scos-sensor/src/static:/var/www/scos-sensor/static:ro
-      - /home/dhicks/Documents/scos-sensor/nginx/certs/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert.pem:ro
-      - /home/dhicks/Documents/scos-sensor/nginx/certs/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert.key:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../src/static:/var/www/scos-sensor/static:ro
+      - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
+      - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
 
   autoheal:
-    image: ubuntu
+    image: ${UBUNTU_IMAGE}
     restart: on-failure
     depends_on:
       - api
