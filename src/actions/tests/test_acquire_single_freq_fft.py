@@ -8,6 +8,7 @@ from sigmf.validate import validate
 
 from .mocks import usrp as mock_usrp
 
+
 def run_single_frequency_fft_acquisition(user_client):
     # Put an entry in the schedule that we can refer to
     rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
@@ -35,5 +36,3 @@ def test_validate_sigmf_output(user_client):
     acquistion = Acquisition.objects.get(task_id=task_id)
     sigmf_metadata = acquistion.sigmf_metadata
     assert validate(sigmf_metadata)
-
-    
