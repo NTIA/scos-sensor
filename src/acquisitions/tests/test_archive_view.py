@@ -28,6 +28,7 @@ def test_archive_download(user_client, testclock):
 
     with tempfile.NamedTemporaryFile() as tf:
         tf.write(response.content)
+        tf.flush()
         sigmf_archive_contents = sigmf.sigmffile.fromarchive(tf.name)
         md = sigmf_archive_contents._metadata
         datafile = sigmf_archive_contents.data_file
