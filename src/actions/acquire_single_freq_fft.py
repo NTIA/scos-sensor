@@ -161,8 +161,21 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
         for i, detector in enumerate(M4sDetector):
+            single_frequency_fft_md = {
+                "number_of_samples_in_fft": self.fft_size,
+                "window": "blackman",
+                "equivalent_noise_bandwidth": "",
+                "detector": detector.name,
+                "number_of_ffts": self.nffts,
+                "units": "dBm",
+                "reference": ""
+            }
+
             annotation_md = {
-                "scos:detector": detector.name
+                # "scos:detector": detector.name,
+                "scos:measurement_type": {
+                        "SingleFrequencyFFTDetection": single_frequency_fft_md
+                }
             }
 
             sigmf_md.add_annotation(
