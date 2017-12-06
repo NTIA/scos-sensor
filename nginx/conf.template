@@ -8,9 +8,9 @@ upstream wsgi-server {
 }
 
 
-# upstream ws-logger {
-#     server ws_logger:8000 fail_timeout=0;
-# }
+upstream ws-logger {
+    server ws_logger:8000 fail_timeout=0;
+}
 
 
 server {
@@ -46,12 +46,12 @@ server {
       try_files $uri @proxy_to_wsgi_server;
     }
 
-    # location /logs/ {
-    #     proxy_pass http://ws-logger/logs;
-    #     proxy_http_version 1.1;
-    #     proxy_set_header Upgrade $http_upgrade;
-    #     proxy_set_header Connection "upgrade";
-    # }
+    location /logs/ {
+        proxy_pass http://ws-logger/logs;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
 
     # Pass off requests to Gunicorn
     location @proxy_to_wsgi_server {
