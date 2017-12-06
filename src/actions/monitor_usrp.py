@@ -46,7 +46,7 @@ class USRPMonitor(Action):
             logger.warn("{} required but not available".format(missing))
             healthy = False
 
-        requested_samples = 100
+        requested_samples = 100000  # Issue #42 hit error at ~70k, so test more
 
         if healthy:
             try:
