@@ -57,9 +57,9 @@ services:
       - ./autoheal_entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
     command: /docker/autoheal_entrypoint.sh
 
-  # ws_logger:
-  #   image: gliderlabs/logspout
-  #   expose:
-  #     - '8000'
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
+  ws_logger:
+    image: gliderlabs/logspout
+    expose:
+      - '8000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
