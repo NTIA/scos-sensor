@@ -85,6 +85,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.fft_size = fft_size
         self.nffts = nffts
         self.usrp = usrp  # make instance variable to allow hotswapping mock
+        self.enbw = None
 
     def __call__(self, schedule_entry_name, task_id):
         from schedule.models import ScheduleEntry
@@ -161,8 +162,20 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
         for i, detector in enumerate(M4sDetector):
+            single_frequency_fft_md = {
+                "number_of_samples_in_fft": self.fft_size,
+                "window": "blackman",
+                "equivalent_noise_bandwidth": self.enbw,
+                "detector": detector.name + "_power",
+                "number_of_ffts": self.nffts,
+                "units": "dBm",
+                "reference": "not referenced"
+            }
+
             annotation_md = {
-                "scos:detector": detector.name
+                "scos:measurement_type": {
+                        "SingleFrequencyFFTDetection": single_frequency_fft_md
+                }
             }
 
             sigmf_md.add_annotation(
@@ -178,8 +191,10 @@ class SingleFrequencyFftAcquisition(Action):
         logger.debug("Applying detector")
 
         window = np.blackman(self.fft_size)
-        window_power = sum(tap*tap for tap in window)
+        window_power = sum(window**2)
         impedance = 50.0  # ohms
+
+        self.enbw = self.fft_size * window_power / sum(window)**2
 
         Vsq2W_dB = -10.0 * np.log10(self.fft_size * window_power * impedance)
 
