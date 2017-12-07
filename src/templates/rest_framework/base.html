@@ -9,3 +9,9 @@
   </a>
 </span>
 {% endblock %}
+
+{% block script %}
+{{ block.super }}
+{% load static %}
+<script src="{% static 'js/ws_logger.js' %}"></script>
+{% endblock %}

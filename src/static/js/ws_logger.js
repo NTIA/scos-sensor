@@ -7,7 +7,7 @@ var WebSocket = WebSocket || MozWebSocket;
 
 
 function connect() {
-    var serverUrl = "ws://" + window.location.hostname + ":6502/logs";
+    var serverUrl = "wss://" + window.location.hostname + "/logs";
 
     connection = new WebSocket(serverUrl);
 
@@ -17,6 +17,19 @@ function connect() {
 
     connection.onmessage = function(evt) {
         var msg = JSON.parse(evt.data);
-        console.log(msg); // FIXME
+        var container_name;
+        if (msg.Container.Name.substring(0, 1) == '/') {
+            container_name = msg.Container.Name.substring(1);
+        } else {
+            container_name = msg.Container.Name;
+        }
+        console.log("[" + container_name + "] " + msg.Data);
+    };
+
+    window.onbeforeunload = function(evt) {
+        connection.close();
     }
 }
+
+
+window.onload = connect();
