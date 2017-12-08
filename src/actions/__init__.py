@@ -2,13 +2,26 @@ from . import acquire_single_freq_fft
 from . import logger
 from . import monitor_usrp
 
+from django.conf import settings
+
+import json
+import os
+
+
+ANTENNA_FILE_PATH = os.path.join(settings.REPO_ROOT, "config", "antenna.json")
+try:
+    with open(ANTENNA_FILE_PATH, "r") as f:
+        scos_antenna_obj = json.load(f)
+except IOError:
+    raise IOError("Unable to open antenna config file at " + ANTENNA_FILE_PATH)
 
 by_name = {
     "acquire700c": acquire_single_freq_fft.SingleFrequencyFftAcquisition(
         frequency=751e6,
         sample_rate=15.36e6,
         fft_size=1024,
-        nffts=300
+        nffts=300,
+        antenna=scos_antenna_obj
     ),
     "logger": logger.Logger(),
     "admin_logger": logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),

@@ -77,7 +77,7 @@ class SingleFrequencyFftAcquisition(Action):
     :param nffts: number of consecutive FFTs to pass to detector
 
     """
-    def __init__(self, frequency, sample_rate, fft_size, nffts):
+    def __init__(self, frequency, sample_rate, fft_size, nffts, antenna):
         super(SingleFrequencyFftAcquisition, self).__init__()
 
         self.frequency = frequency
@@ -85,6 +85,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.fft_size = fft_size
         self.nffts = nffts
         self.usrp = usrp  # make instance variable to allow hotswapping mock
+        self.antenna = antenna
         self.enbw = None
 
     def __call__(self, schedule_entry_name, task_id):
@@ -153,6 +154,12 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:datatype", "rf32_le")
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
+
+        sensor_definition = {
+            "antenna": self.antenna["scos:antenna"]
+        }
+
+        sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
 
         capture_md = {
             "core:frequency": self.frequency,
