@@ -1,12 +1,10 @@
 from __future__ import absolute_import
 
-from actions import acquire_single_freq_fft, by_name
+from actions import by_name
 from acquisitions.models import Acquisition
 from schedule.tests import TEST_SCHEDULE_ENTRY
 from schedule.tests.utils import post_schedule
 from sigmf.validate import validate
-
-from .mocks import usrp as mock_usrp
 
 
 def test_detector(user_client):
@@ -20,4 +18,3 @@ def test_detector(user_client):
     acquistion = Acquisition.objects.get(task_id=task_id)
     sigmf_metadata = acquistion.sigmf_metadata
     assert validate(sigmf_metadata)
-
