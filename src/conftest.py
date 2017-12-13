@@ -117,27 +117,12 @@ def alternate_admin_client(db, alternate_admin_user):
     return client
 
 
-mock_antenna = {
-    "scos:antenna": {
-        "model": "COMTELCO BS698XL3",
-        "type": "dipole",
-        "low_frequency": 698000000.0,
-        "high_frequency": 896000000.0,
-        "gain": 5.15,
-        "horizontal_beam_width": 360,
-        "vertical_beam_width": 30,
-        "steerable": False,
-        "mobile": True
-    }
-}
-
 # Add mock acquisitions for tests
 mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
     frequency=1e9,    # 1 GHz
     sample_rate=1e6,  # 1 MSa/s
     fft_size=16,
-    nffts=11,
-    antenna=mock_antenna
+    nffts=11
 )
 mock_acquire.usrp = actions.tests.mocks.usrp
 
