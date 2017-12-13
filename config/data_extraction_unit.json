@@ -1,9 +1,9 @@
 {
     "scos:data_extraction_unit": {
-	"model": "Ettus B210",
-	"low_frequency": 70000000,
-	"high_frequency": 6000000000,
-	"noise_figure": 8,
-	"max_power": 0 
+        "high_frequency": 6000000000,
+        "low_frequency": 70000000,
+        "max_power": 0,
+        "model": "Ettus B210",
+        "noise_figure": 8
     }
 }
