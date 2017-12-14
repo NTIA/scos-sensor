@@ -7,9 +7,8 @@
 
 # determine where puppet is installed
 # get a list of puppet environments on puppet master  
-# user inputs which location to deploy to
-# create folder structure
+# user inputs which environment to deploy to, or as a common module 
+# create module folder structure
 # copy manifest files
 # copy fact generation files
 # copy scos-code files 
-  
