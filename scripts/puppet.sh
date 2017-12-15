@@ -13,7 +13,7 @@
 continue="y"
 common_module="n"
 environment_module="y"
-install_path="/etc/puppetlabs/code/environments/"
+install_path="/etc/puppetlabs/code/environments"
 install_environment="development"
 path_confirmed="y"
 puppet_environments=`ls -1d /etc/puppetlabs/code/environments/* | xargs -n 1 basename`
@@ -21,7 +21,16 @@ puppet_environments=`ls -1d /etc/puppetlabs/code/environments/* | xargs -n 1 bas
 ## FUNCTIONS ##
 
 scos_copy () {
-    printf "\ncopy!\n"
+    printf "Creating module! \n"
+    mkdir -p $1/scos/files 
+    cp -r ../puppet/lib $1/scos
+    cp -r ../puppet/manifests $1/scos
+    cp ../docker/docker-compose.yml $1/scos/files
+    cp -r ../nginx $1/scos/files
+    cp -r ../src $1/scos/files
+    cp ../env.template $1/scos/files      
+    printf "\nModule created. \n"
+    chown -R puppet $1/scos
 }
 
 ## MAIN ##
@@ -40,10 +49,13 @@ read -e -i "$common_module" -p "Do you wish to install as a common module (y or 
 if [ $common_module == "y" ]
 then
     install_path="/etc/puppetlabs/code/modules/"
-    read -e -i "$path_confirmed" -p "Is this install path correct: $install_path (y/n)? " path_confirmed
+    read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path (y/n)? " path_confirmed
     if [ $path_confirmed == "y" ] 
     then
-        scos_copy
+        scos_copy $install_path
+    else
+        printf "Script aborted, module not installed\n"
+        exit 1
     fi
 else
     read -e -i "$environment_module" -p "Do you wish to install as a environment module (y/n)? " environment_module
@@ -52,10 +64,11 @@ else
         printf "\nPuppet Environments:\n\n"
         printf "$puppet_environments\n\n"
         read -e -i "$install_environment" -p "Enter install environment: " install_environment
-        read -e -i "$path_confirmed" -p "Is this install path correct: $install_path$install_environment/modules/ ? " path_confirmed
+        install_path="$install_path/$install_environment/modules/"
+        read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path ? " path_confirmed
         if [ $path_confirmed == "y" ] 
         then
-            scos_copy
+            scos_copy $install_path
         fi
     else
         printf "Script aborted, module not installed\n"
