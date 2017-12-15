@@ -1,2 +1,3 @@
-docker build -f Dockerfile -t test_scossensor_api .
-docker tag test_scossensor_api ntiaits/test_scossensor_api
+#!/bin/bash
+
+docker build -f ${REPO_ROOT}/Dockerfile -t ntiaits/test_scossensor_api ${REPO_ROOT}
