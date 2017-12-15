@@ -82,6 +82,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src /src
 COPY ./gunicorn /gunicorn
+COPY ./config /config
 
 RUN mkdir -p /docker
 COPY ./docker/api_entrypoint.sh /docker

@@ -13,6 +13,7 @@ from sigmf.sigmffile import SigMFFile
 
 from .base import Action
 from . import usrp
+from capabilities import scos_antenna_obj
 
 
 logger = logging.getLogger(__name__)
@@ -153,6 +154,12 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:datatype", "rf32_le")
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
+
+        sensor_definition = {
+            "antenna": scos_antenna_obj["scos:antenna"]
+        }
+
+        sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
 
         capture_md = {
             "core:frequency": self.frequency,
