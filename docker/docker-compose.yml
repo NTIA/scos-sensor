@@ -10,15 +10,7 @@ services:
     restart: always
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
-    build:
-      args:
-        # must explicitely pass environment as arguments for build-time use
-        - DEBUG
-        - DOMAINS
-        - IPS
-        - SECRET_KEY
-      context: ..
-      dockerfile: Dockerfile
+    image: ntiaits/test_scossensor_api
     environment:
       - DEBUG
       - DOMAINS
