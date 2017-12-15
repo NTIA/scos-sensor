@@ -37,6 +37,7 @@ from .views import get_swagger_view
 
 SCHEMA_VIEW = get_swagger_view(title=API_TITLE)
 
+
 @api_view(('GET',))
 def api_v1_root(request, format=None):
     reverse_ = partial(reverse, request=request, format=format)
