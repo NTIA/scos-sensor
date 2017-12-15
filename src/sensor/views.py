@@ -30,7 +30,7 @@ def get_swagger_view(title=None, url=None, patterns=None, urlconf=None):
                 urlconf=urlconf
             )
 
-            schema = generator.get_schema(request=request)
+            schema = generator.get_schema(request=request, public=True)
 
             if not schema:
                 raise exceptions.ValidationError(
