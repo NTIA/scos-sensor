@@ -14,8 +14,7 @@ def get_swagger_view(title=None, url=None, patterns=None, urlconf=None):
     """
     class SwaggerSchemaView(APIView):
         _ignore_model_permissions = True
-        exclude_from_schema = True
-        # authentication_classes = []
+        # exclude_from_schema = True
         permission_classes = [AllowAny]
         renderer_classes = [
             CoreJSONRenderer,
@@ -30,8 +29,6 @@ def get_swagger_view(title=None, url=None, patterns=None, urlconf=None):
                 patterns=patterns,
                 urlconf=urlconf
             )
-
-            print(request)
 
             schema = generator.get_schema(request=request)
 
