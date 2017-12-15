@@ -25,13 +25,17 @@ from django.conf.urls import include, url
 from django.views.generic import RedirectView
 from rest_framework.decorators import api_view
 from rest_framework.documentation import include_docs_urls
+from rest_framework.renderers import BrowsableAPIRenderer, CoreJSONRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.schemas import get_schema_view
 from rest_framework.urlpatterns import format_suffix_patterns
 
+from .schema import OpenAPIRenderer
 from .settings import API_TITLE, API_DESCRIPTION
 from .views import get_swagger_view
 
+SCHEMA_VIEW = get_swagger_view(title=API_TITLE)
 
 @api_view(('GET',))
 def api_v1_root(request, format=None):
