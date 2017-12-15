@@ -8,7 +8,7 @@ SCRIPT=$(basename ${BASH_SOURCE[0]})
 NARGS=$#
 if [[ $NARGS != 1 ]]; then
     echo "Usage: $SCRIPT URL_TO_OPENAPI2_JSON"
-    echo "Try starting the development server (./src/manage.py runserver)"
+    echo "Try starting the development server (./src/manage.py runsslserver)"
     echo "and using http://localhost:8000/api/v1/schema"
     exit 1
 fi
@@ -20,7 +20,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 APIDOCS_ROOT="${REPO_ROOT}/docs/api"
 
 echo "fetching openapi.json"
-curl -s -H "Accept: application/openapi+json" $URL \
+curl -k -H "Content-type: application/openapi+json" $URL \
     | python -m json.tool > ${APIDOCS_ROOT}/openapi.json
 echo "wrote ${APIDOCS_ROOT}/openapi.json"
 
