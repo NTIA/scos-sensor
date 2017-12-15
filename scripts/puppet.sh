@@ -49,7 +49,7 @@ read -e -i "$common_module" -p "Do you wish to install as a common module (y or 
 if [ $common_module == "y" ]
 then
     install_path="/etc/puppetlabs/code/modules/"
-    read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path (y/n)? " path_confirmed
+    read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path (y or n)? " path_confirmed
     if [ $path_confirmed == "y" ] 
     then
         scos_copy $install_path
@@ -58,14 +58,14 @@ then
         exit 1
     fi
 else
-    read -e -i "$environment_module" -p "Do you wish to install as a environment module (y/n)? " environment_module
+    read -e -i "$environment_module" -p "Do you wish to install as a environment module (y or n)? " environment_module
     if [ $environment_module == "y" ] 
     then
         printf "\nPuppet Environments:\n\n"
         printf "$puppet_environments\n\n"
         read -e -i "$install_environment" -p "Enter install environment: " install_environment
         install_path="$install_path/$install_environment/modules/"
-        read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path ? " path_confirmed
+        read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path (y or n)? " path_confirmed
         if [ $path_confirmed == "y" ] 
         then
             scos_copy $install_path
