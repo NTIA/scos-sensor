@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Title: puppet.sh
-# Author: Brad Eales
-# Date: 2017-12-15
-# Version 0.1
-
 # Use this script to create the `scos` Puppet module on the Puppet Master which
 # will deploy the scos-sensor code to new sensors.
 
