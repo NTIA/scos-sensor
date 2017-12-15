@@ -12,4 +12,4 @@ docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor stop
 
 # Build out and run in background
 echo "Bringing up updated services"
-docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor up -d --build
+docker-compose -f ${REPO_ROOT}/docker/docker-compose.yml -p scossensor up -d --no-build
