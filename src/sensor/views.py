@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from .schema import OpenAPIRenderer
 
 
-def get_swagger_view(title=None, url=None, patterns=None, urlconf=None):
+def get_openapi_view(title=None, url=None, patterns=None, urlconf=None):
     """
     Returns schema view which renders Swagger/OpenAPI.
     """
