@@ -9,9 +9,6 @@ upstream wsgi-server {
 
 
 upstream ws-logger {
-    # fail_timeout=0 means we always retry an upstream even if it failed
-    # to return a good HTTP response (in case the gunicorn master nukes a
-    # single worker for timing out).
     server api:8001 fail_timeout=0;
 }
 
