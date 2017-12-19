@@ -29,7 +29,7 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
 )
 
-RUNNING_DEVSERVER = 'runsslserver' in sys.argv
+RUNNING_DEVSERVER = 'runserver' in sys.argv
 
 # Healthchecks - the existance of any of these indicates an unhealth state
 USRP_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'usrp_unhealthy')
@@ -51,9 +51,8 @@ else:
     ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = not RUNNING_DEVSERVER
+CSRF_COOKIE_SECURE = not RUNNING_DEVSERVER
 
 
 # Application definition
@@ -71,6 +70,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'channels',
     'sslserver',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
@@ -110,6 +110,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sensor.wsgi.application'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_ipc.IPCChannelLayer",
+        "ROUTING": "sensor.routing.channel_routing",
+        "CONFIG": {
+            "prefix": "scos_sensor",
+        },
+    },
+}
 
 
 # Django Rest Framework
@@ -210,6 +221,8 @@ STATIC_URL = '/static/'
 
 
 LOGLEVEL = 'DEBUG' if DEBUG else 'INFO'
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -228,14 +241,18 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
+        'websocket': {
+            'class': 'sensor.ws_logger.WebSocketHandler',
+            'formatter': 'simple'
+        }
     },
     'loggers': {
         'actions': {
-            'handlers': ['console'],
+            'handlers': ['console', 'websocket'],
             'level': LOGLEVEL
         },
         'acquisitions': {
-            'handlers': ['console'],
+            'handlers': ['console', 'websocket'],
             'level': LOGLEVEL
         },
         'capabilities': {
@@ -243,11 +260,11 @@ LOGGING = {
             'level': LOGLEVEL
         },
         'schedule': {
-            'handlers': ['console'],
+            'handlers': ['console', 'websocket'],
             'level': LOGLEVEL
         },
         'scheduler': {
-            'handlers': ['console'],
+            'handlers': ['console', 'websocket'],
             'level': LOGLEVEL
         },
         'sensor': {
@@ -255,7 +272,7 @@ LOGGING = {
             'level': LOGLEVEL
         },
         'status': {
-            'handlers': ['console'],
+            'handlers': ['console', 'websocket'],
             'level': LOGLEVEL
         }
     }

@@ -3,15 +3,33 @@
 {% block title %} SCOS Sensor {% endblock %}
 
 {% block branding %}
-<span>
-  <a href="" ref="nofollow" class="navbar-brand">
-    SCOS Sensor <span class="version">0.0.1</span>
-  </a>
-</span>
+  <span>
+    <a href="" ref="nofollow" class="navbar-brand">
+      SCOS Sensor <span class="version">0.0.1</span>
+    </a>
+  </span>
 {% endblock %}
 
 {% block script %}
 {{ block.super }}
 {% load static %}
-<script src="{% static 'js/ws_logger.js' %}"></script>
+
+{% if user.is_authenticated %}
+  <script src="{% static 'channels/js/websocketbridge.js' %}"></script>
+
+  <script>
+    const webSocketBridge = new channels.WebSocketBridge();
+    webSocketBridge.connect('/logs/');
+    webSocketBridge.listen(function(action, stream) {
+      console.log(action, stream);
+    });
+    webSocketBridge.socket.addEventListener('open', function() {
+      console.debug("Connected to WebSocket");
+    })
+    webSocketBridge.socket.addEventListener('close', function() {
+    console.debug("Disconnected from WebSocket");
+    })
+  </script>
+{% endif %}
+
 {% endblock %}

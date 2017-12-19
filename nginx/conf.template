@@ -9,7 +9,10 @@ upstream wsgi-server {
 
 
 upstream ws-logger {
-    server ws_logger:80 fail_timeout=0;
+    # fail_timeout=0 means we always retry an upstream even if it failed
+    # to return a good HTTP response (in case the gunicorn master nukes a
+    # single worker for timing out).
+    server api:8001 fail_timeout=0;
 }
 
 
@@ -22,6 +25,7 @@ server {
     # For testing, use 307 so that redirect is not cached in browser
     return 307 https://$host$request_uri;
 }
+
 
 server {
     # SSL configuration
@@ -41,6 +45,8 @@ server {
     # path for static files
     root /var/www/scos-sensor/;
 
+    location = /favicon.ico { access_log off; log_not_found off; }
+
     location / {
       # checks for static file, if not found proxy to wsgi server
       try_files $uri @proxy_to_wsgi_server;
@@ -49,7 +55,7 @@ server {
     location /logs {
         proxy_pass http://ws-logger/logs;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade "websocket";
+        proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
