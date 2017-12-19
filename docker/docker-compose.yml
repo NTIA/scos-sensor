@@ -47,15 +47,15 @@ services:
   #
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
-  # autoheal:
-  #   image: ${UBUNTU_IMAGE}
-  #   restart: on-failure
-  #   depends_on:
-  #     - api
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ./autoheal_entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
-  #   command: /docker/autoheal_entrypoint.sh
+  autoheal:
+    image: ${UBUNTU_IMAGE}
+    restart: on-failure
+    depends_on:
+      - api
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./autoheal_entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
+    command: /docker/autoheal_entrypoint.sh
 
   ws_logger:
     restart: always
