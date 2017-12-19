@@ -11,13 +11,31 @@ threads = cpu_count()
 loglevel = os.environ.get('GUNICORN_LOG_LEVEL', 'info')
 
 
-def worker_exit(server, worker):
-    """Notify worker process's scheduler thread that it needs to shut down."""
+def _modify_path():
+    """Ensure Django project is on sys.path."""
     from os import path
 
     PATH = path.join(path.dirname(path.abspath(__file__)), '..', '/src')
-    sys.path.append(PATH)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
+    if PATH not in sys.path:
+        sys.path.append(PATH)
+
+
+def post_worker_init(worker):
+    """Start scheduler in worker."""
+    _modify_path()
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sensor.settings')
+
+    import django
+    django.setup()
+
+    from scheduler import scheduler
+    scheduler.thread.start()
+
+
+def worker_exit(server, worker):
+    """Notify worker process's scheduler thread that it needs to shut down."""
+    _modify_path()
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sensor.settings')
 
     import django
     django.setup()
