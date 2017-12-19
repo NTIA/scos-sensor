@@ -43,3 +43,7 @@ REST API Reference
    - [Security](docs/api/openapi.adoc#_securityscheme)
 
  - [Download PDF](https://github.com/NTIA/scos-sensor/raw/master/docs/api/openapi.pdf)
+ 
+ License
+ -------
+ See [LICENSE.md](LICENSE.md).
