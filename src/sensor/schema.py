@@ -15,6 +15,7 @@ from .settings import SWAGGER_SETTINGS
 
 
 class OpenAPICodec(_OpenAPICodec):
+
     def encode(self, document, extra=None, **options):
         if not isinstance(document, coreapi.Document):
             raise TypeError('Expected a `coreapi.Document` instance')

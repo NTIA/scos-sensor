@@ -21,7 +21,7 @@ class ScheduleEntryViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'create':
-            if self.request.user.is_staff:
+            if self.request and self.request.user.is_staff:
                 return AdminCreateScheduleEntrySerializer
             else:
                 return CreateScheduleEntrySerializer
