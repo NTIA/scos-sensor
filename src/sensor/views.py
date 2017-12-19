@@ -12,7 +12,7 @@ def get_openapi_view(title=None, url=None, patterns=None, urlconf=None):
     """
     Returns schema view which renders Swagger/OpenAPI.
     """
-    class SwaggerSchemaView(APIView):
+    class OpenAPISchemaView(APIView):
         _ignore_model_permissions = True
         # exclude_from_schema = True
         permission_classes = [AllowAny]
@@ -39,4 +39,4 @@ def get_openapi_view(title=None, url=None, patterns=None, urlconf=None):
 
             return Response(schema)
 
-    return SwaggerSchemaView.as_view()
+    return OpenAPISchemaView.as_view()
