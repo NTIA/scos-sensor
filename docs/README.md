@@ -1,3 +1,3 @@
 # Debugging
 
-* 502 on multiple API endpoints. Check and free disk space before rebooting.
+* If you see a 502 response on multiple API endpoints, check and free disk space before rebooting.
