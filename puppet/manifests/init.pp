@@ -1,5 +1,6 @@
 class scos (
-    $docker_image_version_number = undef,
+    $ubuntu_image = undef,
+    $nginx_image = undef,
 )
 
 {
@@ -34,7 +35,9 @@ DEBUG=false
 SECRET_KEY='${secret_key}'
 DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 IPS='${networking[ip]} 127.0.0.1'
-GUNICORN_LOG_LEVEL=info",
+GUNICORN_LOG_LEVEL=info
+UBUNTU_IMAGE=$ubuntu_image
+NGINX_IMAGE=$nginx_image",
     }
  
     if ($server_name_env != undef) {
