@@ -3,13 +3,14 @@ NTIA/ITS SCOS Sensor
 
 The SCOS sensor is a RESTful API for any sensor that can be controlled via python.
 
-It provides:
-  - ready-made containers for x86 and arm32v7 hardware
-  - TODO
+Features:
+  - Ready-made containers for x86 and arm32v7 hardware
+  - An easy-to-use front end that subverts the need for client code to send http requests.
+  - Remote sensor deployment and administration via Foreman and Puppet.
   
 Browsable API
 -------------
-The API provides a browsable front-end through which all valid requests can be made,
+The API provides a browsable front end through which all valid requests can be made,
 and all operations performed. 
 
 All endpoints are easily discoverable, and it's simple
