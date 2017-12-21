@@ -8,6 +8,7 @@ Features:
   - An easy-to-use front end that subverts the need for client code to send http requests.
   - Remote sensor deployment and administration via Foreman and Puppet.
   
+  
 Browsable API
 -------------
 The API provides a browsable front end through which all valid requests can be made,
@@ -28,6 +29,7 @@ Actions that have been scheduled show up in the schedule list:
 
 See the [API Documentation](xxx) for more information on the features and functions
 of each endpoint.
+
 
 Quickstart
 ----------
@@ -65,6 +67,13 @@ For a local development server:
 $ ./src/manage.py runsslserver
 ```
 
+Foreman and Puppet
+------------------
+The optimal way to manage individual SCOS Sensor machines in via Foreman
+and Puppet. Detailed instructions on how to do this are contained in 
+[the Foreman and Puppet README.md](puppet/README.md).
+
+
 REST API Reference
 ------------------
 
@@ -75,6 +84,7 @@ REST API Reference
    - [Security](docs/api/openapi.adoc#_securityscheme)
 
  - [Download PDF](https://github.com/NTIA/scos-sensor/raw/master/docs/api/openapi.pdf)
+ 
  
  License
  -------
