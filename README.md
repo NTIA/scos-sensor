@@ -38,8 +38,9 @@ Quickstart
 It's recommended that you activate a virtual environment via `conda` or 
 `virtualenv`/`virtualenvwrapper` before following the instructions below.
 
-Copy and *modify* the environment template file, then source it and run deploy.sh
-to properly configure the sensor code based on the machine on which it will run.
+Copy the environment template file and *modify* the copy if necessary, then source 
+it and run deploy.sh to properly configure the sensor code based on the machine on
+which it will run.
 ```bash
 $ cp env.template env
 $ source ./env
