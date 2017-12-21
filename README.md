@@ -74,6 +74,11 @@ and Puppet. Detailed instructions on how to do this are contained in
 [the Foreman and Puppet README.md](puppet/README.md).
 
 
+Architecture
+------------
+![SCOS Sensor Architecture Diagram](/docs/img/architecture_diagram.png?raw=true)
+
+
 REST API Reference
 ------------------
 
