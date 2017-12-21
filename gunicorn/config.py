@@ -15,9 +15,9 @@ def _modify_path():
     """Ensure Django project is on sys.path."""
     from os import path
 
-    PATH = path.join(path.dirname(path.abspath(__file__)), '..', '/src')
-    if PATH not in sys.path:
-        sys.path.append(PATH)
+    project_path = path.join(path.dirname(path.abspath(__file__)), '../src')
+    if project_path not in sys.path:
+        sys.path.append(project_path)
 
 
 def post_worker_init(worker):

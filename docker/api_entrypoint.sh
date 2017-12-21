@@ -8,7 +8,7 @@ python manage.py migrate
 echo 'Creating Superuser'
 python /scripts/create_superuser.py
 
-# The following starts and monitors 2 different services, from
+# The following starts and monitors 3 different services, from
 # https://docs.docker.com/engine/admin/multi-service_container/.
 
 # Start gunicorn
@@ -28,7 +28,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # Start Daphne interface server
-daphne -b 0.0.0.0 -p 8001 --proxy-headers sensor.asgi:channel_layer -v2 & daphne_pid=$!
+daphne -b 0.0.0.0 -p 8001 --proxy-headers sensor.asgi:channel_layer & daphne_pid=$!
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start daphne interface server: $status"
