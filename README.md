@@ -6,8 +6,27 @@ The SCOS sensor is a RESTful API for any sensor that can be controlled via pytho
 It provides:
   - ready-made containers for x86 and arm32v7 hardware
   - TODO
+  
+Browsable API
+-------------
+The API provides a browsable front-end through which all valid requests can be made,
+and all operations performed. 
 
-![Browsable API Screenshot](docs/img/browsable_api_screenshot.png)
+All endpoints are easily discoverable, and it's simple
+to navigate from function to function:
+
+![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
+
+Scheduling an action is as simple as filling out a short form:
+
+![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
+
+Actions that have been scheduled show up in the schedule list:
+
+![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
+
+See the [API Documentation](xxx) for more information on the features and functions
+of each endpoint.
 
 Quickstart
 ----------
