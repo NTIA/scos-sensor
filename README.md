@@ -34,22 +34,33 @@ Quickstart
 (See [INSTALL](INSTALL.md) for step-by-step instructions)
 
   - Install `git`, `Docker`, `docker-compose`, and `virtualenvwrapper` (optional)
+  
+It's recommended that you activate a virtual environment via `conda` or 
+`virtualenv`/`virtualenvwrapper` before following the instructions below.
 
+Copy and *modify* the environment template file, then source it and run deploy.sh
+to properly configure the sensor code based on the machine on which it will run.
 ```bash
-$ git clone https://github.com/NTIA/scos-sensor
-$ cd scos-sensor
-$ mkvirtualenv scos-sensor  # `workon scos-sensor` hereafter
-$ cp env.template env       # modify env
+$ cp env.template env
 $ source ./env
 $ ./scripts/deploy.sh       # `deploy.sh` uses `env` to modify other templates
+```
+
+Install all Python requirements, set up the database, and create an admin user.
+```bash
 $ pip install -r ./src/requirements-dev.txt
 $ python ./src/manage.py makemigrations && ./src/manage.py migrate
 $ python ./src/manage.py createsuperuser
-# now, to run a Dockerized production-grade stack:
-$ ./scripts/run.sh          # this make take a while the first time
-# or, for a local development server:
-$ ./src/manage.py runsslserver
+```
 
+To run a Dockerized production-grade stack:
+```bash
+$ ./scripts/run.sh          # this make take a while the first time
+```
+
+For a local development server:
+```bash
+$ ./src/manage.py runsslserver
 ```
 
 REST API Reference
