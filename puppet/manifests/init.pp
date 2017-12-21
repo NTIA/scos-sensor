@@ -71,4 +71,9 @@ GUNICORN_LOG_LEVEL=info",
         }
         notify {"*** ${hostname} is up and running. Woof! ***":}
     }
+
+#    exec { 'ssl_cert':
+#        command => "/bin/echo $nginx_ssl_cert > /opt/scos/ssl_cert",
+#   
+
 }
