@@ -11,9 +11,12 @@ from sigmf.validate import validate as sigmf_validate
 import json
 import os
 
-SCHEMA_PATH = os.path.join(settings.REPO_ROOT, "config", "scos_transfer_spec_schema.json")
+SCHEMA_PATH = os.path.join(settings.REPO_ROOT,
+                           "config",
+                           "scos_transfer_spec_schema.json")
 with open(SCHEMA_PATH, "r") as f:
     schema = json.load(f)
+
 
 def test_detector(user_client):
     # Put an entry in the schedule that we can refer to
