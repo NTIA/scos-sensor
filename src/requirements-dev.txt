@@ -1,6 +1,7 @@
 -rrequirements.txt
 
 flake8==3.5.0
+jsonschema==2.6.0
 mkdocs==0.16.3
 pytest-cov==2.5.1
 pytest-django==3.1.2

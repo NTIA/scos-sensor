@@ -1,0 +1,93 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "definitions": {
+        "antenna_object": {
+	    "type": "object",
+	    "properties": {
+		"model": { "type": "string" },
+		"type": {"type": "string" },
+		"low_frequency": {"type": "number"},
+		"high_frequency": {"type": "number"},
+		"gain": {"type": "number"},
+		"horizontal_gain_pattern": {"type": "array"},
+		"vertical_gain_pattern": {"type": "array"},
+		"horizontal_beam_width": {"type": "number"},
+		"vertical_beam_width": {"type": "number"},
+		"cross_polar_discrimination": {"type": "number"},
+		"voltage_standing_wave_ratio": {"type": "number"},
+		"cable_loss": {"type": "number"},
+		"steerable": {"type": "boolean"},
+		"mobile": {"type": "boolean"}
+	    },
+	    "required": ["model"]
+	},
+	"data_extraction_unit_object": {
+	    "type": "object",
+	    "properties": {
+		"model": {"type": "string"},
+		"low_frequency": {"type": "number"},
+		"high_frequency": {"type": "number"},
+		"noise_figure": {"type": "number"},
+		"max_power": {"type": "number"}
+	    },
+	    "required": ["model"]
+	},
+	"single_frequency_fft_detection_object": {
+	    "type": "object",
+	    "properties": {
+		"number_of_samples_in_fft": {"type": "integer"},
+		"window": {"type": "string"},
+		"equivalent_noise_bandwidth": {"type": "number"},
+		"detector": {"type": "string"},
+		"number_of_ffts": {"type": "integer"},
+		"units": {"type": "string"},
+		"reference": {"type": "string"}
+	    },
+	    "required": ["number_of_samples_in_fft", "window", "detector", "number_of_ffts", "units"]
+	}
+    },
+
+    "type": "object",
+
+    "properties": {
+	"global": {
+	    "type": "object",
+	    "properties": {
+		"scos:sensor_definition": {
+		    "type": "object",
+		    "properties": {
+			"antenna": {
+			    "$ref": "#/definitions/antenna_object"
+			},
+			"data_extraction_unit": {
+			    "$ref": "#/definitions/data_extraction_unit_object"
+			}
+		    },
+		    "required": ["antenna", "data_extraction_unit"]
+		}
+	    },
+	    "required": ["scos:sensor_definition"]
+	},
+	"annotations": {
+	    "type": "array",
+	    "items": {
+	        "type": "object",
+	        "properties": {
+		    "scos:measurement_type": {
+		        "type": "object",
+		        "properties": {
+			    "SingleFrequencyFFTDetection": {
+			        "$ref": "#/definitions/single_frequency_fft_detection_object"
+			    }
+		        },
+		        "required": ["SingleFrequencyFFTDetection"]
+		    }
+	        },
+	        "required": ["scos:measurement_type"]
+	    }
+	}
+    },
+
+    "required": ["global", "annotations"]
+}
