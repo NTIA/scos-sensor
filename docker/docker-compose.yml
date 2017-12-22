@@ -39,11 +39,7 @@ services:
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
-  # containers natively. This container mounts the host's docker unix socket,
-  # which in theory introduces a root privilege escalation vector, but since
-  # this image isn't internet-facing, it's Probably Okay (tm), and definitely
-  # a better temporary solution than mounting the socket directly in the api
-  # container.
+  # containers natively.
   #
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
@@ -56,3 +52,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./autoheal_entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
     command: /docker/autoheal_entrypoint.sh
+
+  ws_logger:
+    restart: always
+    image: gliderlabs/logspout
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

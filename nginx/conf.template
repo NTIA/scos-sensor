@@ -7,6 +7,12 @@ upstream wsgi-server {
     server api:8000 fail_timeout=0;
 }
 
+
+upstream ws-logger {
+    server api:8001 fail_timeout=0;
+}
+
+
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -16,6 +22,7 @@ server {
     # For testing, use 307 so that redirect is not cached in browser
     return 307 https://$host$request_uri;
 }
+
 
 server {
     # SSL configuration
@@ -35,9 +42,24 @@ server {
     # path for static files
     root /var/www/scos-sensor/;
 
+    location = /favicon.ico { access_log off; log_not_found off; }
+
     location / {
       # checks for static file, if not found proxy to wsgi server
       try_files $uri @proxy_to_wsgi_server;
+    }
+
+    location /logs {
+        proxy_pass http://ws-logger/logs;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_read_timeout 86400; # neccessary to avoid websocket timeout disconnect
+        proxy_redirect off;
     }
 
     # Pass off requests to Gunicorn
