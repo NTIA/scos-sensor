@@ -6,7 +6,9 @@ from rest_framework import status
 from acquisitions.tests import SINGLE_ACQUISITION, MULTIPLE_ACQUISITIONS
 from schedule.tests.utils import post_schedule
 from scheduler.tests.utils import simulate_scheduler_run
+from sensor import V1
 from sensor.tests.utils import validate_response
+
 
 HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 
@@ -36,7 +38,7 @@ def reverse_acquisitions_overview():
 
     request = rf.get('/api/v1/acquisitions', **HTTPS_KWARG)
 
-    return reverse('v1:acquisitions-overview', request=request)
+    return reverse('acquisitions-overview', kwargs=V1, request=request)
 
 
 def reverse_acquisition_list(schedule_entry_name):
@@ -44,8 +46,9 @@ def reverse_acquisition_list(schedule_entry_name):
 
     request = rf.get('/acquisitions/' + schedule_entry_name, **HTTPS_KWARG)
     kws = {'schedule_entry_name': schedule_entry_name}
+    kws.update(V1)
 
-    return reverse('v1:acquisition-list', kwargs=kws, request=request)
+    return reverse('acquisition-list', kwargs=kws, request=request)
 
 
 def reverse_acquisition_detail(schedule_entry_name, task_id):
@@ -54,8 +57,9 @@ def reverse_acquisition_detail(schedule_entry_name, task_id):
     request = rf.get(
         '/acquisitions/' + schedule_entry_name + '/' + task_str, **HTTPS_KWARG)
     kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
+    kws.update(V1)
 
-    return reverse('v1:acquisition-detail', kwargs=kws, request=request)
+    return reverse('acquisition-detail', kwargs=kws, request=request)
 
 
 def reverse_acquisition_archive(schedule_entry_name, task_id):
@@ -65,8 +69,9 @@ def reverse_acquisition_archive(schedule_entry_name, task_id):
     url_str = '/'.join(['/acquisitions', entry_name, task_str, 'archive'])
     request = rf.get(url_str, **HTTPS_KWARG)
     kws = {'schedule_entry_name': entry_name, 'task_id': task_id}
+    kws.update(V1)
 
-    return reverse('v1:acquisition-archive', kwargs=kws, request=request)
+    return reverse('acquisition-archive', kwargs=kws, request=request)
 
 
 def get_acquisitions_overview(client):

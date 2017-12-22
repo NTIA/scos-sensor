@@ -37,6 +37,7 @@ class UserProfilesListView(ListAPIView):
 
 class UserInstanceView(APIView):
     def dispatch(self, request, *args, **kwargs):
+        kwargs.pop('version', None)
         if not kwargs:  # /users/me
             kwargs = {'pk': request.user.pk}
 

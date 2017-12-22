@@ -4,6 +4,8 @@ from itertools import chain
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from sensor import V1
+
 
 def post_schedule(client, entry):
     kwargs = {
@@ -12,7 +14,7 @@ def post_schedule(client, entry):
         'wsgi.url_scheme': 'https'
     }
 
-    r = client.post(reverse('v1:schedule-list'), **kwargs)
+    r = client.post(reverse('schedule-list', kwargs=V1), **kwargs)
     rjson = r.json()
 
     assert r.status_code == status.HTTP_201_CREATED, rjson
@@ -21,7 +23,7 @@ def post_schedule(client, entry):
 
 
 def update_schedule(client, entry_name, new_entry):
-    url = reverse('v1:schedule-detail', [entry_name])
+    url = reverse_detail_url(entry_name)
 
     kwargs = {
         'data': json.dumps(new_entry),
@@ -30,6 +32,14 @@ def update_schedule(client, entry_name, new_entry):
     }
 
     return client.put(url, **kwargs)
+
+
+def reverse_detail_url(entry_name):
+    kws = {'pk': entry_name}
+    kws.update(V1)
+    url = reverse('schedule-detail', kwargs=kws)
+
+    return url
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes

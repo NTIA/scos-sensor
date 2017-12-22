@@ -18,13 +18,13 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'v1:user-detail'
+                'view_name': 'user-detail'
             },
             'is_active': {
                 'initial': True
             },
             'schedule_entries': {
-                'view_name': 'v1:schedule-detail'
+                'view_name': 'schedule-detail'
             },
         }
         read_only_fields = (

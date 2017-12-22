@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 import actions
+from sensor import V1
 from .models import ScheduleEntry
 
 
@@ -32,10 +33,10 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'v1:schedule-detail'
+                'view_name': 'schedule-detail'
             },
             'owner': {
-                'view_name': 'v1:user-detail'
+                'view_name': 'user-detail'
             }
         }
         read_only_fields = ('is_active', 'is_private')
@@ -44,7 +45,8 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     def get_acquisitions(self, obj):
         request = self.context['request']
         kws = {'schedule_entry_name': obj.name}
-        return reverse('v1:acquisition-list', kwargs=kws, request=request)
+        kws.update(V1)
+        return reverse('acquisition-list', kwargs=kws, request=request)
 
     def to_internal_value(self, data):
         """Strip incoming start=None so that model uses default start value."""

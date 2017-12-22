@@ -8,6 +8,7 @@ from acquisitions.tests.utils import (
     simulate_acquisitions,
     HTTPS_KWARG
 )
+from sensor import V1
 from sensor.tests.utils import validate_response
 
 
@@ -58,7 +59,9 @@ def test_delete_single(user_client, testclock):
 def test_private_entries_have_private_acquisitons(admin_client, user_client,
                                                   testclock):
     entry_name = simulate_acquisitions(admin_client, is_private=True)
-    entry_url = reverse('v1:schedule-detail', [entry_name])
+    kws = {'pk': entry_name}
+    kws.update(V1)
+    entry_url = reverse('schedule-detail', kwargs=kws)
 
     admin_response = admin_client.get(entry_url, **HTTPS_KWARG)
     admin_acquisition_url = admin_response.data['acquisitions']

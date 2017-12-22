@@ -29,7 +29,7 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
 )
 
-RUNNING_DEVSERVER = 'runsslserver' in sys.argv
+RUNNING_DEVSERVER = 'runserver' in sys.argv
 
 # Healthchecks - the existance of any of these indicates an unhealth state
 USRP_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'usrp_unhealthy')
@@ -46,14 +46,13 @@ if RUNNING_DEVSERVER:
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECRET_KEY = os.environ['SECRET_KEY']
     DEBUG = bool(os.environ['DEBUG'] == "true")
     ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = not RUNNING_DEVSERVER
+CSRF_COOKIE_SECURE = not RUNNING_DEVSERVER
 
 
 # Application definition
@@ -71,7 +70,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
-    'sslserver',
+    'drf_openapi',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
@@ -127,13 +126,13 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework_swagger.renderers.OpenAPIRenderer'
-    )
+    ),
+    # Versioning
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+    'DEFAULT_VERSION': 'v1',  # this should always point to latest stable api
+    'ALLOWED_VERSIONS': ('v1',),
 }
 
-
-API_TITLE = "SCOS Sensor API"
-API_DESCRIPTION = "..."
 
 # Django Rest Swagger
 # http://marcgibbons.github.io/django-rest-swagger/
@@ -210,6 +209,8 @@ STATIC_URL = '/static/'
 
 
 LOGLEVEL = 'DEBUG' if DEBUG else 'INFO'
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

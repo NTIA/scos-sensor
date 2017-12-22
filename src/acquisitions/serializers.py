@@ -18,7 +18,7 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'v1:acquisition-list',
+                'view_name': 'acquisition-list',
                 'lookup_field': 'name',
                 'lookup_url_kwarg': 'schedule_entry_name'
             }
@@ -29,7 +29,8 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_schedule_entry(self, obj):
         request = self.context['request']
-        return reverse('v1:schedule-detail', args=(obj.name,), request=request)
+        kwargs = {'pk': obj.name}
+        return reverse('schedule-detail', kwargs=kwargs, request=request)
 
 
 class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
@@ -44,12 +45,12 @@ class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
 
 class AcquisitionSerializer(serializers.ModelSerializer):
     url = AcquisitionHyperlinkedRelatedField(
-        view_name='v1:acquisition-detail',
+        view_name='acquisition-detail',
         read_only=True,
         source='*'  # pass whole object
     )
     archive = AcquisitionHyperlinkedRelatedField(
-        view_name='v1:acquisition-archive',
+        view_name='acquisition-archive',
         read_only=True,
         source='*'  # pass whole object
     )
@@ -66,7 +67,7 @@ class AcquisitionSerializer(serializers.ModelSerializer):
         )
         extra_kwargs = {
             'schedule_entry': {
-                'view_name': 'v1:schedule-detail',
+                'view_name': 'schedule-detail',
                 'lookup_field': 'name'
             }
         }
