@@ -1,35 +1,88 @@
-class scos (
-    $code_source = Enum['docker','github'],
-    $code_version = undef,
-    $root_install_dir = undef,
-    $ubuntu_image = undef,
-    $nginx_image = undef,
-    $ssl_dir = undef,
+# Setup and present variables that will be entered via Foreman    
+# Source (docker/github)
+# Branch or Version/Tag 
+# Install dir
+# DB User
+# SSL certs
+
+class scos_dev (
+    $install_source = Enum['docker','github'],
+    $install_version = "master",
+    $git_username = undef,
+    $git_password = undef,
+    $install_root = "/opt/scos-sensor",
+    $repo_root = "/opt/scos-sensor_repo",
+    $ubuntu_image = "ubuntu",
+    $nginx_image = "nginx",
+    $ssl_dir = "${install_root}/nginx/certs",
+    $ssl_cert = undef,
+    $ssl_key = undef,
+    $db_admin_pw = "changeme!",
 )
 
-{
+{ 
+
+# Ensure common services are installed and running i.e. Puppet, Docker, git etc Setup secret key, DB user, SSL cert Logic to deterine docker vs. github source processes
+
     service { 'puppet':
         ensure => running,
         enable => true,
-    } 
-
-    file { 'scos_sensor':
-        source => 'puppet:///modules/scos/',
-        ensure => 'directory',
-        path => '/opt/scos',
-        recurse => true,
     }
 
+#    service { 'docker':
+#        ensure => running,
+#        enable => true,
+#    }
+
+#    package { 'git':
+#        ensure => installed,
+#    }
+
     exec { 'secret':
-        onlyif => '/usr/bin/test ! -e /opt/scos/.secret_key',         
+        onlyif => '/usr/bin/test ! -e /opt/scos/.secret_key',
         command => '/usr/bin/openssl rand -base64 32 > /opt/scos/.secret_key',
         notify  => Exec['reboot'],
     }
 
     exec { 'db_superuser':
-        onlyif => '/usr/bin/test ! -e /opt/scos/.db_superuser',
-        command => '/usr/bin/openssl rand -base64 16 > /opt/scos/.db_superuser',
+        command => "/bin/echo $db_admin_pw > /opt/scos/.db_superuser",
     }
+
+    exec { 'ssl_cert':
+        command => "/bin/echo $ssl_cert > ${ssl_dir}/ssl-cert-snakeoil.pem",
+    }
+
+    exec { 'ssl_key':
+        command => "/bin/echo $ssl_key > ${ssl_dir}/ssl-cert-snakeoil.key",
+    }
+
+# Docker container logic Pt 1
+# Check if tag changed
+# Pull matching tagged github release to temp location
+# Copy only required files
+
+# Github logic Pt 1
+# Check if branch changed
+# Pull github branch to temp location
+# Copy entire repo to avoid overwriting secret etc.
+
+    if ($install_source == "github") {
+        vcsrepo { "$repo_root":
+            ensure   => present,
+            provider => git,
+            source   => 'https://github.com/NTIA/scos-sensor.git',
+            revision => $install_version,
+            user     => $git_username,
+            password => $git_password,
+        }
+     
+        exec { 'repo_install':
+            command => "/bin/cp -pr ${repo_root}/docker ${install_root}/docker && /bin/cp -r ${repo_root}/nginx ${install_root}/nginx && /bin/cp ${repo_root}/src ${install_root}/src && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp ${repo_root}/config ${install_root}/config && /bin/cp ${repo_root}/scripts ${install_root}/scripts",
+            notify  => Service['docker'],
+        }
+    }
+
+# Setup environment
 
     file { '/etc/environment':
         ensure => present,
@@ -41,11 +94,14 @@ DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
 UBUNTU_IMAGE=$ubuntu_image
-NGINX_IMAGE=$nginx_image",
+NGINX_IMAGE=$nginx_image
+REPO_ROOT=$install_root
+SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
+SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
     }
- 
+
     if ($server_name_env != undef) {
-        exec { 'envsubst':
+        exec { 'envsubst1':
             command => '/usr/bin/envsubst \'$DOMAINS\' < /opt/scos/nginx/conf.d/conf.template > \
 /opt/scos/nginx/conf.d/scos-sensor.conf',
         }
@@ -56,19 +112,34 @@ NGINX_IMAGE=$nginx_image",
        replace => 'no',
     }
 
+# Restart
+
     exec { 'reboot':
         command => '/sbin/reboot',
         refreshonly => true,
     }
 
-#    cron { 'scos_init':
-#        special => 'reboot',
-#        user => 'root',
-#        command => '/bin/sleep 300; /opt/puppetlabs/puppet/bin/puppet agent --onetime --no-daemonize',
-#    }
+# Docker logic Pt 2
+# Deploy & run
+
+# Github logic Pt 2
+# Deploy, build & run
+
+    if ($install_source == "github") {
+        
+        exec { 'envsubst2':
+            command => '/usr/bin/envsubst \'$UBUNTU_IMAGE\' < ${install_root}/docker/Dockerfile.template > ${install_root}/Dockerfile',
+        }
+
+        docker::image { 'ntiaits/test_scossensor_api':
+            image_tag => 'ntiaits/test_scossensor_api',
+#            docker_file => "${install_root}/Dockerfile",
+            docker_dir => "${install_root}",
+        }
+    }
 
     if ($secret_key_env != undef) and ($secret_key != undef) and ($server_name_env != undef) and ($db_superuser != undef) {
-        docker_compose { '/opt/scos/docker-compose.yml':
+        docker_compose { "${install_root}/docker-compose.yml":
             subscribe => File['/etc/environment'], 
             ensure  => present,
             scale   => {
@@ -78,9 +149,4 @@ NGINX_IMAGE=$nginx_image",
         }
         notify {"*** ${hostname} is up and running. Woof! ***":}
     }
-
-#    exec { 'ssl_cert':
-#        command => "/bin/echo $nginx_ssl_cert > /opt/scos/ssl_cert",
-#   
-
 }
