@@ -4,6 +4,7 @@ class scos (
     $root_install_dir = undef,
     $ubuntu_image = undef,
     $nginx_image = undef,
+    $ssl_dir = undef,
 )
 
 {
