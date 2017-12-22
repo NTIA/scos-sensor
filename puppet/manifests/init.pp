@@ -1,4 +1,7 @@
 class scos (
+    $code_source = Enum['docker','github'],
+    $code_version = undef,
+    $root_install_dir = undef,
     $ubuntu_image = undef,
     $nginx_image = undef,
 )
