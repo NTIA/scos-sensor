@@ -114,11 +114,8 @@ WSGI_APPLICATION = 'sensor.wsgi.application'
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgi_ipc.IPCChannelLayer",
-        "ROUTING": "sensor.routing.channel_routing",
-        "CONFIG": {
-            "prefix": "scos_sensor",
-        },
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "sensor.routing.channel_routing"
     },
 }
 
