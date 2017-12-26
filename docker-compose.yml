@@ -20,21 +20,21 @@ services:
     expose:
       - '8000'
     volumes:
-      - ../db.sqlite3:/db.sqlite3
+      - ./db.sqlite3:/db.sqlite3
       - /opt/scos:/opt/scos
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
-    command: /docker/api_entrypoint.sh
+    command: /entrypoints/api_entrypoint.sh
 
   nginx:
-    image: ${NGINX_IMAGE}
+    image: nginx
     restart: always
     ports:
       - '80:80'
       - '443:443'
     volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d:ro
-      - ../src/static:/var/www/scos-sensor/static:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./src/static:/var/www/scos-sensor/static:ro
       - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
 
@@ -44,14 +44,14 @@ services:
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
   autoheal:
-    image: ${UBUNTU_IMAGE}
+    image: ubuntu
     restart: on-failure
     depends_on:
       - api
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./autoheal_entrypoint.sh:/docker/autoheal_entrypoint.sh:ro
-    command: /docker/autoheal_entrypoint.sh
+      - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
+    command: /entrypoints/autoheal_entrypoint.sh
 
   ws_logger:
     restart: always
