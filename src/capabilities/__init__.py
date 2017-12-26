@@ -3,6 +3,8 @@ from django.conf import settings
 import json
 import os
 
+SCOS_TRANSFER_SPEC_VER = "0.1-beta"
+
 ANTENNA_FILE_PATH = os.path.join(settings.REPO_ROOT, "config", "antenna.json")
 try:
     with open(ANTENNA_FILE_PATH, "r") as f:

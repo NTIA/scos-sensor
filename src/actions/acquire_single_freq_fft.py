@@ -13,8 +13,11 @@ from sigmf.sigmffile import SigMFFile
 
 from .base import Action
 from . import usrp
-from capabilities import scos_antenna_obj, data_extract_obj
+from capabilities import (scos_antenna_obj,
+                          data_extract_obj,
+                          SCOS_TRANSFER_SPEC_VER)
 
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -162,6 +165,10 @@ class SingleFrequencyFftAcquisition(Action):
         }
 
         sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
+        domains = os.environ['DOMAINS']
+        fqdn = domains.split()[1]
+        sigmf_md.set_global_field("scos:sensor_id", fqdn)
+        sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
         capture_md = {
             "core:frequency": self.frequency,

@@ -147,10 +147,17 @@
                         "data_extraction_unit"
                     ],
                     "type": "object"
+                },
+                "scos:sensor_id": {
+                    "type": "string"
+                },
+                "scos:version": {
+                    "type": "string"
                 }
             },
             "required": [
-                "scos:sensor_definition"
+                "scos:sensor_id",
+                "scos:version"
             ],
             "type": "object"
         }
