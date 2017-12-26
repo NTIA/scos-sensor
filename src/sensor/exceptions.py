@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import exception_handler as default_exception_handler
 
+from sensor import V1
+
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +49,8 @@ def handle_protected_error(exc, context):
             'schedule_entry_name': entry_name,
             'task_id': task_id
         }
-        view_name = 'v1:acquisition-detail'
+        url_kwargs.update(V1)
+        view_name = 'acquisition-detail'
         url = reverse(view_name, kwargs=url_kwargs, request=request)
         protected_object_urls.append(url)
 

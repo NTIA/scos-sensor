@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 import actions
+from sensor import V1
 
 
 class TaskSerializer(serializers.Serializer):
@@ -12,6 +13,6 @@ class TaskSerializer(serializers.Serializer):
 
     def get_schedule_entry(self, obj):
         request = self.context['request']
-        return reverse('v1:schedule-detail',
-                       args=(obj.schedule_entry_name,),
-                       request=request)
+        kws = {'pk': obj.schedule_entry_name}
+        kws.update(V1)
+        return reverse('schedule-detail', kwargs=kws, request=request)

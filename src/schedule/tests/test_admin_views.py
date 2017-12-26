@@ -3,6 +3,7 @@ from rest_framework.reverse import reverse
 
 from schedule.tests import TEST_SCHEDULE_ENTRY, TEST_PRIVATE_SCHEDULE_ENTRY
 from schedule.tests.utils import post_schedule, update_schedule
+from sensor import V1
 from sensor.tests.utils import validate_response
 
 
@@ -12,7 +13,9 @@ HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
 def test_post_admin_private_schedule(admin_client):
     rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
-    entry_url = reverse('v1:schedule-detail', [entry_name])
+    kws = {'pk': entry_name}
+    kws.update(V1)
+    entry_url = reverse('schedule-detail', kwargs=kws)
     admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
@@ -28,14 +31,17 @@ def test_admin_can_view_all_entries(admin_client, user_client,
     # user schedule entry
     user_rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     user_entry_name = user_rjson['name']
-    user_url = reverse('v1:schedule-detail', [user_entry_name])
+    kws = {'pk': user_entry_name}
+    kws.update(V1)
+    user_url = reverse('schedule-detail', kwargs=kws)
 
     # alternate admin user schedule entry
     alternate_admin_rjson = post_schedule(
         alternate_admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     alternate_admin_entry_name = alternate_admin_rjson['name']
-    alternate_admin_url = reverse(
-        'v1:schedule-detail', [alternate_admin_entry_name])
+    kws = {'pk': alternate_admin_entry_name}
+    kws.update(V1)
+    alternate_admin_url = reverse('schedule-detail', kwargs=kws)
 
     response = admin_client.get(user_url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_200_OK)
@@ -49,14 +55,17 @@ def test_admin_can_delete_all_entries(admin_client, user_client,
     # user schedule entry
     user_rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     user_entry_name = user_rjson['name']
-    user_url = reverse('v1:schedule-detail', [user_entry_name])
+    kws = {'pk': user_entry_name}
+    kws.update(V1)
+    user_url = reverse('schedule-detail', kwargs=kws)
 
     # admin user schedule entry
     alternate_admin_rjson = post_schedule(
         alternate_admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     alternate_admin_entry_name = alternate_admin_rjson['name']
-    alternate_admin_url = reverse(
-        'v1:schedule-detail', [alternate_admin_entry_name])
+    kws = {'pk': alternate_admin_entry_name}
+    kws.update(V1)
+    alternate_admin_url = reverse('schedule-detail', kwargs=kws)
 
     response = admin_client.delete(user_url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_204_NO_CONTENT)

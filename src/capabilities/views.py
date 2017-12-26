@@ -35,7 +35,7 @@ def get_capabilities():
 
 
 @api_view()
-def capabilities(request, format=None):
+def capabilities(request, version, format=None):
     capabilities = get_capabilities()
     filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
     capabilities['actions'] = filtered_actions

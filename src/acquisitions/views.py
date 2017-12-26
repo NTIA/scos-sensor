@@ -59,7 +59,7 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @list_route(methods=('delete',))
-    def destroy_all(self, request, schedule_entry_name):
+    def destroy_all(self, request, version, schedule_entry_name):
         queryset = self.get_queryset()
         queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
 
@@ -82,7 +82,7 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
     lookup_fields = ('schedule_entry__name', 'task_id')
 
     @detail_route()
-    def archive(self, request, schedule_entry_name, task_id):
+    def archive(self, request, version, schedule_entry_name, task_id):
         entry_name = schedule_entry_name
         acq = self.get_object()
 

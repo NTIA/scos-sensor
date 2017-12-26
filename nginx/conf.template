@@ -7,6 +7,7 @@ upstream wsgi-server {
     server api:8000 fail_timeout=0;
 }
 
+
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -16,6 +17,7 @@ server {
     # For testing, use 307 so that redirect is not cached in browser
     return 307 https://$host$request_uri;
 }
+
 
 server {
     # SSL configuration
@@ -34,6 +36,8 @@ server {
 
     # path for static files
     root /var/www/scos-sensor/;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
 
     location / {
       # checks for static file, if not found proxy to wsgi server
