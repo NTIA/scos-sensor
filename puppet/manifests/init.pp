@@ -38,22 +38,32 @@ class scos_dev (
 #        ensure => installed,
 #    }
 
+    file { [ "$install_root", "$install_root/nginx", "$ssl_dir"]:
+	ensure => 'directory',
+    }
+
     exec { 'secret':
-        onlyif => '/usr/bin/test ! -e /opt/scos/.secret_key',
-        command => '/usr/bin/openssl rand -base64 32 > /opt/scos/.secret_key',
+        onlyif => "/usr/bin/test ! -e $install_root/.secret_key",
+        command => "/usr/bin/openssl rand -base64 32 > $install_root/.secret_key",
         notify  => Exec['reboot'],
     }
 
     exec { 'db_superuser':
-        command => "/bin/echo $db_admin_pw > /opt/scos/.db_superuser",
+        command => "/bin/echo $db_admin_pw > $install_root/.db_superuser",
     }
 
-    exec { 'ssl_cert':
-        command => "/bin/echo $ssl_cert > ${ssl_dir}/ssl-cert-snakeoil.pem",
+    #exec { 'ssl_cert':
+    #    command => "/bin/echo $ssl_cert > ${ssl_dir}/ssl-cert-snakeoil.pem",
+    #}
+    file { "$ssl_dir/ssl-cert-snakeoil.pem":
+	content => $ssl_cert,
     }
 
-    exec { 'ssl_key':
-        command => "/bin/echo $ssl_key > ${ssl_dir}/ssl-cert-snakeoil.key",
+    #exec { 'ssl_key':
+    #    command => "/bin/echo $ssl_key > ${ssl_dir}/ssl-cert-snakeoil.key",
+    #}
+    file {"$ssl_dir/ssl-cert-snakeoil.key":
+	content => $ssl_key,
     }
 
 # Docker container logic Pt 1
@@ -70,15 +80,15 @@ class scos_dev (
         vcsrepo { "$repo_root":
             ensure   => present,
             provider => git,
-            source   => 'https://github.com/NTIA/scos-sensor.git',
+            source   => 'https://sms-ntia:LowiNkeR1@github.com/NTIA/scos-sensor.git',
             revision => $install_version,
-            user     => $git_username,
-            password => $git_password,
+            #user     => $git_username,
+            #password => $git_password,
         }
      
-        exec { 'repo_install':
-            command => "/bin/cp -pr ${repo_root}/docker ${install_root}/docker && /bin/cp -r ${repo_root}/nginx ${install_root}/nginx && /bin/cp ${repo_root}/src ${install_root}/src && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp ${repo_root}/config ${install_root}/config && /bin/cp ${repo_root}/scripts ${install_root}/scripts",
-            notify  => Service['docker'],
+         exec { 'repo_install':
+            command => "/bin/cp -pr ${repo_root}/docker ${install_root}/docker && /bin/cp -r ${repo_root}/nginx ${install_root}/nginx && /bin/cp -r ${repo_root}/src ${install_root}/src && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp -r ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp -r ${repo_root}/config ${install_root}/config && /bin/cp -r ${repo_root}/scripts ${install_root}/scripts",
+            #notify  => Service['docker'], # causes docker to run before build, maybe Exec['reboot'] instead?
         }
     }
 
@@ -102,12 +112,12 @@ SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
 
     if ($server_name_env != undef) {
         exec { 'envsubst1':
-            command => '/usr/bin/envsubst \'$DOMAINS\' < /opt/scos/nginx/conf.d/conf.template > \
-/opt/scos/nginx/conf.d/scos-sensor.conf',
+            command => "/usr/bin/envsubst \'\$DOMAINS\' < $install_root/nginx/conf.template > \
+$install_root/nginx/conf.d/scos-sensor.conf",
         }
     }
 
-    file { '/opt/scos/db.sqlite3':
+    file { "$install_root/db.sqlite3":
        ensure  => 'file',
        replace => 'no',
     }
@@ -128,18 +138,18 @@ SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
     if ($install_source == "github") {
         
         exec { 'envsubst2':
-            command => '/usr/bin/envsubst \'$UBUNTU_IMAGE\' < ${install_root}/docker/Dockerfile.template > ${install_root}/Dockerfile',
+            command => "/usr/bin/envsubst \'\$UBUNTU_IMAGE\' < ${install_root}/docker/Dockerfile.template > ${install_root}/Dockerfile",
         }
 
         docker::image { 'ntiaits/test_scossensor_api':
-            image_tag => 'ntiaits/test_scossensor_api',
+            #image_tag => 'ntiaits/test_scossensor_api',
 #            docker_file => "${install_root}/Dockerfile",
             docker_dir => "${install_root}",
         }
     }
 
     if ($secret_key_env != undef) and ($secret_key != undef) and ($server_name_env != undef) and ($db_superuser != undef) {
-        docker_compose { "${install_root}/docker-compose.yml":
+        docker_compose { "${install_root}/docker/docker-compose.yml":
             subscribe => File['/etc/environment'], 
             ensure  => present,
             scale   => {
