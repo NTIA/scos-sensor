@@ -166,7 +166,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
         domains = os.environ['DOMAINS']
-        fqdn = domains.strip().split(' ')[1]
+        fqdn = domains.split()[1]
         sigmf_md.set_global_field("scos:sensor_id", fqdn)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
