@@ -1,14 +1,13 @@
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from schedule.tests import (
-    TEST_SCHEDULE_ENTRY, TEST_PRIVATE_SCHEDULE_ENTRY,
+    TEST_SCHEDULE_ENTRY,
+    TEST_PRIVATE_SCHEDULE_ENTRY,
     TEST_ALTERNATE_SCHEDULE_ENTRY)
 from schedule.tests.utils import (
     post_schedule,
     update_schedule,
     reverse_detail_url)
-from sensor import V1
 from sensor.tests.utils import validate_response
 
 
