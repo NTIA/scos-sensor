@@ -27,6 +27,6 @@ DOCS_ROOT="${REPO_ROOT}/docs"
 echo "fetching openapi.json"
 curl $URL -k \
 -H "Content-type: application/openapi+json" \
--H "Authorization: Token 509322c540b971a50af8a691689a48a1e3653c0f" \
+-H "Authorization: Token ${API_TOKEN}" \
 > ${DOCS_ROOT}/swagger.json
 echo "wrote ${APIDOCS_ROOT}/swagger.json"
