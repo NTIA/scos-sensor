@@ -38,7 +38,7 @@ class scos_dev (
 #        ensure => installed,
 #    }
 
-    file { [ "$install_root", "$install_root/nginx", "$ssl_dir"]:
+    file { [ "$install_root", "$install_root/nginx", "$ssl_dir", "${install_root}/nginx/conf.d"]:
 	ensure => 'directory',
     }
 
@@ -98,7 +98,7 @@ class scos_dev (
 	}	
 
          exec { 'repo_install':
-            command => "/bin/cp -r ${repo_root}/entrypoints ${install_root} && /bin/cp -r ${repo_root}/nginx ${install_root} && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp -r ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp -r ${repo_root}/config ${install_root}/config && /bin/cp -r ${repo_root}/scripts ${install_root}/scripts && /bin/cp ${repo_root}/docker-compose.yml ${install_root}",
+            command => "/bin/cp -r ${repo_root}/entrypoints ${install_root} && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp -r ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp -r ${repo_root}/config ${install_root}/config && /bin/cp -r ${repo_root}/scripts ${install_root}/scripts && /bin/cp ${repo_root}/docker-compose.yml ${install_root}",
             #notify  => Service['docker'], # causes docker to run before build, maybe Exec['reboot'] instead?
         }
 
@@ -107,6 +107,8 @@ class scos_dev (
             #docker_file => "${install_root}/Dockerfile",
 	    subscribe => File["${install_root}/Dockerfile"],
             docker_dir => "${install_root}",
+	    notify => Docker_compose["${install_root}/docker-compose.yml"],
+	    ensure => present,
         }
     }
 
@@ -130,8 +132,7 @@ SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
 
     if ($server_name_env != undef) {
         exec { 'envsubst1':
-            command => "/usr/bin/envsubst \'\$DOMAINS\' < $install_root/nginx/conf.template > \
-$install_root/nginx/conf.d/scos-sensor.conf",
+            command => "/usr/bin/envsubst \'\$DOMAINS\' < $repo_root/nginx/conf.template > $install_root/nginx/conf.d/scos-sensor.conf",
         }
     }
 
@@ -163,7 +164,7 @@ $install_root/nginx/conf.d/scos-sensor.conf",
 
     if ($secret_key_env != undef) and ($secret_key != undef) and ($server_name_env != undef) and ($db_superuser != undef) {
         docker_compose { "${install_root}/docker-compose.yml":
-            subscribe => File['/etc/environment'], 
+            #subscribe => File['/etc/environment'], 
             ensure  => present,
             scale   => {
                 'api' => 1,
@@ -171,7 +172,8 @@ $install_root/nginx/conf.d/scos-sensor.conf",
 		'autoheal' => 1,
 		'ws_logger' => 1
             },
-	    up_args => '--no-build'
+	    up_args => '--no-build',
+	    require => Docker::image['ntiaits/test_scossensor_api'], 
         }
         notify {"*** ${hostname} is up and running. Woof! ***":}
     }
