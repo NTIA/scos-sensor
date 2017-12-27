@@ -1,4 +1,4 @@
-FROM ${UBUNTU_IMAGE}
+FROM ubuntu
 
 # Update Ubuntu image
 RUN apt-get update && \
@@ -84,15 +84,15 @@ COPY ./src /src
 COPY ./gunicorn /gunicorn
 COPY ./config /config
 
-RUN mkdir -p /docker
-COPY ./docker/api_entrypoint.sh /docker
-COPY ./docker/testing_entrypoint.sh /docker
+RUN mkdir -p /entrypoints
+COPY ./entrypoints/api_entrypoint.sh /entrypoints
+COPY ./entrypoints/testing_entrypoint.sh /entrypoints
 
 RUN mkdir -p /scripts
 COPY ./scripts/create_superuser.py /scripts
 
-RUN chmod +x /docker/api_entrypoint.sh
-RUN chmod +x /docker/testing_entrypoint.sh # for jenkins CI
+RUN chmod +x /entrypoints/api_entrypoint.sh
+RUN chmod +x /entrypoints/testing_entrypoint.sh # for jenkins CI
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG
