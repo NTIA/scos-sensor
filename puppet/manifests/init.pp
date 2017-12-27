@@ -12,8 +12,8 @@ class scos_dev (
     $git_password = undef,
     $install_root = "/opt/scos-sensor",
     $repo_root = "/opt/scos-sensor_repo",
-    $ubuntu_image = "ubuntu",
-    $nginx_image = "nginx",
+    #$ubuntu_image = "ubuntu",
+    #$nginx_image = "nginx",
     $ssl_dir = "${install_root}/nginx/certs",
     $ssl_cert = undef,
     $ssl_key = undef,
@@ -85,10 +85,28 @@ class scos_dev (
             #user     => $git_username,
             #password => $git_password,
         }
+
+	file {"${install_root}/src":
+		ensure => 'directory',
+		recurse => true,
+		source => "${repo_root}/src",
+	}
      
+	file {"${install_root}/Dockerfile":
+		ensure => present,
+		source => "${repo_root}/Dockerfile",
+	}	
+
          exec { 'repo_install':
-            command => "/bin/cp -pr ${repo_root}/docker ${install_root}/docker && /bin/cp -r ${repo_root}/nginx ${install_root}/nginx && /bin/cp -r ${repo_root}/src ${install_root}/src && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp -r ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp -r ${repo_root}/config ${install_root}/config && /bin/cp -r ${repo_root}/scripts ${install_root}/scripts",
+            command => "/bin/cp -r ${repo_root}/entrypoints ${install_root} && /bin/cp -r ${repo_root}/nginx ${install_root} && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp -r ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp -r ${repo_root}/config ${install_root}/config && /bin/cp -r ${repo_root}/scripts ${install_root}/scripts && /bin/cp ${repo_root}/docker-compose.yml ${install_root}",
             #notify  => Service['docker'], # causes docker to run before build, maybe Exec['reboot'] instead?
+        }
+
+        docker::image { 'ntiaits/test_scossensor_api':
+            #image_tag => 'ntiaits/test_scossensor_api',
+            #docker_file => "${install_root}/Dockerfile",
+	    subscribe => File["${install_root}/Dockerfile"],
+            docker_dir => "${install_root}",
         }
     }
 
@@ -103,8 +121,8 @@ SECRET_KEY='${secret_key}'
 DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
-UBUNTU_IMAGE=$ubuntu_image
-NGINX_IMAGE=$nginx_image
+#UBUNTU_IMAGE=$ubuntu_image
+#NGINX_IMAGE=$nginx_image
 REPO_ROOT=$install_root
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
 SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
@@ -135,27 +153,25 @@ $install_root/nginx/conf.d/scos-sensor.conf",
 # Github logic Pt 2
 # Deploy, build & run
 
-    if ($install_source == "github") {
-        
-        exec { 'envsubst2':
-            command => "/usr/bin/envsubst \'\$UBUNTU_IMAGE\' < ${install_root}/docker/Dockerfile.template > ${install_root}/Dockerfile",
-        }
-
-        docker::image { 'ntiaits/test_scossensor_api':
-            #image_tag => 'ntiaits/test_scossensor_api',
-#            docker_file => "${install_root}/Dockerfile",
-            docker_dir => "${install_root}",
-        }
-    }
+    #if ($install_source == "github") {
+    #    docker::image { 'ntiaits/test_scossensor_api':
+    #        #image_tag => 'ntiaits/test_scossensor_api',
+    #        docker_file => "${install_root}/Dockerfile",
+    #        #docker_dir => "${install_root}",
+    #    }
+    #}
 
     if ($secret_key_env != undef) and ($secret_key != undef) and ($server_name_env != undef) and ($db_superuser != undef) {
-        docker_compose { "${install_root}/docker/docker-compose.yml":
+        docker_compose { "${install_root}/docker-compose.yml":
             subscribe => File['/etc/environment'], 
             ensure  => present,
             scale   => {
                 'api' => 1,
                 'nginx' => 1,
+		'autoheal' => 1,
+		'ws_logger' => 1
             },
+	    up_args => '--no-build'
         }
         notify {"*** ${hostname} is up and running. Woof! ***":}
     }
