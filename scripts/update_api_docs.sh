@@ -28,6 +28,6 @@ echo "fetching openapi.json"
 curl $URL -k \
     -H "Content-type: application/openapi+json" \
     -H "Authorization: Token ${API_TOKEN}" \
-    > ${DOCS_ROOT}/swagger.json
+    | python -m json.tool > ${DOCS_ROOT}/swagger.json
 
 echo "wrote ${APIDOCS_ROOT}/swagger.json"
