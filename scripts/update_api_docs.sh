@@ -9,11 +9,11 @@ NARGS=$#
 if [[ $NARGS != 2 ]]; then
     echo "Usage: $SCRIPT URL_TO_OPENAPI2_JSON API_TOKEN"
     echo ""
-    echo "Try starting the development server (./src/manage.py runsslserver)"
-    echo "and using https://localhost/api/v1/schema/?format=openapi."
+    echo "Try starting the development server (./src/manage.py runserver)"
+    echo "and using http://localhost/api/v1/schema/?format=openapi."
     echo ""
     echo "To find your authentication token, log into the server and visit"
-    echo "https://localhost/api/v1/users/me/."
+    echo "http://localhost/api/v1/users/me/."
     exit 1
 fi
 
@@ -26,7 +26,8 @@ DOCS_ROOT="${REPO_ROOT}/docs"
 
 echo "fetching openapi.json"
 curl $URL -k \
--H "Content-type: application/openapi+json" \
--H "Authorization: Token ${API_TOKEN}" \
-> ${DOCS_ROOT}/swagger.json
+    -H "Content-type: application/openapi+json" \
+    -H "Authorization: Token ${API_TOKEN}" \
+    > ${DOCS_ROOT}/swagger.json
+
 echo "wrote ${APIDOCS_ROOT}/swagger.json"
