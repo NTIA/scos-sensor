@@ -6,8 +6,12 @@ from .models import Acquisition
 
 
 class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
-    schedule_entry = serializers.SerializerMethodField()
-    acquisitions_available = serializers.SerializerMethodField()
+    schedule_entry = serializers.SerializerMethodField(
+        help_text="The related schedule entry for the acquisition"
+    )
+    acquisitions_available = serializers.SerializerMethodField(
+        help_text="The available acquisitions"
+    )
 
     class Meta:
         model = ScheduleEntry
