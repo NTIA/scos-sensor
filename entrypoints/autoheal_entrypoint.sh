@@ -1,14 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-# Docker-autoheal is inlined from https://github.com/willfarrell/docker-autoheal
-# so that we can run in on ARM
+# autoheal is modified from https://github.com/willfarrell/docker-autoheal
 
 set -e
 
 DOCKER_SOCK=${DOCKER_SOCK:-/var/run/docker.sock}
 TMP_DIR=/tmp/restart
-
-apt-get install -y curl jq || (apt-get update && apt-get install -y curl jq)
 
 if [ -e ${DOCKER_SOCK} ]; then
 

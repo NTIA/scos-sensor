@@ -10,7 +10,7 @@ services:
     restart: always
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
-    image: ntiaits/test_scossensor_api
+    image: smsntia/scos-sensor
     environment:
       - DEBUG
       - DOMAINS
@@ -27,16 +27,24 @@ services:
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
-    image: nginx
+    image: nginx:alpine
     restart: always
     ports:
       - '80:80'
       - '443:443'
+    command: >-
+      /bin/sh -c
+      "envsubst '$$DOMAINS'
+      < /etc/nginx/nginx.conf.template
+      > /etc/nginx/conf.d/default.conf
+      && nginx -g 'daemon off;'"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/conf.template:/etc/nginx/nginx.conf.template:ro
       - ./src/static:/var/www/scos-sensor/static:ro
       - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
+    environment:
+      - DOMAINS
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
@@ -44,17 +52,18 @@ services:
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
   autoheal:
-    image: ubuntu
+    image: alpine
     restart: on-failure
     depends_on:
       - api
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
-    command: /entrypoints/autoheal_entrypoint.sh
+    command: >-
+      /bin/sh -c "apk add --no-cache jq curl && /entrypoints/autoheal_entrypoint.sh"
 
-  ws_logger:
-    restart: always
-    image: gliderlabs/logspout
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  # logspout:
+  #   restart: always
+  #   image: gliderlabs/logspout
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
