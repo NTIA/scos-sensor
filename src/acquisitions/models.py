@@ -6,13 +6,26 @@ from schedule.models import ScheduleEntry
 
 class Acquisition(models.Model):
     """Map between schedule entries and their task data and metadata."""
-    schedule_entry = models.ForeignKey(ScheduleEntry,
-                                       on_delete=models.PROTECT,
-                                       related_name='acquisitions')
-    task_id = models.IntegerField()
-    sigmf_metadata = JSONField()
-    data = models.BinaryField(null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    schedule_entry = models.ForeignKey(
+        ScheduleEntry,
+        on_delete=models.PROTECT,
+        related_name='acquisitions',
+        help_text="The schedule entry relative to the acquisition"
+    )
+    task_id = models.IntegerField(
+        help_text="The id of the task relative to the acquisition"
+    )
+    sigmf_metadata = JSONField(
+        help_text="The sigmf meta data for the acquisition"
+    )
+    data = models.BinaryField(
+        help_text="",
+        null=True
+    )
+    created = models.DateTimeField(
+        help_text="The time the acquisition was created",
+        auto_now_add=True
+    )
 
     class Meta:
         db_table = 'acquisitions'
