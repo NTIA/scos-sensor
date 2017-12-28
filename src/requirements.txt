@@ -11,3 +11,4 @@ gunicorn==19.7.1
 jsonfield==2.0.2
 numpy==1.13.1
 six==1.10.0
+typing==3.6.2
