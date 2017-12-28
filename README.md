@@ -47,23 +47,19 @@ which it will run.
 ```bash
 $ cp env.template env
 $ source ./env
-$ ./scripts/build.sh       # prepare the Docker containers
-```
-
-Install all Python requirements, set up the database, and create an admin user.
-```bash
-$ pip install -r ./src/requirements-dev.txt
-$ python ./src/manage.py makemigrations && ./src/manage.py migrate
-$ python ./src/manage.py createsuperuser
 ```
 
 To run a Dockerized production-grade stack:
 ```bash
+$ docker-compose pull  # download all necessary images
+$ docker-compose run api /src/manage.py createsuperuser
 $ docker-compose up
 ```
 
 For a local development server:
 ```bash
+$ pip install -r ./src/requirements-dev.txt
+$ python ./src/manage.py createsuperuser
 $ ./src/manage.py runserver
 ```
 
