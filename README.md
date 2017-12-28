@@ -47,6 +47,7 @@ which it will run.
 ```bash
 $ cp env.template env
 $ source ./env
+```
 
 To run a Dockerized production-grade stack:
 ```bash
