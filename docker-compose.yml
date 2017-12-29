@@ -21,7 +21,7 @@ services:
       - '8000'
     volumes:
       - ./db.sqlite3:/db.sqlite3
-      - /opt/scos:/opt/scos
+      - ${REPO_ROOT}:/opt/scos-sensor
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
     command: /entrypoints/api_entrypoint.sh

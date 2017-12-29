@@ -15,6 +15,7 @@ class scos_dev (
   $ssl_dir = "${install_root}/nginx/certs",
   $ssl_cert = undef,
   $ssl_key = undef,
+  $db_admin_email = undef,
   $db_admin_pw = 'changeme!',
 )
 
@@ -38,8 +39,12 @@ stage { 'first':
     command => "/usr/bin/openssl rand -base64 32 > ${install_root}/.secret_key",
   }
 
-  exec { 'db_superuser':
-    command => "/bin/echo ${db_admin_pw} > ${install_root}/.db_superuser",
+  exec { 'db_admin_pw':
+    command => "/bin/echo ${db_admin_pw} > ${install_root}/.db_admin_pw",
+  }
+
+  exec { 'db_admin_email':
+    command => "/bin/echo ${db_admin_email} > ${install_root}/.db_admin_email",
   }
 
   file { "${ssl_dir}/ssl-cert-snakeoil.pem":

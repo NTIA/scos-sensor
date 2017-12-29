@@ -17,15 +17,16 @@ puppet_environments=`ls -1d /etc/puppetlabs/code/environments/* | xargs -n 1 bas
 
 scos_copy () {
     printf "Creating module! \n"
-    mkdir -p $1/scos/files 
+    mkdir -p $1/scos/files
     cp -r ../puppet/lib $1/scos
     cp -r ../puppet/manifests $1/scos
     cp ../docker/docker-compose.yml $1/scos/files
     cp -r ../nginx $1/scos/files
     cp -r ../src $1/scos/files
-    cp ../env.template $1/scos/files      
+    cp ../env.template $1/scos/files
     printf "\nModule created. \n"
     chown -R puppet $1/scos
+    chmod -R o+r * $1/scos
 }
 
 ## MAIN ##
@@ -45,7 +46,7 @@ if [ $common_module == "y" ]
 then
     install_path="/etc/puppetlabs/code/modules/"
     read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path (y or n)? " path_confirmed
-    if [ $path_confirmed == "y" ] 
+    if [ $path_confirmed == "y" ]
     then
         scos_copy $install_path
     else
@@ -54,14 +55,14 @@ then
     fi
 else
     read -e -i "$environment_module" -p "Do you wish to install as a environment module (y or n)? " environment_module
-    if [ $environment_module == "y" ] 
+    if [ $environment_module == "y" ]
     then
         printf "\nPuppet Environments:\n\n"
         printf "$puppet_environments\n\n"
         read -e -i "$install_environment" -p "Enter install environment: " install_environment
         install_path="$install_path/$install_environment/modules/"
         read -e -i "$path_confirmed" -p "Is this full install path correct: $install_path (y or n)? " path_confirmed
-        if [ $path_confirmed == "y" ] 
+        if [ $path_confirmed == "y" ]
         then
             scos_copy $install_path
         fi
