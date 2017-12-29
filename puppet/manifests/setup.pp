@@ -67,7 +67,7 @@ class scos::setup (
     vcsrepo { $repo_root:
       ensure   => present,
       provider => git,
-      source   => 'https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git',
+      source   => "https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git",
       revision => $install_version,
     }
 
