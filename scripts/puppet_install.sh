@@ -20,13 +20,8 @@ scos_copy () {
     mkdir -p $1/scos/files
     cp -r ../puppet/lib $1/scos
     cp -r ../puppet/manifests $1/scos
-    cp ../docker/docker-compose.yml $1/scos/files
-    cp -r ../nginx $1/scos/files
-    cp -r ../src $1/scos/files
-    cp ../env.template $1/scos/files
     printf "\nModule created. \n"
     chown -R puppet $1/scos
-    chmod -R o+r * $1/scos
 }
 
 ## MAIN ##
