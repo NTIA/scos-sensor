@@ -1,4 +1,10 @@
 class Action(object):
+    """The action base class.
+
+    To create an action, create a subclass of `Action` with a descriprive
+    docstring and override the `__call__` method.
+
+    """
     def __init__(self, admin_only=False):
         self.admin_only = admin_only
 

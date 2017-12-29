@@ -32,11 +32,11 @@ STATICFILES_DIRS = (
 RUNNING_DEVSERVER = 'runserver' in sys.argv
 
 # Healthchecks - the existance of any of these indicates an unhealth state
-USRP_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'usrp_unhealthy')
+SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
 
 # Cleanup any existing healtcheck files
 try:
-    os.remove(USRP_HEALTHCHECK_FILE)
+    os.remove(SDR_HEALTHCHECK_FILE)
 except OSError:
     pass
 

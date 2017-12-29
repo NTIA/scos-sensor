@@ -3,7 +3,8 @@ from . import logger
 from . import monitor_usrp
 
 
-by_name = {
+# Actions initialized here are made available through the API
+registered_actions = {
     "acquire700c": acquire_single_freq_fft.SingleFrequencyFftAcquisition(
         frequency=751e6,
         sample_rate=15.36e6,
@@ -16,8 +17,11 @@ by_name = {
 }
 
 
+by_name = registered_actions
+
+
 def get_action_with_summary(action):
-    action_fn = by_name[action]
+    action_fn = registered_actions[action]
     summary = get_summary(action_fn)
     action_with_summary = action
     if summary:
@@ -43,13 +47,13 @@ ADMIN_CHOICES = []
 
 
 def init():
-    """Allows re-initing VALID_ACTIONS if `by_name` is modified."""
+    """Allows re-initing VALID_ACTIONS if `registered_actions` is modified."""
     global VALID_ACTIONS
     global CHOICES
 
-    VALID_ACTIONS = sorted(by_name.keys())
+    VALID_ACTIONS = sorted(registered_actions.keys())
     for action in VALID_ACTIONS:
-        if by_name[action].admin_only:
+        if registered_actions[action].admin_only:
             ADMIN_CHOICES.append((action, get_action_with_summary(action)))
         else:
             CHOICES.append((action, get_action_with_summary(action)))
