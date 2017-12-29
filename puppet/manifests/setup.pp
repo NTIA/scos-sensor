@@ -104,6 +104,7 @@ class scos::setup (
       ensure  => 'directory',
       recurse => true,
       source  => "${repo_root}/scripts",
+      mode    => '0744',
     }
 
     file {"${install_root}/docker-compose.yml":
