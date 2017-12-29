@@ -19,6 +19,6 @@ class scos
 contain 'scos::setup'
 contain 'scos::docker'
 
-class {'scos::setup': } -> class {'scos::docker': }
+Class['scos::setup'] -> Class['scos::docker']
 
 }
