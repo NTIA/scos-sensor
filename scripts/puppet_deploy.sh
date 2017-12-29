@@ -9,5 +9,5 @@ set -e # exit on error
 
 cd $REPO_ROOT
 source scripts/build_api.sh
-source scripts/run.sh
+docker-compose up -d --no-build
 touch .deployed
