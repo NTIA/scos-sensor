@@ -50,6 +50,7 @@ def api_v1_root(request, version, format=None):
 
     return Response(list_endpoints)
 
+
 api_urlpatterns = format_suffix_patterns((
     url(r'^$', api_v1_root, name='api-root'),
     url(r'^acquisitions/', include('acquisitions.urls')),
