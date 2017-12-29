@@ -51,16 +51,10 @@ $ source ./env
 
 To run a Dockerized production-grade stack:
 ```bash
+$ touch db.sqlite3
 $ docker-compose pull  # download all necessary images
 $ docker-compose run api /src/manage.py createsuperuser
 $ docker-compose up
-```
-
-For a local development server:
-```bash
-$ pip install -r ./src/requirements-dev.txt
-$ python ./src/manage.py createsuperuser
-$ ./src/manage.py runserver
 ```
 
 Foreman and Puppet
