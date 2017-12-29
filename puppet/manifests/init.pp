@@ -1,6 +1,6 @@
-# Setup and present variables that will be entered via Foreman    
+# Setup and present variables that will be entered via Foreman
 # Source (docker/github)
-# Branch or Version/Tag 
+# Branch or Version/Tag
 # Install dir
 # DB User
 # SSL certs
@@ -12,15 +12,13 @@ class scos_dev (
     $git_password = undef,
     $install_root = "/opt/scos-sensor",
     $repo_root = "/opt/scos-sensor_repo",
-    #$ubuntu_image = "ubuntu",
-    #$nginx_image = "nginx",
     $ssl_dir = "${install_root}/nginx/certs",
     $ssl_cert = undef,
     $ssl_key = undef,
     $db_admin_pw = "changeme!",
 )
 
-{ 
+{
 
 # Ensure common services are installed and running i.e. Puppet, Docker, git etc Setup secret key, DB user, SSL cert Logic to deterine docker vs. github source processes
 
@@ -29,15 +27,6 @@ class scos_dev (
         enable => true,
     }
 
-#    service { 'docker':
-#        ensure => running,
-#        enable => true,
-#    }
-
-#    package { 'git':
-#        ensure => installed,
-#    }
-
     file { [ "$install_root", "$install_root/nginx", "$ssl_dir", "${install_root}/nginx/conf.d"]:
 	ensure => 'directory',
     }
@@ -45,25 +34,18 @@ class scos_dev (
     exec { 'secret':
         onlyif => "/usr/bin/test ! -e $install_root/.secret_key",
         command => "/usr/bin/openssl rand -base64 32 > $install_root/.secret_key",
-        notify  => Exec['reboot'],
     }
 
     exec { 'db_superuser':
         command => "/bin/echo $db_admin_pw > $install_root/.db_superuser",
     }
 
-    #exec { 'ssl_cert':
-    #    command => "/bin/echo $ssl_cert > ${ssl_dir}/ssl-cert-snakeoil.pem",
-    #}
     file { "$ssl_dir/ssl-cert-snakeoil.pem":
-	content => $ssl_cert,
+	      content => $ssl_cert,
     }
 
-    #exec { 'ssl_key':
-    #    command => "/bin/echo $ssl_key > ${ssl_dir}/ssl-cert-snakeoil.key",
-    #}
-    file {"$ssl_dir/ssl-cert-snakeoil.key":
-	content => $ssl_key,
+    file { "$ssl_dir/ssl-cert-snakeoil.key":
+	      content => $ssl_key,
     }
 
 # Docker container logic Pt 1
@@ -80,10 +62,8 @@ class scos_dev (
         vcsrepo { "$repo_root":
             ensure   => present,
             provider => git,
-            source   => 'https://sms-ntia:LowiNkeR1@github.com/NTIA/scos-sensor.git',
+            source   => 'https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git',
             revision => $install_version,
-            #user     => $git_username,
-            #password => $git_password,
         }
 
 	file {"${install_root}/src":
@@ -91,16 +71,52 @@ class scos_dev (
 		recurse => true,
 		source => "${repo_root}/src",
 	}
-     
+
 	file {"${install_root}/Dockerfile":
 		ensure => present,
 		source => "${repo_root}/Dockerfile",
-	}	
+	}
 
-         exec { 'repo_install':
-            command => "/bin/cp -r ${repo_root}/entrypoints ${install_root} && /bin/cp ${repo_root}/env.template ${install_root} && /bin/cp -r ${repo_root}/gunicorn ${install_root}/gunicorn  && /bin/cp -r ${repo_root}/config ${install_root}/config && /bin/cp -r ${repo_root}/scripts ${install_root}/scripts && /bin/cp ${repo_root}/docker-compose.yml ${install_root}",
-            #notify  => Service['docker'], # causes docker to run before build, maybe Exec['reboot'] instead?
-        }
+  file {"${install_root}/entrypoints":
+      ensure => 'directory',
+		  recurse => true,
+		  source => "${repo_root}/entrypoints",
+  }
+
+  file {"${install_root}/gunicorn":
+      ensure => 'directory',
+		  recurse => true,
+		  source => "${repo_root}/gunicorn",
+  }
+
+  file {"${install_root}/config":
+      ensure => 'directory',
+		  recurse => true,
+		  source => "${repo_root}/config",
+  }
+  file {"${install_root}/scripts":
+      ensure => 'directory',
+		  recurse => true,
+		  source => "${repo_root}/scripts",
+  }
+
+  file {"${install_root}/docker-compose.yml":
+		  ensure => present,
+		  source => "${repo_root}/docker-compose.yml",
+	}
+
+  exec {'puppet_deploy':
+      command => "${install_root}/scripts/puppet_deploy.sh"
+      environment => [
+      "DEBUG=false",
+      "SECRET_KEY=${secret_key}",
+      "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
+      "IPS=${networking[ip]} 127.0.0.1",
+      "GUNICORN_LOG_LEVEL=info",
+      "SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem",
+      "SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
+      ]
+  }
 
         docker::image { 'ntiaits/test_scossensor_api':
             #image_tag => 'ntiaits/test_scossensor_api',
@@ -123,8 +139,6 @@ SECRET_KEY='${secret_key}'
 DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
-#UBUNTU_IMAGE=$ubuntu_image
-#NGINX_IMAGE=$nginx_image
 REPO_ROOT=$install_root
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
 SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
@@ -164,7 +178,7 @@ SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
 
     if ($secret_key_env != undef) and ($secret_key != undef) and ($server_name_env != undef) and ($db_superuser != undef) {
         docker_compose { "${install_root}/docker-compose.yml":
-            #subscribe => File['/etc/environment'], 
+            #subscribe => File['/etc/environment'],
             ensure  => present,
             scale   => {
                 'api' => 1,
@@ -173,7 +187,7 @@ SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
 		'ws_logger' => 1
             },
 	    up_args => '--no-build',
-	    require => Docker::image['ntiaits/test_scossensor_api'], 
+	    require => Docker::image['ntiaits/test_scossensor_api'],
         }
         notify {"*** ${hostname} is up and running. Woof! ***":}
     }
