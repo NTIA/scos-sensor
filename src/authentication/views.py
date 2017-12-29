@@ -15,10 +15,11 @@ from .serializers import UserProfileSerializer, UserDetailsSerializer
 
 
 class UserListView(APIView):
-    """Information on users. Post is only available to admin users. The fields 
-    'email', 'server_url', 'auth_token', 'has_usable_password', and 'is_admin' 
+    """Information on users. Post is only available to admin users. The fields
+    'email', 'server_url', 'auth_token', 'has_usable_password', and 'is_admin'
     are only visible to admin users. For more information on user fields, see
-    [Django's documentation](https://docs.djangoproject.com/en/2.0/topics/auth/customizing/) on custom user models."""
+    Django's documentation on custom user models."""
+
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_staff:
             return UserDetailsListView.as_view()(request, *args, **kwargs)
