@@ -97,7 +97,7 @@ calls out to your SDRs available API and reads the samples back into python.
 
 The next step in supporting a different SDR would be to modify the
 [monitor_usrp](src/actions/monitor_usrp.py) action which can be used to
-periodically exercise the SDR and make signal Docker to recycle the container
+periodically exercise the SDR and signal Docker to recycle the container
 if its connection is lost. Next we'll go into more depth about _actions_ and
 how to write them.
 
