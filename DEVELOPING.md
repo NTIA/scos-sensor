@@ -1,6 +1,5 @@
 This document dives into the process of developing with this codebase. It
 starts with the basics of running the sensor code with local modifications,
-then discusses adding support for a different sofware defined radio (SDR).
 Lastly, it talks about the concept of "actions" and how to program a custom
 action.
 
@@ -69,7 +68,7 @@ it can be useful to add the `source` command to a post-activate file in
 whatever virtual environment you're using).
 
 ```bash
-$ cp env.template env     # modify if necessary, default are okay for testing
+$ cp env.template env     # modify if necessary, defaults are okay for testing
 $ source ./env
 ```
 
