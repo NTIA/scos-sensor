@@ -56,7 +56,7 @@ python dev requirements from "Running Tests".
 $ ./scripts/init_db.sh
 $ cd src
 $ ./manage.py createsuperuser
-# ./manage.py runserver
+$ ./manage.py runserver
 ```
 
 Running Production Server with Local Changes
