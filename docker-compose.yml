@@ -3,7 +3,7 @@ version: '3'
 services:
   api:
     healthcheck:
-      test: test ! -e /usrp_unhealthy
+      test: test ! -e /sdr_unhealthy
       interval: 10s
       timeout: 1s
       retries: 1

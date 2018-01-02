@@ -6,7 +6,7 @@ import os
 import logging
 from itertools import compress
 
-from sensor.settings import USRP_HEALTHCHECK_FILE
+from sensor.settings import SDR_HEALTHCHECK_FILE
 from .base import Action
 from . import usrp
 
@@ -32,11 +32,11 @@ class USRPMonitor(Action):
 
         logger.debug("Performing USRP health check")
 
-        if self.usrp.uhd_is_available and not self.usrp.is_available:
+        if self.usrp.driver_is_available and not self.usrp.is_available:
             self.usrp.connect()
 
         required_components = (
-            self.usrp.uhd_is_available,
+            self.usrp.driver_is_available,
             self.usrp.is_available
         )
         missing_components = [not rc for rc in required_components]
@@ -62,10 +62,10 @@ class USRPMonitor(Action):
 
         if healthy:
             try:
-                os.remove(USRP_HEALTHCHECK_FILE)
+                os.remove(SDR_HEALTHCHECK_FILE)
                 logger.info("USRP healthy")
             except OSError:
                 pass
         else:
             logger.warn("USRP unhealthy")
-            touch(USRP_HEALTHCHECK_FILE)
+            touch(SDR_HEALTHCHECK_FILE)

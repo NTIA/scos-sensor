@@ -22,9 +22,9 @@ logger = logging.getLogger(__name__)
 
 try:
     from gnuradio import uhd
-    uhd_is_available = True
+    driver_is_available = True
 except ImportError:
-    uhd_is_available = False
+    driver_is_available = False
 
 
 radio = None
@@ -32,7 +32,7 @@ is_available = False
 
 
 def connect():  # -> bool:
-    if not uhd_is_available:
+    if not driver_is_available:
         logger.warning("gnuradio.uhd not available - disabling radio")
         return False
 
