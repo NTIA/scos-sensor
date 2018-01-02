@@ -41,7 +41,7 @@ The `scos` class has the following parameters which need to be set before it can
 In addition to the `scos` class, the sensors will also need the following classes installed and configured. The names are the modules taken from the [Puppet Forge](https://forge.puppet.com). These can be assigned to a `Configure > Host Group`, to make setup easier:
 
 * [`puppetlabs/docker`](https://forge.puppet.com/puppetlabs/docker)
-* [`docker::compose`](https://forge.puppet.com/puppetlabs/docker) - Comes as part of `puppetlabs/docker` module
+* [`docker::compose`](https://forge.puppet.com/puppetlabs/docker) - Comes with `puppetlabs/docker` module
 * [`puppetlabs/git`](https://forge.puppet.com/puppetlabs/git)
 * [`puppetlabs/vcsrepo`](https://forge.puppet.com/puppetlabs/vcsrepo) - Note, this will not show as a Smart Class in Foreman
 * [`stankevich/python`](https://forge.puppet.com/stankevich/python)
