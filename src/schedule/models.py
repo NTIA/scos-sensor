@@ -68,12 +68,12 @@ class ScheduleEntry(models.Model):
 
     name = models.SlugField(
         primary_key=True,
-        help_text="Unique identifier used in URLs and filenames"
+        help_text="The unique identifier used in URLs and filenames"
     )
     action = models.CharField(
         choices=actions.CHOICES,
         max_length=actions.MAX_LENGTH,
-        help_text="Action to be scheduled"
+        help_text="The name of the action to be scheduled"
     )
     priority = models.SmallIntegerField(
         default=DEFAULT_PRIORITY,
@@ -100,8 +100,8 @@ class ScheduleEntry(models.Model):
     is_active = models.BooleanField(
         default=True,
         editable=True,
-        help_text="Deactivate an entry to remove it from the scheduler "
-                  "without removing it from the system"
+        help_text="Indicates whether the entry should be removed from the "
+                  "scheduler without removing it from the system"
     )
     is_private = models.BooleanField(
         default=False,
@@ -114,27 +114,27 @@ class ScheduleEntry(models.Model):
     next_task_time = models.BigIntegerField(
         null=True,
         editable=False,
-        help_text='The time the next task is to be executed'
+        help_text="The time the next task is to be executed"
     )
     next_task_id = models.IntegerField(
         default=1,
         editable=False,
-        help_text='The id of the next task to be executed'
+        help_text="The id of the next task to be executed"
     )
     created = models.DateTimeField(
         auto_now_add=True,
-        help_text='The date the Schdule Entry was created'
+        help_text="The date the entry was created"
     )
     modified = models.DateTimeField(
         auto_now=True,
-        help_text='The date the Schedule Entry was modified'
+        help_text="The date the entry was modified"
     )
     owner = models.ForeignKey(
         'authentication.User',
         editable=False,
         related_name='schedule_entries',
         on_delete=models.CASCADE,
-        help_text='The user who owns the Schedule Entry'
+        help_text="The name of the user whom owns the entry"
     )
 
     class Meta:
