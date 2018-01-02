@@ -44,6 +44,8 @@ In addition to the `scos` Puppet module, the sensors will also need the followin
 * `python`
 * `scos` - only do this if you wish to assign it to every sensor in the Host Group
 
+![Host Group](/docs/img/foreman_host_group.png?raw=true)
+
 ## Creating a New SCOS Sensor
 
 Once you have Foreman and Puppet setup as above, the procedure for creating a new SCOS sensor is as follows. From within Foreman under `Hosts > Create Host`
