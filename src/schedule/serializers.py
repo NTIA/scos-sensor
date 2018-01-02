@@ -7,9 +7,18 @@ from .models import ScheduleEntry
 
 
 class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
-    acquisitions = serializers.SerializerMethodField()
-    relative_stop = serializers.BooleanField(required=False)
-    action = serializers.ChoiceField(choices=actions.CHOICES)
+    acquisitions = serializers.SerializerMethodField(
+        help_text="The list of acquisitions related to the entry"
+    )
+    relative_stop = serializers.BooleanField(
+        required=False,
+        help_text="Indicates that the `stop` field should be interpreted as "
+                  "seconds after `start` instead of an absolute time"
+    )
+    action = serializers.ChoiceField(
+        choices=actions.CHOICES,
+        help_text="The name of the action to be scheduled"
+    )
 
     class Meta:
         model = ScheduleEntry
@@ -33,10 +42,12 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'schedule-detail'
+                'view_name': 'schedule-detail',
+                'help_text': 'The url of the entry'
             },
             'owner': {
-                'view_name': 'user-detail'
+                'view_name': 'user-detail',
+                'help_text': 'The name of the user whom owns the entry'
             }
         }
         read_only_fields = ('is_active', 'is_private')

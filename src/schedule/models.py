@@ -68,57 +68,73 @@ class ScheduleEntry(models.Model):
 
     name = models.SlugField(
         primary_key=True,
-        help_text="unique identifier used in URLs and filenames"
+        help_text="The unique identifier used in URLs and filenames"
     )
     action = models.CharField(
         choices=actions.CHOICES,
         max_length=actions.MAX_LENGTH,
-        help_text="action to be scheduled"
+        help_text="The name of the action to be scheduled"
     )
     priority = models.SmallIntegerField(
         default=DEFAULT_PRIORITY,
         help_text=(
-            "lower number is higher priority (default={})"
+            "Lower number is higher priority (default={})"
         ).format(DEFAULT_PRIORITY)
     )
     start = models.BigIntegerField(
         default=next_schedulable_timefn,
         blank=True,
-        help_text="absolute time (epoch) to start, or leave blank for 'now'"
+        help_text="Absolute time (epoch) to start, or leave blank for 'now'"
     )
     stop = models.BigIntegerField(
         null=True,
         blank=True,
-        help_text="absolute time (epoch) to stop, or leave blank for 'never'"
+        help_text="Absolute time (epoch) to stop, or leave blank for 'never'"
     )
     interval = models.PositiveIntegerField(
         null=True,
         blank=True,
         validators=(MinValueValidator(1),),
-        help_text="seconds between events, or leave blank to run once"
+        help_text="Seconds between events, or leave blank to run once"
     )
     is_active = models.BooleanField(
         default=True,
         editable=True,
-        help_text=("deactivate an entry to remove it from the scheduler "
-                   "without removing it from the system")
+        help_text="Indicates whether the entry should be removed from the "
+                  "scheduler without removing it from the system"
     )
     is_private = models.BooleanField(
         default=False,
         editable=True,
-        help_text="entry and resulting data are only visible to admin"
+        help_text="Indicates whether the entry, and resulting data, are only "
+                  "visible to admin"
     )
 
     # read-only fields
-    next_task_time = models.BigIntegerField(null=True, editable=False)
-    next_task_id = models.IntegerField(default=1, editable=False)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
+    next_task_time = models.BigIntegerField(
+        null=True,
+        editable=False,
+        help_text="The time the next task is to be executed"
+    )
+    next_task_id = models.IntegerField(
+        default=1,
+        editable=False,
+        help_text="The id of the next task to be executed"
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text="The date the entry was created"
+    )
+    modified = models.DateTimeField(
+        auto_now=True,
+        help_text="The date the entry was modified"
+    )
     owner = models.ForeignKey(
         'authentication.User',
         editable=False,
         related_name='schedule_entries',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        help_text="The name of the user whom owns the entry"
     )
 
     class Meta:

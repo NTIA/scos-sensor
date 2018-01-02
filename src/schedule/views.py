@@ -14,19 +14,19 @@ class ScheduleEntryViewSet(ModelViewSet):
     """GET /api/v1/schedule/
 
     create:
-    POST /api/v1/schedule/
+    Create a new schedule.
 
     partial_update:
-    PATCH /api/v1/schedule/{name}/
+    Partially updates the specified schedule entry.
 
     update:
-    PUT /api/v1/schedule/{name}/
+    Updates the specified schedule entry.
 
     delete:
-    DELETE /api/v1/schedule/{name}/
+    Deletes the specified schedule entry.
 
     retrieve:
-    GET /api/v1/schedule/{name}/
+    Returns the specified schedule entry.
     """
     queryset = ScheduleEntry.objects.all()
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
