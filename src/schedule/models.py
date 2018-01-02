@@ -68,12 +68,20 @@ class ScheduleEntry(models.Model):
 
     name = models.SlugField(
         primary_key=True,
+<<<<<<< HEAD
         help_text="The unique identifier used in URLs and filenames"
+=======
+        help_text="Unique identifier used in URLs and filenames"
+>>>>>>> c6fc2e07823a3755d78f274a969d4e028e26766e
     )
     action = models.CharField(
         choices=actions.CHOICES,
         max_length=actions.MAX_LENGTH,
+<<<<<<< HEAD
         help_text="The name of the action to be scheduled"
+=======
+        help_text="Action to be scheduled"
+>>>>>>> c6fc2e07823a3755d78f274a969d4e028e26766e
     )
     priority = models.SmallIntegerField(
         default=DEFAULT_PRIORITY,
@@ -100,8 +108,13 @@ class ScheduleEntry(models.Model):
     is_active = models.BooleanField(
         default=True,
         editable=True,
+<<<<<<< HEAD
         help_text="Indicates whether the entry should be removed from the "
                   "scheduler without removing it from the system"
+=======
+        help_text="Deactivate an entry to remove it from the scheduler "
+                  "without removing it from the system"
+>>>>>>> c6fc2e07823a3755d78f274a969d4e028e26766e
     )
     is_private = models.BooleanField(
         default=False,
@@ -114,11 +127,16 @@ class ScheduleEntry(models.Model):
     next_task_time = models.BigIntegerField(
         null=True,
         editable=False,
+<<<<<<< HEAD
         help_text="The time the next task is to be executed"
+=======
+        help_text='The time the next task is to be executed'
+>>>>>>> c6fc2e07823a3755d78f274a969d4e028e26766e
     )
     next_task_id = models.IntegerField(
         default=1,
         editable=False,
+<<<<<<< HEAD
         help_text="The id of the next task to be executed"
     )
     created = models.DateTimeField(
@@ -128,13 +146,28 @@ class ScheduleEntry(models.Model):
     modified = models.DateTimeField(
         auto_now=True,
         help_text="The date the entry was modified"
+=======
+        help_text='The id of the next task to be executed'
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text='The date the Schdule Entry was created'
+    )
+    modified = models.DateTimeField(
+        auto_now=True,
+        help_text='The date the Schedule Entry was modified'
+>>>>>>> c6fc2e07823a3755d78f274a969d4e028e26766e
     )
     owner = models.ForeignKey(
         'authentication.User',
         editable=False,
         related_name='schedule_entries',
         on_delete=models.CASCADE,
+<<<<<<< HEAD
         help_text="The name of the user whom owns the entry"
+=======
+        help_text='The user who owns the Schedule Entry'
+>>>>>>> c6fc2e07823a3755d78f274a969d4e028e26766e
     )
 
     class Meta:
