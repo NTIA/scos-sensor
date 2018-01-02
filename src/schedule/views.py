@@ -17,16 +17,16 @@ class ScheduleEntryViewSet(ModelViewSet):
     Create a new schedule.
 
     partial_update:
-    Partially updates a specified Schedule Entry.
+    Partially updates the specified schedule entry.
 
     update:
-    Updates a specified Schedule Entry.
+    Updates the specified schedule entry.
 
     delete:
-    Deletes a specified Schedule Entry.
+    Deletes the specified schedule entry.
 
     retrieve:
-    Returns a specified Schedule Entry.
+    Returns the specified schedule entry.
     """
     queryset = ScheduleEntry.objects.all()
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
