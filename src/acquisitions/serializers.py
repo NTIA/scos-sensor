@@ -6,8 +6,12 @@ from .models import Acquisition
 
 
 class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
-    schedule_entry = serializers.SerializerMethodField()
-    acquisitions_available = serializers.SerializerMethodField()
+    schedule_entry = serializers.SerializerMethodField(
+        help_text="The related schedule entry for the acquisition"
+    )
+    acquisitions_available = serializers.SerializerMethodField(
+        help_text="The number of available acquisitions"
+    )
 
     class Meta:
         model = ScheduleEntry
@@ -20,7 +24,8 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
             'url': {
                 'view_name': 'acquisition-list',
                 'lookup_field': 'name',
-                'lookup_url_kwarg': 'schedule_entry_name'
+                'lookup_url_kwarg': 'schedule_entry_name',
+                'help_text': 'The url of the list of acquisitions'
             }
         }
 
@@ -47,14 +52,18 @@ class AcquisitionSerializer(serializers.ModelSerializer):
     url = AcquisitionHyperlinkedRelatedField(
         view_name='acquisition-detail',
         read_only=True,
+        help_text="The url of the acquisition",
         source='*'  # pass whole object
     )
     archive = AcquisitionHyperlinkedRelatedField(
         view_name='acquisition-archive',
         read_only=True,
+        help_text="The url of the acquisition's SigMF archive",
         source='*'  # pass whole object
     )
-    sigmf_metadata = serializers.DictField()
+    sigmf_metadata = serializers.DictField(
+        help_text="The sigmf meta data for the acquisition"
+    )
 
     class Meta:
         model = Acquisition

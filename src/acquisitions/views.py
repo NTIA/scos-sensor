@@ -22,6 +22,11 @@ from .serializers import (AcquisitionsOverviewSerializer,
 
 
 class AcquisitionsOverviewViewSet(ListModelMixin, GenericViewSet):
+    """
+    list:
+    Returns an overview of how many acquisitions are available per schedule
+    entry.
+    """
     lookup_field = 'schedule_entry_name'
     queryset = ScheduleEntry.objects.all()
     serializer_class = AcquisitionsOverviewSerializer
@@ -52,6 +57,13 @@ class MultipleFieldLookupMixin(object):
 class AcquisitionListViewSet(MultipleFieldLookupMixin,
                              ListModelMixin,
                              GenericViewSet):
+    """
+    list:
+    Returns a list of all acquisitions created by the given schedule entry.
+
+    destroy_all:
+    Deletes all acquisitions created by the given schedule entry.
+    """
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
     permission_classes = (
@@ -75,6 +87,16 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
                                  RetrieveModelMixin,
                                  DestroyModelMixin,
                                  GenericViewSet):
+    """
+    destroy:
+    Deletes the specified acquisition.
+
+    retrieve:
+    Returns all available metadata about an acquisition.
+
+    archive:
+    Downloads the acquisition's SigMF archive.
+    """
     queryset = Acquisition.objects.all()
     serializer_class = AcquisitionSerializer
     permission_classes = (
