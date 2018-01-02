@@ -36,6 +36,8 @@ The `scos` Puppet module has the following parameters which need setting before 
 * `db admin email` - Administrator email address for the database
 * `db admin password` - Administrator password for the database
 
+![scos class](/docs/img/foreman_scos_class.png?raw=true)
+
 In addition to the `scos` Puppet module, the sensors will also need the following modules installed and configured. These can be assigned to a `Configure > Host Group`, to make setup easier:
 
 * `docker`
