@@ -44,50 +44,52 @@ In addition to the `scos` Puppet module, the sensors will also need the followin
 
 ## Creating a New SCOS Sensor
 
-Once you have Foreman and Puppet setup as above, the procedure for creating a new SCOS sensor is as follows. From within Foreman:  
+Once you have Foreman and Puppet setup as above, the procedure for creating a new SCOS sensor is as follows. From within Foreman under `Hosts > Create Host`
 
-* `Hosts > Create Host`
-  * Host Tab  
-    *  Name - Sensor hostname. This should match the SSL cert you are assigned to it above.  
-    *  Host Group - Select the host group, if you are using this functionality.  
-    *  Deploy On - Bare Metal
-    *  Environment - Select the environment. This needs to match where you installed the SCOS Puppet module.  
-    *  Puppet Master - Leave as inherited.  
-    *  Puppet CA - Leave as inherited. 
+### Host Tab  
+*  Name - Sensor hostname. This should match the SSL cert you are assigned to it above.  
+*  Host Group - Select the host group, if you are using this functionality.  
+*  Deploy On - Bare Metal
+*  Environment - Select the environment. This needs to match where you installed the SCOS Puppet module.  
+*  Puppet Master - Leave as inherited.  
+*  Puppet CA - Leave as inherited. 
+
+![Host Tab](/docs/img/foreman_host_tab.png?raw=true)
+
+### Operating System Tab  
+*  Architecture - x86_64  
+*  Operating System - Ubuntu 16.04.3 LTS  
+*  Build - Checked  
+*  Media - Ubuntu mirror  
+*  Partition Table - Preseed default  
+*  PXE loader - PXELinux BIOS  
+*  Disk - Leave blank  
+*  Root pass - The system root password you wish to use.
+
+![Operating System Tab](/docs/img/foreman_os_tab.png?raw=true)
+
+### Interfaces Tab  
+* Edit the default Interface:  
+  * Type - Interface  
+  *  MAC Address - This must match the MAC address of the sensor NIC  
+  *  DNS Name - This should match the sensor hostname above  
+  *  Domain - Set what Foreman domain this sensor is being deployed to  
+  *  IPv4 Subnet - Set what Foreman subnet this sensor is being deployed to  
+  *  IPv6 Subnet - No subnets  
+  *  IPv4 Address - The IP you want the sensor to have. Must fall within IPv4 subnet  
+  *  IPv6 Address - Leave blank  
+  *  Managed - Checked  
+  *  Primary - Checked  
+  *  Provision - Checked  
+  *  Virtual NIC - Unchecked  
+      
+### Puppet Classes Tab  
+* See required modules listed above. These can be inherited based on the `Host Group`, if you selected it. If you want to assign the `scos` class at this time, this will install the scos-sensor code automatically, otherwise you'll need to assign it individually to the sensor after provisioning using `Hosts > All Hosts > <sensor name> > Edit > Puppet Classes > +socs`   
+
+### Parameters Tab  
+* Leave alone 
     
-![Host Tab](/docs/img/foreman_host_tab.png?raw=true)  
-    
-  * Operating System Tab  
-    *  Architecture - x86_64  
-    *  Operating System - Ubuntu 16.04.3 LTS  
-    *  Build - Checked  
-    *  Media - Ubuntu mirror  
-    *  Partition Table - Preseed default  
-    *  PXE loader - PXELinux BIOS  
-    *  Disk - Leave blank  
-    *  Root pass - The system root password you wish to use. 
-    
-![Operating System Tab](/docs/img/foreman_os_tab.png?raw=true)  
-    
-  * Interfaces Tab  
-    * Edit the default Interface:  
-      * Type - Interface  
-      *  MAC Address - This must match the MAC address of the sensor NIC  
-      *  DNS Name - This should match the sensor hostname above  
-      *  Domain - Set what Foreman domain this sensor is being deployed to  
-      *  IPv4 Subnet - Set what Foreman subnet this sensor is being deployed to  
-      *  IPv6 Subnet - No subnets  
-      *  IPv4 Address - The IP you want the sensor to have. Must fall within IPv4 subnet  
-      *  IPv6 Address - Leave blank  
-      *  Managed - Checked  
-      *  Primary - Checked  
-      *  Provision - Checked  
-      *  Virtual NIC - Unchecked  
-  * Puppet Classes Tab  
-    * See required modules listed above. These can be inherited based on the `Host Group`, if you selected it. If you want to assign the `scos` class at this time, this will install the scos-sensor code automatically, otherwise you'll need to assign it individually to the sensor after provisioning using `Hosts > All Hosts > <sensor name> > Edit > Puppet Classes > +socs`   
-  * Parameters Tab  
-    * Leave alone  
-  * Additional Information Tab  
-    * Leave alone  
+### Additional Information Tab  
+* Leave alone  
 
 With all these parameters configured, select the `Submit` button. Foreman is now waiting for the sensor to contact it. You will need to go the sensor device and power it on. At startup press `F10` to select boot mode, and from there select `PXE boot`/`Network boot`. If configured correctly the sensor will contact Foreman and start building itself: installing the OS, Puppet, and the scos-sensor code.
