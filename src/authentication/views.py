@@ -15,7 +15,7 @@ from .serializers import UserProfileSerializer, UserDetailsSerializer
 
 
 class UserListView(APIView):
-    """Information on users. 
+    """Information on users.
 
     Post is only available to admin users. The fields
     `email`, `server_url`, `auth_token`, `has_usable_password`, and `is_admin`
