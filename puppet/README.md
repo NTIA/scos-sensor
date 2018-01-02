@@ -82,12 +82,18 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
   *  Primary - Checked  
   *  Provision - Checked  
   *  Virtual NIC - Unchecked  
+  
+![Interfaces Tab](/docs/img/foreman_interface_tab.png?raw=true)
       
 ### Puppet Classes Tab  
 * See required modules listed above. These can be inherited based on the `Host Group`, if you selected it. If you want to assign the `scos` class at this time, this will install the scos-sensor code automatically, otherwise you'll need to assign it individually to the sensor after provisioning using `Hosts > All Hosts > <sensor name> > Edit > Puppet Classes > +socs`   
 
+![Puppet Classes Tab](/docs/img/foreman_puppet_tab.png?raw=true)
+
 ### Parameters Tab  
-* Leave alone 
+* Leave alone
+
+![Parameters Tab](/docs/img/foreman_parameters_tab.png?raw=true)
     
 ### Additional Information Tab  
 * Leave alone  
