@@ -7,6 +7,7 @@ from scheduler.serializers import TaskSerializer
 
 @api_view()
 def status(request, version, format=None):
+    """The status overview of the sensor."""
     context = {'request': request}
     taskq = scheduler.thread.task_queue.to_list()
     task_serializer = TaskSerializer(taskq, many=True, context=context)
