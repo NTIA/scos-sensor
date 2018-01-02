@@ -15,6 +15,8 @@ In Foreman, these are configured through `Hosts > Installation Media`, `Hosts > 
 
 `enable-puppetlabs-puppet5-repo = true`
 
+![Puppet 5](/docs/img/foreman_puppet5_parameter.png?raw=true)
+
 ### Puppet
 
 The scos-sensor code is deployed through Puppet. Within this scos-sensor repo (in `/scripts`), is a bash script to copy the required `scos` Puppet module to the Puppet Master. Clone this repo to the Puppet Master, and from within the `/scripts` directory run `./puppet_install.sh` and follow the prompts. You should not need to change the defaults. Note, this only needs to be run once.
