@@ -36,6 +36,8 @@ def get_capabilities():
 
 @api_view()
 def capabilities(request, version, format=None):
+    """ The capabilites of the sensor.
+    """
     capabilities = get_capabilities()
     filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
     capabilities['actions'] = filtered_actions
