@@ -10,7 +10,7 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         help_text="The related schedule entry for the acquisition"
     )
     acquisitions_available = serializers.SerializerMethodField(
-        help_text="The available acquisitions"
+        help_text="The number of available acquisitions"
     )
 
     class Meta:
@@ -58,7 +58,7 @@ class AcquisitionSerializer(serializers.ModelSerializer):
     archive = AcquisitionHyperlinkedRelatedField(
         view_name='acquisition-archive',
         read_only=True,
-        help_text="The archive location of the acquisition",
+        help_text="The url of the acquisition's SigMF archive",
         source='*'  # pass whole object
     )
     sigmf_metadata = serializers.DictField(
