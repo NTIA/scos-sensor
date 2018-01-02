@@ -11,7 +11,7 @@ Provisioning is carried out through Foreman. Provisioning bare metal is largely 
 * Provisioning template - Installs selected OS, sets up partition table, and provides configuration options
 * Finishing template - Configures Puppet
 
-In Foreman, these are configured through `Hosts > Installation Media`, `Hosts > Provisioning Templates` and `Infrastructure > Provisioning Setup`. To ensure the Puppet 5 agent is installed on the sensors, a `Configure > Global Parameter` parameter was set in Foreman:
+In Foreman, these are configured through `Hosts > Installation Media`, `Hosts > Provisioning Templates` and `Infrastructure > Provisioning Setup`. To ensure the Puppet 5 agent is installed on the sensors, a `Configure > Global Parameters` parameter was set in Foreman:
 
 `enable-puppetlabs-puppet5-repo = true`
 
@@ -19,18 +19,18 @@ In Foreman, these are configured through `Hosts > Installation Media`, `Hosts > 
 
 ### Puppet
 
-The scos-sensor code is deployed through Puppet. Within this scos-sensor repo (in `/scripts`), is a bash script to copy the required `scos` Puppet module to the Puppet Master. Clone this repo to the Puppet Master, and from within the `/scripts` directory run `./puppet_install.sh` and follow the prompts. You should not need to change the defaults. Note, this only needs to be run once.
+The scos-sensor code is deployed through Puppet. Within this scos-sensor repo (in `/scripts`), is a bash script to copy the required `scos` Puppet module to the Puppet Master (a note on nomelcature, Puppet "modules" are synonymous with a Foreman "classes"). Clone this repo to the Puppet Master, and from within the `/scripts` directory run `./puppet_install.sh` and follow the prompts. You should not need to change the defaults. Note, this only needs to be run once.
 
 Once the `scos` Puppet module is installed, you will need to refresh Foreman through the `Configure > Classes > Import Environment from ...` button. You should see a new `scos` class added which needs to be configured before being assigned to a sensor.
 
-The `scos` Puppet module has the following parameters which need setting before it can be assigned to a sensor. Default values have been provided where possible:
+The `scos` class has the following parameters which need to be set before it can be assigned to a sensor. Default values have been provided where possible:
 
 * `install source` -  Where the scos-sensor code will be sourced from. Either `docker` or `github`.
 * `install version` - A tag pertaining to the branch (Github) or image file (Dockerhub) to be installed on the sensor.
 * `install root` - The location on the sensor where the scos-sensor code will be installed
 * `ssl dir` - Where the nginx ssl cert will be stored
-* `ssl cert` - The nginx SSL cert to be used on the sensor. You will need to use Foreman `Smart Class Parameter > ssl cert > Matchers` to assign a specific SSL cert to a single host, e.g. by FQDN
-* `ssl key` - The private key associated with the nginx ssl cert. You will need to use Foreman `Smart Class Parameter > ssl key > Matchers` to assign a specific private key to a single host. e.g. by FQDN. Make sure this variable has the `Hidden Value` checkbox selected.
+* `ssl cert` - The nginx SSL cert to be used on the sensor. You will need to use Foreman `Smart Class Parameter > ssl cert > Matchers` to assign a specific SSL cert to a single host, e.g. by matching on FQDN
+* `ssl key` - The private key associated with the nginx ssl cert. You will need to use Foreman `Smart Class Parameter > ssl key > Matchers` to assign a specific private key to a single host. e.g. by matching on FQDN. Make sure this variable has the `Hidden Value` checkbox selected.
 * `git password` - Github password to use when cloning the scos-sensor repository from Github to the sensor. Only required if using a Github private repository.
 * `git username` - Github username to use when cloning the scos-sensor repository from Github to the sensor. Only required if using a Github private repository.
 * `db admin email` - Administrator email address for the database
@@ -38,12 +38,13 @@ The `scos` Puppet module has the following parameters which need setting before 
 
 ![scos class](/docs/img/foreman_scos_class.png?raw=true)
 
-In addition to the `scos` Puppet module, the sensors will also need the following modules installed and configured. These can be assigned to a `Configure > Host Group`, to make setup easier:
+In addition to the `scos` class, the sensors will also need the following classes installed and configured. The names are the modules taken from the [Puppet Forge](https://forge.puppet.com). These can be assigned to a `Configure > Host Group`, to make setup easier:
 
-* `docker`
-* `docker::compose`
-* `git`
-* `python`
+* [`puppetlabs/docker`](https://forge.puppet.com/puppetlabs/docker)
+* [`docker::compose`](https://forge.puppet.com/puppetlabs/docker)
+* [`puppetlabs/git`](https://forge.puppet.com/puppetlabs/git)
+* [`puppetlabs/vcsrepo`](https://forge.puppet.com/puppetlabs/vcsrepo) - Note, this will not show as a Smart Class in Foreman
+* [`stankevich/python`](https://forge.puppet.com/stankevich/python)
 * `scos` - only do this if you wish to assign it to every sensor in the Host Group
 
 ![Host Group](/docs/img/foreman_host_group.png?raw=true)
