@@ -8,8 +8,7 @@ from .settings import API_TITLE, API_DESCRIPTION
 
 
 class SchemaView(APIView):
-    """The schema overview for the API.
-    """
+    """The schema overview for the API."""
     renderer_classes = (CoreJSONRenderer, SwaggerUIRenderer, OpenAPIRenderer)
     permission_classes = (permissions.IsAuthenticated,)
     url = ''
