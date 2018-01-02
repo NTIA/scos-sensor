@@ -12,7 +12,8 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     )
     relative_stop = serializers.BooleanField(
         required=False,
-        help_text="Indicates whether or not the entry stops relatively"
+        help_text="Indicates that the `stop` field should be interpreted as "
+                  "seconds after `start` instead of an absolute time"
     )
     action = serializers.ChoiceField(
         choices=actions.CHOICES,
