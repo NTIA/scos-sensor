@@ -47,14 +47,17 @@ In addition to the `scos` Puppet module, the sensors will also need the followin
 Once you have Foreman and Puppet setup as above, the procedure for creating a new SCOS sensor is as follows. From within Foreman:  
 
 * `Hosts > Create Host`
-  * Host Tab
+  * Host Tab  
     *  Name - Sensor hostname. This should match the SSL cert you are assigned to it above.  
     *  Host Group - Select the host group, if you are using this functionality.  
     *  Deploy On - Bare Metal
     *  Environment - Select the environment. This needs to match where you installed the SCOS Puppet module.  
     *  Puppet Master - Leave as inherited.  
-    *  Puppet CA - Leave as inherited.  
-  * Operating System Tab
+    *  Puppet CA - Leave as inherited. 
+    
+![Host Tab](/docs/img/foreman_host_tab.png?raw=true)  
+    
+  * Operating System Tab  
     *  Architecture - x86_64  
     *  Operating System - Ubuntu 16.04.3 LTS  
     *  Build - Checked  
@@ -62,8 +65,11 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
     *  Partition Table - Preseed default  
     *  PXE loader - PXELinux BIOS  
     *  Disk - Leave blank  
-    *  Root pass - The system root password you wish to use.  
-  * Interfaces Tab
+    *  Root pass - The system root password you wish to use. 
+    
+![Operating System Tab](/docs/img/foreman_os_tab.png?raw=true)  
+    
+  * Interfaces Tab  
     * Edit the default Interface:  
       * Type - Interface  
       *  MAC Address - This must match the MAC address of the sensor NIC  
