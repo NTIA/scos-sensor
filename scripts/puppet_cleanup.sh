@@ -27,5 +27,9 @@ if [ ! "$(docker ps -aq)" = "" ]
 then
 docker stop $(docker ps -aq)
 docker rm -f $(docker ps -aq)
+fi
+
+if [ ! "$(docker images -q)" = "" ]
+then
 docker rmi -f $(docker images -q)
 fi
