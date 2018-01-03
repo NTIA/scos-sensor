@@ -3,7 +3,7 @@
 class scos
 
 (
-  $install_source = Enum['docker','github'],
+  $install_source = Enum['dockerhub','github'],
   $install_version = 'master',
   $git_username = undef,
   $git_password = undef,

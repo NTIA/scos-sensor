@@ -23,19 +23,18 @@ class scos::clone (
     enable => true,
   }
 
-# Docker container logic Pt 1
-# Check if tag changed
-# Pull matching tagged github release
+  vcsrepo { $install_root:
+    ensure   => latest,
+    provider => git,
+    source   => "https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git",
+    revision => $install_version,
+    notify   => Exec['cleanup'],
+  }
 
-# Github logic Pt 1
-# Check if branch changed
+# Cleanup only if source/branch changes
 
-  if ($install_source == 'github') {
-    vcsrepo { $install_root:
-      ensure   => present,
-      provider => git,
-      source   => "https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git",
-      revision => $install_version,
-    }
+  exec { 'cleanup':
+    refreshonly => true,
+    command     => "${install_root}/scripts/puppet_cleanup.sh"
   }
 }
