@@ -55,7 +55,7 @@ $secret_key = fqdn_rand_string(32, 'sdljsdlffsj')
 
   file { '/etc/environment':
     ensure  => present,
-    require => Exec['secret'],
+#    require => Exec['secret'],
     content => "# This file is managed by Puppet - any manual edits will be lost
 DEBUG=false
 SECRET_KEY='${secret_key}'
