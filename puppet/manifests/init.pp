@@ -8,7 +8,6 @@ class scos
   $git_username = undef,
   $git_password = undef,
   $install_root = '/opt/scos-sensor',
-#  $repo_root = '/opt/scos-sensor_repo',
   $ssl_dir = "${install_root}/nginx/certs",
   $ssl_cert = undef,
   $ssl_key = undef,

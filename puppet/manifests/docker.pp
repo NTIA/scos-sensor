@@ -6,7 +6,6 @@ class scos::docker (
   $git_username = $scos::git_username,
   $git_password = $scos::git_password,
   $install_root = $scos::install_root,
-#  $repo_root = $scos::repo_root,
   $ssl_dir = $scos::ssl_dir,
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,

@@ -6,7 +6,6 @@ class scos::clone (
   $git_username = $scos::git_username,
   $git_password = $scos::git_password,
   $install_root = $scos::install_root,
-#  $repo_root = $scos::repo_root,
   $ssl_dir = $scos::ssl_dir,
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,
@@ -24,7 +23,7 @@ class scos::clone (
   }
 
   vcsrepo { $install_root:
-    ensure   => latest,
+    ensure   => latest, # Will use latest commit
     provider => git,
     source   => "https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git",
     revision => $install_version,

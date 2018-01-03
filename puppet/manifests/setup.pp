@@ -6,7 +6,6 @@ class scos::setup (
   $git_username = $scos::git_username,
   $git_password = $scos::git_password,
   $install_root = $scos::install_root,
-#  $repo_root = $scos::repo_root,
   $ssl_dir = $scos::ssl_dir,
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,
@@ -23,17 +22,7 @@ class scos::setup (
     replace => 'false',
   }
 
-#  exec { 'secret':
-#    onlyif  => "/usr/bin/test ! -e ${install_root}/.secret_key",
-#    command => "/usr/bin/openssl rand -base64 32 > ${install_root}/.secret_key",
-#  }
-
 $secret_key = fqdn_rand_string(32)
-
-#  exec { 'secret_env':
-#    onlyif  => "/usr/bin/test ! -e ${install_root}/.secret_key",
-#    command => "export FACTER_SECRET_KEY < ${install_root}/.secret_key",
-#  }
 
   exec { 'db_admin_pw':
     command => "/bin/echo ${db_admin_pw} > ${install_root}/.db_admin_pw",
@@ -55,7 +44,6 @@ $secret_key = fqdn_rand_string(32)
 
   file { '/etc/environment':
     ensure  => present,
-#    require => Exec['secret'],
     content => "# This file is managed by Puppet - any manual edits will be lost
 DEBUG=false
 SECRET_KEY='${secret_key}'

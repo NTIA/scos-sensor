@@ -7,6 +7,8 @@ set -e # exit on error
 
 cd $REPO_ROOT
 
+# Only remove the database if deployment has occured via Github
+
 if [ -e .github ] 
 then
 mv -f db.sqlite3 db.sqlite3_backup
@@ -16,12 +18,16 @@ rm -f .deployed
 rm -f .github
 rm -f .dockerhub
 
+# Only move the environment file if it exists
+
 if [ -e /etc/environment ] 
 then
 mv -f /etc/environment /etc/environment_backup
 fi
 
 touch /etc/environment
+
+# Clean up Docker images / containers if present
 
 if [ ! "$(docker ps -aq)" = "" ]
 then
