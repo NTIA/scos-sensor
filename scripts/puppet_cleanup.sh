@@ -22,6 +22,10 @@ mv -f /etc/environment /etc/environment_backup
 fi
 
 touch /etc/environment
+
+if [ ! "$(docker ps -aq)" = "" ]
+then
 docker stop $(docker ps -aq)
 docker rm -f $(docker ps -aq)
 docker rmi -f $(docker images -q)
+fi
