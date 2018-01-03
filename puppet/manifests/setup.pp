@@ -28,7 +28,7 @@ class scos::setup (
 #    command => "/usr/bin/openssl rand -base64 32 > ${install_root}/.secret_key",
 #  }
 
-$secret_key = fqdn_rand_string(32, 'sdljsdlffsj')
+$secret_key = fqdn_rand_string(32)
 
 #  exec { 'secret_env':
 #    onlyif  => "/usr/bin/test ! -e ${install_root}/.secret_key",
