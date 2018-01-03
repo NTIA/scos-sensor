@@ -12,12 +12,14 @@ class scos::docker (
   $ssl_key = $scos::ssl_key,
   $db_admin_email = $scos::db_admin_email,
   $db_admin_pw = $scos::db_admin_pw,
-  $secret_key = $::secret_key,
+  $secret_key = $scos::setup::secret_key,
   )
 
 {
 
 # Dockerhub logic - deploy & run
+
+notify {"*** Secret_key is ${secret_key}! ***":}
 
   if ($install_source == 'dockerhub') {
       exec {'puppet_deploy_dockerhub':
