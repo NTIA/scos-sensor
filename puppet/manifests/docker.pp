@@ -18,8 +18,6 @@ class scos::docker (
 
 # Dockerhub logic - deploy & run
 
-notify {"*** Secret_key is ${secret_key}! ***":}
-
   if ($install_source == 'dockerhub') {
       exec {'puppet_deploy_dockerhub':
       onlyif      => "/usr/bin/test ! -e ${install_root}/.deployed",
@@ -59,4 +57,5 @@ notify {"*** Secret_key is ${secret_key}! ***":}
     }
     notify {"*** ${hostname} is up and running. Woof! ***":}
   }
+  notify {"*** secret_key is ${secret_key}! ***":}
 }
