@@ -15,7 +15,12 @@ fi
 rm -f .deployed
 rm -f .github
 rm -f .dockerhub
+
+if [ -e /etc/environment ] 
+then
 mv -f /etc/environment /etc/environment_backup
+fi
+
 touch /etc/environment
 docker stop $(docker ps -aq)
 docker rm -f $(docker ps -aq)
