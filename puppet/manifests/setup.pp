@@ -42,6 +42,7 @@ class scos::setup (
 
   file { "${ssl_dir}/ssl-cert-snakeoil.key":
     content => $ssl_key,
+  }
 
 # Setup permanent environment file for persistance
 
