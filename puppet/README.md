@@ -25,7 +25,7 @@ Once the `scos` Puppet module is installed, you will need to refresh Foreman thr
 
 The `scos` class has the following parameters which need to be set before it can be assigned to a sensor. Default values have been provided where possible:
 
-* `install source` -  Where the scos-sensor code will be sourced from. Either `docker` or `github`.
+* `install source` -  Where the scos-sensor code will be sourced from. Either `dockerhub` or `github`. Dockerhub is primarily for production version, Github for development versions.  
 * `install version` - A tag pertaining to the branch (Github) or image file (Dockerhub) to be installed on the sensor.
 * `install root` - The location on the sensor where the scos-sensor code will be installed
 * `ssl dir` - Where the nginx ssl cert will be stored
