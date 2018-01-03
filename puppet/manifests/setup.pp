@@ -28,10 +28,10 @@ class scos::setup (
     command => "/usr/bin/openssl rand -base64 32 > ${install_root}/.secret_key",
   }
 
-  exec { 'secret_env':
-    onlyif  => "/usr/bin/test ! -e ${install_root}/.secret_key",
-    command => "export FACTER_SECRET_KEY < ${install_root}/.secret_key",
-  }
+  #exec { 'secret_env':
+  #  onlyif  => "/usr/bin/test ! -e ${install_root}/.secret_key",
+  #  command => "export FACTER_SECRET_KEY < ${install_root}/.secret_key",
+  #}
 
   exec { 'db_admin_pw':
     command => "/bin/echo ${db_admin_pw} > ${install_root}/.db_admin_pw",
