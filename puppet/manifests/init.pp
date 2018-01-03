@@ -1,3 +1,5 @@
+# Main: Set variables, set manifest run order.
+
 class scos
 
 (
@@ -6,7 +8,7 @@ class scos
   $git_username = undef,
   $git_password = undef,
   $install_root = '/opt/scos-sensor',
-  $repo_root = '/opt/scos-sensor_repo',
+#  $repo_root = '/opt/scos-sensor_repo',
   $ssl_dir = "${install_root}/nginx/certs",
   $ssl_cert = undef,
   $ssl_key = undef,
@@ -16,9 +18,10 @@ class scos
 
 {
 
+contain 'scos::clone'
 contain 'scos::setup'
 contain 'scos::docker'
 
-Class['scos::setup'] -> Class['scos::docker']
+Class['scos::clone'] -> Class['scos::setup'] -> Class['scos::docker']
 
 }

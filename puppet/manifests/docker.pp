@@ -1,10 +1,12 @@
+# Part 3: Start Docker container
+
 class scos::docker (
   $install_source = $scos::install_source,
   $install_version = $scos::install_version,
   $git_username = $scos::git_username,
   $git_password = $scos::git_password,
   $install_root = $scos::install_root,
-  $repo_root = $scos::repo_root,
+#  $repo_root = $scos::repo_root,
   $ssl_dir = $scos::ssl_dir,
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,
@@ -25,7 +27,7 @@ class scos::docker (
       onlyif      => "/usr/bin/test ! -e ${install_root}/.deployed",
       command     => "${install_root}/scripts/puppet_deploy.sh",
       environment => [
-      "REPO_ROOT=${install_root}",
+      "REPO_ROOT=${install_root}", #Note this subtle change
       'DEBUG=false',
       "SECRET_KEY=${secret_key}",
       "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
