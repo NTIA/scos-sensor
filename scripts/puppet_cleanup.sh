@@ -7,7 +7,7 @@ set -e # exit on error
 
 cd $REPO_ROOT
 
-if [test -e .github] 
+if [/usr/bin/test -e .github] 
 then
 mv -f db.sqlite3 db.sqlite3_backup
 fi
