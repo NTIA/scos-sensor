@@ -7,7 +7,7 @@ set -e # exit on error
 
 cd $REPO_ROOT
 
-if [/usr/bin/test -e .github] 
+if [ -e .github] 
 then
 mv -f db.sqlite3 db.sqlite3_backup
 fi
@@ -20,4 +20,3 @@ touch /etc/environment
 docker stop $(docker ps -aq)
 docker rm -f $(docker ps -aq)
 docker rmi -f $(docker images -q)
-
