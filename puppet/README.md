@@ -26,7 +26,7 @@ Once the `scos` Puppet module is installed, you will need to refresh Foreman thr
 The `scos` class has the following parameters which need to be set before it can be assigned to a sensor. Default values have been provided where possible:
 
 * `install source` -  Where the scos-sensor code will be sourced from. Either `dockerhub` or `github`. Dockerhub is primarily for production version, Github for development versions.  
-* `install version` - A variable pertaining to the branch (Github) or version (Dockerhub) to be installed on the sensor. **Note, the Dockerhub version functionality isn't currently implemented. The Dockerhub version is hard-coded in [docker-compose.yml](../docker-compose.yml) to the latest version.**
+* `install version` - A variable pertaining to the branch (Github) or version (Dockerhub) to be installed on the sensor. **Note, the Dockerhub version functionality isn't currently implemented. The Dockerhub version is hard-coded in [docker-compose.yml](../docker-compose.yml) to use the latest version.**
 * `install root` - The location on the sensor where the scos-sensor code will be installed
 * `ssl dir` - Where the nginx ssl cert will be stored
 * `ssl cert` - The nginx SSL cert to be used on the sensor. You will need to use Foreman `Smart Class Parameter > ssl cert > Matchers` to assign a specific SSL cert to a single host, e.g. by matching on FQDN
