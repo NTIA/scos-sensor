@@ -1,74 +1,26 @@
-class scos (
-    $docker_image_version_number = undef,
+# Main: Set variables, set manifest run order.
+
+class scos
+
+(
+  $install_source = Enum['dockerhub','github'],
+  $install_version = 'master',
+  $git_username = undef,
+  $git_password = undef,
+  $install_root = '/opt/scos-sensor',
+  $ssl_dir = "${install_root}/nginx/certs",
+  $ssl_cert = undef,
+  $ssl_key = undef,
+  $db_admin_email = undef,
+  $db_admin_pw = 'changeme!',
 )
 
 {
-    service { 'puppet':
-        ensure => running,
-        enable => true,
-    } 
 
-    file { 'scos_sensor':
-        source => 'puppet:///modules/scos/',
-        ensure => 'directory',
-        path => '/opt/scos',
-        recurse => true,
-    }
+contain 'scos::clone'
+contain 'scos::setup'
+contain 'scos::docker'
 
-    exec { 'secret':
-        onlyif => '/usr/bin/test ! -e /opt/scos/.secret_key',         
-        command => '/usr/bin/openssl rand -base64 32 > /opt/scos/.secret_key',
-        notify  => Exec['reboot'],
-    }
+Class['scos::clone'] -> Class['scos::setup'] -> Class['scos::docker']
 
-    exec { 'db_superuser':
-        onlyif => '/usr/bin/test ! -e /opt/scos/.db_superuser',
-        command => '/usr/bin/openssl rand -base64 16 > /opt/scos/.db_superuser',
-    }
-
-    file { '/etc/environment':
-        ensure => present,
-        require => Exec['secret'],
-        content => "# This file is managed by Puppet - any manual edits will be lost
-DEBUG=false
-SECRET_KEY='${secret_key}'
-DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
-IPS='${networking[ip]} 127.0.0.1'
-GUNICORN_LOG_LEVEL=info",
-    }
- 
-    if ($server_name_env != undef) {
-        exec { 'envsubst':
-            command => '/usr/bin/envsubst \'$DOMAINS\' < /opt/scos/nginx/conf.d/conf.template > \
-/opt/scos/nginx/conf.d/scos-sensor.conf',
-        }
-    }
-
-    file { '/opt/scos/db.sqlite3':
-       ensure  => 'file',
-       replace => 'no',
-    }
-
-    exec { 'reboot':
-        command => '/sbin/reboot',
-        refreshonly => true,
-    }
-
-#    cron { 'scos_init':
-#        special => 'reboot',
-#        user => 'root',
-#        command => '/bin/sleep 300; /opt/puppetlabs/puppet/bin/puppet agent --onetime --no-daemonize',
-#    }
-
-    if ($secret_key_env != undef) and ($secret_key != undef) and ($server_name_env != undef) and ($db_superuser != undef) {
-        docker_compose { '/opt/scos/docker-compose.yml':
-            subscribe => File['/etc/environment'], 
-            ensure  => present,
-            scale   => {
-                'api' => 1,
-                'nginx' => 1,
-            },
-        }
-        notify {"*** ${hostname} is up and running. Woof! ***":}
-    }
 }
