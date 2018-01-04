@@ -53,7 +53,7 @@ services:
   # https://github.com/willfarrell/docker-autoheal
   autoheal:
     image: alpine
-    restart: on-failure
+    restart: always
     depends_on:
       - api
     volumes:
