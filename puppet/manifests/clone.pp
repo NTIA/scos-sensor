@@ -33,7 +33,7 @@ class scos::clone (
 # Cleanup only if source/branch changes
 
   exec { 'cleanup':
-    onlyif      => "/usr/bin/test ! -e ${install_root}",
+    onlyif      => "/usr/bin/test -e ${install_root}",
     refreshonly => true,
     command     => "${install_root}/scripts/puppet_cleanup.sh",
     environment => [
