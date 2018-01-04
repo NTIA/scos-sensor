@@ -1,8 +1,6 @@
 # local settings
-Dockerfile
 env
 db.sqlite3
-nginx/conf.d
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
