@@ -30,7 +30,14 @@ class scos::clone (
     notify   => Exec['cleanup'],
   }
 
-# Cleanup only if source/branch changes
+# Trigger cleanup if source changes
+
+  exec { 'source_change':
+    onlyif      => "/usr/bin/test ! -e ${install_root}/.${install_source}",
+    notify   => Exec['cleanup'],
+  }
+
+# Cleanup
 
   exec { 'cleanup':
     onlyif      => "/usr/bin/test -d ${install_root}",
