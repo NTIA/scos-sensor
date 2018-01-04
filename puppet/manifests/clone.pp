@@ -45,7 +45,7 @@ class scos::clone (
     refreshonly => true,
     command     => "${install_root}/scripts/puppet_cleanup.sh",
     environment => [
-    "REPO_ROOT=${install_root}", #Note this subtle change
+      "REPO_ROOT=${install_root}", #Note this subtle change
     ],
 #    logoutput   => true,
   }

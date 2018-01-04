@@ -22,7 +22,7 @@ class scos::setup (
     replace => 'false',
   }
 
-$secret_key = fqdn_rand_string(32)
+  $secret_key = fqdn_rand_string(32)
 
   exec { 'db_admin_pw':
     command => "/bin/echo ${db_admin_pw} > ${install_root}/.db_admin_pw",
