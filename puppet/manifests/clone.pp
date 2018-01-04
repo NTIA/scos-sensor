@@ -39,5 +39,6 @@ class scos::clone (
     environment => [
     "REPO_ROOT=${install_root}", #Note this subtle change
     ],
+    logoutput   => true,
   }
 }
