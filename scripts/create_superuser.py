@@ -16,7 +16,7 @@ from django.contrib.auth import get_user_model  # noqa
 try:
     with open('/opt/scos-sensor/.admin_password', 'r') as admin_password_file:
         password = admin_password_file.readline().rstrip()
-    with open('/opt/scos-sensor/.admin_email'), 'r') as admin_email_file:
+    with open('/opt/scos-sensor/.admin_email', 'r') as admin_email_file:
         email = admin_email_file.readline().rstrip()
 
 except IOError:
