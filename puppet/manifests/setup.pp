@@ -42,7 +42,7 @@ class scos::setup (
 
 # Setup Dockerhub permanent environment file for persistance
 
-  if ($install_source == 'github') {
+  if ($install_source == 'dockerhub') {
     file { '/etc/environment':
       ensure  => present,
       content => "# This file is managed by Puppet - any manual edits will be lost
