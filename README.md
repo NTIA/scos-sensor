@@ -10,11 +10,11 @@ Occupancy Sensing_ sensor and control plane.
 It's a web application that makes it easy to control a software-defined radio
 over the Internet.
 
-> _How so?_
+> _How?_
 
  - Common open source software stack
  - Pre-built Docker containers
- - Standards track [Browsable](#Browsable API) RESTful API
+ - Standards track [Browsable](#browsable-api) RESTful API
  - Flexible, extensible, and open default [data format](https://github.com/gnuradio/sigmf)
  - Task scheduling
  - User authenication
