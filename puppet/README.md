@@ -105,4 +105,8 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
 ### Additional Information Tab  
 * Leave alone  
 
-With all these parameters configured, select the `Submit` button. Foreman is now waiting for the sensor to contact it. You will need to go the sensor device and power it on. At startup press `F10` to select boot mode, and from there select `PXE boot`/`Network boot`. If configured correctly the sensor will contact Foreman and start building itself: installing the OS, Puppet, and the scos-sensor code.
+With all these parameters configured, select the `Submit` button. Foreman is now waiting for the sensor to contact it:  
+
+![Provisioning](/docs/img/foreman_provisioning.png?raw=true)
+
+You will need to go the sensor device and power it on. At startup press `F10` to select boot mode, and from there select `PXE boot`/`Network boot`. If configured correctly the sensor will contact Foreman and start building itself: installing the OS, Puppet, and the scos-sensor code.
