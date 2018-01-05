@@ -13,20 +13,13 @@ over the Internet.
 > _How so?_
 
  - Common open source software stack
-
  - Pre-built Docker containers
-
  - Standards track [Browsable](#Browsable API) RESTful API
-
  - Flexible, extensible, and open default [data format](https://github.com/gnuradio/sigmf)
-
  - Task scheduling
-
  - User authenication
-
  - Loosely coupled to SDR (see [Supporting a Different
    SDR](DEVELOPING.md#supporting-a-different-sdr))
-
  - Flexible concept of "actions" (see [Writing Custom
    Actions](DEVELOPING.md#writing-custom-actions))
 
@@ -50,17 +43,11 @@ Table of Contents
 -----------------
 
  - [Introduction](#introduction)
-
  - [Quickstart](#quickstart)
-
  - [Browsable API](#browsable-api)
-
  - [Large Deployments](#large-deployments)
-
  - [Architecture](#architecture)
-
  - [API Reference](#api-reference)
-
  - [License](#license)
 
 
@@ -165,10 +152,8 @@ developers familiar with Python.
  - Persistent data is stored on disk in a file-based SQL database. If this
    simple database doesn't meet your needs, a heavier-duty SQL database like
    PostgreSQL or MariaDB can be dropped in with very little effort.
-
  - A scheduler thread running in a Gunicorn worker process periodically reads
    the schedule from the database and performs the associated actions.
-
  - A website and JSON RESTful API is served over HTTPS via NGINX, a
    high-performance web server. These provide easy administration over the
    sensor.
