@@ -11,8 +11,8 @@ class scos
   $ssl_dir = "${install_root}/nginx/certs",
   $ssl_cert = undef,
   $ssl_key = undef,
-  $db_admin_email = undef,
-  $db_admin_pw = 'changeme!',
+  $admin_email = undef,
+  $admin_password = 'changeme!',
 )
 
 {

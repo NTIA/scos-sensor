@@ -9,8 +9,8 @@ class scos::setup (
   $ssl_dir = $scos::ssl_dir,
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,
-  $db_admin_email = $scos::db_admin_email,
-  $db_admin_pw = $scos::db_admin_pw,
+  $admin_email = $scos::admin_email,
+  $admin_password = $scos::admin_password,
   )
 
 {
@@ -24,12 +24,12 @@ class scos::setup (
 
   $secret_key = fqdn_rand_string(32)
 
-  exec { 'db_admin_pw':
-    command => "/bin/echo ${db_admin_pw} > ${install_root}/.db_admin_pw",
+  exec { 'admin_password':
+    command => "/bin/echo ${admin_password} > ${install_root}/.admin_password",
   }
 
-  exec { 'db_admin_email':
-    command => "/bin/echo ${db_admin_email} > ${install_root}/.db_admin_email",
+  exec { 'admin_email':
+    command => "/bin/echo ${admin_email} > ${install_root}/.admin_email",
   }
 
   file { "${ssl_dir}/ssl-cert-snakeoil.pem":
