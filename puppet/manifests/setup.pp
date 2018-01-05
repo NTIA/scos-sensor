@@ -72,7 +72,7 @@ GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
 SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
-DOCKER_TAG=latest", #Github should always use 'latest' in branch
+DOCKER_TAG=latest", 
     }
   }
 
