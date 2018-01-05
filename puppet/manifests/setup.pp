@@ -42,6 +42,10 @@ class scos::setup (
 
 # Setup permanent environment file for persistance
 
+  if ($install_source == 'github') {
+    $install_version = "latest" #Github should always use 'latest' in branch
+  }
+
   file { '/etc/environment':
     ensure  => present,
     content => "# This file is managed by Puppet - any manual edits will be lost
@@ -52,7 +56,8 @@ IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
-SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
+SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
+DOCKER_TAG=${install_version}",
   }
 
   exec { 'envsubst1':

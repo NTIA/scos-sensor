@@ -30,7 +30,8 @@ class scos::docker (
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
         "SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem",
-        "SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key"
+        "SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
+        "DOCKER_TAG=${install_version}"
       ],
 #      logoutput   => true,
     }
@@ -43,6 +44,7 @@ class scos::docker (
     exec {'puppet_deploy_github':
       onlyif      => "/usr/bin/test ! -e ${install_root}/.deployed",
       command     => "${install_root}/scripts/puppet_deploy_github.sh",
+      timeout     => 0,
       environment => [
         "REPO_ROOT=${install_root}", #Note this subtle change
         'DEBUG=false',
@@ -51,7 +53,8 @@ class scos::docker (
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
         "SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem",
-        "SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key"
+        "SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
+        "DOCKER_TAG=${install_version}" #Github should always use 'latest' in branch
       ],
 #      logoutput   => true,
     }
