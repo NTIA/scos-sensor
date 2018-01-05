@@ -116,13 +116,14 @@ docstring, and a `__call__` method that must be overridden. If you pass
 `admin_only=True` to this base class, the API will not make it or any data it
 created available to non-admin users.
 
-The [logger action](src/actions/logger.py) is a very simple example action and
-simply logs the name of the schedule entry and task id that is running it, but
-it's a good example of a complete action. Notice that you first create a
-subclass of the `Action` base class, and then override the `__call__` method.
-The action should not store any state locally, but it can access to database.
+The [logger action](src/actions/logger.py) is a very simple example action that
+logs the name of the schedule entry and task id that is running it, but it's a
+good example of a complete action. Notice that you first create a subclass of
+the `Action` base class, document the action using a normal python docstring,
+and then override the `__call__` method. The action should not store any state
+locally, but it can access to database.
 
-As a more complex example, check out the [acquire_single_freq_fft
+For a more complex example, check out the [acquire_single_freq_fft
 action](src/actions/acquire_single_freq_fft.py), which uses the USRP and stores
 the acquisition metadata and data in the database.
 
