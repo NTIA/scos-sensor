@@ -54,7 +54,7 @@ GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
 SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
-DOCKER_TAG=${install_version}", 
+DOCKER_TAG=${install_version}",
     }
   }
 
@@ -72,7 +72,7 @@ GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
 SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
-DOCKER_TAG=latest", 
+DOCKER_TAG=latest",
     }
   }
 
