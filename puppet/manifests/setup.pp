@@ -40,11 +40,12 @@ class scos::setup (
     content => $ssl_key,
   }
 
-# Setup permanent environment file for persistance
+# Setup Dockerhub permanent environment file for persistance
 
-  file { '/etc/environment':
-    ensure  => present,
-    content => "# This file is managed by Puppet - any manual edits will be lost
+  if ($install_source == 'dockerhub') {
+    file { '/etc/environment':
+      ensure  => present,
+      content => "# This file is managed by Puppet - any manual edits will be lost
 DEBUG=false
 SECRET_KEY='${secret_key}'
 DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
@@ -52,7 +53,27 @@ IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
-SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key",
+SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
+DOCKER_TAG=${install_version}",
+    }
+  }
+
+# Setup Github permanent environment file for persistance
+
+  if ($install_source == 'github') {
+    file { '/etc/environment':
+      ensure  => present,
+      content => "# This file is managed by Puppet - any manual edits will be lost
+DEBUG=false
+SECRET_KEY='${secret_key}'
+DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
+IPS='${networking[ip]} 127.0.0.1'
+GUNICORN_LOG_LEVEL=info
+REPO_ROOT=${install_root}
+SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
+SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
+DOCKER_TAG=latest",
+    }
   }
 
   exec { 'envsubst1':
