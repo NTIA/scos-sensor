@@ -60,8 +60,8 @@ Reference](#api-reference).
 
 A sensor advertises its **capabilities**, among which are **actions** that you
 can schedule on the sensor. Actions are functions that the sensor owner
-implements and exposes. Actions can do anything, e.g., rotate an antenna or
-start streaming data over a socket and never return.
+implements and exposes to the API. Actions can do anything, e.g., rotate an
+antenna or start streaming data over a socket and never return.
 
 Sensor actions are scheduled by posting a **schedule entry** to the sensor's
 **schedule**. The **scheduler** periodically reads the schedule and populates a
