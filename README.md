@@ -123,11 +123,13 @@ $ docker-compose up
 Browsable API
 -------------
 
-The API provides a browsable front end through which all valid requests can be
-made, and all operations performed.
+Opening the URL to your sensor (`localhost` if you followed the Quickstart) in
+a browser, you will see a frontend to the API that allows you to do anything
+the JSON API allows.
 
-All endpoints are easily discoverable, and it's simple to navigate from
-function to function:
+Relationships in the API are represented by URLs which you can click to
+navigate front endpoint to endpoint. The full API is _discoverable_ simply by
+following these links:
 
 ![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
 
@@ -135,20 +137,17 @@ Scheduling an action is as simple as filling out a short form:
 
 ![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
 
-Actions that have been scheduled show up in the schedule list:
+Actions that have been scheduled show up in the schedule entry list:
 
 ![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
-
-See the [API Documentation](https://ntia.github.io/scos-sensor/) for more
-information on the features and functions of each endpoint.
 
 
 Large Deployments
 -----------------
 
-The optimal way to manage multiple SCOS Sensors is via Foreman and Puppet.
-Detailed instructions on how to do this are contained in [the Foreman and
-Puppet README.md](puppet/README.md).
+The best way to manage multiple SCOS Sensors is via Foreman and Puppet. For
+detailed instructions, see [the Foreman and Puppet
+README.md](puppet/README.md).
 
 
 Architecture
@@ -173,7 +172,7 @@ developers familiar with Python.
 API Reference
 -------------
 
-[View on Github](https://ntia.github.io/scos-sensor/#)
+See the full [API reference](https://ntia.github.io/scos-sensor/) online.
 
 
 License
