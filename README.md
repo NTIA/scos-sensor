@@ -84,7 +84,7 @@ entries and view, modify, or delete any other user's schedule entries or
 acquisitions. Admins can create non-priveleged **user** accounts which can also
 create schedule entries and view, modify, and delete things they own, but which
 cannot modify or delete things they don't own. Admins can mark a schedule entry
-as `private` from unpriveleged users.
+as private from unpriveleged users.
 
 
 Quickstart
