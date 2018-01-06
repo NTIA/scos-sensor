@@ -59,24 +59,32 @@ repository. Many of these concepts map to endpoints detailed in the [API
 Reference](#api-reference).
 
 A sensor advertises its **capabilities**, among which are **actions** that you
-can schedule the sensor to do. Some actions acquire data, and those
-**acquisitions** are retrievable in an easy to use archive format. Acquisitions
-are "owned" by the schedule entry. Schedule entries are "owned" by a specific
-user.
+can schedule on the sensor. Actions are functions that the sensor owner
+implements and exposes. Actions can do anything, e.g., rotate an antenna or
+start streaming data over a socket and never return.
 
-Actions are functions that the sensor owner implements and exposes. Actions can
-do anything, e.g., rotate an antenna or start streaming data over a socket and
-never return. Sensor actions are scheduled by posting a **schedule entry** to
-the sensor's **schedule**. The scheduler periodically reads the schedule and
-populates a task queue in priority order.
+Sensor actions are scheduled by posting a **schedule entry** to the sensor's
+**schedule**. The **scheduler** periodically reads the schedule and populates a
+task queue in priority order.
 
-A **task** represents an action at a _specific_ time. Therefore, a schedule
-entry represents a range of tasks. The scheduler continues populating its task
-queue until the schedule is exhausted. When executing the task queue, the
-scheduler makes a best effort to run each task at its designated time, but the
-scheduler will not cancel a running task to start another task, even of higher
-priority. **priority** is used to disambiguate two or more tasks that are
-schedule to start at the same time.
+A **task** represents an action to be run at a _specific_ time. Therefore, a
+schedule entry represents a range of tasks. The scheduler continues populating
+its task queue until the schedule is exhausted. When executing the task queue,
+the scheduler makes a best effort to run each task at its designated time, but
+the scheduler will not cancel a running task to start another task, even of
+higher priority. **priority** is used to disambiguate two or more tasks that
+are schedule to start at the same time.
+
+Some actions acquire data, and those **acquisitions** are retrievable in an
+easy to use archive format. Acquisitions are "owned" by the schedule entry that
+created them. Schedule entries are "owned" by a specific user.
+
+**Admin** users have full control over the sensor and can create schedule
+entries and view, modify, or delete any other user's schedule entries or
+acquisitions. Admins can create non-priveleged **user** accounts which can also
+create schedule entries and view, modify, and delete things they own, but which
+cannot modify or delete things they don't own. Admins can mark a schedule entry
+as `private` from unpriveleged users.
 
 
 Quickstart
