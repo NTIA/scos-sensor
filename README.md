@@ -7,7 +7,7 @@ Occupancy Sensing_ sensor and control plane.
 
 > _What?_
 
-It's a web application that makes it easy to control a software-defined radio
+It's a web application that makes it easy to control and get data from a sensor
 over the Internet.
 
 > _How?_
