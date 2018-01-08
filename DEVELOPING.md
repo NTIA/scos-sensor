@@ -3,6 +3,7 @@ starts with the basics of running the sensor code with local modifications,
 Lastly, it talks about the concept of "actions" and how to program a custom
 action.
 
+
 Running the Sensor
 ==================
 
@@ -10,6 +11,7 @@ The main README's Quickstart provides guidance on running the sensor in its
 stock configuration. The following techniques can be used to see local
 modifications. Sections are in order, so "Running Development Server" assumes
 you've done the setup setups in "Running Tests", etc.
+
 
 Running Tests
 -------------
@@ -44,6 +46,7 @@ $ tox -e lint     # check that code meets widely accepted coding standards
 $ tox -e coverage # check where test coverage lacks
 ```
 
+
 Running Development Server
 --------------------------
 
@@ -54,9 +57,12 @@ python dev requirements from "Running Tests".
 ```bash
 $ ./scripts/init_db.sh
 $ cd src
+$ ./manage.py makemigrations
+$ ./manage.py migrate
 $ ./manage.py createsuperuser
 $ ./manage.py runserver
 ```
+
 
 Running Production Server with Local Changes
 --------------------------------------------
@@ -106,8 +112,8 @@ Writing Custom Actions
 ======================
 
 "Actions" are one of the main concepts used by `scos-sensor`. At a high level,
-they are the things that the sensor owner wants to the sensor to be able to
-_do_. At a lower level, they are simply python classes with a special method
+they are the things that the sensor owner wants the sensor to be able to _do_.
+At a lower level, they are simply python classes with a special method
 `__call__`.
 
 Start by looking at the [Action base class](src/actions/base.py). It includes
@@ -121,7 +127,7 @@ logs the name of the schedule entry and task id that is running it, but it's a
 good example of a complete action. Notice that you first create a subclass of
 the `Action` base class, document the action using a normal python docstring,
 and then override the `__call__` method. The action should not store any state
-locally, but it can access to database.
+locally, but it can access the database.
 
 For a more complex example, check out the [acquire_single_freq_fft
 action](src/actions/acquire_single_freq_fft.py), which uses the USRP and stores

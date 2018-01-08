@@ -31,6 +31,9 @@ STATICFILES_DIRS = (
 
 RUNNING_DEVSERVER = 'runserver' in sys.argv
 
+_testcmd = os.path.split(sys.argv[0])[-1]
+RUNNING_TESTS = 'test' in _testcmd
+
 # Healthchecks - the existance of any of these indicates an unhealth state
 SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
 
@@ -41,7 +44,7 @@ except OSError:
     pass
 
 # See /env.template
-if RUNNING_DEVSERVER:
+if RUNNING_DEVSERVER or RUNNING_TESTS:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
     DEBUG = True
     ALLOWED_HOSTS = []

@@ -16,8 +16,8 @@ from . import usrp
 from capabilities import (scos_antenna_obj,
                           data_extract_obj,
                           SCOS_TRANSFER_SPEC_VER)
+from sensor import settings
 
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -165,8 +165,12 @@ class SingleFrequencyFftAcquisition(Action):
         }
 
         sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
-        domains = os.environ['DOMAINS']
-        fqdn = domains.split()[1]
+
+        try:
+            fqdn = settings.ALLOWED_HOSTS[1]
+        except IndexError:
+            fqdn = 'not.set'
+
         sigmf_md.set_global_field("scos:sensor_id", fqdn)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
