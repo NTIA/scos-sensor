@@ -2,8 +2,8 @@ NTIA/ITS SCOS Sensor
 ====================
 
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
-reference implementation of the _IEEE 802.22.3 Spectrum Characterization and
-Occupancy Sensing_ sensor and control plane.
+reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
+Occupancy Sensing](scos-link) sensor and control plane.
 
 > _What?_
 
@@ -37,6 +37,7 @@ deployment](puppet#foreman-and-puppet).
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
 [Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
+[scos-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
 
 
 Table of Contents
@@ -47,7 +48,7 @@ Table of Contents
  - [Browsable API](#browsable-api)
  - [Large Deployments](#large-deployments)
  - [Architecture](#architecture)
- - [API Reference](#api-reference)
+ - [References](#references)
  - [License](#license)
 
 
@@ -159,20 +160,24 @@ developers familiar with Python.
  - Persistent data is stored on disk in a file-based SQL database. If this
    simple database doesn't meet your needs, a heavier-duty SQL database like
    PostgreSQL or MariaDB can be dropped in with very little effort.
- - A scheduler thread running in a Gunicorn worker process periodically reads
+ - A scheduler thread running in a [Gunicorn] worker process periodically reads
    the schedule from the database and performs the associated actions.
- - A website and JSON RESTful API is served over HTTPS via NGINX, a
+ - A website and JSON RESTful API is served over HTTPS via [NGINX], a
    high-performance web server. These provide easy administration over the
    sensor.
 
 
 ![SCOS Sensor Architecture Diagram](/docs/img/architecture_diagram.png?raw=true)
 
+[Gunicorn]: http://gunicorn.org/
+[NGINX]: https://www.nginx.com/
 
-API Reference
--------------
 
-See the full [API reference](https://ntia.github.io/scos-sensor/) online.
+References
+----------
+
+ - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
+ - [SCOS Data Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec)
 
 
 License
