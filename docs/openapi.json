@@ -1,1 +1,313 @@
-{"swagger": "2.0", "info": {"title": "SCOS Sensor API", "description": "A RESTful API for controlling a SCOS-compatible sensor.", "version": "v1"}, "host": "localhost", "schemes": ["https"], "paths": {"/api/v1/": {"get": {"tags": ["api"], "summary": "/api/v1/", "responses": {"200": {"description": "Success"}}, "parameters": [], "operationId": "read"}}, "/api/v1/acquisitions/": {"get": {"tags": ["api"], "summary": "/api/v1/acquisitions/", "responses": {"200": {"description": "Success", "schema": {"required": ["results"], "type": "object", "properties": {"results": {"items": {"type": "object", "properties": {"url": {"type": "string", "description": ""}, "acquisitions_available": {"type": "string", "description": ""}, "schedule_entry": {"type": "string", "description": ""}}}, "required": true, "type": "array", "name": "results", "description": ""}}}}}, "parameters": [], "operationId": "acquisitions_list"}}, "/api/v1/acquisitions/{schedule_entry_name}/": {"get": {"tags": ["api"], "summary": "/api/v1/acquisitions/{schedule_entry_name}/", "responses": {"200": {"description": "Success", "schema": {"required": ["results"], "type": "object", "properties": {"results": {"items": {"type": "object", "properties": {"url": {"type": "string", "description": ""}, "sigmf_metadata": {"type": "string", "description": ""}, "archive": {"type": "string", "description": ""}, "task_id": {"type": "integer", "description": ""}, "created": {"type": "string", "description": ""}}}, "required": true, "type": "array", "name": "results", "description": ""}}}}}, "parameters": [{"required": true, "type": "string", "name": "schedule_entry_name", "in": "path", "description": ""}], "operationId": "acquisitions_list_0"}, "delete": {"tags": ["api"], "summary": "/api/v1/acquisitions/{schedule_entry_name}/", "responses": {"200": {"description": "Success"}}, "parameters": [{"required": true, "type": "string", "name": "schedule_entry_name", "in": "path", "description": ""}], "operationId": "acquisitions_delete"}}, "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/": {"get": {"tags": ["api"], "summary": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/", "responses": {"200": {"description": "Success", "schema": {"required": ["task_id", "sigmf_metadata"], "type": "object", "properties": {"url": {"type": "string", "description": ""}, "sigmf_metadata": {"type": "object", "description": ""}, "archive": {"type": "string", "description": ""}, "task_id": {"type": "integer", "description": ""}, "created": {"type": "string", "description": ""}}}}}, "parameters": [{"required": true, "type": "string", "name": "schedule_entry_name", "in": "path", "description": ""}, {"required": true, "type": "string", "name": "task_id", "in": "path", "description": ""}], "operationId": "acquisitions_read"}, "delete": {"tags": ["api"], "summary": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/", "responses": {"200": {"description": "Success"}}, "parameters": [{"required": true, "type": "string", "name": "schedule_entry_name", "in": "path", "description": ""}, {"required": true, "type": "string", "name": "task_id", "in": "path", "description": ""}], "operationId": "acquisitions_delete_0"}}, "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/archive": {"get": {"tags": ["api"], "summary": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/archive", "responses": {"200": {"description": "Success"}}, "parameters": [{"required": true, "type": "string", "name": "schedule_entry_name", "in": "path", "description": ""}, {"required": true, "type": "string", "name": "task_id", "in": "path", "description": ""}], "operationId": "acquisitions_archive"}}, "/api/v1/capabilities/": {"get": {"tags": ["api"], "summary": "/api/v1/capabilities/", "responses": {"200": {"description": "Success"}}, "parameters": [], "operationId": "capabilities_list"}}, "/api/v1/schedule/": {"get": {"tags": ["api"], "summary": "/api/v1/schedule/", "responses": {"200": {"description": "Success", "schema": {"required": ["results"], "type": "object", "properties": {"results": {"items": {"type": "object", "properties": {"acquisitions": {"type": "string", "description": ""}, "name": {"type": "string", "description": "unique identifier used in URLs and filenames"}, "created": {"type": "string", "description": ""}, "url": {"type": "string", "description": ""}, "is_active": {"type": "boolean", "description": "deactivate an entry to remove it from the scheduler without removing it from the system"}, "interval": {"type": "integer", "description": "seconds between events, or leave blank to run once"}, "stop": {"type": "integer", "description": "absolute time (epoch) to stop, or leave blank for 'never'"}, "modified": {"type": "string", "description": ""}, "owner": {"type": "string", "description": ""}, "priority": {"type": "integer", "description": "lower number is higher priority (default=10)"}, "start": {"type": "integer", "description": "absolute time (epoch) to start, or leave blank for 'now'"}, "next_task_time": {"type": "integer", "description": ""}, "action": {"type": "string", "description": ""}, "relative_stop": {"type": "boolean", "description": ""}, "next_task_id": {"type": "integer", "description": ""}, "is_private": {"type": "boolean", "description": "entry and resulting data are only visible to admin"}}}, "required": true, "type": "array", "name": "results", "description": ""}}}}}, "parameters": [], "operationId": "schedule_list"}, "post": {"tags": ["api"], "summary": "/api/v1/schedule/", "responses": {"200": {"description": "Success"}}, "parameters": [], "operationId": "schedule_create"}}, "/api/v1/schedule/{name}/": {"get": {"tags": ["api"], "summary": "/api/v1/schedule/{name}/", "responses": {"200": {"description": "Success", "schema": {"required": ["action"], "type": "object", "properties": {"acquisitions": {"type": "string", "description": ""}, "name": {"type": "string", "description": "unique identifier used in URLs and filenames"}, "created": {"type": "string", "description": ""}, "url": {"type": "string", "description": ""}, "is_active": {"type": "boolean", "description": "deactivate an entry to remove it from the scheduler without removing it from the system"}, "interval": {"type": "integer", "description": "seconds between events, or leave blank to run once"}, "stop": {"type": "integer", "description": "absolute time (epoch) to stop, or leave blank for 'never'"}, "modified": {"type": "string", "description": ""}, "owner": {"type": "string", "description": ""}, "priority": {"type": "integer", "description": "lower number is higher priority (default=10)"}, "start": {"type": "integer", "description": "absolute time (epoch) to start, or leave blank for 'now'"}, "next_task_time": {"type": "integer", "description": ""}, "action": {"type": "string", "description": ""}, "relative_stop": {"type": "boolean", "description": ""}, "next_task_id": {"type": "integer", "description": ""}, "is_private": {"type": "boolean", "description": "entry and resulting data are only visible to admin"}}}}}, "parameters": [{"required": true, "type": "string", "name": "name", "in": "path", "description": "unique identifier used in URLs and filenames"}], "operationId": "schedule_read"}, "put": {"tags": ["api"], "summary": "/api/v1/schedule/{name}/", "responses": {"200": {"description": "Success"}}, "parameters": [{"required": true, "type": "string", "name": "name", "in": "path", "description": "unique identifier used in URLs and filenames"}], "operationId": "schedule_update"}, "patch": {"tags": ["api"], "summary": "/api/v1/schedule/{name}/", "responses": {"200": {"description": "Success"}}, "parameters": [{"required": true, "type": "string", "name": "name", "in": "path", "description": "unique identifier used in URLs and filenames"}], "operationId": "schedule_partial_update"}, "delete": {"tags": ["api"], "summary": "/api/v1/schedule/{name}/", "responses": {"200": {"description": "Success"}}, "parameters": [{"required": true, "type": "string", "name": "name", "in": "path", "description": "unique identifier used in URLs and filenames"}], "operationId": "schedule_delete"}}, "/api/v1/schema/": {"get": {"tags": ["api"], "summary": "/api/v1/schema/", "responses": {"200": {"description": "Success"}}, "parameters": [], "operationId": "schema_list"}}, "/api/v1/status": {"get": {"tags": ["api"], "summary": "/api/v1/status", "responses": {"200": {"description": "Success"}}, "parameters": [], "operationId": "status_list"}}}, "securityDefinitions": {"token": {"in": "header", "type": "apiKey", "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. Non-admin user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can use `manage.py changepassword <username>`, but only the account's token should be stored and used for general purpose API access.", "name": "Token"}}}
+{
+    "api": {
+        "status": {
+            "list": {
+                "action": "get", 
+                "description": "The status overview of the sensor.", 
+                "url": "/api/v1/status", 
+                "_type": "link"
+            }
+        }, 
+        "read": {
+            "action": "get", 
+            "description": "The API for the sensor", 
+            "url": "/api/v1/", 
+            "_type": "link"
+        }, 
+        "capabilities": {
+            "list": {
+                "action": "get", 
+                "description": "The capabilites of the sensor.", 
+                "url": "/api/v1/capabilities/", 
+                "_type": "link"
+            }
+        }, 
+        "schedule": {
+            "read": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "name", 
+                        "schema": {
+                            "description": "The unique identifier used in URLs and filenames", 
+                            "title": "name", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "get", 
+                "description": "Returns the specified schedule entry.", 
+                "url": "/api/v1/schedule/{name}/", 
+                "_type": "link"
+            }, 
+            "create": {
+                "action": "post", 
+                "description": "Create a new schedule.", 
+                "url": "/api/v1/schedule/", 
+                "_type": "link"
+            }, 
+            "list": {
+                "action": "get", 
+                "description": "GET /api/v1/schedule/", 
+                "url": "/api/v1/schedule/", 
+                "_type": "link"
+            }, 
+            "partial_update": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "name", 
+                        "schema": {
+                            "description": "The unique identifier used in URLs and filenames", 
+                            "title": "name", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "patch", 
+                "description": "Partially updates the specified schedule entry.", 
+                "url": "/api/v1/schedule/{name}/", 
+                "_type": "link"
+            }, 
+            "update": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "name", 
+                        "schema": {
+                            "description": "The unique identifier used in URLs and filenames", 
+                            "title": "name", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "put", 
+                "description": "Updates the specified schedule entry.", 
+                "url": "/api/v1/schedule/{name}/", 
+                "_type": "link"
+            }, 
+            "delete": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "name", 
+                        "schema": {
+                            "description": "The unique identifier used in URLs and filenames", 
+                            "title": "name", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "delete", 
+                "description": "Deletes the specified schedule entry.", 
+                "url": "/api/v1/schedule/{name}/", 
+                "_type": "link"
+            }
+        }, 
+        "acquisitions": {
+            "archive": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "schedule_entry_name", 
+                        "schema": {
+                            "description": "", 
+                            "title": "", 
+                            "_type": "string"
+                        }
+                    }, 
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "task_id", 
+                        "schema": {
+                            "description": "The id of the task relative to the acquisition", 
+                            "title": "task id", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "get", 
+                "description": "Downloads the acquisition's SigMF archive.", 
+                "url": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/archive", 
+                "_type": "link"
+            }, 
+            "delete_0": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "schedule_entry_name", 
+                        "schema": {
+                            "description": "", 
+                            "title": "", 
+                            "_type": "string"
+                        }
+                    }, 
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "task_id", 
+                        "schema": {
+                            "description": "The id of the task relative to the acquisition", 
+                            "title": "task id", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "delete", 
+                "description": "Deletes the specified acquisition.", 
+                "url": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/", 
+                "_type": "link"
+            }, 
+            "list_0": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "schedule_entry_name", 
+                        "schema": {
+                            "description": "", 
+                            "title": "", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "get", 
+                "description": "Returns a list of all acquisitions created by the given schedule entry.", 
+                "url": "/api/v1/acquisitions/{schedule_entry_name}/", 
+                "_type": "link"
+            }, 
+            "read": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "schedule_entry_name", 
+                        "schema": {
+                            "description": "", 
+                            "title": "", 
+                            "_type": "string"
+                        }
+                    }, 
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "task_id", 
+                        "schema": {
+                            "description": "The id of the task relative to the acquisition", 
+                            "title": "task id", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "get", 
+                "description": "Returns all available metadata about an acquisition.", 
+                "url": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/", 
+                "_type": "link"
+            }, 
+            "list": {
+                "action": "get", 
+                "description": "Returns an overview of how many acquisitions are available per schedule\nentry.", 
+                "url": "/api/v1/acquisitions/", 
+                "_type": "link"
+            }, 
+            "delete": {
+                "fields": [
+                    {
+                        "location": "path", 
+                        "required": true, 
+                        "name": "schedule_entry_name", 
+                        "schema": {
+                            "description": "", 
+                            "title": "", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "action": "delete", 
+                "description": "Deletes all acquisitions created by the given schedule entry.", 
+                "url": "/api/v1/acquisitions/{schedule_entry_name}/", 
+                "_type": "link"
+            }
+        }, 
+        "schema": {
+            "list": {
+                "action": "get", 
+                "description": "The schema overview for the API.", 
+                "url": "/api/v1/schema/", 
+                "_type": "link"
+            }, 
+            "list_0": {
+                "action": "get", 
+                "url": "/api/v1/schema/", 
+                "_type": "link"
+            }
+        }, 
+        "users": {
+            "create": {
+                "action": "post", 
+                "fields": [
+                    {
+                        "location": "form", 
+                        "required": true, 
+                        "name": "username", 
+                        "schema": {
+                            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.", 
+                            "title": "Username", 
+                            "_type": "string"
+                        }
+                    }, 
+                    {
+                        "location": "form", 
+                        "name": "is_active", 
+                        "schema": {
+                            "description": "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.", 
+                            "title": "Active", 
+                            "_type": "boolean"
+                        }
+                    }, 
+                    {
+                        "location": "form", 
+                        "name": "email", 
+                        "schema": {
+                            "description": "", 
+                            "title": "Email", 
+                            "_type": "string"
+                        }
+                    }, 
+                    {
+                        "location": "form", 
+                        "name": "server_url", 
+                        "schema": {
+                            "description": "URL of server if account belongs to a sensor manager", 
+                            "title": "Server URL", 
+                            "_type": "string"
+                        }
+                    }
+                ], 
+                "_type": "link", 
+                "url": "/api/v1/users/", 
+                "description": "Information on users.\n\nPost is only available to admin users. The fields\n`email`, `server_url`, `auth_token`, `has_usable_password`, and `is_admin`\nare only visible to admin users. For more information on user fields, see\nDjango's documentation on custom user models.", 
+                "encoding": "application/json"
+            }, 
+            "list": {
+                "action": "get", 
+                "description": "Information on users.\n\nPost is only available to admin users. The fields\n`email`, `server_url`, `auth_token`, `has_usable_password`, and `is_admin`\nare only visible to admin users. For more information on user fields, see\nDjango's documentation on custom user models.", 
+                "url": "/api/v1/users/", 
+                "_type": "link"
+            }
+        }
+    }, 
+    "_type": "document", 
+    "_meta": {
+        "description": "A RESTful API for controlling a SCOS-compatible sensor.", 
+        "url": "http://testserver/api/v1/schema/", 
+        "title": "SCOS Sensor API"
+    }
+}
