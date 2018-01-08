@@ -3,7 +3,7 @@ NTIA/ITS SCOS Sensor
 
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
-Occupancy Sensing](scos-link) sensor and control plane.
+Occupancy Sensing][scos-link] sensor and control plane.
 
 > _What?_
 
