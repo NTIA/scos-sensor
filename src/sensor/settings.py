@@ -37,6 +37,8 @@ RUNNING_TESTS = 'test' in _testcmd
 # Healthchecks - the existance of any of these indicates an unhealth state
 SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
 
+OPENAPI_FILE = os.path.join(REPO_ROOT, 'docs', 'openapi.json')
+
 # Cleanup any existing healtcheck files
 try:
     os.remove(SDR_HEALTHCHECK_FILE)
