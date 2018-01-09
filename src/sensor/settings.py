@@ -103,6 +103,7 @@ the API call. The body of the response will be JSON in the following format:
 {
     "detail": "description of error"
 }
+```
 
 """
 
