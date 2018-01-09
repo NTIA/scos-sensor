@@ -106,11 +106,11 @@ class SingleFrequencyFftAcquisition(Action):
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        if self.usrp.uhd_is_available and not self.usrp.is_available:
+        if self.usrp.driver_is_available and not self.usrp.is_available:
             self.usrp.connect()
 
         required_components = (
-            self.usrp.uhd_is_available,
+            self.usrp.driver_is_available,
             self.usrp.is_available
         )
         component_names = ("UHD", "USRP")
