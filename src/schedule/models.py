@@ -142,11 +142,11 @@ class ScheduleEntry(models.Model):
         ordering = ('created',)
 
     def __init__(self, *args, **kwargs):
-        relative_stop = kwargs.pop('relative_stop', False)
+        stop_is_relative = kwargs.pop('stop_is_relative', False)
 
         super(ScheduleEntry, self).__init__(*args, **kwargs)
 
-        if relative_stop:
+        if stop_is_relative:
             self.stop = self.start + self.stop
 
         if self.next_task_time is None:

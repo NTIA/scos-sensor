@@ -10,10 +10,10 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField(
         help_text="The list of acquisitions related to the entry"
     )
-    relative_stop = serializers.BooleanField(
+    stop_is_relative = serializers.BooleanField(
         required=False,
-        help_text="Indicates that the `stop` field should be interpreted as "
-                  "seconds after `start` instead of an absolute time"
+        help_text=("Indicates that the `stop` field should be interpreted as "
+                   "seconds after `start` instead of an absolute time")
     )
     action = serializers.ChoiceField(
         choices=actions.CHOICES,
@@ -29,7 +29,7 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'priority',
             'start',
             'stop',
-            'relative_stop',
+            'stop_is_relative',
             'interval',
             'is_active',
             'is_private',
@@ -43,15 +43,15 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {
                 'view_name': 'schedule-detail',
-                'help_text': 'The url of the entry'
+                'help_text': "The url of the entry"
             },
             'owner': {
                 'view_name': 'user-detail',
-                'help_text': 'The name of the user whom owns the entry'
+                'help_text': "The name of the user who owns the entry"
             }
         }
         read_only_fields = ('is_active', 'is_private')
-        write_only_fields = ('relative_stop',)
+        write_only_fields = ('stop_is_relative',)
 
     def get_acquisitions(self, obj):
         request = self.context['request']
