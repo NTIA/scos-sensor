@@ -115,7 +115,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_swagger',
     'drf_openapi',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
