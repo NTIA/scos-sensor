@@ -3,7 +3,7 @@
 import numpy as np
 
 
-uhd_is_available = True
+driver_is_available = True
 is_available = False
 radio = None
 
