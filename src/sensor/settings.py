@@ -47,6 +47,7 @@ except OSError:
 
 # See /env.template
 if RUNNING_DEVSERVER or RUNNING_TESTS:
+    print("RUNNING DEVSERVER")
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -63,7 +64,47 @@ CSRF_COOKIE_SECURE = not RUNNING_DEVSERVER
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
-API_DESCRIPTION = "A RESTful API for controlling a SCOS-compatible sensor."
+
+API_DESCRIPTION = """A RESTful API for controlling a SCOS-compatible sensor.
+
+# Errors
+
+The API uses standard HTTP status codes to indicate the success or failure of
+the API call. The body of the response will be JSON in the following format:
+
+## 400 Bad Request (Parse Error)
+
+```json
+{
+    "field_name": [
+        "description of first error",
+        "description of second error",
+        ...
+    ]
+}
+```
+
+## 400 Bad Request (Protected Error)
+
+```json
+{
+    "detail": "description of error",
+    "protected_objects": [
+        "url_to_protected_item_1",
+        "url_to_protected_item_2",
+        ...
+    ]
+}
+```
+
+## 409 Conflict (DB Integrity Error)
+
+```json
+{
+    "detail": "description of error"
+}
+
+"""
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -95,7 +136,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'sensor.urls'
-
 
 TEMPLATES = [
     {

@@ -39,8 +39,7 @@ DEFAULT_API_VERSION = REST_FRAMEWORK['DEFAULT_VERSION']
 
 @api_view(('GET',))
 def api_v1_root(request, version, format=None):
-    """The API for the sensor
-    """
+    """SCOS sensor API root."""
     reverse_ = partial(reverse, request=request, format=format)
     list_endpoints = {
         'schedule': reverse_('schedule-list'),

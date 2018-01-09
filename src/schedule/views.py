@@ -11,22 +11,26 @@ from .serializers import (
 
 
 class ScheduleEntryViewSet(ModelViewSet):
-    """GET /api/v1/schedule/
+    """View and modify the schedule.
+
+    list:
+    Retrieves the current schedule.
 
     create:
-    Create a new schedule.
+    Creates a new schedule entry.
 
-    partial_update:
-    Partially updates the specified schedule entry.
+    retrieve:
+    Returns the specified schedule entry.
 
     update:
     Updates the specified schedule entry.
 
+    partial_update:
+    Partially updates the specified schedule entry.
+
     delete:
     Deletes the specified schedule entry.
 
-    retrieve:
-    Returns the specified schedule entry.
     """
     queryset = ScheduleEntry.objects.all()
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
@@ -37,7 +41,6 @@ class ScheduleEntryViewSet(ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_serializer_class(self):
-        """Get"""
         if self.action == 'create':
             if self.request and self.request.user.is_staff:
                 return AdminCreateScheduleEntrySerializer
