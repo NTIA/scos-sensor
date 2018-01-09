@@ -47,7 +47,6 @@ except OSError:
 
 # See /env.template
 if RUNNING_DEVSERVER or RUNNING_TESTS:
-    print("RUNNING DEVSERVER")
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
     DEBUG = True
     ALLOWED_HOSTS = []
