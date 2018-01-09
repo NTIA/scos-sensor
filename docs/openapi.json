@@ -1,0 +1,791 @@
+{
+    "info": {
+        "version": "v1", 
+        "description": "A RESTful API for controlling a SCOS-compatible sensor.", 
+        "title": "SCOS Sensor API"
+    }, 
+    "paths": {
+        "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "schedule_entry_name", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "The id of the task relative to the acquisition", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "task_id", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Deletes the specified acquisition.", 
+                "summary": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/", 
+                "operationId": "acquisitions_delete_0"
+            }, 
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "task_id", 
+                                "sigmf_metadata"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "url": {
+                                    "type": "string", 
+                                    "description": "The url of the acquisition"
+                                }, 
+                                "sigmf_metadata": {
+                                    "type": "object", 
+                                    "description": "The sigmf meta data for the acquisition"
+                                }, 
+                                "archive": {
+                                    "type": "string", 
+                                    "description": "The url of the acquisition's SigMF archive"
+                                }, 
+                                "task_id": {
+                                    "type": "integer", 
+                                    "description": "The id of the task relative to the acquisition"
+                                }, 
+                                "created": {
+                                    "type": "string", 
+                                    "description": "The time the acquisition was created"
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "schedule_entry_name", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "The id of the task relative to the acquisition", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "task_id", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Returns all available metadata about an acquisition.", 
+                "summary": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/", 
+                "operationId": "acquisitions_read"
+            }
+        }, 
+        "/api/v1/users/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "username"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "username": {
+                                    "type": "string", 
+                                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                }, 
+                                "has_usable_password": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "url": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "auth_token": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "is_active": {
+                                    "type": "boolean", 
+                                    "description": "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+                                }, 
+                                "server_url": {
+                                    "type": "string", 
+                                    "description": "URL of server if account belongs to a sensor manager"
+                                }, 
+                                "schedule_entries": {
+                                    "items": {
+                                        "type": "string", 
+                                        "description": ""
+                                    }, 
+                                    "required": false, 
+                                    "type": "array", 
+                                    "name": "schedule_entries", 
+                                    "description": ""
+                                }, 
+                                "last_login": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "is_admin": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "email": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "date_joined": {
+                                    "type": "string", 
+                                    "description": ""
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "description": "Information on users.\n\nPost is only available to admin users. The fields\n`email`, `server_url`, `auth_token`, `has_usable_password`, and `is_admin`\nare only visible to admin users. For more information on user fields, see\nDjango's documentation on custom user models.", 
+                "parameters": [
+                    {
+                        "in": "body", 
+                        "name": "data", 
+                        "schema": {
+                            "required": [
+                                "username"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "username": {
+                                    "type": "string", 
+                                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                }, 
+                                "is_active": {
+                                    "type": "boolean", 
+                                    "description": "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+                                }, 
+                                "email": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "server_url": {
+                                    "type": "string", 
+                                    "description": "URL of server if account belongs to a sensor manager"
+                                }
+                            }
+                        }
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "summary": "/api/v1/users/", 
+                "consumes": [
+                    "application/json"
+                ], 
+                "operationId": "users_create"
+            }, 
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "username"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "username": {
+                                    "type": "string", 
+                                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                }, 
+                                "has_usable_password": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "url": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "auth_token": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "is_active": {
+                                    "type": "boolean", 
+                                    "description": "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+                                }, 
+                                "server_url": {
+                                    "type": "string", 
+                                    "description": "URL of server if account belongs to a sensor manager"
+                                }, 
+                                "schedule_entries": {
+                                    "items": {
+                                        "type": "string", 
+                                        "description": ""
+                                    }, 
+                                    "required": false, 
+                                    "type": "array", 
+                                    "name": "schedule_entries", 
+                                    "description": ""
+                                }, 
+                                "last_login": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "is_admin": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "email": {
+                                    "type": "string", 
+                                    "description": ""
+                                }, 
+                                "date_joined": {
+                                    "type": "string", 
+                                    "description": ""
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Information on users.\n\nPost is only available to admin users. The fields\n`email`, `server_url`, `auth_token`, `has_usable_password`, and `is_admin`\nare only visible to admin users. For more information on user fields, see\nDjango's documentation on custom user models.", 
+                "summary": "/api/v1/users/", 
+                "operationId": "users_list"
+            }
+        }, 
+        "/api/v1/capabilities/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "The capabilites of the sensor.", 
+                "summary": "/api/v1/capabilities/", 
+                "operationId": "capabilities_list"
+            }
+        }, 
+        "/api/v1/acquisitions/{schedule_entry_name}/": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "schedule_entry_name", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Deletes all acquisitions created by the given schedule entry.", 
+                "summary": "/api/v1/acquisitions/{schedule_entry_name}/", 
+                "operationId": "acquisitions_delete"
+            }, 
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "results"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "results": {
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "url": {
+                                                "type": "string", 
+                                                "description": "The url of the acquisition"
+                                            }, 
+                                            "sigmf_metadata": {
+                                                "type": "string", 
+                                                "description": "The sigmf meta data for the acquisition"
+                                            }, 
+                                            "archive": {
+                                                "type": "string", 
+                                                "description": "The url of the acquisition's SigMF archive"
+                                            }, 
+                                            "task_id": {
+                                                "type": "integer", 
+                                                "description": "The id of the task relative to the acquisition"
+                                            }, 
+                                            "created": {
+                                                "type": "string", 
+                                                "description": "The time the acquisition was created"
+                                            }
+                                        }
+                                    }, 
+                                    "required": true, 
+                                    "type": "array", 
+                                    "name": "results", 
+                                    "description": ""
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "schedule_entry_name", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Returns a list of all acquisitions created by the given schedule entry.", 
+                "summary": "/api/v1/acquisitions/{schedule_entry_name}/", 
+                "operationId": "acquisitions_list_0"
+            }
+        }, 
+        "/api/v1/acquisitions/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "results"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "results": {
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "url": {
+                                                "type": "string", 
+                                                "description": "The url of the list of acquisitions"
+                                            }, 
+                                            "acquisitions_available": {
+                                                "type": "string", 
+                                                "description": "The number of available acquisitions"
+                                            }, 
+                                            "schedule_entry": {
+                                                "type": "string", 
+                                                "description": "The related schedule entry for the acquisition"
+                                            }
+                                        }
+                                    }, 
+                                    "required": true, 
+                                    "type": "array", 
+                                    "name": "results", 
+                                    "description": ""
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Returns an overview of how many acquisitions are available per schedule\nentry.", 
+                "summary": "/api/v1/acquisitions/", 
+                "operationId": "acquisitions_list"
+            }
+        }, 
+        "/api/v1/schedule/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Create a new schedule.", 
+                "summary": "/api/v1/schedule/", 
+                "operationId": "schedule_create"
+            }, 
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "results"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "results": {
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "acquisitions": {
+                                                "type": "string", 
+                                                "description": "The list of acquisitions related to the entry"
+                                            }, 
+                                            "name": {
+                                                "type": "string", 
+                                                "description": "The unique identifier used in URLs and filenames"
+                                            }, 
+                                            "created": {
+                                                "type": "string", 
+                                                "description": "The date the entry was created"
+                                            }, 
+                                            "url": {
+                                                "type": "string", 
+                                                "description": "The url of the entry"
+                                            }, 
+                                            "stop": {
+                                                "type": "integer", 
+                                                "description": "Absolute time (epoch) to stop, or leave blank for 'never'"
+                                            }, 
+                                            "interval": {
+                                                "type": "integer", 
+                                                "description": "Seconds between events, or leave blank to run once"
+                                            }, 
+                                            "is_active": {
+                                                "type": "boolean", 
+                                                "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system"
+                                            }, 
+                                            "modified": {
+                                                "type": "string", 
+                                                "description": "The date the entry was modified"
+                                            }, 
+                                            "priority": {
+                                                "type": "integer", 
+                                                "description": "Lower number is higher priority (default=10)"
+                                            }, 
+                                            "start": {
+                                                "type": "integer", 
+                                                "description": "Absolute time (epoch) to start, or leave blank for 'now'"
+                                            }, 
+                                            "next_task_time": {
+                                                "type": "integer", 
+                                                "description": "The time the next task is to be executed"
+                                            }, 
+                                            "owner": {
+                                                "type": "string", 
+                                                "description": "The name of the user whom owns the entry"
+                                            }, 
+                                            "relative_stop": {
+                                                "type": "boolean", 
+                                                "description": "Indicates that the `stop` field should be interpreted as seconds after `start` instead of an absolute time"
+                                            }, 
+                                            "next_task_id": {
+                                                "type": "integer", 
+                                                "description": "The id of the next task to be executed"
+                                            }, 
+                                            "action": {
+                                                "type": "string", 
+                                                "description": "The name of the action to be scheduled"
+                                            }, 
+                                            "is_private": {
+                                                "type": "boolean", 
+                                                "description": "Indicates whether the entry, and resulting data, are only visible to admin"
+                                            }
+                                        }
+                                    }, 
+                                    "required": true, 
+                                    "type": "array", 
+                                    "name": "results", 
+                                    "description": ""
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "GET /api/v1/schedule/", 
+                "summary": "/api/v1/schedule/", 
+                "operationId": "schedule_list"
+            }
+        }, 
+        "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/archive": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "schedule_entry_name", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "The id of the task relative to the acquisition", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "task_id", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Downloads the acquisition's SigMF archive.", 
+                "summary": "/api/v1/acquisitions/{schedule_entry_name}/{task_id}/archive", 
+                "operationId": "acquisitions_archive"
+            }
+        }, 
+        "/api/v1/schema/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "The schema overview for the API.", 
+                "summary": "/api/v1/schema/", 
+                "operationId": "schema_list"
+            }
+        }, 
+        "/api/v1/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "The API for the sensor", 
+                "summary": "/api/v1/", 
+                "operationId": "read"
+            }
+        }, 
+        "/api/v1/schedule/{name}/": {
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "The unique identifier used in URLs and filenames", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "name", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Updates the specified schedule entry.", 
+                "summary": "/api/v1/schedule/{name}/", 
+                "operationId": "schedule_update"
+            }, 
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "The unique identifier used in URLs and filenames", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "name", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Deletes the specified schedule entry.", 
+                "summary": "/api/v1/schedule/{name}/", 
+                "operationId": "schedule_delete"
+            }, 
+            "patch": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "The unique identifier used in URLs and filenames", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "name", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Partially updates the specified schedule entry.", 
+                "summary": "/api/v1/schedule/{name}/", 
+                "operationId": "schedule_partial_update"
+            }, 
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "required": [
+                                "action"
+                            ], 
+                            "type": "object", 
+                            "properties": {
+                                "acquisitions": {
+                                    "type": "string", 
+                                    "description": "The list of acquisitions related to the entry"
+                                }, 
+                                "name": {
+                                    "type": "string", 
+                                    "description": "The unique identifier used in URLs and filenames"
+                                }, 
+                                "created": {
+                                    "type": "string", 
+                                    "description": "The date the entry was created"
+                                }, 
+                                "url": {
+                                    "type": "string", 
+                                    "description": "The url of the entry"
+                                }, 
+                                "stop": {
+                                    "type": "integer", 
+                                    "description": "Absolute time (epoch) to stop, or leave blank for 'never'"
+                                }, 
+                                "interval": {
+                                    "type": "integer", 
+                                    "description": "Seconds between events, or leave blank to run once"
+                                }, 
+                                "is_active": {
+                                    "type": "boolean", 
+                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system"
+                                }, 
+                                "modified": {
+                                    "type": "string", 
+                                    "description": "The date the entry was modified"
+                                }, 
+                                "priority": {
+                                    "type": "integer", 
+                                    "description": "Lower number is higher priority (default=10)"
+                                }, 
+                                "start": {
+                                    "type": "integer", 
+                                    "description": "Absolute time (epoch) to start, or leave blank for 'now'"
+                                }, 
+                                "next_task_time": {
+                                    "type": "integer", 
+                                    "description": "The time the next task is to be executed"
+                                }, 
+                                "owner": {
+                                    "type": "string", 
+                                    "description": "The name of the user whom owns the entry"
+                                }, 
+                                "relative_stop": {
+                                    "type": "boolean", 
+                                    "description": "Indicates that the `stop` field should be interpreted as seconds after `start` instead of an absolute time"
+                                }, 
+                                "next_task_id": {
+                                    "type": "integer", 
+                                    "description": "The id of the next task to be executed"
+                                }, 
+                                "action": {
+                                    "type": "string", 
+                                    "description": "The name of the action to be scheduled"
+                                }, 
+                                "is_private": {
+                                    "type": "boolean", 
+                                    "description": "Indicates whether the entry, and resulting data, are only visible to admin"
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "description": "The unique identifier used in URLs and filenames", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "name", 
+                        "in": "path"
+                    }
+                ], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "Returns the specified schedule entry.", 
+                "summary": "/api/v1/schedule/{name}/", 
+                "operationId": "schedule_read"
+            }
+        }, 
+        "/api/v1/status": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }, 
+                "parameters": [], 
+                "tags": [
+                    "api"
+                ], 
+                "description": "The status overview of the sensor.", 
+                "summary": "/api/v1/status", 
+                "operationId": "status_list"
+            }
+        }
+    }, 
+    "schemes": [
+        "http"
+    ], 
+    "securityDefinitions": {
+        "token": {
+            "type": "apiKey", 
+            "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. Non-admin user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can use `manage.py changepassword <username>`, but only the account's token should be stored and used for general purpose API access.", 
+            "name": "Token", 
+            "in": "header"
+        }
+    }, 
+    "host": "testserver", 
+    "swagger": "2.0"
+}
