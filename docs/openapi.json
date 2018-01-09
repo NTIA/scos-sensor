@@ -1,7 +1,7 @@
 {
     "info": {
         "version": "v1", 
-        "description": "A RESTful API for controlling a SCOS-compatible sensor.", 
+        "description": "A RESTful API for controlling a SCOS-compatible sensor.\n\n# Errors\n\nThe API uses standard HTTP status codes to indicate the success or failure of\nthe API call. The body of the response will be JSON in the following format:\n\n## 400 Bad Request (Parse Error)\n\n```json\n{\n    \"field_name\": [\n        \"description of first error\",\n        \"description of second error\",\n        ...\n    ]\n}\n```\n\n## 400 Bad Request (Protected Error)\n\n```json\n{\n    \"detail\": \"description of error\",\n    \"protected_objects\": [\n        \"url_to_protected_item_1\",\n        \"url_to_protected_item_2\",\n        ...\n    ]\n}\n```\n\n## 409 Conflict (DB Integrity Error)\n\n```json\n{\n    \"detail\": \"description of error\"\n}\n\n", 
         "title": "SCOS Sensor API"
     }, 
     "paths": {
@@ -431,7 +431,7 @@
                 "tags": [
                     "api"
                 ], 
-                "description": "Create a new schedule.", 
+                "description": "Creates a new schedule entry.", 
                 "summary": "/api/v1/schedule/", 
                 "operationId": "schedule_create"
             }, 
@@ -452,6 +452,10 @@
                                             "acquisitions": {
                                                 "type": "string", 
                                                 "description": "The list of acquisitions related to the entry"
+                                            }, 
+                                            "stop_is_relative": {
+                                                "type": "boolean", 
+                                                "description": "Indicates that the `stop` field should be interpreted as seconds after `start` instead of an absolute time"
                                             }, 
                                             "name": {
                                                 "type": "string", 
@@ -495,11 +499,7 @@
                                             }, 
                                             "owner": {
                                                 "type": "string", 
-                                                "description": "The name of the user whom owns the entry"
-                                            }, 
-                                            "relative_stop": {
-                                                "type": "boolean", 
-                                                "description": "Indicates that the `stop` field should be interpreted as seconds after `start` instead of an absolute time"
+                                                "description": "The name of the user who owns the entry"
                                             }, 
                                             "next_task_id": {
                                                 "type": "integer", 
@@ -528,7 +528,7 @@
                 "tags": [
                     "api"
                 ], 
-                "description": "GET /api/v1/schedule/", 
+                "description": "Retrieves the current schedule.", 
                 "summary": "/api/v1/schedule/", 
                 "operationId": "schedule_list"
             }
@@ -591,7 +591,7 @@
                 "tags": [
                     "api"
                 ], 
-                "description": "The API for the sensor", 
+                "description": "SCOS sensor API root.", 
                 "summary": "/api/v1/", 
                 "operationId": "read"
             }
@@ -677,6 +677,10 @@
                                     "type": "string", 
                                     "description": "The list of acquisitions related to the entry"
                                 }, 
+                                "stop_is_relative": {
+                                    "type": "boolean", 
+                                    "description": "Indicates that the `stop` field should be interpreted as seconds after `start` instead of an absolute time"
+                                }, 
                                 "name": {
                                     "type": "string", 
                                     "description": "The unique identifier used in URLs and filenames"
@@ -719,11 +723,7 @@
                                 }, 
                                 "owner": {
                                     "type": "string", 
-                                    "description": "The name of the user whom owns the entry"
-                                }, 
-                                "relative_stop": {
-                                    "type": "boolean", 
-                                    "description": "Indicates that the `stop` field should be interpreted as seconds after `start` instead of an absolute time"
+                                    "description": "The name of the user who owns the entry"
                                 }, 
                                 "next_task_id": {
                                     "type": "integer", 
