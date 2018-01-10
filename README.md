@@ -3,7 +3,7 @@ NTIA/ITS SCOS Sensor
 
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
-Occupancy Sensing][scos-link] sensor and control plane.
+Occupancy Sensing][ieee-link] sensor and control plane.
 
 > _What?_
 
@@ -37,7 +37,7 @@ deployment](puppet#foreman-and-puppet).
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
 [Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
-[scos-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
+[ieee-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
 
 
 Table of Contents
@@ -91,10 +91,7 @@ as private from unpriveleged users.
 Quickstart
 ----------
 
- - Install `git`, `Docker`, `docker-compose`, and `virtualenvwrapper` (optional)
-
-It's recommended that you activate a virtual environment via `conda` or
-`virtualenv`/`virtualenvwrapper` before following the instructions below.
+ - Install `git`, `Docker`, and `docker-compose`.
 
 1) Clone the repository.
 
@@ -148,7 +145,7 @@ Large Deployments
 
 The best way to manage multiple SCOS Sensors is via Foreman and Puppet. For
 detailed instructions, see [the Foreman and Puppet
-README.md](puppet/README.md).
+README](puppet/README.md).
 
 
 Architecture
@@ -183,4 +180,4 @@ References
 License
 -------
 
-See [LICENSE.md](LICENSE.md).
+See [LICENSE](LICENSE.md).
