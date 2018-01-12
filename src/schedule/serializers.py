@@ -10,6 +10,9 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField(
         help_text="The list of acquisitions related to the entry"
     )
+    results = serializers.SerializerMethodField(
+        help_text="The list of results related to the entry"
+    )
     stop_is_relative = serializers.BooleanField(
         required=False,
         help_text=("Indicates that the `stop` field should be interpreted as "
@@ -33,12 +36,14 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'interval',
             'is_active',
             'is_private',
+            'callback_url',
             'next_task_time',
             'next_task_id',
             'created',
             'modified',
             'owner',
-            'acquisitions'
+            'acquisitions',
+            'results'
         )
         extra_kwargs = {
             'url': {
@@ -58,6 +63,12 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         kws = {'schedule_entry_name': obj.name}
         kws.update(V1)
         return reverse('acquisition-list', kwargs=kws, request=request)
+
+    def get_results(self, obj):
+        request = self.context['request']
+        kws = {'schedule_entry_name': obj.name}
+        kws.update(V1)
+        return reverse('result-list', kwargs=kws, request=request)
 
     def to_internal_value(self, data):
         """Strip incoming start=None so that model uses default start value."""

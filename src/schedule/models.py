@@ -100,14 +100,19 @@ class ScheduleEntry(models.Model):
     is_active = models.BooleanField(
         default=True,
         editable=True,
-        help_text="Indicates whether the entry should be removed from the "
-                  "scheduler without removing it from the system"
+        help_text=("Indicates whether the entry should be removed from the "
+                   "scheduler without removing it from the system")
     )
     is_private = models.BooleanField(
         default=False,
         editable=True,
-        help_text="Indicates whether the entry, and resulting data, are only "
-                  "visible to admin"
+        help_text=("Indicates whether the entry, and resulting data, are only "
+                   "visible to admin")
+    )
+    callback_url = models.URLField(
+        blank=True,
+        help_text=("If given, the scheduler will POST a `TaskResult` JSON "
+                   "object to this URL after each task completes")
     )
 
     # read-only fields
