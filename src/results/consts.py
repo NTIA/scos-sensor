@@ -1,0 +1,1 @@
+MAX_DETAIL_LEN = 512
