@@ -46,7 +46,8 @@ def api_v1_root(request, version, format=None):
         'acquisitions': reverse_('acquisitions-overview'),
         'status': reverse_('status'),
         'users': reverse_('user-list'),
-        'capabilities': reverse_('capabilities')
+        'capabilities': reverse_('capabilities'),
+        'results': reverse_('results-overview')
     }
 
     return Response(list_endpoints)
@@ -59,6 +60,7 @@ api_urlpatterns = format_suffix_patterns((
     url(r'^schedule/', include('schedule.urls')),
     url(r'^status', include('status.urls')),
     url(r'^users/', include('authentication.urls')),
+    url(r'^results/', include('results.urls')),
     url(r'^schema/$', SchemaView.as_view(), name='api_schema')
 ))
 
