@@ -112,9 +112,8 @@ $ source ./env
 
 ```bash
 $ ./scripts/init_db.sh
-$ docker-compose pull  # download all necessary images
-$ docker-compose run api /src/manage.py createsuperuser
 $ docker-compose up
+$ docker-compose exec api /src/manage.py createsuperuser  # in another tab
 ```
 
 
