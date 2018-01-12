@@ -4,12 +4,19 @@ import logging
 import threading
 from contextlib import contextmanager
 
+from django.utils import timezone
+from requests_futures.sessions import FuturesSession
+
+from results.consts import MAX_DETAIL_LEN
+from results.models import TaskResult
+from results.serializers import TaskResultSerializer
 from schedule.models import ScheduleEntry
 from . import utils
 from .tasks import TaskQueue
 
 
 logger = logging.getLogger(__name__)
+requests_futures_session = FuturesSession()
 
 
 class Scheduler(threading.Thread):
@@ -93,13 +100,53 @@ class Scheduler(threading.Thread):
     def _call_task_actions(self, pending_task_queue):
         for next_task in pending_task_queue.to_list():
             entry_name = next_task.schedule_entry_name
+            entry = ScheduleEntry.objects.get(name=entry_name)
             task_id = next_task.task_id
+            started = timezone.now()
+
             try:
                 logger.debug("running task {}/{}".format(entry_name, task_id))
-                next_task.action_fn(entry_name, task_id)
+                detail = next_task.action_fn(entry_name, task_id)
                 self.delayfn(0)  # let other threads run
-            except Exception:
-                logger.exception("action failed")
+                result = 'success'
+            except Exception as err:
+                detail = str(err)
+                logger.exception("action failed: {}".format(detail))
+                result = 'failure'
+
+            # py2 compat: check for 'str' in py3
+            if not isinstance(detail, basestring):
+                detail = ""
+
+            detail = detail[:MAX_DETAIL_LEN]
+
+            finished = timezone.now()
+
+            result = TaskResult(
+                schedule_entry=entry,
+                task_id=task_id,
+                started=started,
+                finished=finished,
+                duration=(finished - started),
+                result=result,
+                detail=detail
+            )
+            result.save()
+            result_json = TaskResultSerializer(result)
+
+            def _post_logger(sess, resp):
+                if resp.ok:
+                    logger.info("POSTed {:!r} to {}".format(result, resp.url))
+                else:
+                    msg = "Failed to POST to {}: {}"
+                    logger.warning(msg.format(resp.url, resp.reason))
+
+            if entry.callback_url:
+                requests_futures_session.post(
+                    entry.callback_url,
+                    json=result_json.data,
+                    background_callback=_post_logger,
+                )
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()
