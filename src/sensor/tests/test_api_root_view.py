@@ -9,7 +9,8 @@ API_ROOT_ENDPOINTS = {
     'users',
     'schedule',
     'status',
-    'capabilities'
+    'capabilities',
+    'results'
 }
 
 
