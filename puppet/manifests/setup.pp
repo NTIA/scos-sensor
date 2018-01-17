@@ -15,7 +15,7 @@ class scos::setup (
 
 {
 
-# Setup secret key, DB user, SSL cert Logic to deterine docker vs. github source processes
+# Setup secret key, admin password, DB user, SSL cert Logic to deterine docker vs. github source processes
 
   file { [ $install_root, "${install_root}/nginx", $ssl_dir, "${install_root}/nginx/conf.d"]:
     ensure => 'directory',
@@ -24,8 +24,15 @@ class scos::setup (
 
   $secret_key = fqdn_rand_string(32)
 
+  if ($admin_password == '') or ($admin_password == undef) {
+    $admin_password_actual = fqdn_rand_string(12)
+  }
+  else {
+    $admin_password_actual = $admin_password
+  }
+
   exec { 'admin_password':
-    command => "/bin/echo ${admin_password} > ${install_root}/.admin_password",
+    command => "/bin/echo ${admin_password_actual} > ${install_root}/.admin_password",
   }
 
   exec { 'admin_email':
