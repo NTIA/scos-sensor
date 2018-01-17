@@ -12,7 +12,7 @@ class scos
   $ssl_cert = undef,
   $ssl_key = undef,
   $admin_email = undef,
-  #$admin_password = 'changeme!',
+  $admin_password_manual = undef,
 )
 
 {

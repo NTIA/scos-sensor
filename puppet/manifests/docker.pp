@@ -10,7 +10,7 @@ class scos::docker (
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,
   $admin_email = $scos::admin_email,
-  #$admin_password = $scos::admin_password,
+  $admin_password = $scos::admin_password,
   $secret_key = $scos::setup::secret_key,
   )
 

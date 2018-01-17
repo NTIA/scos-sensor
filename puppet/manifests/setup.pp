@@ -10,7 +10,7 @@ class scos::setup (
   $ssl_cert = $scos::ssl_cert,
   $ssl_key = $scos::ssl_key,
   $admin_email = $scos::admin_email,
-  #$admin_password = $scos::admin_password,
+  $admin_password = $scos::admin_password,
   $secret_key = $scos::setup::secret_key,
   )
 
@@ -25,10 +25,15 @@ class scos::setup (
 
   $secret_key = fqdn_rand_string(32)
 
-  $admin_password = fqdn_rand_string(12)
+  if ($admin_password == '') {
+    $admin_password_actual = fqdn_rand_string(12)
+  }
+  else {
+    $admin_password_actual = $admin_password
+  }
 
   exec { 'admin_password':
-    command => "/bin/echo ${admin_password} > ${install_root}/.admin_password",
+    command => "/bin/echo ${admin_password_actual} > ${install_root}/.admin_password",
   }
 
   exec { 'admin_email':
