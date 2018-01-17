@@ -24,7 +24,7 @@ class scos::setup (
 
   $secret_key = fqdn_rand_string(32)
 
-  if ($admin_password == '') {
+  if ($admin_password == '') or (admin_password == undef) {
     $admin_password_actual = fqdn_rand_string(12)
   }
   else {
