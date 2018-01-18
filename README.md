@@ -44,8 +44,8 @@ Introduction
    performed at specified times
  - Standardized metadata/data format that supports cooperative sensing and open
    data initiatives
- - Security controls that forbid unauthorized users to alter internal sensor
-   functions
+ - Security controls that prevent unauthorized users from accessing internal
+   sensor functionality
  - Easy-to-deploy with provisioned and configured OS
  - Quality assurance of software via automated testing prior to release
 
@@ -66,20 +66,20 @@ metadata and data format is an extension of, and fully compatible with, the
 namespace SigMF specification.
 
 When deploying equipment remotely, the robustness and security of its software
-becomes a prime concern. `scos-sensor` sits on top of a very popular
-open-source framework, which provides out-of-the protection against cross site
-scripting (XSS), cross site request forgery (CSRF), SQL injection, and
-clickjacking attacks, and also enforces SSL/HTTPS (traffic encryption), host
-header validation, and user session security. In addition to these, we have
+becomes a prime concern. `scos-sensor` sits on top of a popular open-source
+framework, which provides out-of-the protection against cross site scripting
+(XSS), cross site request forgery (CSRF), SQL injection, and clickjacking
+attacks, and also enforces SSL/HTTPS (traffic encryption), host header
+validation, and user session security. In addition to these, we have
 implemented an unpriveleged user type so that the sensor owner can allow access
 to other users and API consumers while maintaining ultimate control. To
 minimize the chance of regressions while developing for the sensor, we have
 written almost 200 unit and integration tests. See [Developing](Developing.md)
 to learn how to run these tests, or continue on to the
-[Quickstart][#quickstart] section for how to spin up a production-grade sensor
+[Quickstart](#quickstart) section for how to spin up a production-grade sensor
 in just a few commands.
 
-We have tried to make these common hurdles to remotely deploying a sensor as
+We have tried to make the most common hurdles to remotely deploying a sensor as
 painless as possible, while keeping in mind that the way people may want to use
 them are as varied as the types of sensors themselves. We have focused on
 generalization in two important places: by being as hardware agnostic as
@@ -166,15 +166,16 @@ developers familiar with Python.
    PostgreSQL or MariaDB can be dropped in with very little effort.
  - A scheduler thread running in a [Gunicorn] worker process periodically reads
    the schedule from the database and performs the associated actions.
- - A website and JSON RESTful API is served over HTTPS via [NGINX], a
-   high-performance web server. These provide easy administration over the
-   sensor.
+ - A website and JSON RESTful API using [Django REST framework] is served over
+   HTTPS via [NGINX], a high-performance web server. These provide easy
+   administration over the sensor.
 
 
 ![SCOS Sensor Architecture Diagram](/docs/img/architecture_diagram.png?raw=true)
 
 [Gunicorn]: http://gunicorn.org/
 [NGINX]: https://www.nginx.com/
+[Django REST framework]: http://www.django-rest-framework.org/
 
 
 Glossary
