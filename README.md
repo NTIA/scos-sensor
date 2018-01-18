@@ -62,7 +62,7 @@ stored in a local database. The full metadata can be read directly through the
 self-hosting website or retrieved in plain text via a single API call. Our
 metadata and data format is an extension of, and fully compatible with, the
 [SigMF](https://github.com/gnuradio/sigmf) specification. See the
-[References][#references] section for a link fully describing the `scos`
+[References](#references) section for a link fully describing the `scos`
 namespace SigMF specification.
 
 When deploying equipment remotely, the robustness and security of its software
