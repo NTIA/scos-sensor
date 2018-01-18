@@ -8,10 +8,10 @@ next-generation technologies can be introduced without interfering with the
 existing system that we all rely on. `scos-sensor` is open source and automates
 the boring parts of performing some action with a sensor over the Internet,
 while keeping the concepts of "action" and "sensor" loose enough to be broadly
-useful. Just add an "adapter" for your desired sensor, implement one or more
-"actions" to expose to the API, and get a robust (over 180 automated tests;
+useful. Just add an adapter for your desired sensor, implement one or more
+actions to expose to the API, and you have a robust (over 180 automated tests;
 self-healing architecture), secure (user authentication; traffic encryption on
-by default) remote spectrum monitoring solution.
+by default) remote sensing solution.
 
 
 ## Features:
