@@ -38,10 +38,8 @@ Introduction
  - Design flexibility to allow developers to evolve sensor technologies and
    metrics
  - Hardware agnostic
- - Discoverable sensor capabilities, i.e., high-level actions that can be
-   performed
- - Schedulable actions, i.e., sensor hardware/software supported algorithms
-   performed at specified times
+ - Discoverable sensor capabilities
+ - Task scheduling using start/stop times, interval, and/or priority
  - Standardized metadata/data format that supports cooperative sensing and open
    data initiatives
  - Security controls that prevent unauthorized users from accessing internal
