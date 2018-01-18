@@ -96,16 +96,16 @@ feel free to open an issue.
 Quickstart
 ----------
 
- - Install `git`, `Docker`, and `docker-compose`.
+1) Install `git`, `Docker`, and `docker-compose`.
 
-1) Clone the repository.
+2) Clone the repository.
 
 ```bash
 $ git clone https://github.com/NTIA/scos-sensor.git
 $ cd scos-sensor
 ```
 
-2) Copy the environment template file and *modify* the copy if necessary, then
+3) Copy the environment template file and *modify* the copy if necessary, then
 source it.
 
 ```bash
@@ -113,7 +113,7 @@ $ cp env.template env
 $ source ./env
 ```
 
-3) Run a Dockerized production-grade stack.
+4) Run a Dockerized production-grade stack.
 
 ```bash
 $ ./scripts/init_db.sh
