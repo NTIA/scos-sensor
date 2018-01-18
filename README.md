@@ -51,24 +51,24 @@ Sensor control is accomplished through a RESTful API. The API is designed to be
 rich enough so that multiple sensors can be automated effectively while being
 simple enough to still be useful for single-sensor deployments. For example, by
 advertising capabilites and location, an owner of multiple sensors can easily
-filter by frequency range, available actions, or goegraphic location. Yet,
+filter by frequency range, available actions, or geographic location. Yet,
 since each sensor hosts its own [Browsable API](#browsable-api), controlling
 small deployments is as easy as clicking around a website.
 
 When a task acquires data, that data and a significant amount of metadata are
 stored in a local database. The full metadata can be read directly through the
-self-hosting website or retrieved in plain text via a single API call. Our
-metadata and data format is an extension of, and fully compatible with, the
+self-hosted website or retrieved in plain text via a single API call. Our
+metadata and data format is an extension of, and compatible with, the
 [SigMF](https://github.com/gnuradio/sigmf) specification. See the
-[References](#references) section for a link fully describing the `scos`
+[References](#references) section for a link describing the `scos`
 namespace SigMF specification.
 
 When deploying equipment remotely, the robustness and security of its software
 becomes a prime concern. `scos-sensor` sits on top of a popular open-source
-framework, which provides out-of-the protection against cross site scripting
-(XSS), cross site request forgery (CSRF), SQL injection, and clickjacking
-attacks, and also enforces SSL/HTTPS (traffic encryption), host header
-validation, and user session security. In addition to these, we have
+framework, which provides out-of-the-box protection against cross site
+scripting (XSS), cross site request forgery (CSRF), SQL injection, and
+clickjacking attacks, and also enforces SSL/HTTPS (traffic encryption), host
+header validation, and user session security. In addition to these, we have
 implemented an unpriveleged user type so that the sensor owner can allow access
 to other users and API consumers while maintaining ultimate control. To
 minimize the chance of regressions while developing for the sensor, we have
@@ -77,14 +77,14 @@ to learn how to run these tests, or continue on to the
 [Quickstart](#quickstart) section for how to spin up a production-grade sensor
 in just a few commands.
 
-We have tried to make the most common hurdles to remotely deploying a sensor as
-painless as possible, while keeping in mind that the way people may want to use
-them are as varied as the types of sensors themselves. We have focused on
-generalization in two important places: by being as hardware agnostic as
-practical (see [Supporting a Different
-SDR](DEVELOPING.md#supporting-a-different-sdr)), and by letting the sensor
-owner have ultimate say what the sensor can _do_ using a flexible "actions"
-concept (see [Writing Custom Actions](DEVELOPING.md#writing-custom-actions)).
+We have tried remove the most common hurdles to remotely deploying a sensor,
+while keeping in mind that the way people may want to use them are as varied as
+the types of sensors themselves. We have focused on generalization in two
+important places: by being as hardware agnostic as practical (see [Supporting a
+Different SDR](DEVELOPING.md#supporting-a-different-sdr)), and by letting the
+sensor owner have ultimate say in what the sensor can _do_ using a flexible
+"actions" concept (see [Writing Custom
+Actions](DEVELOPING.md#writing-custom-actions)).
 
 Lastly, we have many of our design and development discussions right here on
 GitHub. If you find a bug or have a use-case that we don't currently support,
