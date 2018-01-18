@@ -8,13 +8,10 @@ next-generation technologies can be introduced without interfering with the
 existing system that we all rely on. `scos-sensor` is open source and automates
 the boring parts of performing some action with a sensor over the Internet,
 while keeping the concepts of "action" and "sensor" loose enough to be broadly
-useful. Just add an adapter for your desired sensor, implement one or more
-actions to expose to the API, and you have a robust (over 180 automated tests;
-self-healing architecture), secure (user authentication; traffic encryption on
-by default) remote sensing solution.
+useful.
 
 
-## Features:
+**Features**:
 
  - Easy sensor control over RESTful API or [Browsable API](#browsable-api) website
  - Flexible, extensible, and open data format
@@ -51,7 +48,23 @@ Introduction
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
 Occupancy Sensing][ieee-link] (SCOS) sensor.
 
-# TODO: better technical introduction here.
+`scos-sensor` was designed with the following requirements in mind:
+
+ - Easy-to-use sensor control and data retrieval via IP network
+ - Design flexibility to allow developers to evolve sensor technologies and
+   metrics
+ - Non-cost-prohibitive/non-proprietary development resources
+ - Hardware agnostic
+ - Discoverable sensor capabilities, i.e., high-level actions that can be
+   performed
+ - Scheduled actions, i.e., sensor hardware/software supported algorithms
+   performed at specified times
+ - Standardized metadata/data format that supports cooperative sensing and open
+   data initiatives
+ - Security controls that forbid unauthorized users to alter internal sensor
+   functions
+ - Easy-to-deploy with provisioned and configured OS
+ - Quality assurance of software via automated testing prior to release
 
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
@@ -67,7 +80,7 @@ a browser, you will see a frontend to the API that allows you to do anything
 the JSON API allows.
 
 Relationships in the API are represented by URLs which you can click to
-navigate front endpoint to endpoint. The full API is _discoverable_ simply by
+navigate from endpoint to endpoint. The full API is _discoverable_ simply by
 following these links:
 
 ![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
