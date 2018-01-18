@@ -1,4 +1,5 @@
 # Foreman and Puppet
+
 This project provides support for automatically provisioning and deploying the sensor code through the use of [The Foreman](https://www.theforeman.org) and [Puppet](https://puppet.com). This documentation does not cover the installation and setup of these tools, and assumes you are familiar with their use.
 
 ## Initial Setup
@@ -25,16 +26,16 @@ Once the `scos` Puppet module is installed, you will need to refresh Foreman thr
 
 The `scos` class has the following parameters which need to be set before it can be assigned to a sensor. Default values have been provided where possible:
 
-* `install source` -  Where the scos-sensor code will be sourced from. Either `dockerhub` or `github`. Dockerhub is primarily for production version, Github for development versions.  
-* `install version` - A variable pertaining to the branch (Github) or version (Dockerhub) to be installed on the sensor. **Note, the Dockerhub version functionality isn't currently implemented. The Dockerhub version is hard-coded in [docker-compose.yml](../docker-compose.yml) to use the latest version.**
-* `install root` - The location on the sensor where the scos-sensor code will be installed
-* `ssl dir` - Where the nginx ssl cert will be stored
-* `ssl cert` - The nginx SSL cert to be used on the sensor. You will need to use Foreman `Smart Class Parameter > ssl cert > Matchers` to assign a specific SSL cert to a single host, e.g. by matching on FQDN
-* `ssl key` - The private key associated with the nginx ssl cert. You will need to use Foreman `Smart Class Parameter > ssl key > Matchers` to assign a specific private key to a single host. e.g. by matching on FQDN. Make sure this variable has the `Hidden Value` checkbox selected.
+* `admin email` - Administrator email address for the sensor API.
+* `admin password` - Administrator password for the sensor API. If left blank, the sensor will auto-generate a random 12-digit password, and output it to .admin_password in the install root. It will also be reported as a Puppet fact after the second run.
 * `git password` - Github password to use when cloning the scos-sensor repository from Github to the sensor. Only required if using a Github private repository.
 * `git username` - Github username to use when cloning the scos-sensor repository from Github to the sensor. Only required if using a Github private repository.
-* `db admin email` - Administrator email address for the database
-* `db admin password` - Administrator password for the database
+* `install root` - The location on the sensor where the scos-sensor code will be installed.
+* `install source` -  Where the scos-sensor code will be sourced from. Either `dockerhub` or `github`. Dockerhub is primarily for production version, Github for development versions.  
+* `install version` - A variable pertaining to the branch (Github) or version (Dockerhub) to be installed on the sensor.
+* `ssl cert` - The nginx SSL cert to be used on the sensor. You will need to use Foreman `Smart Class Parameter > ssl cert > Matchers` to assign a specific SSL cert to a single host, e.g. by matching on FQDN.
+* `ssl dir` - Where the nginx ssl cert will be stored.
+* `ssl key` - The private key associated with the nginx ssl cert. You will need to use Foreman `Smart Class Parameter > ssl key > Matchers` to assign a specific private key to a single host. e.g. by matching on FQDN. Make sure this variable has the `Hidden Value` checkbox selected.
 
 ![scos class](/docs/img/foreman_scos_class.png?raw=true)
 
@@ -53,57 +54,63 @@ In addition to the `scos` class, the sensors will also need the following classe
 
 Once you have Foreman and Puppet setup as above, the procedure for creating a new SCOS sensor is as follows. From within Foreman under `Hosts > Create Host`
 
-### Host Tab  
-*  Name - Sensor hostname. This should match the SSL cert you are assigned to it above.  
-*  Host Group - Select the host group, if you are using this functionality.  
-*  Deploy On - Bare Metal
-*  Environment - Select the environment. This needs to match where you installed the SCOS Puppet module.  
-*  Puppet Master - Leave as inherited.  
-*  Puppet CA - Leave as inherited. 
+### Host Tab
+
+* Name - Sensor hostname. This should match the SSL cert you are assigned to it above.
+* Host Group - Select the host group, if you are using this functionality.
+* Deploy On - Bare Metal.
+* Environment - Select the environment. This needs to match where you installed the SCOS Puppet module.
+* Puppet Master - Leave as inherited
+* Puppet CA - Leave as inherited
 
 ![Host Tab](/docs/img/foreman_host_tab.png?raw=true)
 
-### Operating System Tab  
-*  Architecture - x86_64  
-*  Operating System - Ubuntu 16.04.3 LTS  
-*  Build - Checked  
-*  Media - Ubuntu mirror  
-*  Partition Table - Preseed default  
-*  PXE loader - PXELinux BIOS  
-*  Disk - Leave blank  
-*  Root pass - The system root password you wish to use.
+### Operating System Tab
+
+* Architecture - x86_64
+* Operating System - Ubuntu 16.04.3 LTS
+* Build - Checked
+* Media - Ubuntu mirror
+* Partition Table - Preseed default
+* PXE loader - PXELinux BIOS
+* Disk - Leave blank
+* Root pass - The system root password you wish to use
 
 ![Operating System Tab](/docs/img/foreman_os_tab.png?raw=true)
 
-### Interfaces Tab  
-* Edit the default Interface:  
-  * Type - Interface  
-  *  MAC Address - This must match the MAC address of the sensor NIC  
-  *  DNS Name - This should match the sensor hostname above  
-  *  Domain - Set what Foreman domain this sensor is being deployed to  
-  *  IPv4 Subnet - Set what Foreman subnet this sensor is being deployed to  
-  *  IPv6 Subnet - No subnets  
-  *  IPv4 Address - The IP you want the sensor to have. Must fall within IPv4 subnet  
-  *  IPv6 Address - Leave blank  
-  *  Managed - Checked  
-  *  Primary - Checked  
-  *  Provision - Checked  
-  *  Virtual NIC - Unchecked  
-  
+### Interfaces Tab
+
+* Edit the default Interface:
+* Type - Interface
+* MAC Address - This must match the MAC address of the sensor NIC
+* DNS Name - This should match the sensor hostname above
+* Domain - Set what Foreman domain this sensor is being deployed to
+* IPv4 Subnet - Set what Foreman subnet this sensor is being deployed to
+* IPv6 Subnet - No subnets
+* IPv4 Address - The IP you want the sensor to have. Must fall within IPv4 subnet
+* IPv6 Address - Leave blank
+* Managed - Checked
+* Primary - Checked
+* Provision - Checked
+* Virtual NIC - Unchecked
+
 ![Interfaces Tab](/docs/img/foreman_interface_tab.png?raw=true)
-      
-### Puppet Classes Tab  
-* See required modules listed above. These can be inherited based on the `Host Group`, if you selected it. If you want to assign the `scos` class at this time, this will install the scos-sensor code automatically, otherwise you'll need to assign it individually to the sensor after provisioning using `Hosts > All Hosts > <sensor name> > Edit > Puppet Classes > +socs`   
+
+### Puppet Classes Tab
+
+* See required modules listed above. These can be inherited based on the `Host Group`, if you selected it. If you want to assign the `scos` class at this time, this will install the scos-sensor code automatically, otherwise you'll need to assign it individually to the sensor after provisioning using `Hosts > All Hosts > <sensor name> > Edit > Puppet Classes > +socs`.
 
 ![Puppet Classes Tab](/docs/img/foreman_puppet_tab.png?raw=true)
 
-### Parameters Tab  
+### Parameters Tab
+
 * Leave alone
 
 ![Parameters Tab](/docs/img/foreman_parameters_tab.png?raw=true)
-    
-### Additional Information Tab  
-* Leave alone  
+
+### Additional Information Tab
+
+* Leave alone
 
 With all these parameters configured, select the `Submit` button. Foreman is now waiting for the sensor to contact it:  
 
