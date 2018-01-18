@@ -10,21 +10,6 @@ the boring parts of performing some action with a sensor over the Internet,
 while keeping the concepts of "action" and "sensor" loose enough to be broadly
 useful.
 
-
-**Features**:
-
- - Easy sensor control over RESTful API or [Browsable API](#browsable-api) website
- - Flexible, extensible, and open data format
- - Common open source software stack
- - Pre-built Docker containers
- - Task scheduling
- - User authentication
- - Hardware agnostic (see [Supporting a Different
-   SDR](DEVELOPING.md#supporting-a-different-sdr))
- - Flexible concept of "actions" (see [Writing Custom
-   Actions](DEVELOPING.md#writing-custom-actions))
-
-
 [NTIA/ITS]: https://its.bldrdoc.gov/
 
 
@@ -32,9 +17,9 @@ Table of Contents
 -----------------
 
  - [Introduction](#introduction)
- - [Browsable API](#browsable-api)
  - [Quickstart](#quickstart)
  - [Large Deployments](#large-deployments)
+ - [Browsable API](#browsable-api)
  - [Architecture](#architecture)
  - [Glossary](#glossary)
  - [References](#references)
@@ -44,20 +29,22 @@ Table of Contents
 Introduction
 ------------
 
+Hint: It may help to read the [Glossary][#glossary] first.
+
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
 Occupancy Sensing][ieee-link] (SCOS) sensor.
 
-`scos-sensor` was designed with the following requirements in mind:
+It was designed with the following requirements in mind:
 
  - Easy-to-use sensor control and data retrieval via IP network
+ - low-cost, open-source development resources
  - Design flexibility to allow developers to evolve sensor technologies and
    metrics
- - Non-cost-prohibitive/non-proprietary development resources
  - Hardware agnostic
  - Discoverable sensor capabilities, i.e., high-level actions that can be
    performed
- - Scheduled actions, i.e., sensor hardware/software supported algorithms
+ - Schedulable actions, i.e., sensor hardware/software supported algorithms
    performed at specified times
  - Standardized metadata/data format that supports cooperative sensing and open
    data initiatives
@@ -66,32 +53,53 @@ Occupancy Sensing][ieee-link] (SCOS) sensor.
  - Easy-to-deploy with provisioned and configured OS
  - Quality assurance of software via automated testing prior to release
 
+Sensor control is accomplished through a RESTful API. The API is designed to be
+rich enough so that multiple sensors can be automated effectively while being
+simple enough to still be useful for single-sensor deployments. For example, by
+advertising capabilites and location, an owner of multiple sensors can easily
+filter by frequency range, available actions, or goegraphic location. Yet,
+since each sensor hosts its own [Browsable API](#browsable-api), controlling
+small deployments is as easy as clicking around a website.
+
+When a task acquires data, that data and a significant amount of metadata are
+stored in a local database. The full metadata can be read directly through the
+self-hosting website or retrieved in plain text via a single API call. Our
+metadata and data format is an extension of, and fully compatible with, the
+[SigMF](https://github.com/gnuradio/sigmf) specification. See the
+[References][#references] section for a link fully describing the `scos`
+namespace SigMF specification.
+
+When deploying equipment remotely, the robustness and security of its software
+becomes a prime concern. `scos-sensor` sits on top of a very popular
+open-source framework, which provides out-of-the protection against cross site
+scripting (XSS), cross site request forgery (CSRF), SQL injection, and
+clickjacking attacks, and also enforces SSL/HTTPS (traffic encryption), host
+header validation, and user session security. In addition to these, we have
+implemented an unpriveleged user type so that the sensor owner can allow access
+to other users and API consumers while maintaining ultimate control. To
+minimize the chance of regressions while developing for the sensor, we have
+written almost 200 unit and integration tests. See [Developing](Developing.md)
+to learn how to run these tests, or continue on to the
+[Quickstart][#quickstart] section for how to spin up a production-grade sensor
+in just a few commands.
+
+We have tried to make these common hurdles to remotely deploying a sensor as
+painless as possible, while keeping in mind that the way people may want to use
+them are as varied as the types of sensors themselves. We have focused on
+generalization in two important places: by being as hardware agnostic as
+practical (see [Supporting a Different
+SDR](DEVELOPING.md#supporting-a-different-sdr)), and by letting the sensor
+owner have ultimate say what the sensor can _do_ using a flexible "actions"
+concept (see [Writing Custom Actions](DEVELOPING.md#writing-custom-actions)).
+
+Lastly, we have many of our design and development discussions right here on
+GitHub. If you find a bug or have a use-case that we don't currently support,
+feel free to open an issue.
+
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
 [Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
 [ieee-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
-
-
-Browsable API
--------------
-
-Opening the URL to your sensor (`localhost` if you followed the Quickstart) in
-a browser, you will see a frontend to the API that allows you to do anything
-the JSON API allows.
-
-Relationships in the API are represented by URLs which you can click to
-navigate from endpoint to endpoint. The full API is _discoverable_ simply by
-following these links:
-
-![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
-
-Scheduling an action is as simple as filling out a short form:
-
-![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
-
-Actions that have been scheduled show up in the schedule entry list:
-
-![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
 
 Quickstart
@@ -127,9 +135,33 @@ $ docker-compose up
 Large Deployments
 -----------------
 
-The best way to manage multiple SCOS Sensors is via Foreman and Puppet. For
-detailed instructions, see [the Foreman and Puppet
-README](puppet/README.md).
+Large sensor deployments present unique challenges. At NTIA/ITS, we use Foreman
+and Puppet to handle hardware provisioning and configuration management. While
+a ground-up introduction to these tools is outside the scope of this
+repository, The [Foreman and Puppet README](puppet/README.md) should be enough
+to help someone familiar with these tools get up to speed.
+
+
+Browsable API
+-------------
+
+Opening the URL to your sensor (`localhost` if you followed the Quickstart) in
+a browser, you will see a frontend to the API that allows you to do anything
+the JSON API allows.
+
+Relationships in the API are represented by URLs which you can click to
+navigate from endpoint to endpoint. The full API is _discoverable_ simply by
+following these links:
+
+![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
+
+Scheduling an action is as simple as filling out a short form:
+
+![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
+
+Actions that have been scheduled show up in the schedule entry list:
+
+![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
 
 Architecture
@@ -192,14 +224,13 @@ Reference](#api-reference).
  - *schedule*: The collection of all schedule entries (active and inactive) on
    the sensor.
 
- - *scheduler*: A thread that consumes times from active entries and executes
-   the requested action. The scheduler reads the schedule at most once a second
-   and *consumes* all past and present times for each active entry in the
-   schedule. The latest task per entry is then added to a priority queue, and
-   the scheduler executes the associated actions and stores/POSTs tasks
-   results. The scheduler operates in a simple blocking fashion, which
-   significantly simplifies resources deconfliction, but means that it cannot
-   guarantee a task is run at the requested time.
+ - *scheduler*: A thread responsible for executing the schedule. The scheduler
+   reads the schedule at most once a second and *consumes* all past and present
+   times for each active entry in the schedule. The latest task per entry is
+   then added to a priority queue, and the scheduler executes the associated
+   actions and stores/POSTs tasks results. The scheduler operates in a simple
+   blocking fashion, which significantly simplifies resources deconfliction,
+   but means that it cannot guarantee a task is run at the requested time.
 
  - *schedule entry*: Describes a series of scheduler tasks. A schedule entry is
    at minimum a human readable name and an associated action. Combining
