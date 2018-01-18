@@ -34,7 +34,7 @@ Introduction
 `scos-sensor` was designed by NTIA/ITS with the following goals in mind:
 
  - Easy-to-use sensor control and data retrieval via IP network
- - low-cost, open-source development resources
+ - Low-cost, open-source development resources
  - Design flexibility to allow developers to evolve sensor technologies and
    metrics
  - Hardware agnostic
