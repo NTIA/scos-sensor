@@ -2,30 +2,33 @@ NTIA/ITS SCOS Sensor
 ====================
 
 `scos-sensor` is a platform for operating a sensor, such as a software-defined
-radio, over a network. It's developed by [NTIA/ITS] [Spectrum Monitoring] group
-to help us better understand how radio spectrum is being used, so that
+radio (SDR), over a network. It's developed by [NTIA/ITS] Spectrum Monitoring
+group to help us better understand how radio spectrum is being used, so that
 next-generation technologies can be introduced without interfering with the
 existing system that we all rely on. `scos-sensor` is open source and automates
 the boring parts of performing some action with a sensor over the Internet,
 while keeping the concepts of "action" and "sensor" loose enough to be broadly
-useful.
+useful. Just add an "adapter" for your desired sensor, implement one or more
+"actions" to expose to the API, and get a robust (over 180 automated tests;
+self-healing architecture), secure (user authentication; traffic encryption on
+by default) remote spectrum monitoring solution.
+
 
 ## Features:
 
+ - Easy sensor control over RESTful API or [Browsable API](#browsable-api) website
+ - Flexible, extensible, and open data format
  - Common open source software stack
  - Pre-built Docker containers
- - [Browsable](#browsable-api) RESTful API
- - Flexible, extensible, and open data format
  - Task scheduling
- - User authenication
- - Loosely coupled to SDR (see [Supporting a Different
+ - User authentication
+ - Hardware agnostic (see [Supporting a Different
    SDR](DEVELOPING.md#supporting-a-different-sdr))
  - Flexible concept of "actions" (see [Writing Custom
    Actions](DEVELOPING.md#writing-custom-actions))
 
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
-[Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
 
 
 Table of Contents
@@ -47,6 +50,8 @@ Introduction
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
 Occupancy Sensing][ieee-link] (SCOS) sensor.
+
+# TODO: better technical introduction here.
 
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
