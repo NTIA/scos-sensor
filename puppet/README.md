@@ -83,6 +83,7 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
 * Edit the default Interface:
 * Type - Interface
 * MAC Address - This must match the MAC address of the sensor NIC
+* Device Identifier - Not required
 * DNS Name - This should match the sensor hostname above
 * Domain - Set what Foreman domain this sensor is being deployed to
 * IPv4 Subnet - Set what Foreman subnet this sensor is being deployed to
@@ -104,13 +105,24 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
 
 ### Parameters Tab
 
-* Leave alone
+* Leave this section alone, unless you want to make custom changes to the [scos class](./README.md#puppet) operating on this host. I.e.:
+* admin_email
+* admin_password
+* git_username
+* git_password
+* install-source
+* install_version
+* ssl_cert
+* ssl_key
 
 ![Parameters Tab](/docs/img/foreman_parameters_tab.png?raw=true)
 
 ### Additional Information Tab
 
-* Leave alone
+* Owned By - Who should own and manage the host
+* Enabled - Checked
+* Hardware Model - Leave blank. This will be automatically populated
+* Comment - As needed
 
 With all these parameters configured, select the `Submit` button. Foreman is now waiting for the sensor to contact it:  
 
