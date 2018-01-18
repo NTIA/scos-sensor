@@ -29,7 +29,7 @@ Table of Contents
 Introduction
 ------------
 
-**Note**: It may help to read the [Glossary][#glossary] first.
+**Note**: It may help to read the [Glossary](#glossary) first.
 
 `scos-sensor` was designed by NTIA/ITS with the following goals in mind:
 
