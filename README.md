@@ -1,16 +1,16 @@
 NTIA/ITS SCOS Sensor
 ====================
 
-`scos-sensor` is a platform for operating a sensor, such as a software-defined
-radio (SDR), over a network. It's developed by [NTIA/ITS] Spectrum Monitoring
-group to help us better understand how radio spectrum is being used, so that
-next-generation technologies can be introduced without interfering with the
-existing system that we all rely on. `scos-sensor` is open source and automates
-the boring parts of performing some action with a sensor over the Internet,
-while keeping the concepts of "action" and "sensor" loose enough to be broadly
-useful.
+`scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
+reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
+Occupancy Sensing][ieee-link] (SCOS) sensor. It is a platform for operating a
+sensor, such as a software-defined radio (SDR), over a network. The goal is to
+provide a robust, flexible, and secure starting point for remote spectrum
+monitoring.
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
+[Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
+[ieee-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
 
 
 Table of Contents
@@ -29,13 +29,9 @@ Table of Contents
 Introduction
 ------------
 
-Hint: It may help to read the [Glossary][#glossary] first.
+**Note**: It may help to read the [Glossary][#glossary] first.
 
-`scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
-reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
-Occupancy Sensing][ieee-link] (SCOS) sensor.
-
-It was designed with the following requirements in mind:
+`scos-sensor` was designed by NTIA/ITS with the following goals in mind:
 
  - Easy-to-use sensor control and data retrieval via IP network
  - low-cost, open-source development resources
@@ -95,11 +91,6 @@ concept (see [Writing Custom Actions](DEVELOPING.md#writing-custom-actions)).
 Lastly, we have many of our design and development discussions right here on
 GitHub. If you find a bug or have a use-case that we don't currently support,
 feel free to open an issue.
-
-
-[NTIA/ITS]: https://its.bldrdoc.gov/
-[Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
-[ieee-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
 
 
 Quickstart
