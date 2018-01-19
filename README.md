@@ -65,34 +65,35 @@ namespace SigMF specification.
 
 When deploying equipment remotely, the robustness and security of its software
 becomes a prime concern. `scos-sensor` sits on top of a popular open-source
-framework, which provides out-of-the-box protection against cross site
-scripting (XSS), cross site request forgery (CSRF), SQL injection, and
-clickjacking attacks, and also enforces SSL/HTTPS (traffic encryption), host
-header validation, and user session security. In addition to these, we have
-implemented an unpriveleged user type so that the sensor owner can allow access
-to other users and API consumers while maintaining ultimate control. To
-minimize the chance of regressions while developing for the sensor, we have
-written almost 200 unit and integration tests. See [Developing](Developing.md)
-to learn how to run these tests, or continue on to the
-[Quickstart](#quickstart) section for how to spin up a production-grade sensor
-in just a few commands.
+framework (see [Architecture](#architecture)), which provides out-of-the-box
+protection against cross site scripting (XSS), cross site request forgery
+(CSRF), SQL injection, and clickjacking attacks, and also enforces SSL/HTTPS
+(traffic encryption), host header validation, and user session security. In
+addition to these, we have implemented an unprivileged user type so that the
+sensor owner can allow access to other users and API consumers while
+maintaining ultimate control. To minimize the chance of regressions while
+developing for the sensor, we have written almost 200 unit and integration
+tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
 
 We have tried remove the most common hurdles to remotely deploying a sensor,
-while keeping in mind that the way people may want to use them are as varied as
-the types of sensors themselves. We have focused on generalization in two
-important places: by being as hardware agnostic as practical (see [Supporting a
-Different SDR](DEVELOPING.md#supporting-a-different-sdr)), and by letting the
-sensor owner have ultimate say in what the sensor can _do_ using a flexible
-"actions" concept (see [Writing Custom
-Actions](DEVELOPING.md#writing-custom-actions)).
+while maintaining flexibility in two key areas:
 
-Lastly, we have many of our design and development discussions right here on
-GitHub. If you find a bug or have a use-case that we don't currently support,
-feel free to open an issue.
+ - by being as hardware agnostic as practical (see [Supporting a Different
+   SDR](DEVELOPING.md#supporting-a-different-sdr)), and
+
+ - by using a flexible "actions" concept (see [Writing Custom
+   Actions](DEVELOPING.md#writing-custom-actions)), giving the sensor owner
+   control over what the sensor can be tasked to do
+
+We have many of our design and development discussions right here on GitHub. If
+you find a bug or have a use-case that we don't currently support, feel free to
+open an issue.
 
 
 Quickstart
 ----------
+
+This section describes how to spin up a production-grade sensor in just a few commands.
 
 1) Install `git`, `Docker`, and `docker-compose`.
 
@@ -184,9 +185,8 @@ repository. Many of these concepts map to endpoints detailed in the [API
 Reference](#api-reference).
 
  - *action*: A function that the sensor owner implements and exposes to the
-   API. Actions are one of the main concepts used by `scos-sensor`. At a high
-   level, they are the things that the sensor owner wants the sensor to be able
-   to *do*. Since actions block the scheduler while they run, they have
+   API. Actions are the things that the sensor owner wants the sensor to be
+   able to *do*. Since actions block the scheduler while they run, they have
    exclusive access to the sensor's resources (like the SDR). Currently, there
    are several logical groupings of actions, such as those that create
    acquisitions, or admin-only actions that handle administrative tasks.
@@ -202,25 +202,28 @@ Reference](#api-reference).
 
  - *admin*: A user account that has full control over the sensor and can create
    schedule entries and view, modify, or delete any other user's schedule
-   entries or acquisitions. Admins can create non-priveleged *user* accounts.
-   Admins can mark a schedule entry as private from unpriveleged users.
+   entries or acquisitions. Admins can create non-privileged *user* accounts.
+   Admins can mark a schedule entry as private from unprivileged users.
 
- - *capability*: A fact about some ability or limitation that the sensor has.
-   For example, is the sensor mobile or stationary? What is the frequency range
-   of the attached SDR? These values are generally hard-coded by the sensor
-   owner and rarely change. The actions registered on a sensor are considered
-   part of its capabilities.
+ - *capability*: Available actions, installation specifications (e.g., mobile
+   or stationary), and operational ranges of hardware components (e.g.,
+   frequency range of SDR). These values are generally hard-coded by the sensor
+   owner and rarely change.
 
  - *schedule*: The collection of all schedule entries (active and inactive) on
    the sensor.
 
  - *scheduler*: A thread responsible for executing the schedule. The scheduler
-   reads the schedule at most once a second and *consumes* all past and present
-   times for each active entry in the schedule. The latest task per entry is
-   then added to a priority queue, and the scheduler executes the associated
-   actions and stores/POSTs tasks results. The scheduler operates in a simple
-   blocking fashion, which significantly simplifies resources deconfliction,
-   but means that it cannot guarantee a task is run at the requested time.
+   reads the schedule at most once a second and consumes all past and present
+   times for each active schedule entry until the schedule is exhausted. The
+   latest task per schedule entry is then added to a priority queue, and the
+   scheduler executes the associated actions and stores/POSTs tasks results.
+   The scheduler operates in a simple blocking fashion, which significantly
+   simplifies resource deconfliction. When executing the task queue, the
+   scheduler makes a best effort to run each task at its designated time, but
+   the scheduler will not cancel a running task to start another task, even of
+   higher priority. *priority* is used to disambiguate two or more tasks that
+   are schedule to start at the same time.
 
  - *schedule entry*: Describes a series of scheduler tasks. A schedule entry is
    at minimum a human readable name and an associated action. Combining
@@ -233,12 +236,7 @@ Reference](#api-reference).
    be used with a future start time.
 
  - *task*: A representation of an action to be run at a specific time. A
-   schedule entry represents a range of tasks. The scheduler continues
-   populating its task queue with tasks until the schedule is exhausted. When
-   executing the task queue, the scheduler makes a best effort to run each task
-   at its designated time, but the scheduler will not cancel a running task to
-   start another task, even of higher priority. *priority* is used to
-   disambiguate two or more tasks that are schedule to start at the same time.
+   schedule entry represents a range of tasks.
 
  - *task result*: A record of the outcome of a task. A result is recorded for
    each task after the action function returns, and includes metadata such as
@@ -247,7 +245,7 @@ Reference](#api-reference).
    JSON object is also POSTed to a schedule entry's `callback_url`, if
    provided.
 
- - *user*: An unpriveleged account type which can create schedule entries and
+ - *user*: An unprivileged account type which can create schedule entries and
    view, modify, and delete things they own, but which cannot modify or delete
    things they don't own. Actions marked `admin_only` are not schedulable, and
    schedule entries marked private by an admin (along with their results and
