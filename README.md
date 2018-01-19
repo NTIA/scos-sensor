@@ -59,9 +59,9 @@ When a task acquires data, that data and a significant amount of metadata are
 stored in a local database. The full metadata can be read directly through the
 self-hosted website or retrieved in plain text via a single API call. Our
 metadata and data format is an extension of, and compatible with, the
-[SigMF](https://github.com/gnuradio/sigmf) specification. See the
-[References](#references) section for a link describing the `scos`
-namespace SigMF specification.
+[SigMF](https://github.com/gnuradio/sigmf) specification. The [SCOS Data
+Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec) describes
+the `scos` namespace.
 
 When deploying equipment remotely, the robustness and security of its software
 becomes a prime concern. `scos-sensor` sits on top of a popular open-source
