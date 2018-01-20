@@ -36,6 +36,9 @@ class Scheduler(threading.Thread):
         self.running = False
         self.interrupt_flag = threading.Event()
 
+        # Hack: scheduler needs to have _some_ request context to reverse URLs
+        self.request = None
+
     @property
     def schedule(self):
         """An updated view of the current schedule"""
@@ -106,7 +109,7 @@ class Scheduler(threading.Thread):
 
             try:
                 logger.debug("running task {}/{}".format(entry_name, task_id))
-                detail = next_task.action_fn(entry_name, task_id)
+                detail = next_task.action_fn(self.request, entry_name, task_id)
                 self.delayfn(0)  # let other threads run
                 result = 'success'
             except Exception as err:
@@ -114,8 +117,13 @@ class Scheduler(threading.Thread):
                 logger.exception("action failed: {}".format(detail))
                 result = 'failure'
 
-            # py2 compat: check for 'str' in py3
-            if not isinstance(detail, basestring):
+            if self.request is None:
+                msg = "reporting task result required a request but none set"
+                logger.warning(msg)
+                return
+
+            # py2.7 compat: check for 'str' in py3
+            if not isinstance(detail, basestring):  # noqa
                 detail = ""
 
             detail = detail[:MAX_DETAIL_LEN]
@@ -132,21 +140,25 @@ class Scheduler(threading.Thread):
                 detail=detail
             )
             result.save()
-            result_json = TaskResultSerializer(result)
-
-            def _post_logger(sess, resp):
-                if resp.ok:
-                    logger.info("POSTed {:!r} to {}".format(result, resp.url))
-                else:
-                    msg = "Failed to POST to {}: {}"
-                    logger.warning(msg.format(resp.url, resp.reason))
+            result_json = TaskResultSerializer(
+                result,
+                context={'request': self.request}
+            )
 
             if entry.callback_url:
                 requests_futures_session.post(
                     entry.callback_url,
                     json=result_json.data,
-                    background_callback=_post_logger,
+                    background_callback=self._callback_response_handler,
                 )
+
+    @staticmethod
+    def _callback_response_handler(sess, resp):
+        if resp.ok:
+            logger.info("POSTed to {}".format(resp.url))
+        else:
+            msg = "Failed to POST to {}: {}"
+            logger.warning(msg.format(resp.url, resp.reason))
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()

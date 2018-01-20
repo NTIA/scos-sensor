@@ -1,7 +1,9 @@
 import time
 import threading
+from functools import partial
 
 import pytest
+import requests_mock
 
 import actions
 from authentication.models import User
@@ -10,7 +12,10 @@ from scheduler.scheduler import Scheduler, minimum_duration
 from .utils import advance_testclock
 
 
-def create_entry(name, priority, start, stop, interval, action):
+BAD_ACTION_STR = "testing expected failure"
+
+
+def create_entry(name, priority, start, stop, interval, action, cb_url=None):
     kwargs = {
         'name': name,
         'priority': priority,
@@ -23,12 +28,19 @@ def create_entry(name, priority, start, stop, interval, action):
     if start is not None:
         kwargs['start'] = start
 
+    if cb_url is not None:
+        kwargs['callback_url'] = cb_url
+
     return ScheduleEntry.objects.create(**kwargs)
 
 
 def create_action():
     flag = threading.Event()
-    cb = lambda entry, task_id: flag.set()  # noqa: E731
+
+    def cb(ctx, entry, task_id):
+        flag.set()
+        return "set flag"
+
     cb.__name__ = 'testcb' + str(create_action.counter)
     actions.by_name[cb.__name__] = cb
     create_action.counter += 1
@@ -39,8 +51,8 @@ create_action.counter = 0
 
 
 def create_bad_action():
-    def bad_action():
-        raise Exception
+    def bad_action(ctx, entry, task_id):
+        raise Exception(BAD_ACTION_STR)
 
     actions.by_name['bad_action'] = bad_action
     return bad_action
@@ -335,6 +347,52 @@ def test_minimum_duration_non_blocking():
     stop = time.time()
     one_ms = 0.001
     assert (stop - start) <= one_ms
+
+
+@pytest.mark.django_db
+def test_failure_posted_to_callback_url(testclock, rf):
+    """If an entry has callback_url defined, scheduler should POST to it."""
+    cb_flag = threading.Event()
+
+    def cb_request_handler(sess, resp):
+        cb_flag.set()
+
+    cb = create_bad_action()
+    create_entry('t', 10, None, None, None, cb.__name__, 'mock://cburl')
+    s = Scheduler()
+    s.request = rf.post('mock://cburl/schedule')
+    s._callback_response_handler = cb_request_handler
+
+    with requests_mock.Mocker() as m:
+        m.post('mock://cburl')  # register url for posting
+        s.run(blocking=False)
+        time.sleep(0.1)  # let requests thread run
+
+    assert cb_flag.is_set()
+
+
+@pytest.mark.django_db
+def test_success_posted_to_callback_url(testclock, rf):
+    """If an entry has callback_url defined, scheduler should POST to it."""
+    cb_flag = threading.Event()
+
+    def cb_request_handler(sess, resp):
+        cb_flag.set()
+
+    cb, action_flag = create_action()
+    # less priority to force run after bad_entry fails
+    create_entry('t', 20,  None, None, None, cb.__name__, 'mock://cburl')
+    s = Scheduler()
+    s.request = rf.post('mock://cburl/schedule')
+    s._callback_response_handler = cb_request_handler
+
+    with requests_mock.Mocker() as m:
+        m.post('mock://cburl')  # register url for posting
+        s.run(blocking=False)
+        time.sleep(0.1)  # let requests thread run
+
+    assert cb_flag.is_set()
+    assert action_flag.is_set()
 
 
 def test_str():

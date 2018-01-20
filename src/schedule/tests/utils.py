@@ -44,5 +44,5 @@ def reverse_detail_url(entry_name):
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
 def flatten(list_of_lists):
-    "Flatten one level of nesting"
+    """Flatten one level of nesting."""
     return chain.from_iterable(list_of_lists)
