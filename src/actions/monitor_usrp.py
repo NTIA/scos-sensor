@@ -27,7 +27,7 @@ class USRPMonitor(Action):
 
         self.usrp = usrp  # make instance variable to allow hotswapping mock
 
-    def __call__(self, name, tid):
+    def __call__(self, req, name, tid):
         healthy = True
 
         logger.debug("Performing USRP health check")

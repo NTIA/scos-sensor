@@ -19,7 +19,7 @@ class Action(object):
     def __init__(self, admin_only=False):
         self.admin_only = admin_only
 
-    def __call__(self, schedule_entry_name, task_id):
+    def __call__(self, request, schedule_entry_name, task_id):
         raise NotImplementedError("Implement action logic.")
 
     @property

@@ -11,21 +11,24 @@ from sigmf.validate import validate as sigmf_validate
 import json
 import os
 
-SCHEMA_PATH = os.path.join(settings.REPO_ROOT,
-                           "config",
-                           "scos_transfer_spec_schema.json")
+
+SCHEMA_FNAME = "scos_transfer_spec_schema.json"
+SCHEMA_PATH = os.path.join(settings.REPO_ROOT, "config", SCHEMA_FNAME)
+
 with open(SCHEMA_PATH, "r") as f:
     schema = json.load(f)
 
 
-def test_detector(user_client):
+def test_detector(user_client, rf):
     # Put an entry in the schedule that we can refer to
     rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     task_id = rjson['next_task_id']
 
+    request = rf.post('mock://cburl/schedule')
+
     # use mock_acquire set up in conftest.py
-    by_name['mock_acquire'](entry_name, task_id)
+    by_name['mock_acquire'](request, entry_name, task_id)
     acquistion = Acquisition.objects.get(task_id=task_id)
     sigmf_metadata = acquistion.sigmf_metadata
     assert sigmf_validate(sigmf_metadata)

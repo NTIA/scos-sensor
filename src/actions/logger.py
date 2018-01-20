@@ -26,6 +26,6 @@ class Logger(Action):
         super(Logger, self).__init__(admin_only=admin_only)
         self.loglvl = loglvl
 
-    def __call__(self, name, tid):
+    def __call__(self, req, name, tid):
         msg = "running test {name}/{tid}"
         logger.log(level=self.loglvl, msg=msg.format(name=name, tid=tid))
