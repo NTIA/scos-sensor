@@ -74,7 +74,7 @@ class ResultInstanceViewSet(MultipleFieldLookupMixin,
                             GenericViewSet):
     """
     retrieve:
-    Returns all available metadata about an result.
+    Returns a specific result.
     """
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer

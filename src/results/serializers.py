@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
+from sensor import V1
 from .models import TaskResult
 
 
@@ -46,6 +47,7 @@ class TaskResultHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
             'schedule_entry_name': obj.schedule_entry.name,
             'task_id': obj.task_id
         }
+        kws.update(V1)
         return reverse(view_name, kwargs=kws, request=request, format=format)
 
 

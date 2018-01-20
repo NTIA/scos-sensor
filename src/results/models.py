@@ -38,5 +38,5 @@ class TaskResult(models.Model):
         super(TaskResult, self).save()
 
     def __str__(self):
-        s = "TasksResults {}/{}"
+        s = "{}/{}"
         return s.format(self.schedule_entry.name, self.task_id)
