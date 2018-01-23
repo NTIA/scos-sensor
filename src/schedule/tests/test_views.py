@@ -76,7 +76,7 @@ def test_get_entry(user_client):
     validate_response(user_client.get(good_url, **HTTPS_KWARG))
 
 
-def test_delete_entry_with_acquisitions_fails(user_client, testclock):
+def test_delete_entry_with_acquisitions_fails(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client)
     entry_url = reverse_detail_url(entry_name)
     response = user_client.delete(entry_url, **HTTPS_KWARG)

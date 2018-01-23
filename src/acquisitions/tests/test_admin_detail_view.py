@@ -10,7 +10,7 @@ from sensor.tests.utils import validate_response
 
 
 def test_admin_can_create_private_acquisition(admin_client, user_client,
-                                              testclock):
+                                              test_scheduler):
     private_entry_name = simulate_acquisitions(admin_client, is_private=True)
     private_acq_url = reverse_acquisition_detail(private_entry_name, 1)
 
@@ -20,7 +20,7 @@ def test_admin_can_create_private_acquisition(admin_client, user_client,
 
 
 def test_admin_can_view_all_acquisitions(admin_client, alternate_admin_client,
-                                         user_client, testclock):
+                                         user_client, test_scheduler):
     # alternate admin schedule entry
     alternate_admin_entry_name = simulate_acquisitions(
         alternate_admin_client, name='alternate_admin_single_acq')
@@ -42,7 +42,7 @@ def test_admin_can_view_all_acquisitions(admin_client, alternate_admin_client,
 
 def test_admin_can_view_private_acquisitions(admin_client,
                                              alternate_admin_client,
-                                             testclock):
+                                             test_scheduler):
     private_entry_name = simulate_acquisitions(
         alternate_admin_client, is_private=True)
     private_acq_url = reverse_acquisition_detail(private_entry_name, 1)
@@ -52,7 +52,7 @@ def test_admin_can_view_private_acquisitions(admin_client,
     validate_response(response, status.HTTP_200_OK)
 
 
-def test_admin_can_delete_their_acquisition(admin_client, testclock):
+def test_admin_can_delete_their_acquisition(admin_client, test_scheduler):
     entry_name = simulate_acquisitions(admin_client)
     acq_url = reverse_acquisition_detail(entry_name, 1)
 
@@ -65,7 +65,7 @@ def test_admin_can_delete_their_acquisition(admin_client, testclock):
 
 def test_admin_can_delete_other_acquisitions(admin_client,
                                              alternate_admin_client,
-                                             user_client, testclock):
+                                             user_client, test_scheduler):
     # alternate admin private schedule entry
     alternate_admin_entry_name = simulate_acquisitions(
         alternate_admin_client, name='alternate_admin_single_acq',
@@ -88,7 +88,7 @@ def test_admin_can_delete_other_acquisitions(admin_client,
         admin_delete_alternate_admin_response, status.HTTP_204_NO_CONTENT)
 
 
-def test_admin_cant_modify_their_acquisition(admin_client, testclock):
+def test_admin_cant_modify_their_acquisition(admin_client, test_scheduler):
     entry_name = simulate_acquisitions(admin_client)
     acq_url = reverse_acquisition_detail(entry_name, 1)
 
@@ -104,7 +104,7 @@ def test_admin_cant_modify_their_acquisition(admin_client, testclock):
 
 def test_user_cant_modify_other_acquisitions(admin_client,
                                              alternate_admin_client,
-                                             user_client, testclock):
+                                             user_client, test_scheduler):
     # alternate admin schedule entry
     alternate_admin_entry_name = simulate_acquisitions(
         alternate_admin_client, name='alternate_admin_single_acq')

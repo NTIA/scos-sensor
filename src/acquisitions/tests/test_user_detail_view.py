@@ -9,7 +9,7 @@ from acquisitions.tests.utils import (
 from sensor.tests.utils import validate_response
 
 
-def test_user_can_create_nonprivate_acquisition(user_client, testclock):
+def test_user_can_create_nonprivate_acquisition(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client)
     acq_url = reverse_acquisition_detail(entry_name, 1)
     response = user_client.get(acq_url, **HTTPS_KWARG)
@@ -19,7 +19,7 @@ def test_user_can_create_nonprivate_acquisition(user_client, testclock):
 
 def test_user_cant_create_private_acquisition(user_client,
                                               alternate_user_client,
-                                              testclock):
+                                              test_scheduler):
     # The alternate user attempts to create a private acquisition.
     entry_name = simulate_acquisitions(alternate_user_client, is_private=True)
     acq_url = reverse_acquisition_detail(entry_name, 1)
@@ -34,7 +34,7 @@ def test_user_cant_create_private_acquisition(user_client,
 
 def test_user_can_view_other_nonprivate_acquisitions(admin_client, user_client,
                                                      alternate_user_client,
-                                                     testclock):
+                                                     test_scheduler):
     # alternate user schedule entry
     alternate_user_entry_name = simulate_acquisitions(
         alternate_user_client, name='alternate_user_single_acq')
@@ -56,7 +56,7 @@ def test_user_can_view_other_nonprivate_acquisitions(admin_client, user_client,
 
 
 def test_user_cant_view_private_acquisitions(admin_client, user_client,
-                                             testclock):
+                                             test_scheduler):
     private_entry_name = simulate_acquisitions(admin_client, is_private=True)
     private_acq_url = reverse_acquisition_detail(private_entry_name, 1)
 
@@ -65,7 +65,7 @@ def test_user_cant_view_private_acquisitions(admin_client, user_client,
     validate_response(response, status.HTTP_403_FORBIDDEN)
 
 
-def test_user_can_delete_their_acquisition(user_client, testclock):
+def test_user_can_delete_their_acquisition(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client)
     acq_url = reverse_acquisition_detail(entry_name, 1)
 
@@ -77,7 +77,8 @@ def test_user_can_delete_their_acquisition(user_client, testclock):
 
 
 def test_user_cant_delete_other_acquisitions(admin_client, user_client,
-                                             alternate_user_client, testclock):
+                                             alternate_user_client,
+                                             test_scheduler):
     # alternate user schedule entry
     alternate_user_entry_name = simulate_acquisitions(
         alternate_user_client, name='alternate_user_single_acq')
@@ -100,7 +101,7 @@ def test_user_cant_delete_other_acquisitions(admin_client, user_client,
         user_delete_alternate_user_response, status.HTTP_403_FORBIDDEN)
 
 
-def test_user_cant_modify_their_acquisition(user_client, testclock):
+def test_user_cant_modify_their_acquisition(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client)
     acq_url = reverse_acquisition_detail(entry_name, 1)
 
@@ -115,7 +116,8 @@ def test_user_cant_modify_their_acquisition(user_client, testclock):
 
 
 def test_user_cant_modify_other_acquisitions(admin_client, user_client,
-                                             alternate_user_client, testclock):
+                                             alternate_user_client,
+                                             test_scheduler):
     # alternate user schedule entry
     alternate_user_entry_name = simulate_acquisitions(
         alternate_user_client, name='alternate_user_single_acq')

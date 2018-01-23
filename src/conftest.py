@@ -24,12 +24,23 @@ def pytest_collection_modifyitems(config, items):
 
 
 @pytest.yield_fixture
-def testclock():
+def test_scheduler(rf):
+    """Instantiate test scheduler with fake request context.
+
+    Replace scheduler's timefn with manually steppable test timefn.
+
+    """
+    # Setup test clock
     real_timefn = scheduler.scheduler.utils.timefn
     real_delayfun = scheduler.utils.delayfn
     scheduler.utils.timefn = scheduler.tests.utils.TestClock()
     scheduler.utils.delayfn = scheduler.tests.utils.delayfn
-    yield scheduler.utils.timefn
+
+    s = scheduler.scheduler.Scheduler()
+    s.request = rf.post('mock://cburl/schedule')
+    yield s
+
+    # Teardown test clock
     scheduler.utils.timefn = real_timefn
     scheduler.utils.delayfn = real_delayfun
 
@@ -90,8 +101,10 @@ def alternate_user_client(db, alternate_user):
 @pytest.fixture
 def alternate_admin_user(db, django_user_model, django_username_field):
     """A Django admin user.
+
     This uses an existing user with username "admin", or creates a new one with
     password "password".
+
     """
     UserModel = django_user_model
     username_field = django_username_field

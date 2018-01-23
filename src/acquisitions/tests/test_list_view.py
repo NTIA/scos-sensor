@@ -13,13 +13,13 @@ from schedule.tests.utils import post_schedule
 from sensor.tests.utils import validate_response
 
 
-def test_non_existent_entry(user_client, testclock):
+def test_non_existent_entry(user_client, test_scheduler):
     with pytest.raises(AssertionError):
         get_acquisition_list(user_client, 'doesntexist')
 
 
 @pytest.mark.django_db
-def test_entry_with_no_acquisition_response(user_client, testclock):
+def test_entry_with_no_acquisition_response(user_client, test_scheduler):
     entry = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
 
     with pytest.raises(AssertionError):
@@ -27,7 +27,7 @@ def test_entry_with_no_acquisition_response(user_client, testclock):
 
 
 @pytest.mark.django_db
-def test_single_acquisition_response(user_client, testclock):
+def test_single_acquisition_response(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=1)
     acquisition, = get_acquisition_list(user_client, entry_name)
     task_id = 1
@@ -38,7 +38,7 @@ def test_single_acquisition_response(user_client, testclock):
 
 
 @pytest.mark.django_db
-def test_multiple_acquisition_response(user_client, testclock):
+def test_multiple_acquisition_response(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=3)
     acquisitions = get_acquisition_list(user_client, entry_name)
     assert len(acquisitions) == 3
@@ -50,7 +50,7 @@ def test_multiple_acquisition_response(user_client, testclock):
 
 
 @pytest.mark.django_db
-def test_delete_list(user_client, testclock):
+def test_delete_list(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=3)
     url = reverse_acquisition_list(entry_name)
 

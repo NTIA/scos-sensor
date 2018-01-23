@@ -17,13 +17,13 @@ def test_empty_overview_response(user_client):
     assert response == EMPTY_ACQUISITIONS_RESPONSE
 
 
-def test_overview_exists_when_entry_created(user_client, testclock):
+def test_overview_exists_when_entry_created(user_client, test_scheduler):
     post_schedule(user_client, SINGLE_ACQUISITION)
     overview, = get_acquisitions_overview(user_client)
     assert overview['acquisitions_available'] == 0
 
 
-def test_get_overview(user_client, testclock):
+def test_get_overview(user_client, test_scheduler):
     entry1_name = simulate_acquisitions(user_client)
     overview, = get_acquisitions_overview(user_client)
 
@@ -42,7 +42,7 @@ def test_get_overview(user_client, testclock):
     assert overview2['acquisitions_available'] == 3
 
 
-def test_delete_overview_not_allowed(user_client, testclock):
+def test_delete_overview_not_allowed(user_client, test_scheduler):
     url = reverse_acquisitions_overview()
     response = user_client.delete(url, **HTTPS_KWARG)
     assert validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)

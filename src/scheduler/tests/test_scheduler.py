@@ -1,6 +1,5 @@
 import time
 import threading
-from functools import partial
 
 import pytest
 import requests_mock
@@ -59,41 +58,41 @@ def create_bad_action():
 
 
 @pytest.mark.django_db
-def test_populate_queue(testclock):
+def test_populate_queue(test_scheduler):
     """An entry in the schedule should be added to a read-only task queue."""
     create_entry('test', 1, 0, 5, 1, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)  # now=0, so task with time 0 is run
     assert [e.time for e in s.task_queue] == [1, 2, 3, 4]
 
 
 @pytest.mark.django_db
-def test_priority(testclock):
+def test_priority(test_scheduler):
     """A task with lower priority number should sort higher in task queue."""
     lopri = 20
     hipri = 10
     create_entry('lopri', lopri, 0, 5, 1, 'logger')
     create_entry('hipri', hipri, 0, 5, 1, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     q = s.task_queue.to_list()
-    assert len(s.task_queue) == 8
+    assert len(test_scheduler.task_queue) == 8
     assert all(e.priority is hipri for e in q[::2])   # tasks at 0, 2...
     assert all(e.priority is lopri for e in q[1::2])  # tasks at 1, 3...
 
 
 @pytest.mark.django_db
-def test_future_start(testclock):
+def test_future_start(test_scheduler):
     """An entry with start time in future should remain in schedule."""
     create_entry('t', 1, 50, 100, 1, 'logger')
-    s = Scheduler()
-    s.run(blocking=False)
+    test_scheduler.run(blocking=False)
+    s = test_scheduler
     assert len(s.task_queue) == 0
     assert len(s.schedule) == 1
 
 
 @pytest.mark.django_db
-def test_calls_actions(testclock):
+def test_calls_actions(test_scheduler):
     """The scheduler should call task's action function at the right time."""
     # This test works by registering a few test actions and ensuring the
     # scheduler calls them.
@@ -102,7 +101,7 @@ def test_calls_actions(testclock):
     for i, cb in enumerate(test_actions):
         create_entry('test' + str(i), 1, 0, 3, 1, cb.__name__)
 
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 5)
     assert s.timefn() == 5
@@ -113,10 +112,10 @@ def test_calls_actions(testclock):
 
 
 @pytest.mark.django_db
-def test_add_entry(testclock):
+def test_add_entry(test_scheduler):
     """Creating a new entry instance adds it to the current schedule."""
     create_entry('t1', 10, 1, 100, 5, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 49)
     create_entry('t2', 20, 50, 300, 5, 'logger')
@@ -126,11 +125,11 @@ def test_add_entry(testclock):
 
 
 @pytest.mark.django_db
-def test_remove_entry_by_delete(testclock):
+def test_remove_entry_by_delete(test_scheduler):
     """An entry is removed from schedule if it's deleted."""
     e1 = create_entry('t1', 10, 1, 300, 5, 'logger')
     e2 = create_entry('t2', 20, 50, 300, 5, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 10)
     e1.delete()
@@ -140,11 +139,11 @@ def test_remove_entry_by_delete(testclock):
 
 
 @pytest.mark.django_db
-def test_remove_entry_by_cancel(testclock):
+def test_remove_entry_by_cancel(test_scheduler):
     """scheduler.cancel removes an entry from schedule without deleting it."""
     e1 = create_entry('t1', 10, 1, 300, 5, 'logger')
     e2 = create_entry('t2', 20, 50, 300, 5, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 10)
     s.cancel(e1)
@@ -154,10 +153,10 @@ def test_remove_entry_by_cancel(testclock):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_start_stop(testclock):
+def test_start_stop(test_scheduler):
     """Calling stop on started scheduler thread should cause thread exit."""
     create_entry('t', 1, 1, 100, 5, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.start()
     time.sleep(0.02)  # hit minimum_duration
     advance_testclock(s.timefn, 1)
@@ -168,10 +167,10 @@ def test_start_stop(testclock):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_run_completes(testclock):
+def test_run_completes(test_scheduler):
     """The scheduler should return to idle state after schedule completes."""
     create_entry('t', 1, None, None, None, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.start()
     time.sleep(0.1)  # hit minimum_duration
     advance_testclock(s.timefn, 1)
@@ -183,23 +182,23 @@ def test_run_completes(testclock):
 
 
 @pytest.mark.django_db
-def test_survives_failed_action(testclock):
+def test_survives_failed_action(test_scheduler):
     """An action throwing an exception should be survivable."""
     cb1 = create_bad_action()
     create_entry('t1', 10, None, None, None, cb1.__name__)
     cb2, flag = create_action()
     # less priority to force run after bad_entry fails
     create_entry('t2', 20,  None, None, None, cb2.__name__)
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     assert flag.is_set()
 
 
 @pytest.mark.django_db
-def test_compress_past_times(testclock):
+def test_compress_past_times(test_scheduler):
     """Multiple task times in the past should be compressed to one."""
     create_entry('t', 1, -10, 5, 1, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     # past times -10 through 0 are compressed and a single task is run,
     # then 1, 2, 3, and 4 are queued
@@ -207,10 +206,10 @@ def test_compress_past_times(testclock):
 
 
 @pytest.mark.django_db
-def test_compress_past_times_offset(testclock):
+def test_compress_past_times_offset(test_scheduler):
     """Multiple task times in the past should be compressed to one."""
     create_entry('t', 1, -2, 14, 4, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     # past time -2 is run, then 2, 6, and 10 are queued
     # NOTE: time 14 isn't included because range is [-2, 14) interval 4
@@ -219,9 +218,9 @@ def test_compress_past_times_offset(testclock):
 
 # XXX: refactor
 @pytest.mark.django_db
-def test_next_task_time_value_when_start_changes(testclock):
+def test_next_task_time_value_when_start_changes(test_scheduler):
     entry = create_entry('t', 1, 1, 10, 1, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     assert entry.next_task_time == 1
     assert [task.time for task in s.task_queue[:5]] == [1, 2, 3, 4, 5]
@@ -254,9 +253,9 @@ def test_next_task_time_value_when_start_changes(testclock):
 
 # XXX: refactor
 @pytest.mark.django_db
-def test_next_task_time_value_when_interval_changes(testclock):
+def test_next_task_time_value_when_interval_changes(test_scheduler):
     entry = create_entry('t', 1, 1, 100, 1, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     assert entry.next_task_time == 1
     assert [task.time for task in s.task_queue[:5]] == [1, 2, 3, 4, 5]
@@ -281,19 +280,19 @@ def test_next_task_time_value_when_interval_changes(testclock):
 
 
 @pytest.mark.django_db
-def test_one_shot(testclock):
+def test_one_shot(test_scheduler):
     """If no start or interval given, entry should be run once and removed."""
     create_entry('t', 1, None, None, None, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)
     assert len(s.task_queue) == 0
     assert not s.schedule_has_entries
 
 
 @pytest.mark.django_db
-def test_task_queue(testclock):
+def test_task_queue(test_scheduler):
     e = create_entry('t', 1, 1, 100, 5, 'logger')
-    s = Scheduler()
+    s = test_scheduler
 
     # upcoming tasks are queued
     s.run(blocking=False)  # queue first 10 tasks
@@ -315,10 +314,10 @@ def test_task_queue(testclock):
 
 
 @pytest.mark.django_db
-def test_clearing_schedule_clears_task_queue(testclock):
+def test_clearing_schedule_clears_task_queue(test_scheduler):
     """The scheduler should empty task_queue when schedule is deleted."""
     create_entry('t', 1, 1, 100, 5, 'logger')
-    s = Scheduler()
+    s = test_scheduler
     s.run(blocking=False)  # queue first 10 tasks
     assert len(s.task_queue) == 10
     s.schedule.delete()
@@ -350,7 +349,7 @@ def test_minimum_duration_non_blocking():
 
 
 @pytest.mark.django_db
-def test_failure_posted_to_callback_url(testclock, rf):
+def test_failure_posted_to_callback_url(test_scheduler):
     """If an entry has callback_url defined, scheduler should POST to it."""
     cb_flag = threading.Event()
 
@@ -359,8 +358,7 @@ def test_failure_posted_to_callback_url(testclock, rf):
 
     cb = create_bad_action()
     create_entry('t', 10, None, None, None, cb.__name__, 'mock://cburl')
-    s = Scheduler()
-    s.request = rf.post('mock://cburl/schedule')
+    s = test_scheduler
     s._callback_response_handler = cb_request_handler
 
     with requests_mock.Mocker() as m:
@@ -372,7 +370,7 @@ def test_failure_posted_to_callback_url(testclock, rf):
 
 
 @pytest.mark.django_db
-def test_success_posted_to_callback_url(testclock, rf):
+def test_success_posted_to_callback_url(test_scheduler):
     """If an entry has callback_url defined, scheduler should POST to it."""
     cb_flag = threading.Event()
 
@@ -382,12 +380,11 @@ def test_success_posted_to_callback_url(testclock, rf):
     cb, action_flag = create_action()
     # less priority to force run after bad_entry fails
     create_entry('t', 20,  None, None, None, cb.__name__, 'mock://cburl')
-    s = Scheduler()
-    s.request = rf.post('mock://cburl/schedule')
+    s = test_scheduler
     s._callback_response_handler = cb_request_handler
 
     with requests_mock.Mocker() as m:
-        m.post('mock://cburl')  # register url for posting
+        m.post('mock://cburl')  # register mock url for posting
         s.run(blocking=False)
         time.sleep(0.1)  # let requests thread run
 
