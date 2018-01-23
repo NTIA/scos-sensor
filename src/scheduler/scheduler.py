@@ -83,7 +83,7 @@ class Scheduler(threading.Thread):
                 self.running = True
                 schedule_snapshot = self.schedule
                 pending_task_queue = self._queue_tasks(schedule_snapshot)
-                self._call_task_actions(pending_task_queue)
+                self._consume_task_queue(pending_task_queue)
 
             if not blocking or self.interrupt_flag.is_set():
                 break
@@ -100,57 +100,61 @@ class Scheduler(threading.Thread):
 
         return pending_task_queue
 
-    def _call_task_actions(self, pending_task_queue):
-        for next_task in pending_task_queue.to_list():
-            entry_name = next_task.schedule_entry_name
-            entry = ScheduleEntry.objects.get(name=entry_name)
-            task_id = next_task.task_id
-            started = timezone.now()
+    def _consume_task_queue(self, pending_task_queue):
+        for task in pending_task_queue.to_list():
+            result, started, finished, detail = self._call_task_action(task)
+            self._save_task_result(task, started, finished, result, detail)
 
-            try:
-                logger.debug("running task {}/{}".format(entry_name, task_id))
-                detail = next_task.action_fn(self.request, entry_name, task_id)
-                self.delayfn(0)  # let other threads run
-                result = 'success'
-            except Exception as err:
-                detail = str(err)
-                logger.exception("action failed: {}".format(detail))
-                result = 'failure'
+    def _call_task_action(self, task):
+        entry_name = task.schedule_entry_name
+        task_id = task.task_id
+        started = timezone.now()
 
-            if self.request is None:
-                msg = "reporting task result required a request but none set"
-                logger.warning(msg)
-                return
-
+        try:
+            logger.debug("running task {}/{}".format(entry_name, task_id))
+            detail = task.action_fn(self.request, entry_name, task_id)
+            self.delayfn(0)  # let other threads run
+            result = 'success'
             # py2.7 compat: check for 'str' in py3
             if not isinstance(detail, basestring):  # noqa
                 detail = ""
+        except Exception as err:
+            detail = str(err)
+            logger.exception("action failed: {}".format(detail))
+            result = 'failure'
 
-            detail = detail[:MAX_DETAIL_LEN]
+        finished = timezone.now()
 
-            finished = timezone.now()
+        return result, started, finished, detail[:MAX_DETAIL_LEN]
 
-            result = TaskResult(
-                schedule_entry=entry,
-                task_id=task_id,
-                started=started,
-                finished=finished,
-                duration=(finished - started),
-                result=result,
-                detail=detail
+    def _save_task_result(self, task, started, finished, result, detail):
+        entry_name = task.schedule_entry_name
+        entry = ScheduleEntry.objects.get(name=entry_name)
+        task_id = task.task_id
+
+        if self.request is None:
+            msg = "request context required to report task result but none set"
+            logger.warning(msg)
+            return
+
+        tr = TaskResult(
+            schedule_entry=entry,
+            task_id=task_id,
+            started=started,
+            finished=finished,
+            duration=(finished - started),
+            result=result,
+            detail=detail
+        ).save()
+
+        if entry.callback_url:
+            context = {'request': self.request}
+            result_json = TaskResultSerializer(tr, context=context).data
+            requests_futures_session.post(
+                entry.callback_url,
+                json=result_json,
+                background_callback=self._callback_response_handler,
             )
-            result.save()
-            result_json = TaskResultSerializer(
-                result,
-                context={'request': self.request}
-            )
-
-            if entry.callback_url:
-                requests_futures_session.post(
-                    entry.callback_url,
-                    json=result_json.data,
-                    background_callback=self._callback_response_handler,
-                )
 
     @staticmethod
     def _callback_response_handler(sess, resp):
