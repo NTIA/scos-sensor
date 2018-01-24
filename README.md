@@ -235,7 +235,10 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
    be scheduled until the schedule entry is manually deactivated. Leaving the
    interval undefined results in a "one-shot" entry, where the scheduler
    deactivates the entry after a single task is scheduled. One-shot entries can
-   be used with a future start time.
+   be used with a future start time. If two tasks are scheduled to run at the
+   same time, they will be run in order of *priority*. If two tasks are
+   scheduled to run at the same time and have the same *priority*, execution
+   order is implmenetation-dependent (undefined).
 
  - *task*: A representation of an action to be run at a specific time.
 
