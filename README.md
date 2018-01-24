@@ -63,12 +63,12 @@ metadata and data format is an extension of, and compatible with, the
 Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec) describes
 the `scos` namespace.
 
-When deploying equipment remotely, the robustness and security of its software
+When deploying equipment remotely, the robustness and security of software
 becomes a prime concern. `scos-sensor` sits on top of a popular open-source
 framework (see [Architecture](#architecture)), which provides out-of-the-box
 protection against cross site scripting (XSS), cross site request forgery
 (CSRF), SQL injection, and clickjacking attacks, and also enforces SSL/HTTPS
-(traffic encryption), host header validation, and *user* session security. In
+(traffic encryption), host header validation, and user session security. In
 addition to these, we have implemented an unprivileged *user* type so that the
 sensor owner can allow access to other users and API consumers while
 maintaining ultimate control. To minimize the chance of regressions while
@@ -76,12 +76,13 @@ developing for the sensor, we have written almost 200 unit and integration
 tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
 
 We have tried to remove the most common hurdles to remotely deploying a sensor
-while maintaining design flexibility. First, the API supports hardware agnostic
-sensor design principles (see [Supporting a Different
-SDR](DEVELOPING.md#supporting-a-different-sdr)). Secondly, we introduce the
-flexible "*actions*" concept (see [Writing Custom
-Actions](DEVELOPING.md#writing-custom-actions)), which simplifies *tasking* and
-gives the sensor owner control over what the sensor can be tasked to do.
+while maintaining flexibility in two key areas. First, the API itself is
+hardware agnostic, and the implementation assumes different hardware will be
+used depending on sensing requirements (see [Supporting a Different
+SDR](DEVELOPING.md#supporting-a-different-sdr)). Second, we introduce the
+high-level concept of "*actions*" (see [Writing Custom
+Actions](DEVELOPING.md#writing-custom-actions)), which gives the sensor owner
+control over what the sensor can be tasked to do.
 
 We have many of our design and development discussions right here on GitHub. If
 you find a bug or have a use-case that we don't currently support, feel free to
@@ -95,8 +96,8 @@ This section describes how to spin up a production-grade sensor in just a few co
 
 We currently support Ettus USRP B2xx software-defined radios out of the box,
 and any Intel-based host computer should work. ARM-based single-board computers
-have also been tested, but we do not prepare pre-build Docker containers for
-that at this time.
+have also been tested, but we do not prepare pre-build Docker containers at
+this time.
 
 1) Install `git`, `Docker`, and `docker-compose`.
 
@@ -119,9 +120,9 @@ $ source ./env
 
 ```bash
 $ ./scripts/init_db.sh
-$ docker-compose pull  # download all necessary images
-$ docker-compose run api /src/manage.py createsuperuser
-$ docker-compose up
+$ docker-compose up -d                                    # start in background
+$ docker-compose exec api /src/manage.py createsuperuser  # create admin user
+$ docker-compose logs --follow api                        # reattach terminal
 ```
 
 
@@ -148,7 +149,7 @@ following these links:
 
 ![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
 
-Scheduling an *action* is as simple as filling out a short form:
+Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 
 ![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
 
@@ -183,9 +184,7 @@ developers familiar with Python.
 Glossary
 --------
 
-In this section, we'll go over the high-level concepts used throughout this
-repository. Many of these concepts map to endpoints detailed in the [API
-Reference](#api-reference).
+In this section, we'll go over the high-level concepts used by `scos-sensor`.
 
  - *action*: A function that the sensor owner implements and exposes to the
    API. Actions are the things that the sensor owner wants the sensor to be
@@ -198,7 +197,7 @@ Reference](#api-reference).
    rotate an antenna, or start streaming data over a socket and only return
    when the recipient closes the connection.
 
- - *acquisition*: Some combination of data and metadata created by an action
+ - *acquisition*: The combination of data and metadata created by an action
    (though an action does not have to create an acquisition). Metadata is
    accessible directly though the API, while data is retrievable in an
    easy-to-use archive format with its associated metadata.
@@ -220,8 +219,8 @@ Reference](#api-reference).
    reads the schedule at most once a second and consumes all past and present
    times for each active schedule entry until the schedule is exhausted. The
    latest task per schedule entry is then added to a priority queue, and the
-   scheduler executes the associated actions and stores/POSTs tasks results.
-   The scheduler operates in a simple blocking fashion, which significantly
+   scheduler executes the associated actions and stores/POSTs task results. The
+   scheduler operates in a simple blocking fashion, which significantly
    simplifies resource deconfliction. When executing the task queue, the
    scheduler makes a best effort to run each task at its designated time, but
    the scheduler will not cancel a running task to start another task, even of
