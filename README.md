@@ -51,11 +51,11 @@ Sensor control is accomplished through a RESTful API. The API is designed to be
 rich enough so that multiple sensors can be automated effectively while being
 simple enough to still be useful for single-sensor deployments. For example, by
 advertising capabilites and location, an owner of multiple sensors can easily
-filter by frequency range, available actions, or geographic location. Yet,
+filter by frequency range, available *actions*, or geographic location. Yet,
 since each sensor hosts its own [Browsable API](#browsable-api), controlling
 small deployments is as easy as clicking around a website.
 
-When a task acquires data, that data and a significant amount of metadata are
+When a *task* acquires data, that data and a significant amount of metadata are
 stored in a local database. The full metadata can be read directly through the
 self-hosted website or retrieved in plain text via a single API call. Our
 metadata and data format is an extension of, and compatible with, the
@@ -68,22 +68,20 @@ becomes a prime concern. `scos-sensor` sits on top of a popular open-source
 framework (see [Architecture](#architecture)), which provides out-of-the-box
 protection against cross site scripting (XSS), cross site request forgery
 (CSRF), SQL injection, and clickjacking attacks, and also enforces SSL/HTTPS
-(traffic encryption), host header validation, and user session security. In
-addition to these, we have implemented an unprivileged user type so that the
+(traffic encryption), host header validation, and *user* session security. In
+addition to these, we have implemented an unprivileged *user* type so that the
 sensor owner can allow access to other users and API consumers while
 maintaining ultimate control. To minimize the chance of regressions while
 developing for the sensor, we have written almost 200 unit and integration
 tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
 
 We have tried to remove the most common hurdles to remotely deploying a sensor
-while maintaining flexibility in two key areas:
-
- - by being as hardware agnostic as practical (see [Supporting a Different
-   SDR](DEVELOPING.md#supporting-a-different-sdr)), and
-
- - by using a flexible "actions" concept (see [Writing Custom
-   Actions](DEVELOPING.md#writing-custom-actions)), giving the sensor owner
-   control over what the sensor can be tasked to do
+while maintaining design flexibility. First, the API supports hardware agnostic
+sensor design principles (see [Supporting a Different
+SDR](DEVELOPING.md#supporting-a-different-sdr)). Secondly, we introduce the
+flexible "*actions*" concept (see [Writing Custom
+Actions](DEVELOPING.md#writing-custom-actions)), which simplifies *tasking* and
+gives the sensor owner control over what the sensor can be tasked to do.
 
 We have many of our design and development discussions right here on GitHub. If
 you find a bug or have a use-case that we don't currently support, feel free to
@@ -94,6 +92,11 @@ Quickstart
 ----------
 
 This section describes how to spin up a production-grade sensor in just a few commands.
+
+We currently support Ettus USRP B2xx software-defined radios out of the box,
+and any Intel-based host computer should work. ARM-based single-board computers
+have also been tested, but we do not prepare pre-build Docker containers for
+that at this time.
 
 1) Install `git`, `Docker`, and `docker-compose`.
 
@@ -145,11 +148,11 @@ following these links:
 
 ![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
 
-Scheduling an action is as simple as filling out a short form:
+Scheduling an *action* is as simple as filling out a short form:
 
 ![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
 
-Actions that have been scheduled show up in the schedule entry list:
+*Actions* that have been scheduled show up in the *schedule entry* list:
 
 ![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
@@ -163,8 +166,8 @@ developers familiar with Python.
  - Persistent data is stored on disk in a file-based SQL database. If this
    simple database doesn't meet your needs, a heavier-duty SQL database like
    PostgreSQL or MariaDB can be dropped in with very little effort.
- - A scheduler thread running in a [Gunicorn] worker process periodically reads
-   the schedule from the database and performs the associated actions.
+ - A *scheduler* thread running in a [Gunicorn] worker process periodically reads
+   the *schedule* from the database and performs the associated *actions*.
  - A website and JSON RESTful API using [Django REST framework] is served over
    HTTPS via [NGINX], a high-performance web server. These provide easy
    administration over the sensor.
