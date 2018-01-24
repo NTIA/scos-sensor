@@ -228,7 +228,7 @@ Reference](#api-reference).
    higher priority. *priority* is used to disambiguate two or more tasks that
    are schedule to start at the same time.
 
- - *schedule entry*: Describes a series of scheduler tasks. A schedule entry is
+ - *schedule entry*: Describes a range of scheduler tasks. A schedule entry is
    at minimum a human readable name and an associated action. Combining
    different values of *start*, *stop*, *interval*, and *priority* allows for
    flexible task scheduling. If no start time is given, the first task is
@@ -238,8 +238,7 @@ Reference](#api-reference).
    deactivates the entry after a single task is scheduled. One-shot entries can
    be used with a future start time.
 
- - *task*: A representation of an action to be run at a specific time. A
-   schedule entry represents a range of tasks.
+ - *task*: A representation of an action to be run at a specific time.
 
  - *task result*: A record of the outcome of a task. A result is recorded for
    each task after the action function returns, and includes metadata such as
