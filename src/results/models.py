@@ -29,10 +29,16 @@ class TaskResult(models.Model):
         ordering = ('task_id',)
         unique_together = (('schedule_entry', 'task_id'),)
 
+    def __init__(self, *args, **kwargs):
+        super(TaskResult, self).__init__(*args, **kwargs)
+
+        # Allow Swapping max_results for testing
+        self.max_results = MAX_TASK_RESULTS
+
     def save(self):
         """Limit number of results to MAX_TASK_RESULTS by removing oldest."""
         objects = TaskResult.objects.all()
-        if objects.count() >= MAX_TASK_RESULTS:
+        if objects.count() >= self.max_results:
             objects[0].delete()
 
         super(TaskResult, self).save()
