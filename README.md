@@ -75,7 +75,7 @@ maintaining ultimate control. To minimize the chance of regressions while
 developing for the sensor, we have written almost 200 unit and integration
 tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
 
-We have tried remove the most common hurdles to remotely deploying a sensor,
+We have tried to remove the most common hurdles to remotely deploying a sensor
 while maintaining flexibility in two key areas:
 
  - by being as hardware agnostic as practical (see [Supporting a Different
