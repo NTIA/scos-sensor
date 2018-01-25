@@ -1,9 +1,6 @@
 from django.http import Http404
-from rest_framework import status
-from rest_framework.decorators import list_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
-from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from schedule.models import ScheduleEntry
@@ -55,18 +52,6 @@ class ResultListViewSet(MultipleFieldLookupMixin,
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
     lookup_fields = ('schedule_entry__name', 'task_id')
-
-    @list_route(methods=('delete',))
-    def destroy_all(self, request, version, schedule_entry_name):
-        queryset = self.get_queryset()
-        queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
-
-        if not queryset.exists():
-            raise Http404
-
-        queryset.delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ResultInstanceViewSet(MultipleFieldLookupMixin,
