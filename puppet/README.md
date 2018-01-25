@@ -74,7 +74,7 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
 * Partition Table - Preseed default
 * PXE loader - PXELinux BIOS
 * Disk - Leave blank
-* Root pass - The system root password you wish to use
+* Root pass - The system root password you wish to use. **Caution:** as there is no password confirmation box, the suggested procedure is to type the password into a text editor and copy/paste *carefully* into this field.
 
 ![Operating System Tab](/docs/img/foreman_os_tab.png?raw=true)
 
@@ -83,7 +83,7 @@ Once you have Foreman and Puppet setup as above, the procedure for creating a ne
 * Edit the default Interface:
 * Type - Interface
 * MAC Address - This must match the MAC address of the sensor NIC
-* Device Identifier - Not required
+* Device Identifier - Not required. Leave blank
 * DNS Name - This should match the sensor hostname above
 * Domain - Set what Foreman domain this sensor is being deployed to
 * IPv4 Subnet - Set what Foreman subnet this sensor is being deployed to
