@@ -23,7 +23,7 @@ def test_task_result_serializer(user_client):
 
 # FIXME: having problems reversing return-detail url, probably sth to do with
 # url path versioning
-@pytest.mark.skip
+@pytest.mark.xfail
 @pytest.mark.django_db
 def test_task_result_overview_serializer(user_client):
     from schedule.models import ScheduleEntry
