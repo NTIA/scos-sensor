@@ -51,7 +51,7 @@ def advance_testclock(iterator, n):
         try:
             next(islice(iterator, n, n), None)
         except TypeError:
-            err = "The calling test case requires the 'testclock' fixture."
+            err = "This test case requires the 'test_scheduler' fixture."
             raise TypeError(err)
 
 
