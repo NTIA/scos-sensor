@@ -21,11 +21,16 @@ EMPTY_RESULTS_RESPONSE = []
 
 def create_task_results(n, user_client, entry_name=None):
     # We need an entry in the schedule to create TRs for
-    if entry_name is None:
-        rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
-        entry_name = rjson['name']
+    try:
+        entry = ScheduleEntry.objects.get(name=entry_name)
+    except:
+        test_entry = TEST_SCHEDULE_ENTRY
+        if entry_name is not None:
+            test_entry['name'] = entry_name
 
-    entry = ScheduleEntry.objects.get(name=entry_name)
+        rjson = post_schedule(user_client, test_entry)
+        entry_name = rjson['name']
+        entry = ScheduleEntry.objects.get(name=entry_name)
 
     for i in range(n):
         started = timezone.now()
