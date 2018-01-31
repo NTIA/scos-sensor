@@ -23,7 +23,7 @@ def create_task_results(n, user_client, entry_name=None):
     # We need an entry in the schedule to create TRs for
     try:
         entry = ScheduleEntry.objects.get(name=entry_name)
-    except:
+    except Exception:
         test_entry = TEST_SCHEDULE_ENTRY
         if entry_name is not None:
             test_entry['name'] = entry_name
