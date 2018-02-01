@@ -6,7 +6,6 @@ from schedule.tests.utils import (
     EMPTY_SCHEDULE_RESPONSE,
     TEST_SCHEDULE_ENTRY,
     TEST_PRIVATE_SCHEDULE_ENTRY,
-    TEST_NONSENSE_SCHEDULE_ENTRY,
     post_schedule,
     reverse_detail_url
 )
@@ -14,7 +13,7 @@ from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
-def test_post_schedule(user_client):
+def test_entry_posted_to_schedule_is_immediately_available(user_client):
     rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)
@@ -26,21 +25,24 @@ def test_post_schedule(user_client):
     validate_response(user_response, status.HTTP_200_OK)
 
 
-def test_post_nonsense_schedule(user_client):
-    rjson = post_schedule(user_client, TEST_NONSENSE_SCHEDULE_ENTRY)
+def test_post_unknown_field_to_schedule(user_client):
+    """Unknown fields in a schedule entry should be ignored."""
+    entry_json = TEST_SCHEDULE_ENTRY.copy()
+    entry_json['nonsense'] = True
+    rjson = post_schedule(user_client, entry_json)
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)
     response = user_client.get(entry_url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_200_OK)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
         assert rjson[k] == v
 
     assert 'nonsense' not in rjson
-    validate_response(response, status.HTTP_200_OK)
     assert 'nonsense' not in response.data
 
 
-def test_private_schedule_is_private(admin_client, user_client):
+def test_private_schedule_entry_is_private(admin_client, user_client):
     rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)

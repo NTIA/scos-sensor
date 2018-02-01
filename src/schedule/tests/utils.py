@@ -28,12 +28,6 @@ TEST_PRIVATE_SCHEDULE_ENTRY = {
     'is_private': True
 }
 
-TEST_NONSENSE_SCHEDULE_ENTRY = {
-    'name': 'test_nonsense',
-    'action': 'logger',
-    'nonsense': True
-}
-
 
 def post_schedule(client, entry):
     kwargs = {

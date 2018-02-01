@@ -19,7 +19,7 @@ def test_post_admin_private_schedule(admin_client):
     entry_url = reverse('schedule-detail', kwargs=kws)
     admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
 
-    for k, v in TEST_SCHEDULE_ENTRY.items():
+    for k, v in TEST_PRIVATE_SCHEDULE_ENTRY.items():
         assert rjson[k] == v
 
     assert rjson['is_private']
