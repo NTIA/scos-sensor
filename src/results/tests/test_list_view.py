@@ -3,7 +3,6 @@ from rest_framework import status
 
 from acquisitions.tests.utils import simulate_acquisitions
 from results.tests.utils import (
-    EMPTY_RESULTS_RESPONSE,
     create_task_results,
     get_result_list,
     reverse_result_detail,
