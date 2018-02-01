@@ -18,37 +18,37 @@ def test_post_schedule(user_client):
     rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)
-    user_respose = user_client.get(entry_url, **HTTPS_KWARG)
+    user_response = user_client.get(entry_url, **HTTPS_KWARG)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
         assert rjson[k] == v
 
-    validate_response(user_respose, status.HTTP_200_OK)
+    validate_response(user_response, status.HTTP_200_OK)
 
 
 def test_post_nonsense_schedule(user_client):
     rjson = post_schedule(user_client, TEST_NONSENSE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)
-    user_respose = user_client.get(entry_url, **HTTPS_KWARG)
+    response = user_client.get(entry_url, **HTTPS_KWARG)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
         assert rjson[k] == v
 
     assert 'nonsense' not in rjson
-    validate_response(user_respose, status.HTTP_200_OK)
-    assert 'nonsense' not in user_respose.data
+    validate_response(response, status.HTTP_200_OK)
+    assert 'nonsense' not in response.data
 
 
 def test_private_schedule_is_private(admin_client, user_client):
     rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)
-    user_respose = user_client.get(entry_url, **HTTPS_KWARG)
-    admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
+    user_response = user_client.get(entry_url, **HTTPS_KWARG)
+    admin_user_response = admin_client.get(entry_url, **HTTPS_KWARG)
 
-    validate_response(user_respose, status.HTTP_403_FORBIDDEN)
-    validate_response(admin_user_respose, status.HTTP_200_OK)
+    validate_response(user_response, status.HTTP_403_FORBIDDEN)
+    validate_response(admin_user_response, status.HTTP_200_OK)
 
 
 def test_get_schedule(user_client):
@@ -78,7 +78,7 @@ def test_get_existing_entry_details_returns_200(user_client):
     entry_name = rjson['name']
     url = reverse_detail_url(entry_name)
     response = user_client.get(url, **HTTPS_KWARG)
-    validate_response(response, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_200_OK)
 
 
 def test_delete_entry_with_acquisitions_fails(user_client, test_scheduler):
