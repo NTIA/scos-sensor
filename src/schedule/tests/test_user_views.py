@@ -56,11 +56,14 @@ def test_user_cannot_view_private_entry_in_list(admin_client, user_client):
 
 
 def test_user_cannot_view_private_entry_details(admin_client, user_client):
+    """A user attempting to access a private entry should receive 404."""
+    # Private indicates admin wants users to be unaware that the entry exists
+    # on the system, hence 404 vs 403 (FORBIDDEN).
     rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
     url = reverse_detail_url(entry_name)
     response = user_client.get(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_403_FORBIDDEN)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
 
 
 def test_user_can_delete_their_entry(user_client):
@@ -98,7 +101,8 @@ def test_user_cannot_delete_any_other_entry(admin_client, user_client,
 
     validate_response(
         user_delete_alternate_user_response, status.HTTP_403_FORBIDDEN)
-    validate_response(user_delete_admin_response, status.HTTP_403_FORBIDDEN)
+    # Admin's entry is private, hence 404 instead of 403
+    validate_response(user_delete_admin_response, status.HTTP_404_NOT_FOUND)
 
 
 def test_user_can_modify_their_entry(user_client):
@@ -132,4 +136,5 @@ def test_user_cannot_modify_any_other_entry(admin_client, user_client,
 
     validate_response(
         user_adjust_alternate_user_response, status.HTTP_403_FORBIDDEN)
-    validate_response(user_adjust_admin_response, status.HTTP_403_FORBIDDEN)
+    # Admin's entry is private, hence 404 instead of 403
+    validate_response(user_adjust_admin_response, status.HTTP_404_NOT_FOUND)

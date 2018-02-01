@@ -42,6 +42,13 @@ def test_get_overview(user_client, test_scheduler):
     assert overview2['acquisitions_available'] == 3
 
 
+def test_overview_for_private_entry_is_private(admin_client, user_client,
+                                               test_scheduler):
+    simulate_acquisitions(admin_client, is_private=True)
+    overview = get_acquisitions_overview(user_client)
+    assert overview == []
+
+
 def test_delete_overview_not_allowed(user_client, test_scheduler):
     url = reverse_acquisitions_overview()
     response = user_client.delete(url, **HTTPS_KWARG)

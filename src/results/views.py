@@ -18,8 +18,17 @@ class ResultsOverviewViewSet(ListModelMixin, GenericViewSet):
     queryset = ScheduleEntry.objects.all()
     serializer_class = TaskResultsOverviewSerializer
 
+    def get_queryset(self):
+        # .list() does not call .get_object(), which triggers permissions
+        # checks, so we need to filter our queryset based on `is_private` and
+        # request user.
+        base_queryset = self.filter_queryset(self.queryset)
+        if self.request.user.is_staff:
+            return base_queryset
+        else:
+            return base_queryset.filter(is_private=False)
 
-# FIXME: this is identical to the one in acquisitions/views.py
+
 class MultipleFieldLookupMixin(object):
     """Get multiple field filtering based on a `lookup_fields` attribute."""
     def get_queryset(self):
@@ -27,6 +36,8 @@ class MultipleFieldLookupMixin(object):
         base_queryset = self.filter_queryset(base_queryset)
 
         filter = {'schedule_entry__name': self.kwargs['schedule_entry_name']}
+        if not self.request.user.is_staff:
+            filter.update({'schedule_entry__is_private': False})
 
         queryset = base_queryset.filter(**filter)
 

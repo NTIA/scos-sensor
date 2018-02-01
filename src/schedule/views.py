@@ -40,6 +40,16 @@ class ScheduleEntryViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def get_queryset(self):
+        # .list() does not call .get_object(), which triggers permissions
+        # checks, so we need to filter our queryset based on `is_private` and
+        # request user.
+        base_queryset = self.filter_queryset(self.queryset)
+        if self.request.user.is_staff:
+            return base_queryset
+        else:
+            return base_queryset.filter(is_private=False)
+
     def get_serializer_class(self):
         if self.action == 'create':
             if self.request and self.request.user.is_staff:

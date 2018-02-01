@@ -49,7 +49,7 @@ def test_private_schedule_entry_is_private(admin_client, user_client):
     user_response = user_client.get(entry_url, **HTTPS_KWARG)
     admin_user_response = admin_client.get(entry_url, **HTTPS_KWARG)
 
-    validate_response(user_response, status.HTTP_403_FORBIDDEN)
+    validate_response(user_response, status.HTTP_404_NOT_FOUND)
     validate_response(admin_user_response, status.HTTP_200_OK)
 
 
