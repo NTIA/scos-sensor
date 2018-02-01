@@ -5,12 +5,10 @@ from acquisitions.tests.utils import (
     get_acquisition_list,
     reverse_acquisition_detail,
     reverse_acquisition_list,
-    simulate_acquisitions,
-    HTTPS_KWARG
+    simulate_acquisitions
 )
-from schedule.tests import TEST_SCHEDULE_ENTRY
-from schedule.tests.utils import post_schedule
-from sensor.tests.utils import validate_response
+from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
+from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
 def test_non_existent_entry(user_client, test_scheduler):

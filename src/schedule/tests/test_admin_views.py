@@ -1,13 +1,14 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from schedule.tests import TEST_SCHEDULE_ENTRY, TEST_PRIVATE_SCHEDULE_ENTRY
-from schedule.tests.utils import post_schedule, update_schedule
+from schedule.tests.utils import (
+    TEST_SCHEDULE_ENTRY,
+    TEST_PRIVATE_SCHEDULE_ENTRY,
+    post_schedule,
+    update_schedule
+)
 from sensor import V1
-from sensor.tests.utils import validate_response
-
-
-HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
+from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
 def test_post_admin_private_schedule(admin_client):
@@ -19,7 +20,7 @@ def test_post_admin_private_schedule(admin_client):
     admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
 
     for k, v in TEST_SCHEDULE_ENTRY.items():
-        rjson[k] == v
+        assert rjson[k] == v
 
     assert rjson['is_private']
     validate_response(admin_user_respose, status.HTTP_200_OK)

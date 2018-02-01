@@ -1,30 +1,28 @@
 from rest_framework import status
+from rest_framework.reverse import reverse
 
-from schedule.tests import (
+from schedule.tests.utils import (
+    EMPTY_SCHEDULE_RESPONSE,
     TEST_SCHEDULE_ENTRY,
     TEST_PRIVATE_SCHEDULE_ENTRY,
-    TEST_ALTERNATE_SCHEDULE_ENTRY
-)
-from schedule.tests.utils import (
+    TEST_ALTERNATE_SCHEDULE_ENTRY,
     post_schedule,
     update_schedule,
     reverse_detail_url
 )
-from sensor.tests.utils import validate_response
+from sensor import V1
+from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
-HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
-
-
-def test_user_cant_post_private_schedule(user_client):
+def test_user_cannot_post_private_schedule(user_client):
+    """Unpriveleged users should not be able to create private entries."""
     rjson = post_schedule(user_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
-    entry_url = reverse_detail_url(entry_name)
-    user_respose = user_client.get(entry_url, **HTTPS_KWARG)
-
+    url = reverse_detail_url(entry_name)
+    response = user_client.get(url, **HTTPS_KWARG)
     assert not rjson['is_private']
-    validate_response(user_respose, status.HTTP_200_OK)
-    assert not user_respose.data['is_private']
+    validate_response(response, status.HTTP_200_OK)
+    assert not response.data['is_private']
 
 
 def test_user_can_view_non_private_entries(admin_client, user_client,
@@ -45,19 +43,24 @@ def test_user_can_view_non_private_entries(admin_client, user_client,
 
     user_view_admin_response = user_client.get(admin_entry_url, **HTTPS_KWARG)
 
-    validate_response(
-        user_view_alternate_user_response, status.HTTP_200_OK)
+    validate_response(user_view_alternate_user_response, status.HTTP_200_OK)
     validate_response(user_view_admin_response, status.HTTP_200_OK)
 
 
-def test_user_cant_view_private_entry(admin_client, user_client):
+def test_user_cannot_view_private_entry_in_list(admin_client, user_client):
+    post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+    url = reverse('schedule-list', kwargs=V1)
+    response = user_client.get(url, **HTTPS_KWARG)
+    rjson = validate_response(response, status.HTTP_200_OK)
+    assert rjson == EMPTY_SCHEDULE_RESPONSE
+
+
+def test_user_cannot_view_private_entry_details(admin_client, user_client):
     rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     entry_name = rjson['name']
-    entry_url = reverse_detail_url(entry_name)
-
-    user_respose = user_client.get(entry_url, **HTTPS_KWARG)
-
-    validate_response(user_respose, status.HTTP_403_FORBIDDEN)
+    url = reverse_detail_url(entry_name)
+    response = user_client.get(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_403_FORBIDDEN)
 
 
 def test_user_can_delete_their_entry(user_client):
@@ -65,15 +68,17 @@ def test_user_can_delete_their_entry(user_client):
     entry_name = rjson['name']
     entry_url = reverse_detail_url(entry_name)
 
+    # First attempt to delete should return 204
     response = user_client.delete(entry_url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_204_NO_CONTENT)
 
+    # Second attempt to delete should return 404
     response = user_client.delete(entry_url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_404_NOT_FOUND)
 
 
-def test_user_cant_delete_any_other_entry(admin_client, user_client,
-                                          alternate_user_client):
+def test_user_cannot_delete_any_other_entry(admin_client, user_client,
+                                            alternate_user_client):
     # alternate user schedule entry
     alternate_user_rjson = post_schedule(
         alternate_user_client, TEST_SCHEDULE_ENTRY)
@@ -108,8 +113,8 @@ def test_user_can_modify_their_entry(user_client):
     assert user_adjust_repose.data['priority'] == 5
 
 
-def test_user_cant_modify_any_other_entry(admin_client, user_client,
-                                          alternate_user_client):
+def test_user_cannot_modify_any_other_entry(admin_client, user_client,
+                                            alternate_user_client):
     # alternate user schedule entry
     alternate_user_rjson = post_schedule(
         alternate_user_client, TEST_SCHEDULE_ENTRY)

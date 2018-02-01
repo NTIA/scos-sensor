@@ -1,7 +1,9 @@
 import pytest
 from rest_framework import status
 
+from acquisitions.tests.utils import simulate_acquisitions
 from results.tests.utils import (
+    EMPTY_RESULTS_RESPONSE,
     create_task_results,
     get_result_list,
     reverse_result_detail,
@@ -35,6 +37,14 @@ def test_multiple_result_response(user_client, test_scheduler):
         expected_url = reverse_result_detail(entry_name, i)
         assert acq['url'] == expected_url
         assert acq['task_id'] == i
+
+
+def test_private_entry_results_list_is_private(admin_client, user_client,
+                                               test_scheduler):
+    entry_name = simulate_acquisitions(admin_client, is_private=True)
+    url = reverse_result_list(entry_name)
+    response = user_client.get(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
 
 
 @pytest.mark.django_db

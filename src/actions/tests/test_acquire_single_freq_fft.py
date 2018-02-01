@@ -4,8 +4,7 @@ from actions import by_name
 from acquisitions.models import Acquisition
 from django.conf import settings
 from jsonschema import validate as schema_validate
-from schedule.tests import TEST_SCHEDULE_ENTRY
-from schedule.tests.utils import post_schedule
+from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
 from sigmf.validate import validate as sigmf_validate
 
 import json

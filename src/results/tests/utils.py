@@ -7,8 +7,7 @@ from rest_framework import status
 
 from results.models import TaskResult
 from schedule.models import ScheduleEntry
-from schedule.tests import TEST_SCHEDULE_ENTRY
-from schedule.tests.utils import post_schedule
+from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
