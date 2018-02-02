@@ -29,6 +29,11 @@ def test_overview_for_private_entry_is_private(admin_client, user_client,
     overview = get_results_overview(user_client)
     assert overview == []
 
+    overview, = get_results_overview(admin_client)
+    assert overview['results_available'] == 1
+    assert overview['url']  # is non-empty string
+    assert overview['schedule_entry']  # is non-empty string
+
 
 def test_delete_overview_not_allowed(user_client):
     url = reverse_results_overview()

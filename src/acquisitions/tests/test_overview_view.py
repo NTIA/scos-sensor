@@ -48,6 +48,11 @@ def test_overview_for_private_entry_is_private(admin_client, user_client,
     overview = get_acquisitions_overview(user_client)
     assert overview == []
 
+    overview, = get_acquisitions_overview(admin_client)
+    assert overview['acquisitions_available'] == 1
+    assert overview['url']  # is non-empty string
+    assert overview['schedule_entry']  # is non-empty string
+
 
 def test_delete_overview_not_allowed(user_client, test_scheduler):
     url = reverse_acquisitions_overview()
