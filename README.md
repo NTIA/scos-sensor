@@ -224,8 +224,7 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
    simplifies resource deconfliction. When executing the task queue, the
    scheduler makes a best effort to run each task at its designated time, but
    the scheduler will not cancel a running task to start another task, even of
-   higher priority. *priority* is used to disambiguate two or more tasks that
-   are schedule to start at the same time.
+   higher priority.
 
  - *schedule entry*: Describes a range of scheduler tasks. A schedule entry is
    at minimum a human readable name and an associated action. Combining
@@ -238,7 +237,7 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
    be used with a future start time. If two tasks are scheduled to run at the
    same time, they will be run in order of *priority*. If two tasks are
    scheduled to run at the same time and have the same *priority*, execution
-   order is implmenetation-dependent (undefined).
+   order is implementation-dependent (undefined).
 
  - *task*: A representation of an action to be run at a specific time.
 
