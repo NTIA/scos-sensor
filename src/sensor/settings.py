@@ -113,7 +113,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'requset',  # django-request
+    'request',  # django-request
     'rest_framework',
     'rest_framework.authtoken',
     'drf_openapi',
