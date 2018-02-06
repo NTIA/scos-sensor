@@ -27,7 +27,7 @@ class USRPMonitor(Action):
 
         self.usrp = usrp  # make instance variable to allow hotswapping mock
 
-    def __call__(self, req, name, tid):
+    def __call__(self, name, tid):
         healthy = True
 
         logger.debug("Performing USRP health check")
@@ -48,16 +48,18 @@ class USRPMonitor(Action):
 
         requested_samples = 100000  # Issue #42 hit error at ~70k, so test more
 
+        detail = ""
+
         if healthy:
             try:
                 data = self.usrp.radio.acquire_samples(requested_samples)
             except Exception:
-                logger.exception("Unable to acquire USRP")
+                detail = "Unable to acquire USRP"
                 healthy = False
 
         if healthy:
             if not len(data) == requested_samples:
-                logger.warn("USRP data doesn't match request")
+                detail = "USRP data doesn't match request"
                 healthy = False
 
         if healthy:
@@ -69,3 +71,4 @@ class USRPMonitor(Action):
         else:
             logger.warn("USRP unhealthy")
             touch(SDR_HEALTHCHECK_FILE)
+            raise RuntimeError(detail)

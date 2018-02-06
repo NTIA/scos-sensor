@@ -75,10 +75,6 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         if 'start' in data and data['start'] is None:
             data.pop('start')
 
-        # Hack: scheduler needs to have _some_ request context to reverse URLs
-        from scheduler import scheduler
-        scheduler.thread.request = self.context['request']
-
         # py2.7 compat -> super().to_internal...
         cls = CreateScheduleEntrySerializer
         return super(cls, self).to_internal_value(data)

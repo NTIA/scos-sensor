@@ -92,7 +92,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.usrp = usrp  # make instance variable to allow hotswapping mock
         self.enbw = None
 
-    def __call__(self, request, schedule_entry_name, task_id):
+    def __call__(self, schedule_entry_name, task_id):
         from schedule.models import ScheduleEntry
 
         # raises ScheduleEntry.DoesNotExist if no matching schedule entry
@@ -107,7 +107,11 @@ class SingleFrequencyFftAcquisition(Action):
 
         kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
         kws.update(V1)
-        detail = reverse('acquisition-detail', kwargs=kws, request=request)
+        detail = reverse(
+            'acquisition-detail',
+            kwargs=kws,
+            request=parent_entry.request
+        )
 
         return detail
 
