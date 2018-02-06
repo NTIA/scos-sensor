@@ -24,7 +24,7 @@ class ResultsOverviewViewSet(ListModelMixin, GenericViewSet):
         # request user.
         base_queryset = self.filter_queryset(self.queryset)
         if self.request.user.is_staff:
-            return base_queryset
+            return base_queryset.all()
         else:
             return base_queryset.filter(is_private=False)
 
