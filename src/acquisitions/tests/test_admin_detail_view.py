@@ -19,16 +19,15 @@ def test_admin_can_create_private_acquisition(admin_client, user_client,
     validate_response(user_response, status.HTTP_403_FORBIDDEN)
 
 
-def test_admin_can_view_all_acquisitions(admin_client, alternate_admin_client,
+def test_admin_can_view_all_acquisitions(admin_client, alt_admin_client,
                                          user_client, test_scheduler):
-    # alternate admin schedule entry
-    alternate_admin_entry_name = simulate_acquisitions(
-        alternate_admin_client, name='alternate_admin_single_acq')
-    alternate_admin_acq_url = reverse_acquisition_detail(
-        alternate_admin_entry_name, 1)
+    # alt admin schedule entry
+    alt_admin_entry_name = simulate_acquisitions(
+        alt_admin_client, name='alt_admin_single_acq')
+    alt_admin_acq_url = reverse_acquisition_detail(alt_admin_entry_name, 1)
 
-    admin_view_alternate_admin_response = admin_client.get(
-        alternate_admin_acq_url, **HTTPS_KWARG)
+    admin_view_alt_admin_response = admin_client.get(
+        alt_admin_acq_url, **HTTPS_KWARG)
 
     # user schedule entry
     user_acq_name = simulate_acquisitions(user_client, name='admin_single_acq')
@@ -36,15 +35,14 @@ def test_admin_can_view_all_acquisitions(admin_client, alternate_admin_client,
 
     admin_view_user_response = admin_client.get(user_acq_url, **HTTPS_KWARG)
 
-    validate_response(admin_view_alternate_admin_response, status.HTTP_200_OK)
+    validate_response(admin_view_alt_admin_response, status.HTTP_200_OK)
     validate_response(admin_view_user_response, status.HTTP_200_OK)
 
 
-def test_admin_can_view_private_acquisitions(admin_client,
-                                             alternate_admin_client,
+def test_admin_can_view_private_acquisitions(admin_client, alt_admin_client,
                                              test_scheduler):
     private_entry_name = simulate_acquisitions(
-        alternate_admin_client, is_private=True)
+        alt_admin_client, is_private=True)
     private_acq_url = reverse_acquisition_detail(private_entry_name, 1)
 
     response = admin_client.get(private_acq_url, **HTTPS_KWARG)
@@ -63,18 +61,16 @@ def test_admin_can_delete_their_acquisition(admin_client, test_scheduler):
     validate_response(second_response, status.HTTP_404_NOT_FOUND)
 
 
-def test_admin_can_delete_other_acquisitions(admin_client,
-                                             alternate_admin_client,
+def test_admin_can_delete_other_acquisitions(admin_client, alt_admin_client,
                                              user_client, test_scheduler):
-    # alternate admin private schedule entry
-    alternate_admin_entry_name = simulate_acquisitions(
-        alternate_admin_client, name='alternate_admin_single_acq',
+    # alt admin private schedule entry
+    alt_admin_entry_name = simulate_acquisitions(
+        alt_admin_client, name='alt_admin_single_acq',
         is_private=True)
-    alternate_admin_acq_url = reverse_acquisition_detail(
-        alternate_admin_entry_name, 1)
+    alt_admin_acq_url = reverse_acquisition_detail(alt_admin_entry_name, 1)
 
-    admin_delete_alternate_admin_response = admin_client.delete(
-        alternate_admin_acq_url, **HTTPS_KWARG)
+    admin_delete_alt_admin_response = admin_client.delete(
+        alt_admin_acq_url, **HTTPS_KWARG)
 
     # user schedule entry
     user_acq_name = simulate_acquisitions(user_client, name='admin_single_acq')
@@ -85,7 +81,7 @@ def test_admin_can_delete_other_acquisitions(admin_client,
 
     validate_response(admin_delete_user_response, status.HTTP_204_NO_CONTENT)
     validate_response(
-        admin_delete_alternate_admin_response, status.HTTP_204_NO_CONTENT)
+        admin_delete_alt_admin_response, status.HTTP_204_NO_CONTENT)
 
 
 def test_admin_cant_modify_their_acquisition(admin_client, test_scheduler):
@@ -102,24 +98,21 @@ def test_admin_cant_modify_their_acquisition(admin_client, test_scheduler):
     validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-def test_user_cant_modify_other_acquisitions(admin_client,
-                                             alternate_admin_client,
+def test_user_cant_modify_other_acquisitions(admin_client, alt_admin_client,
                                              user_client, test_scheduler):
-    # alternate admin schedule entry
-    alternate_admin_entry_name = simulate_acquisitions(
-        alternate_admin_client, name='alternate_admin_single_acq')
-    alternate_admin_acq_url = reverse_acquisition_detail(
-        alternate_admin_entry_name, 1)
+    # alt admin schedule entry
+    alt_admin_entry_name = simulate_acquisitions(
+        alt_admin_client, name='alt_admin_single_acq')
+    alt_admin_acq_url = reverse_acquisition_detail(alt_admin_entry_name, 1)
 
-    new_acquisition_detail = user_client.get(
-        alternate_admin_acq_url, **HTTPS_KWARG)
+    new_acquisition_detail = user_client.get(alt_admin_acq_url, **HTTPS_KWARG)
 
     new_acquisition_detail = new_acquisition_detail.data
 
     new_acquisition_detail['task_id'] = 2
 
-    admin_modify_alternate_admin_response = update_acquisition_detail(
-        admin_client, alternate_admin_entry_name, 1, new_acquisition_detail)
+    admin_modify_alt_admin_response = update_acquisition_detail(
+        admin_client, alt_admin_entry_name, 1, new_acquisition_detail)
 
     # user schedule entry
     user_entry_name = simulate_acquisitions(
@@ -134,7 +127,7 @@ def test_user_cant_modify_other_acquisitions(admin_client,
         admin_client, user_entry_name, 1, new_acquisition_detail)
 
     validate_response(
-        admin_modify_alternate_admin_response,
+        admin_modify_alt_admin_response,
         status.HTTP_405_METHOD_NOT_ALLOWED)
     validate_response(
         admin_modify_user_response, status.HTTP_405_METHOD_NOT_ALLOWED)

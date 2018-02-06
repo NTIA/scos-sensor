@@ -13,11 +13,11 @@ def test_can_view_own_result_details(user_client):
     validate_response(response, status.HTTP_200_OK)
 
 
-def test_can_view_others_result_details(user_client, alternate_user_client):
+def test_can_view_others_result_details(user_client, alt_user_client):
     """A user should be able to view results created by others."""
     entry_name = create_task_results(1, user_client)
     url = reverse_result_detail(entry_name, 1)
-    response = alternate_user_client.get(url, **HTTPS_KWARG)
+    response = alt_user_client.get(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_200_OK)
 
 

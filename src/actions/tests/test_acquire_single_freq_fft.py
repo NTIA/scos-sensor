@@ -24,10 +24,8 @@ def test_detector(user_client, rf):
     entry_name = rjson['name']
     task_id = rjson['next_task_id']
 
-    request = rf.post('mock://cburl/schedule')
-
     # use mock_acquire set up in conftest.py
-    by_name['mock_acquire'](request, entry_name, task_id)
+    by_name['mock_acquire'](entry_name, task_id)
     acquistion = Acquisition.objects.get(task_id=task_id)
     sigmf_metadata = acquistion.sigmf_metadata
     assert sigmf_validate(sigmf_metadata)

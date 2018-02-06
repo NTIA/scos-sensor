@@ -36,7 +36,7 @@ def create_entry(name, priority, start, stop, interval, action, cb_url=None):
 def create_action():
     flag = threading.Event()
 
-    def cb(ctx, entry, task_id):
+    def cb(entry, task_id):
         flag.set()
         return "set flag"
 
