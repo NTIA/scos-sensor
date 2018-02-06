@@ -107,6 +107,7 @@ the API call. The body of the response will be JSON in the following format:
 """
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

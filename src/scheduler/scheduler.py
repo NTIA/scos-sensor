@@ -36,9 +36,6 @@ class Scheduler(threading.Thread):
         self.running = False
         self.interrupt_flag = threading.Event()
 
-        # Hack: scheduler needs to have _some_ request context to reverse URLs
-        self.request = None
-
     @property
     def schedule(self):
         """An updated view of the current schedule"""
@@ -112,7 +109,7 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
-            detail = task.action_fn(self.request, entry_name, task_id)
+            detail = task.action_fn(entry_name, task_id)
             self.delayfn(0)  # let other threads run
             result = 'success'
             # py2.7 compat: check for 'str' in py3
@@ -132,11 +129,6 @@ class Scheduler(threading.Thread):
         entry = ScheduleEntry.objects.get(name=entry_name)
         task_id = task.task_id
 
-        if self.request is None:
-            msg = "request context required to report task result but none set"
-            logger.warning(msg)
-            return
-
         tr = TaskResult(
             schedule_entry=entry,
             task_id=task_id,
@@ -148,7 +140,7 @@ class Scheduler(threading.Thread):
         ).save()
 
         if entry.callback_url:
-            context = {'request': self.request}
+            context = {'request': entry.request}
             result_json = TaskResultSerializer(tr, context=context).data
             requests_futures_session.post(
                 entry.callback_url,

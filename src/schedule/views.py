@@ -1,7 +1,7 @@
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
-from .models import ScheduleEntry
+from .models import ScheduleEntry, Request
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers import (
     CreateScheduleEntrySerializer,
@@ -38,7 +38,10 @@ class ScheduleEntryViewSet(ModelViewSet):
     ]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        # import pdb; pdb.set_trace()
+        r = Request()
+        r.from_drf_request(self.request)
+        serializer.save(request=r, owner=self.request.user)
 
     def get_queryset(self):
         # .list() does not call .get_object(), which triggers permissions
