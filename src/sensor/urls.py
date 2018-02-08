@@ -22,6 +22,7 @@ from __future__ import absolute_import
 from functools import partial
 
 from django.conf.urls import include, url
+from django.contrib import admin
 from django.views.generic import RedirectView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -46,7 +47,8 @@ def api_v1_root(request, version, format=None):
         'acquisitions': reverse_('acquisitions-overview'),
         'status': reverse_('status'),
         'users': reverse_('user-list'),
-        'capabilities': reverse_('capabilities')
+        'capabilities': reverse_('capabilities'),
+        'results': reverse_('results-overview')
     }
 
     return Response(list_endpoints)
@@ -59,11 +61,21 @@ api_urlpatterns = format_suffix_patterns((
     url(r'^schedule/', include('schedule.urls')),
     url(r'^status', include('status.urls')),
     url(r'^users/', include('authentication.urls')),
+    url(r'^results/', include('results.urls')),
     url(r'^schema/$', SchemaView.as_view(), name='api_schema')
 ))
 
+# Modify admin portal before including url
+
+# Text to put in each page's <h1> (and above login form).
+admin.site.site_header = 'SCOS Sensor Admin Portal'
+
+# Text to put at the top of the admin index page.
+admin.site.index_title = 'SCOS Sensor Admin Portal'
+
 urlpatterns = (
     url(r'^$', RedirectView.as_view(url='/api/')),
+    url(r'^admin/', admin.site.urls),
     url(r'^api/$',
         RedirectView.as_view(url='/api/{}/'.format(DEFAULT_API_VERSION))),
     url(API_PREFIX, include(api_urlpatterns)),

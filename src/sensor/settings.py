@@ -107,6 +107,7 @@ the API call. The body of the response will be JSON in the following format:
 """
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -119,6 +120,7 @@ INSTALLED_APPS = [
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
+    'results.apps.ResultsConfig',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
     'status.apps.StatusConfig',
@@ -144,7 +146,6 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -216,6 +217,10 @@ DATABASES = {
 }
 
 
+# Ensure not more than this many results are stored in db by removing oldest
+MAX_TASK_RESULTS = 10000
+
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -246,14 +251,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
-
-STATIC_URL = '/static/'
-
-
 LOGLEVEL = 'DEBUG' if DEBUG else 'INFO'
-
 
 LOGGING = {
     'version': 1,

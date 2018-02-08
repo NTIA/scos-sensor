@@ -7,6 +7,28 @@ from rest_framework.reverse import reverse
 from sensor import V1
 
 
+EMPTY_SCHEDULE_RESPONSE = []
+
+TEST_SCHEDULE_ENTRY = {
+    'name': 'test',
+    'action': 'logger',
+    'is_private': False
+}
+
+TEST_ALTERNATE_SCHEDULE_ENTRY = {
+    'name': 'test_alternate',
+    'action': 'logger',
+    'is_private': False,
+    'priority': 5
+}
+
+TEST_PRIVATE_SCHEDULE_ENTRY = {
+    'name': 'test_private',
+    'action': 'logger',
+    'is_private': True
+}
+
+
 def post_schedule(client, entry):
     kwargs = {
         'data': json.dumps(entry),
@@ -38,11 +60,10 @@ def reverse_detail_url(entry_name):
     kws = {'pk': entry_name}
     kws.update(V1)
     url = reverse('schedule-detail', kwargs=kws)
-
     return url
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
 def flatten(list_of_lists):
-    "Flatten one level of nesting"
+    """Flatten one level of nesting."""
     return chain.from_iterable(list_of_lists)

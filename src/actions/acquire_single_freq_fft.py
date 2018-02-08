@@ -9,6 +9,7 @@ from itertools import compress
 import numpy as np
 from enum import Enum
 
+from rest_framework.reverse import reverse
 from sigmf.sigmffile import SigMFFile
 
 from .base import Action
@@ -16,7 +17,7 @@ from . import usrp
 from capabilities import (scos_antenna_obj,
                           data_extract_obj,
                           SCOS_TRANSFER_SPEC_VER)
-from sensor import settings
+from sensor import V1, settings
 
 
 logger = logging.getLogger(__name__)
@@ -103,6 +104,16 @@ class SingleFrequencyFftAcquisition(Action):
         m4s_data = self.apply_detector(data)
         sigmf_md = self.build_sigmf_md()
         self.archive(m4s_data, sigmf_md, parent_entry, task_id)
+
+        kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
+        kws.update(V1)
+        detail = reverse(
+            'acquisition-detail',
+            kwargs=kws,
+            request=parent_entry.request
+        )
+
+        return detail
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""

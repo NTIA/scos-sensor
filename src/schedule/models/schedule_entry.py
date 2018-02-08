@@ -95,19 +95,24 @@ class ScheduleEntry(models.Model):
         null=True,
         blank=True,
         validators=(MinValueValidator(1),),
-        help_text="Seconds between events, or leave blank to run once"
+        help_text="Seconds between tasks, or leave blank to run once"
     )
     is_active = models.BooleanField(
         default=True,
         editable=True,
-        help_text="Indicates whether the entry should be removed from the "
-                  "scheduler without removing it from the system"
+        help_text=("Indicates whether the entry should be removed from the "
+                   "scheduler without removing it from the system")
     )
     is_private = models.BooleanField(
         default=False,
         editable=True,
-        help_text="Indicates whether the entry, and resulting data, are only "
-                  "visible to admin"
+        help_text=("Indicates whether the entry, and resulting data, are only "
+                   "visible to admin")
+    )
+    callback_url = models.URLField(
+        blank=True,
+        help_text=("If given, the scheduler will POST a `TaskResult` JSON "
+                   "object to this URL after each task completes")
     )
 
     # read-only fields
@@ -134,7 +139,15 @@ class ScheduleEntry(models.Model):
         editable=False,
         related_name='schedule_entries',
         on_delete=models.CASCADE,
-        help_text="The name of the user whom owns the entry"
+        help_text="The name of the user who owns the entry"
+    )
+
+    request = models.ForeignKey(
+        'schedule.Request',
+        null=True,  # null allowable for unit testing only
+        editable=False,
+        on_delete=models.CASCADE,
+        help_text="The request that created the entry"
     )
 
     class Meta:

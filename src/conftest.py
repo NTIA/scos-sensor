@@ -24,12 +24,23 @@ def pytest_collection_modifyitems(config, items):
 
 
 @pytest.yield_fixture
-def testclock():
+def test_scheduler(rf):
+    """Instantiate test scheduler with fake request context.
+
+    Replace scheduler's timefn with manually steppable test timefn.
+
+    """
+    # Setup test clock
     real_timefn = scheduler.scheduler.utils.timefn
     real_delayfun = scheduler.utils.delayfn
     scheduler.utils.timefn = scheduler.tests.utils.TestClock()
     scheduler.utils.delayfn = scheduler.tests.utils.delayfn
-    yield scheduler.utils.timefn
+
+    s = scheduler.scheduler.Scheduler()
+    s.request = rf.post('mock://cburl/schedule')
+    yield s
+
+    # Teardown test clock
     scheduler.utils.timefn = real_timefn
     scheduler.utils.delayfn = real_delayfun
 
@@ -61,9 +72,9 @@ def user_client(db, user):
 
 
 @pytest.fixture
-def alternate_user(db):
+def alt_user(db):
     """A normal user."""
-    username = 'alternate_test'
+    username = 'alt_test'
     password = 'password'
 
     user, created = User.objects.get_or_create(username=username)
@@ -78,47 +89,49 @@ def alternate_user(db):
 
 
 @pytest.fixture
-def alternate_user_client(db, alternate_user):
+def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
     client = Client()
     client.login(
-        username=alternate_user.username, password=alternate_user.password)
+        username=alt_user.username, password=alt_user.password)
 
     return client
 
 
 @pytest.fixture
-def alternate_admin_user(db, django_user_model, django_username_field):
+def alt_admin_user(db, django_user_model, django_username_field):
     """A Django admin user.
+
     This uses an existing user with username "admin", or creates a new one with
     password "password".
+
     """
     UserModel = django_user_model
     username_field = django_username_field
 
     try:
         user = UserModel._default_manager.get(
-            **{username_field: 'alternate_admin'})
+            **{username_field: 'alt_admin'})
     except UserModel.DoesNotExist:
         extra_fields = {}
 
         if username_field != 'username':
-            extra_fields[username_field] = 'alternate_admin'
+            extra_fields[username_field] = 'alt_admin'
 
         user = UserModel._default_manager.create_superuser(
-            'alternate_admin', 'alternate_admin@example.com', 'password',
+            'alt_admin', 'alt_admin@example.com', 'password',
             **extra_fields)
 
     return user
 
 
 @pytest.fixture
-def alternate_admin_client(db, alternate_admin_user):
+def alt_admin_client(db, alt_admin_user):
     """A Django test client logged in as an admin user."""
     from django.test.client import Client
 
     client = Client()
-    client.login(username=alternate_admin_user.username, password='password')
+    client.login(username=alt_admin_user.username, password='password')
 
     return client
 

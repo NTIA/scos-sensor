@@ -17,14 +17,14 @@ def test_non_existent_entry(user_client):
         get_acquisition_detail(user_client, 'doesntexist', 1)
 
 
-def test_non_existent_task_id(user_client, testclock):
+def test_non_existent_task_id(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=1)
     with pytest.raises(AssertionError):
         non_existent_task_id = 2
         get_acquisition_detail(user_client, entry_name, non_existent_task_id)
 
 
-def test_get_detail_from_single(user_client, testclock):
+def test_get_detail_from_single(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=1)
     task_id = 1
     acq = get_acquisition_detail(user_client, entry_name, task_id)
@@ -32,7 +32,7 @@ def test_get_detail_from_single(user_client, testclock):
     assert acq['task_id'] == task_id
 
 
-def test_get_detail_from_multiple(user_client, testclock):
+def test_get_detail_from_multiple(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=3)
     task_id = 3
     acq = get_acquisition_detail(user_client, entry_name, task_id)
@@ -40,7 +40,7 @@ def test_get_detail_from_multiple(user_client, testclock):
     assert acq['task_id'] == task_id
 
 
-def test_delete_single(user_client, testclock):
+def test_delete_single(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=3)
     task_id_to_delete = 2
     url = reverse_acquisition_detail(entry_name, task_id_to_delete)
@@ -57,7 +57,7 @@ def test_delete_single(user_client, testclock):
 
 
 def test_private_entries_have_private_acquisitons(admin_client, user_client,
-                                                  testclock):
+                                                  test_scheduler):
     entry_name = simulate_acquisitions(admin_client, is_private=True)
     kws = {'pk': entry_name}
     kws.update(V1)

@@ -4,12 +4,19 @@ import logging
 import threading
 from contextlib import contextmanager
 
+from django.utils import timezone
+from requests_futures.sessions import FuturesSession
+
+from results.consts import MAX_DETAIL_LEN
+from results.models import TaskResult
+from results.serializers import TaskResultSerializer
 from schedule.models import ScheduleEntry
 from . import utils
 from .tasks import TaskQueue
 
 
 logger = logging.getLogger(__name__)
+requests_futures_session = FuturesSession()
 
 
 class Scheduler(threading.Thread):
@@ -73,7 +80,7 @@ class Scheduler(threading.Thread):
                 self.running = True
                 schedule_snapshot = self.schedule
                 pending_task_queue = self._queue_tasks(schedule_snapshot)
-                self._call_task_actions(pending_task_queue)
+                self._consume_task_queue(pending_task_queue)
 
             if not blocking or self.interrupt_flag.is_set():
                 break
@@ -90,16 +97,65 @@ class Scheduler(threading.Thread):
 
         return pending_task_queue
 
-    def _call_task_actions(self, pending_task_queue):
-        for next_task in pending_task_queue.to_list():
-            entry_name = next_task.schedule_entry_name
-            task_id = next_task.task_id
-            try:
-                logger.debug("running task {}/{}".format(entry_name, task_id))
-                next_task.action_fn(entry_name, task_id)
-                self.delayfn(0)  # let other threads run
-            except Exception:
-                logger.exception("action failed")
+    def _consume_task_queue(self, pending_task_queue):
+        for task in pending_task_queue.to_list():
+            result, started, finished, detail = self._call_task_action(task)
+            self._save_task_result(task, started, finished, result, detail)
+
+    def _call_task_action(self, task):
+        entry_name = task.schedule_entry_name
+        task_id = task.task_id
+        started = timezone.now()
+
+        try:
+            logger.debug("running task {}/{}".format(entry_name, task_id))
+            detail = task.action_fn(entry_name, task_id)
+            self.delayfn(0)  # let other threads run
+            result = 'success'
+            # py2.7 compat: check for 'str' in py3
+            if not isinstance(detail, basestring):  # noqa
+                detail = ""
+        except Exception as err:
+            detail = str(err)
+            logger.exception("action failed: {}".format(detail))
+            result = 'failure'
+
+        finished = timezone.now()
+
+        return result, started, finished, detail[:MAX_DETAIL_LEN]
+
+    def _save_task_result(self, task, started, finished, result, detail):
+        entry_name = task.schedule_entry_name
+        entry = ScheduleEntry.objects.get(name=entry_name)
+        task_id = task.task_id
+
+        tr = TaskResult(
+            schedule_entry=entry,
+            task_id=task_id,
+            started=started,
+            finished=finished,
+            duration=(finished - started),
+            result=result,
+            detail=detail
+        )
+        tr.save()
+
+        if entry.callback_url:
+            context = {'request': entry.request}
+            result_json = TaskResultSerializer(tr, context=context).data
+            requests_futures_session.post(
+                entry.callback_url,
+                json=result_json,
+                background_callback=self._callback_response_handler,
+            )
+
+    @staticmethod
+    def _callback_response_handler(sess, resp):
+        if resp.ok:
+            logger.info("POSTed to {}".format(resp.url))
+        else:
+            msg = "Failed to POST to {}: {}"
+            logger.warning(msg.format(resp.url, resp.reason))
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()

@@ -14,7 +14,7 @@ from acquisitions.tests.utils import (
 )
 
 
-def test_archive_download(user_client, testclock):
+def test_archive_download(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=1)
     task_id = 1
     url = reverse_acquisition_archive(entry_name, task_id)

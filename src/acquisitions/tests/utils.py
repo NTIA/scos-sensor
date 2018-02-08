@@ -3,14 +3,30 @@ from django.test import RequestFactory
 from rest_framework.reverse import reverse
 from rest_framework import status
 
-from acquisitions.tests import SINGLE_ACQUISITION, MULTIPLE_ACQUISITIONS
 from schedule.tests.utils import post_schedule
 from scheduler.tests.utils import simulate_scheduler_run
 from sensor import V1
-from sensor.tests.utils import validate_response
+from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
-HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
+EMPTY_ACQUISITIONS_RESPONSE = []
+
+SINGLE_ACQUISITION = {
+    'name': 'test_acq',
+    'start': None,
+    'stop': None,
+    'interval': None,
+    'action': 'mock_acquire'
+}
+
+MULTIPLE_ACQUISITIONS = {
+    'name': 'test_multiple_acq',
+    'start': None,
+    'stop': 5,
+    'stop_is_relative': True,
+    'interval': 1,
+    'action': 'mock_acquire'
+}
 
 
 def simulate_acquisitions(client, n=1, is_private=False, name=None):
@@ -35,63 +51,52 @@ def simulate_acquisitions(client, n=1, is_private=False, name=None):
 
 def reverse_acquisitions_overview():
     rf = RequestFactory()
-
-    request = rf.get('/api/v1/acquisitions', **HTTPS_KWARG)
-
+    request = rf.get('/acquisitions/', **HTTPS_KWARG)
     return reverse('acquisitions-overview', kwargs=V1, request=request)
 
 
 def reverse_acquisition_list(schedule_entry_name):
     rf = RequestFactory()
-
     request = rf.get('/acquisitions/' + schedule_entry_name, **HTTPS_KWARG)
     kws = {'schedule_entry_name': schedule_entry_name}
     kws.update(V1)
-
     return reverse('acquisition-list', kwargs=kws, request=request)
 
 
 def reverse_acquisition_detail(schedule_entry_name, task_id):
     rf = RequestFactory()
-    task_str = str(task_id)
-    request = rf.get(
-        '/acquisitions/' + schedule_entry_name + '/' + task_str, **HTTPS_KWARG)
+    url = '/acquisitions/' + schedule_entry_name + '/' + str(task_id)
+    request = rf.get(url, **HTTPS_KWARG)
     kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
     kws.update(V1)
-
     return reverse('acquisition-detail', kwargs=kws, request=request)
 
 
 def reverse_acquisition_archive(schedule_entry_name, task_id):
     rf = RequestFactory()
     entry_name = schedule_entry_name
-    task_str = str(task_id)
-    url_str = '/'.join(['/acquisitions', entry_name, task_str, 'archive'])
-    request = rf.get(url_str, **HTTPS_KWARG)
+    url = '/'.join(['/acquisitions', entry_name, str(task_id), 'archive'])
+    request = rf.get(url, **HTTPS_KWARG)
     kws = {'schedule_entry_name': entry_name, 'task_id': task_id}
     kws.update(V1)
-
     return reverse('acquisition-archive', kwargs=kws, request=request)
 
 
 def get_acquisitions_overview(client):
     url = reverse_acquisitions_overview()
     response = client.get(url, **HTTPS_KWARG)
-
     return validate_response(response, status.HTTP_200_OK)
 
 
 def get_acquisition_list(client, schedule_entry_name):
     url = reverse_acquisition_list(schedule_entry_name)
     response = client.get(url, **HTTPS_KWARG)
-
     return validate_response(response, status.HTTP_200_OK)
 
 
 def get_acquisition_detail(client, schedule_entry_name, task_id):
     url = reverse_acquisition_detail(schedule_entry_name, task_id)
     response = client.get(url, **HTTPS_KWARG)
-
     return validate_response(response, status.HTTP_200_OK)
 
 

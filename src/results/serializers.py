@@ -3,35 +3,35 @@ from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
 from sensor import V1
-from .models import Acquisition
+from .models import TaskResult
 
 
-class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
+class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
     schedule_entry = serializers.SerializerMethodField(
-        help_text="The related schedule entry for the acquisition"
+        help_text="The related schedule entry for the result"
     )
-    acquisitions_available = serializers.SerializerMethodField(
-        help_text="The number of available acquisitions"
+    results_available = serializers.SerializerMethodField(
+        help_text="The number of available results"
     )
 
     class Meta:
         model = ScheduleEntry
         fields = (
             'url',
-            'acquisitions_available',
+            'results_available',
             'schedule_entry'
         )
         extra_kwargs = {
             'url': {
-                'view_name': 'acquisition-list',
+                'view_name': 'result-list',
                 'lookup_field': 'name',
                 'lookup_url_kwarg': 'schedule_entry_name',
-                'help_text': 'The url of the list of acquisitions'
+                'help_text': 'The url of the list of results'
             }
         }
 
-    def get_acquisitions_available(self, obj):
-        return obj.acquisitions.count()
+    def get_results_available(self, obj):
+        return obj.results.count()
 
     def get_schedule_entry(self, obj):
         request = self.context['request']
@@ -39,7 +39,8 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         return reverse('schedule-detail', kwargs=kwargs, request=request)
 
 
-class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
+# FIXME: this is identical to AcquisitionHyperlinkedRelatedField
+class TaskResultHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
     # django-rest-framework.org/api-guide/relations/#custom-hyperlinked-fields
     def get_url(self, obj, view_name, request, format):
         kws = {
@@ -50,31 +51,24 @@ class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
         return reverse(view_name, kwargs=kws, request=request, format=format)
 
 
-class AcquisitionSerializer(serializers.ModelSerializer):
-    url = AcquisitionHyperlinkedRelatedField(
-        view_name='acquisition-detail',
+class TaskResultSerializer(serializers.ModelSerializer):
+    url = TaskResultHyperlinkedRelatedField(
+        view_name='result-detail',
         read_only=True,
-        help_text="The url of the acquisition",
+        help_text="The url of the result",
         source='*'  # pass whole object
-    )
-    archive = AcquisitionHyperlinkedRelatedField(
-        view_name='acquisition-archive',
-        read_only=True,
-        help_text="The url of the acquisition's SigMF archive",
-        source='*'  # pass whole object
-    )
-    sigmf_metadata = serializers.DictField(
-        help_text="The sigmf meta data for the acquisition"
     )
 
     class Meta:
-        model = Acquisition
+        model = TaskResult
         fields = (
             'url',
             'task_id',
-            'created',
-            'archive',
-            'sigmf_metadata'
+            'started',
+            'finished',
+            'duration',
+            'result',
+            'detail'
         )
         extra_kwargs = {
             'schedule_entry': {
