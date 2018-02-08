@@ -50,7 +50,7 @@ create_action.counter = 0
 
 
 def create_bad_action():
-    def bad_action(ctx, entry, task_id):
+    def bad_action(entry, task_id):
         raise Exception(BAD_ACTION_STR)
 
     actions.by_name['bad_action'] = bad_action
@@ -361,12 +361,21 @@ def test_failure_posted_to_callback_url(test_scheduler):
     s = test_scheduler
     s._callback_response_handler = cb_request_handler
 
+    request_json = None
     with requests_mock.Mocker() as m:
         m.post('mock://cburl')  # register url for posting
         s.run(blocking=False)
         time.sleep(0.1)  # let requests thread run
+        request_json = m.request_history[0].json()
 
     assert cb_flag.is_set()
+    assert request_json['result'] == 'failure'
+    assert request_json['task_id'] == 1
+    assert request_json['url']
+    assert request_json['detail'] == BAD_ACTION_STR
+    assert request_json['started']
+    assert request_json['finished']
+    assert request_json['duration']
 
 
 @pytest.mark.django_db
@@ -383,13 +392,21 @@ def test_success_posted_to_callback_url(test_scheduler):
     s = test_scheduler
     s._callback_response_handler = cb_request_handler
 
+    request_json = None
     with requests_mock.Mocker() as m:
         m.post('mock://cburl')  # register mock url for posting
         s.run(blocking=False)
         time.sleep(0.1)  # let requests thread run
+        request_json = m.request_history[0].json()
 
     assert cb_flag.is_set()
     assert action_flag.is_set()
+    assert request_json['result'] == 'success'
+    assert request_json['task_id'] == 1
+    assert request_json['url']
+    assert request_json['started']
+    assert request_json['finished']
+    assert request_json['duration']
 
 
 def test_str():
