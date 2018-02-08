@@ -137,7 +137,8 @@ class Scheduler(threading.Thread):
             duration=(finished - started),
             result=result,
             detail=detail
-        ).save()
+        )
+        tr.save()
 
         if entry.callback_url:
             context = {'request': entry.request}
