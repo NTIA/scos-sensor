@@ -1,13 +1,11 @@
+from rest_framework import serializers
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
+import actions
 from .models import ScheduleEntry, Request
 from .permissions import IsAdminOrOwnerOrReadOnly
-from .serializers import (
-    CreateScheduleEntrySerializer,
-    AdminCreateScheduleEntrySerializer,
-    UpdateScheduleEntrySerializer
-)
+from .serializers import ScheduleEntrySerializer
 
 
 class ScheduleEntryViewSet(ModelViewSet):
@@ -38,7 +36,6 @@ class ScheduleEntryViewSet(ModelViewSet):
     ]
 
     def perform_create(self, serializer):
-        # import pdb; pdb.set_trace()
         r = Request()
         r.from_drf_request(self.request)
         serializer.save(request=r, owner=self.request.user)
@@ -54,10 +51,30 @@ class ScheduleEntryViewSet(ModelViewSet):
             return base_queryset.filter(is_private=False)
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            if self.request and self.request.user.is_staff:
-                return AdminCreateScheduleEntrySerializer
-            else:
-                return CreateScheduleEntrySerializer
+        """Modify the base serializer based on user and request."""
+
+        updating = self.action in {'update', 'partial_update'}
+
+        ro_fields = ()
+        if updating:
+            ro_fields += ('name',)
         else:
-            return UpdateScheduleEntrySerializer
+            ro_fields += ('is_active',)
+
+        if not self.request.user.is_staff:
+            ro_fields += ('is_private',)
+
+        choices = actions.CHOICES
+        if self.request.user.is_staff:
+            choices += actions.ADMIN_CHOICES
+
+        class Serializer(ScheduleEntrySerializer):
+            action = serializers.ChoiceField(
+                choices=choices,
+                read_only=updating
+            )
+
+            class Meta(ScheduleEntrySerializer.Meta):
+                read_only_fields = ro_fields
+
+        return Serializer

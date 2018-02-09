@@ -6,7 +6,7 @@ from sensor import V1
 from .models import ScheduleEntry
 
 
-class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
+class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField(
         help_text="The list of acquisitions related to the entry"
     )
@@ -76,20 +76,4 @@ class CreateScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             data.pop('start')
 
         # py2.7 compat -> super().to_internal...
-        cls = CreateScheduleEntrySerializer
-        return super(cls, self).to_internal_value(data)
-
-
-class AdminCreateScheduleEntrySerializer(CreateScheduleEntrySerializer):
-    action = serializers.ChoiceField(
-        choices=(actions.CHOICES + actions.ADMIN_CHOICES)
-    )
-
-    class Meta(CreateScheduleEntrySerializer.Meta):
-        read_only_fields = ('is_active',)  # allow setting 'is_private'
-
-
-class UpdateScheduleEntrySerializer(CreateScheduleEntrySerializer):
-    class Meta(CreateScheduleEntrySerializer.Meta):
-        # allow changing 'is_active' after creation
-        read_only_fields = ('name',)
+        return super(ScheduleEntrySerializer, self).to_internal_value(data)
