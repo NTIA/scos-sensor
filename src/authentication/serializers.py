@@ -42,8 +42,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         """Filter private schedule entries if requester is not an admin."""
         request = self.context['request']
         entries = obj.schedule_entries.get_queryset()
-        # if not request.user.is_staff:
-        #     entries = entries.filter(is_private=False)
+        if not request.user.is_staff:
+            entries = entries.filter(is_private=False)
 
         urls = []
         for entry in entries:
