@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
+    'capabilities.apps.CapabilitiesConfig',
     'results.apps.ResultsConfig',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
