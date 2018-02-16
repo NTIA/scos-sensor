@@ -1,6 +1,14 @@
 version: '3'
 
 services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD
+    expose:
+      - '5432'
+
   api:
     healthcheck:
       test: test ! -e /sdr_unhealthy
@@ -8,6 +16,8 @@ services:
       timeout: 1s
       retries: 1
     restart: always
+    depends_on:
+      - db
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
