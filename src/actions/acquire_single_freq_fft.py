@@ -14,9 +14,6 @@ from sigmf.sigmffile import SigMFFile
 
 from .base import Action
 from . import usrp
-from capabilities import (scos_antenna_obj,
-                          data_extract_obj,
-                          SCOS_TRANSFER_SPEC_VER)
 from sensor import V1, settings
 
 
@@ -50,6 +47,9 @@ def parse_iso8601_datetime(d):
 
 # FIXME: comes from initial amplitude accuracy calibration
 scale_factor = 1.0
+
+# FIXME: this needs to be defined globally somewhere
+SCOS_TRANSFER_SPEC_VER = '0.1'
 
 
 def m4s_detector(array):
@@ -169,11 +169,12 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        sensor_definition = {
-            "antenna": scos_antenna_obj["scos:antenna"],
-            "data_extraction_unit":
-                data_extract_obj["scos:data_extraction_unit"]
-        }
+        # sensor_definition = {
+        #     "antenna": scos_antenna_obj["scos:antenna"],
+        #     "data_extraction_unit":
+        #         data_extract_obj["scos:data_extraction_unit"]
+        # }
+        sensor_definition = {}
 
         sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
 
