@@ -29,10 +29,9 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
 )
 
-RUNNING_DEVSERVER = 'runserver' in sys.argv
-
-_testcmd = os.path.split(sys.argv[0])[-1]
-RUNNING_TESTS = 'test' in _testcmd
+__cmd = os.path.split(sys.argv[0])[-1]
+RUNNING_DEVSERVER = 'manage.py' in __cmd
+RUNNING_TESTS = 'test' in __cmd
 
 # Healthchecks - the existance of any of these indicates an unhealth state
 SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
@@ -55,6 +54,7 @@ else:
     SECRET_KEY = os.environ['SECRET_KEY']
     DEBUG = bool(os.environ['DEBUG'] == "true")
     ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
+    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
 
 SESSION_COOKIE_SECURE = not RUNNING_DEVSERVER
 CSRF_COOKIE_SECURE = not RUNNING_DEVSERVER
@@ -207,25 +207,24 @@ SWAGGER_SETTINGS = {
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(REPO_ROOT, 'db.sqlite3'),
-#         'OPTIONS': {
-#             'timeout': 20
-#         }
-#     }
-# }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': 'db',
-        'PORT': '5432',
+if RUNNING_TESTS:
+    DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3'}}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+            'HOST': 'db',
+            'PORT': '5432',
+        }
     }
-}
+
+if RUNNING_DEVSERVER:
+    # Not running within Docker network
+    DATABASES['default']['HOST'] = 'localhost'
+
 
 # Ensure not more than this many results are stored in db by removing oldest
 MAX_TASK_RESULTS = 10000

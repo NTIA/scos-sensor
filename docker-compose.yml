@@ -6,8 +6,10 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD
-    expose:
-      - '5432'
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data:/var/lib/postgresql/data
 
   api:
     healthcheck:
@@ -24,13 +26,13 @@ services:
     environment:
       - DEBUG
       - DOMAINS
-      - IPS
-      - SECRET_KEY
       - GUNICORN_LOG_LEVEL
+      - IPS
+      - POSTGRES_PASSWORD
+      - SECRET_KEY
     expose:
       - '8000'
     volumes:
-      - ./db.sqlite3:/db.sqlite3
       - ${REPO_ROOT}:/opt/scos-sensor
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
