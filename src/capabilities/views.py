@@ -3,12 +3,17 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from os import path
+import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import actions
+
+from .models import SensorDefinition
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_actions(include_admin_actions=False):
@@ -26,18 +31,20 @@ def get_actions(include_admin_actions=False):
     return serialized_actions
 
 
-def get_capabilities():
-    capabilities = {}
-    fname = 'capabilities.py'
-    fpath = path.join(path.dirname(__file__), fname)
-    exec(compile(open(fpath, 'r').read(), fpath, 'exec'), {}, capabilities)
-    return capabilities
+def get_sensor_definition():
+    sensor_def = SensorDefinition.objects.get()
+    if sensor_def is None:
+        logger.error("You must create a SensorDefinition in /admin.")
+
+    return sensor_def
 
 
 @api_view()
 def capabilities(request, version, format=None):
-    """ The capabilites of the sensor."""
-    capabilities = get_capabilities()
+    """The capabilites of the sensor."""
+    capabilities = {}
+    sensor_def = get_sensor_definition()
+    capabilities['sensor_definition'] = sensor_def
     filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
     capabilities['actions'] = filtered_actions
     return Response(capabilities)
