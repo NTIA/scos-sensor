@@ -12,9 +12,12 @@ from enum import Enum
 from rest_framework.reverse import reverse
 from sigmf.sigmffile import SigMFFile
 
+from capabilities.models import SensorDefinition
+from capabilities.serializers import SensorDefinitionSerializer
+from sensor import V1, settings
+
 from .base import Action
 from . import usrp
-from sensor import V1, settings
 
 
 logger = logging.getLogger(__name__)
@@ -169,13 +172,8 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        # sensor_definition = {
-        #     "antenna": scos_antenna_obj["scos:antenna"],
-        #     "data_extraction_unit":
-        #         data_extract_obj["scos:data_extraction_unit"]
-        # }
-        sensor_definition = {}
-
+        sensor_definition_obj = SensorDefinition.objects.get()
+        sensor_definition = SensorDefinitionSerializer(sensor_definition_obj)
         sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
 
         try:
