@@ -11,6 +11,7 @@ from rest_framework.response import Response
 import actions
 
 from .models import SensorDefinition
+from .serializers import SensorDefinitionSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -32,9 +33,12 @@ def get_actions(include_admin_actions=False):
 
 
 def get_sensor_definition():
+    """Returns SensorDefition object JSON if set or None and logs an error."""
     sensor_def = SensorDefinition.objects.get()
     if sensor_def is None:
         logger.error("You must create a SensorDefinition in /admin.")
+    else:
+        sensor_def = SensorDefinitionSerializer(sensor_def).data
 
     return sensor_def
 
