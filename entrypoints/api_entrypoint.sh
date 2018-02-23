@@ -2,16 +2,8 @@
 
 set -e  # exit on error
 
-# DB_PATH=/db.sqlite3
-
-# if [ -d $DB_PATH ]; then
-#     echo "The database file $DB_PATH didn't exist, so Docker mounted it as a directory."
-#     echo "Use the following commands to fix the issue:"
-#     echo "$ docker-compose stop"
-#     echo "$ docker-compose rm"
-#     echo "$ ./scripts/init_db.sh"
-#     exit 1
-# fi
+echo "Ensuring Migrations are up-to-date"
+python manage.py makemigrations
 
 echo "Starting Migrations"
 python manage.py migrate

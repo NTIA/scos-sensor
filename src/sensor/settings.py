@@ -30,7 +30,7 @@ STATICFILES_DIRS = (
 )
 
 __cmd = os.path.split(sys.argv[0])[-1]
-RUNNING_DEVSERVER = 'manage.py' in __cmd
+IN_DOCKER = bool(os.environ.get('IN_DOCKER'))
 RUNNING_TESTS = 'test' in __cmd
 
 # Healthchecks - the existance of any of these indicates an unhealth state
@@ -45,7 +45,7 @@ except OSError:
     pass
 
 # See /env.template
-if RUNNING_DEVSERVER or RUNNING_TESTS:
+if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -56,8 +56,8 @@ else:
     ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
     POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
 
-SESSION_COOKIE_SECURE = not RUNNING_DEVSERVER
-CSRF_COOKIE_SECURE = not RUNNING_DEVSERVER
+SESSION_COOKIE_SECURE = IN_DOCKER
+CSRF_COOKIE_SECURE = IN_DOCKER
 
 
 # Application definition
@@ -221,8 +221,7 @@ else:
         }
     }
 
-if RUNNING_DEVSERVER:
-    # Not running within Docker network
+if not IN_DOCKER:
     DATABASES['default']['HOST'] = 'localhost'
 
 
