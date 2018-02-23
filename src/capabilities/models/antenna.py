@@ -1,8 +1,8 @@
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
 MAX_CHARFIELD_LEN = 255
+MAX_FLOAT_ARRAY_CHARFIELD_LEN = 1023
 
 
 class Antenna(models.Model):
@@ -37,15 +37,19 @@ class Antenna(models.Model):
         blank=True,
         null=True,
     )
-    horizontal_gain_pattern = ArrayField(
-        models.FloatField(),
-        help_text="Antenna gain pattern in horizontal plane. [dBi]",
+    horizontal_gain_pattern = models.CharField(
+        max_length=MAX_FLOAT_ARRAY_CHARFIELD_LEN,
+        help_text=("Antenna gain pattern in horizontal plane. "
+                   "Enter as comma-separated floating point numbers. [dBi]"),
         blank=True,
+        null=True,
     )
-    vertical_gain_pattern = ArrayField(
-        models.FloatField(),
-        help_text="Antenna gain pattern in vertical plane. [dBi]",
+    vertical_gain_pattern = models.CharField(
+        max_length=MAX_FLOAT_ARRAY_CHARFIELD_LEN,
+        help_text=("Antenna gain pattern in vertical plane. [dBi]",
+                   "Enter as comma-separated floating point numbers. [dBi]"),
         blank=True,
+        null=True,
     )
     horizontal_beam_width = models.FloatField(
         help_text="Horizontal 3-dB beamwidth. [degrees]",
