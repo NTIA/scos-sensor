@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script is triggered to cleanup the Puppet install on the 
+# This script is triggered to cleanup the Puppet install on the
 # sensor if there is a source file change.
 
 set -e # exit on error
@@ -10,7 +10,7 @@ cd $REPO_ROOT
 # Only remove the database if deployment has occured via Github
 
 if [ -e .github ]; then
-    mv -f db.sqlite3 db.sqlite3_backup
+    mv -f data data_backup
 fi
 
 rm -f .deployed

@@ -13,6 +13,7 @@ class scos
   $ssl_key = undef,
   $admin_email = undef,
   $admin_password = undef,
+  $postgres_password = undef,
 )
 
 {

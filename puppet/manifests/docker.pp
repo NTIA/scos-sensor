@@ -12,6 +12,7 @@ class scos::docker (
   $admin_email = $scos::admin_email,
   $admin_password = $scos::admin_password,
   $secret_key = $scos::setup::secret_key,
+  $postgres_password = $scos::postgres_password,
   )
 
 {
@@ -26,6 +27,7 @@ class scos::docker (
         "REPO_ROOT=${install_root}", #Note this subtle change
         'DEBUG=false',
         "SECRET_KEY=${secret_key}",
+        "POSTGRES_PASSWORD=${postgres_password}",
         "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
@@ -49,6 +51,7 @@ class scos::docker (
         "REPO_ROOT=${install_root}", #Note this subtle change
         'DEBUG=false',
         "SECRET_KEY=${secret_key}",
+        "POSTGRES_PASSWORD=${postgres_password}",
         "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
@@ -61,4 +64,5 @@ class scos::docker (
     notify {"*** ${hostname} is up and running. Woof! ***":}
   }
   notify {"*** secret_key is ${secret_key}! ***":}
+  notify {"*** postgres_password is ${postgres_password}! ***":}
 }

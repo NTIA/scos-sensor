@@ -11,6 +11,7 @@ class scos::setup (
   $ssl_key = $scos::ssl_key,
   $admin_email = $scos::admin_email,
   $admin_password = $scos::admin_password,
+  $postgres_password = $scos::postgres_password,
   )
 
 {
@@ -35,6 +36,17 @@ class scos::setup (
     command => "/bin/echo ${admin_password_actual} > ${install_root}/.admin_password",
   }
 
+  if ($postgres_password == '') or ($postgres_password == undef) {
+    $postgres_password_actual = fqdn_rand_string(12)
+  }
+  else {
+    $postgres_password_actual = $postgres_password
+  }
+
+  exec { 'postgres_password':
+    command => "/bin/echo ${postgres_password_actual} > ${install_root}/.postgres_password",
+  }
+
   exec { 'admin_email':
     command => "/bin/echo ${admin_email} > ${install_root}/.admin_email",
   }
@@ -55,6 +67,7 @@ class scos::setup (
       content => "# This file is managed by Puppet - any manual edits will be lost
 DEBUG=false
 SECRET_KEY='${secret_key}'
+POSTGRES_PASSWORD='${postgres_password}'
 DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
@@ -74,6 +87,7 @@ DOCKER_TAG=${install_version}",
 DEBUG=false
 SECRET_KEY='${secret_key}'
 DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
+POSTGRES_PASSWORD='${postgres_password}'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
@@ -87,11 +101,6 @@ DOCKER_TAG=latest",
     onlyif      => "/usr/bin/test ! -e ${install_root}/nginx/conf.d/scos-sensor.conf",
     command     => "/usr/bin/envsubst \'\$DOMAINS\' < ${install_root}/nginx/conf.template > ${install_root}/nginx/conf.d/scos-sensor.conf",
     environment => ["DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost"],
-  }
-
-  file { "${install_root}/db.sqlite3":
-    ensure  => 'file',
-    replace => 'no',
   }
 
 }
