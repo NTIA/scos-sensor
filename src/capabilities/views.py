@@ -34,13 +34,12 @@ def get_actions(include_admin_actions=False):
 
 def get_sensor_definition():
     """Returns SensorDefition object JSON if set or None and logs an error."""
-    sensor_def = SensorDefinition.objects.get()
-    if sensor_def is None:
+    try:
+        sensor_def = SensorDefinition.objects.get()
+        return SensorDefinitionSerializer(sensor_def).data
+    except SensorDefinition.DoesNotExist:
         logger.error("You must create a SensorDefinition in /admin.")
-    else:
-        sensor_def = SensorDefinitionSerializer(sensor_def).data
-
-    return sensor_def
+        return None
 
 
 @api_view()
