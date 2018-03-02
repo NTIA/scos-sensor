@@ -55,13 +55,18 @@ assume you've already setup some kind of virtual environment and installed
 python dev requirements from "Running Tests".
 
 ```bash
-$ ./scripts/init_db.sh
+$ docker-compose up -d db
 $ cd src
 $ ./manage.py makemigrations
 $ ./manage.py migrate
 $ ./manage.py createsuperuser
 $ ./manage.py runserver
 ```
+
+### Common Issues:
+- The development server serves on `localhost:8000`, not `:80`
+- If you get a Forbidden (403) error, close any tabs and clear any cache and
+  cookies related to SCOS Sensor and try again
 
 
 Running Production Server with Local Changes

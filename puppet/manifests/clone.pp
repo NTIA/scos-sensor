@@ -11,6 +11,7 @@ class scos::clone (
   $ssl_key = $scos::ssl_key,
   $admin_email = $scos::admin_email,
   $admin_password = $scos::admin_password,
+  $postgres_password = $scos::postgres_password,
   )
 
 {

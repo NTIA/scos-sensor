@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
   api:
     healthcheck:
       test: test ! -e /sdr_unhealthy
@@ -8,20 +18,29 @@ services:
       timeout: 1s
       retries: 1
     restart: always
+    depends_on:
+      - db
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     environment:
       - DEBUG
       - DOMAINS
-      - IPS
-      - SECRET_KEY
       - GUNICORN_LOG_LEVEL
+      - IPS
+      - POSTGRES_PASSWORD
+      - SECRET_KEY
+      - IN_DOCKER=1
     expose:
       - '8000'
     volumes:
-      - ./db.sqlite3:/db.sqlite3
       - ${REPO_ROOT}:/opt/scos-sensor
+      # Uncomment to see code changes by restarting docker container (without rebuilding)
+      # - ./src:/src:ro
+      # - ./gunicorn:/gunicorn:ro
+      # - ./config:/config:ro
+      # - ./entrypoints:/entrypoints:ro
+      # - ./scripts:/scripts:ro
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
     command: /entrypoints/api_entrypoint.sh

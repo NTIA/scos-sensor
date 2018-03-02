@@ -51,7 +51,7 @@
             ],
             "type": "object"
         },
-        "data_extraction_unit_object": {
+        "receiver_object": {
             "properties": {
                 "high_frequency": {
                     "type": "number"
@@ -114,12 +114,12 @@
                 "properties": {
                     "scos:measurement_type": {
                         "properties": {
-                            "SingleFrequencyFFTDetection": {
+                            "single_frequency_fft_detection": {
                                 "$ref": "#/definitions/single_frequency_fft_detection_object"
                             }
                         },
                         "required": [
-                            "SingleFrequencyFFTDetection"
+                            "single_frequency_fft_detection"
                         ],
                         "type": "object"
                     }
@@ -139,12 +139,12 @@
                             "$ref": "#/definitions/antenna_object"
                         },
                         "data_extraction_unit": {
-                            "$ref": "#/definitions/data_extraction_unit_object"
+                            "$ref": "#/definitions/reciever_object"
                         }
                     },
                     "required": [
                         "antenna",
-                        "data_extraction_unit"
+                        "receiver"
                     ],
                     "type": "object"
                 },

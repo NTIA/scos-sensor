@@ -22,6 +22,6 @@ from scheduler import scheduler  # noqa
 application = get_wsgi_application()
 
 
-if settings.RUNNING_DEVSERVER:
+if not settings.IN_DOCKER:
     # Normally scheduler is started by gunicorn worker process
     scheduler.thread.start()

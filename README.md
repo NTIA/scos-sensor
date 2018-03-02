@@ -119,7 +119,6 @@ $ source ./env
 4) Run a Dockerized production-grade stack.
 
 ```bash
-$ ./scripts/init_db.sh
 $ docker-compose up -d                                    # start in background
 $ docker-compose exec api /src/manage.py createsuperuser  # create admin user
 $ docker-compose logs --follow api                        # reattach terminal

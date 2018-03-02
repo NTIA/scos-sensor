@@ -12,12 +12,12 @@ from enum import Enum
 from rest_framework.reverse import reverse
 from sigmf.sigmffile import SigMFFile
 
+from capabilities.models import SensorDefinition
+from capabilities.serializers import SensorDefinitionSerializer
+from sensor import V1, settings
+
 from .base import Action
 from . import usrp
-from capabilities import (scos_antenna_obj,
-                          data_extract_obj,
-                          SCOS_TRANSFER_SPEC_VER)
-from sensor import V1, settings
 
 
 logger = logging.getLogger(__name__)
@@ -50,6 +50,9 @@ def parse_iso8601_datetime(d):
 
 # FIXME: comes from initial amplitude accuracy calibration
 scale_factor = 1.0
+
+# FIXME: this needs to be defined globally somewhere
+SCOS_TRANSFER_SPEC_VER = '0.1'
 
 
 def m4s_detector(array):
@@ -169,13 +172,9 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        sensor_definition = {
-            "antenna": scos_antenna_obj["scos:antenna"],
-            "data_extraction_unit":
-                data_extract_obj["scos:data_extraction_unit"]
-        }
-
-        sigmf_md.set_global_field("scos:sensor_definition", sensor_definition)
+        sensor_def_obj = SensorDefinition.objects.get()
+        sensor_def_json = SensorDefinitionSerializer(sensor_def_obj).data
+        sigmf_md.set_global_field("scos:sensor_definition", sensor_def_json)
 
         try:
             fqdn = settings.ALLOWED_HOSTS[1]
@@ -205,7 +204,7 @@ class SingleFrequencyFftAcquisition(Action):
 
             annotation_md = {
                 "scos:measurement_type": {
-                        "SingleFrequencyFFTDetection": single_frequency_fft_md
+                    "single_frequency_fft_detection": single_frequency_fft_md,
                 }
             }
 

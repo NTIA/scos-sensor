@@ -29,10 +29,9 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
 )
 
-RUNNING_DEVSERVER = 'runserver' in sys.argv
-
-_testcmd = os.path.split(sys.argv[0])[-1]
-RUNNING_TESTS = 'test' in _testcmd
+__cmd = os.path.split(sys.argv[0])[-1]
+IN_DOCKER = bool(os.environ.get('IN_DOCKER'))
+RUNNING_TESTS = 'test' in __cmd
 
 # Healthchecks - the existance of any of these indicates an unhealth state
 SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
@@ -46,7 +45,7 @@ except OSError:
     pass
 
 # See /env.template
-if RUNNING_DEVSERVER or RUNNING_TESTS:
+if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -55,9 +54,10 @@ else:
     SECRET_KEY = os.environ['SECRET_KEY']
     DEBUG = bool(os.environ['DEBUG'] == "true")
     ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
+    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
 
-SESSION_COOKIE_SECURE = not RUNNING_DEVSERVER
-CSRF_COOKIE_SECURE = not RUNNING_DEVSERVER
+SESSION_COOKIE_SECURE = IN_DOCKER
+CSRF_COOKIE_SECURE = IN_DOCKER
 
 
 # Application definition
@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
+    'capabilities.apps.CapabilitiesConfig',
     'results.apps.ResultsConfig',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
@@ -206,15 +207,22 @@ SWAGGER_SETTINGS = {
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(REPO_ROOT, 'db.sqlite3'),
-        'OPTIONS': {
-            'timeout': 20
+if RUNNING_TESTS:
+    DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3'}}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+            'HOST': 'db',
+            'PORT': '5432',
         }
     }
-}
+
+if not IN_DOCKER:
+    DATABASES['default']['HOST'] = 'localhost'
 
 
 # Ensure not more than this many results are stored in db by removing oldest
