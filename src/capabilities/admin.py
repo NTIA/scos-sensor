@@ -2,13 +2,7 @@
 
 from django.contrib import admin
 
-from .models import (
-    Antenna,
-    DataExtractionUnit,
-    RFPath,
-    SensorDefinition,
-    SignalConditioningUnit
-)
+from .models import Antenna, Preselector, Receiver, RFPath, SensorDefinition
 
 
 @admin.register(Antenna)
@@ -24,8 +18,8 @@ class AntennaAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(DataExtractionUnit)
-class DataExtractionUnitAdmin(admin.ModelAdmin):
+@admin.register(Receiver)
+class ReceiverAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'model',
@@ -40,16 +34,16 @@ class DataExtractionUnitAdmin(admin.ModelAdmin):
 class RFPathAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'signal_condition_unit',
+        'preselector',
         'rf_path_number',
         'low_frequency_passband',
         'high_frequency_passband',
     )
-    list_filter = ('signal_condition_unit',)
+    list_filter = ('preselector',)
 
 
-@admin.register(SignalConditioningUnit)
-class SignalConditioningUnitAdmin(admin.ModelAdmin):
+@admin.register(Preselector)
+class PreselectorAdmin(admin.ModelAdmin):
     list_display = ('id',)
 
 
@@ -59,6 +53,6 @@ class SensorDefinitionAdmin(admin.ModelAdmin):
         'id',
         'host_controller',
         'antenna',
-        'signal_condition_unit',
-        'data_extraction_unit',
+        'preselector',
+        'receiver',
     )
