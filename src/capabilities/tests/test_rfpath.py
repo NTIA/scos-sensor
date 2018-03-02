@@ -1,7 +1,7 @@
-from capabilities.models import RFPath, SignalConditioningUnit
+from capabilities.models import RFPath, Preselector
 
 
 def test_antenna_str():
-    scu = SignalConditioningUnit()
-    str(RFPath(signal_condition_unit=scu))
-    str(RFPath(signal_condition_unit=scu, rf_path_number=1))
+    ps = Preselector()
+    str(RFPath(preselector=ps))
+    str(RFPath(preselector=ps, rf_path_number=1))

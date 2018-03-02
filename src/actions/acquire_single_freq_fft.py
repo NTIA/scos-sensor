@@ -204,7 +204,7 @@ class SingleFrequencyFftAcquisition(Action):
 
             annotation_md = {
                 "scos:measurement_type": {
-                        "SingleFrequencyFFTDetection": single_frequency_fft_md
+                    "single_frequency_fft_detection": single_frequency_fft_md,
                 }
             }
 

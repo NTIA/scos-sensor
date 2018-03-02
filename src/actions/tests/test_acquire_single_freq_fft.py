@@ -12,7 +12,7 @@ import os
 
 
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"
-SCHEMA_PATH = os.path.join(settings.REPO_ROOT, "config", SCHEMA_FNAME)
+SCHEMA_PATH = os.path.join(settings.REPO_ROOT, SCHEMA_FNAME)
 
 with open(SCHEMA_PATH, "r") as f:
     schema = json.load(f)
