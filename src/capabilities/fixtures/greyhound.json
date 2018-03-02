@@ -3,10 +3,10 @@
     "model": "capabilities.antenna",
     "pk": 1,
     "fields": {
-        "model": "WDS-ANT101",
-        "type": null,
-        "low_frequency": null,
-        "high_frequency": null,
+        "model": "Comtelco BS698XL3 Base Station Antenna",
+        "type": "dipole",
+        "low_frequency": 698000000.0,
+        "high_frequency": 896000000.0,
         "gain": null,
         "horizontal_gain_pattern": null,
         "vertical_gain_pattern": null,
@@ -14,58 +14,21 @@
         "vertical_beam_width": null,
         "cross_polar_discrimintation": null,
         "voltage_standing_wave_ratio": null,
-        "cable_loss": null,
+        "cable_loss": 0.0,
         "steerable": false,
         "mobile": false
     }
 },
 {
-    "model": "capabilities.dataextractionunit",
+    "model": "capabilities.receiver",
     "pk": 1,
     "fields": {
         "model": "Ettus B200",
-        "low_frequency": 50000000.0,
+        "low_frequency": 70000000.0,
         "high_frequency": 6000000000.0,
-        "noise_figure": 15.0,
+        "noise_figure": 8.0,
         "max_power": 0.0
     }
-},
-{
-    "model": "capabilities.rfpath",
-    "pk": 1,
-    "fields": {
-        "signal_condition_unit": 1,
-        "rf_path_number": 1,
-        "low_frequency_passband": 6000000000.0,
-        "high_frequency_passband": 800000000.0,
-        "low_frequency_stopband": null,
-        "high_frequency_stopband": null,
-        "lna_gain": 25.0,
-        "lna_noise_figure": 3.0,
-        "cal_source_type": null,
-        "cal_source_enr": null
-    }
-},
-{
-    "model": "capabilities.rfpath",
-    "pk": 2,
-    "fields": {
-        "signal_condition_unit": 1,
-        "rf_path_number": 2,
-        "low_frequency_passband": 1500000000.0,
-        "high_frequency_passband": 1600000000.0,
-        "low_frequency_stopband": null,
-        "high_frequency_stopband": null,
-        "lna_gain": 25.0,
-        "lna_noise_figure": 3.0,
-        "cal_source_type": null,
-        "cal_source_enr": null
-    }
-},
-{
-    "model": "capabilities.signalconditioningunit",
-    "pk": 1,
-    "fields": {}
 },
 {
     "model": "capabilities.sensordefinition",
@@ -73,8 +36,8 @@
     "fields": {
         "host_controller": "Intel NUC Board NUC7i7DNBE",
         "antenna": 1,
-        "signal_condition_unit": 1,
-        "data_extraction_unit": 1
+        "preselector": null,
+        "receiver": 1
     }
 }
 ]
