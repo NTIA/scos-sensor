@@ -10,10 +10,10 @@ class RFPath(models.Model):
     https://github.com/NTIA/SCOS-Transfer-Spec#rfpath-object
 
     """
-    signal_condition_unit = models.ForeignKey(
-        'capabilities.SignalConditioningUnit',
+    preselector = models.ForeignKey(
+        'capabilities.Preselector',
         on_delete=models.CASCADE,
-        related_name='rf_path_spec',
+        related_name='rf_paths',
     )
     rf_path_number = models.PositiveSmallIntegerField(
         help_text="RF path number.",

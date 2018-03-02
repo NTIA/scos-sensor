@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from .models import (
-    Antenna,
-    DataExtractionUnit,
-    RFPath,
-    SensorDefinition,
-    SignalConditioningUnit
-)
+from .models import Antenna, Preselector, Receiver, RFPath, SensorDefinition
 
 
 def filter_null_fields(self, obj):
@@ -81,13 +75,13 @@ AntennaSerializer.validate_vertical_gain_pattern = (
 )
 
 
-class DataExtractionUnitSerializer(serializers.ModelSerializer):
+class ReceiverSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DataExtractionUnit
+        model = Receiver
         exclude = ('id',)
 
 
-DataExtractionUnitSerializer.to_representation = filter_null_fields
+ReceiverSerializer.to_representation = filter_null_fields
 
 
 class RFPathSerializer(serializers.ModelSerializer):
@@ -99,23 +93,23 @@ class RFPathSerializer(serializers.ModelSerializer):
 RFPathSerializer.to_representation = filter_null_fields
 
 
-class SignalConditioningUnitSerializer(serializers.ModelSerializer):
+class PreselectorSerializer(serializers.ModelSerializer):
     rf_path_spec = RFPathSerializer(many=True)
 
     class Meta:
-        model = SignalConditioningUnit
+        model = Preselector
         exclude = ('id',)
 
 
-SignalConditioningUnitSerializer.to_representation = (
+PreselectorSerializer.to_representation = (
     filter_null_fields_and_empty_ararys
 )
 
 
 class SensorDefinitionSerializer(serializers.ModelSerializer):
     antenna = AntennaSerializer()
-    data_extraction_unit = DataExtractionUnitSerializer()
-    signal_condition_unit = SignalConditioningUnitSerializer()
+    receiver = ReceiverSerializer()
+    preselector = PreselectorSerializer()
 
     class Meta:
         model = SensorDefinition

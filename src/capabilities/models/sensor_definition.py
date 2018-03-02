@@ -21,13 +21,13 @@ class SensorDefinition(models.Model):
         'capabilities.Antenna',
         on_delete=models.PROTECT,
     )
-    signal_condition_unit = models.ForeignKey(
-        'capabilities.SignalConditioningUnit',
+    preselector = models.ForeignKey(
+        'capabilities.Preselector',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
     )
-    data_extraction_unit = models.ForeignKey(
-        'capabilities.DataExtractionUnit',
+    receiver = models.ForeignKey(
+        'capabilities.Receiver',
         on_delete=models.PROTECT,
     )

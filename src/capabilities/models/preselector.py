@@ -4,12 +4,12 @@ from django.db import models
 MAX_CHARFIELD_LEN = 255
 
 
-class SignalConditioningUnit(models.Model):
-    """Implements SignalConditioningUnit as defined in the SCOS transfer spec.
+class Preselector(models.Model):
+    """Implements Preselector as defined in the SCOS transfer spec.
 
-    https://github.com/NTIA/SCOS-Transfer-Spec#signalconditioningunit-object
+    https://github.com/NTIA/SCOS-Transfer-Spec#preselector-object
 
-    `rf_path_spec` is provided automatically by the RFPath model.
+    `rf_paths` is provided automatically by the RFPath model.
 
     """
     pass
