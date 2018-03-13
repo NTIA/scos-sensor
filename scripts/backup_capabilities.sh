@@ -36,6 +36,7 @@ OUTPUT_FILE=${REPO_ROOT}/src/capabilities/fixtures/"$INPUT"-$(date -I).json
 
 set +e  # this command may "fail"
 DB_RUNNING=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps db |grep Up)
+API_RUNNING=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps api |grep Up)
 set -e
 
 # Ensure database container is running
@@ -44,9 +45,17 @@ docker-compose -f ${REPO_ROOT}/docker-compose.yml up -d db
 echo "Querying capabilities fixture"
 echo "=============================="
 
-# Load given fixture file into database
-python ${REPO_ROOT}/src/manage.py dumpdata capabilities --indent=4 2>&1 \
-    | tee "$OUTPUT_FILE"
+# tail +4 strips off the output from the USRP driver
+
+if [[ "$API_RUNNING" ]]; then
+    docker-compose  -f ${REPO_ROOT}/docker-compose.yml exec api \
+                    /bin/bash -c "echo -e '\u001E' && /src/manage.py dumpdata capabilities --indent=4" \
+        | tail +4 | tee "$OUTPUT_FILE"
+else
+    docker-compose  -f ${REPO_ROOT}/docker-compose.yml run --rm api \
+                    /bin/bash -c "echo -e '\u001E' && /src/manage.py dumpdata capabilities --indent=4" \
+        | tail +4 | tee "$OUTPUT_FILE"
+fi
 
 echo "=============================="
 
