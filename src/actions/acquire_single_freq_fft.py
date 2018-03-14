@@ -29,9 +29,6 @@ GLOBAL_INFO = {
 }
 
 
-SIGMF_DATETIME_ISO8601_FMT = "%Y-%m-%dT%H:%M:%S.%fZ"
-
-
 class M4sDetector(Enum):
     min = 1
     max = 2
@@ -45,7 +42,7 @@ def get_sigmf_iso8601_datetime_now():
 
 
 def parse_iso8601_datetime(d):
-    return datetime.strptime(d, SIGMF_DATETIME_ISO8601_FMT)
+    return datetime.strptime(d, settings.DATETIME_FORMAT)
 
 
 # FIXME: comes from initial amplitude accuracy calibration
