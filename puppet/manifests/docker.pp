@@ -1,18 +1,6 @@
 # Part 3: Start Docker container
 
 class scos::docker (
-#  $install_source = $scos::install_source,
-#  $install_version = $scos::install_version,
-#  $git_username = $scos::git_username,
-#  $git_password = $scos::git_password,
-#  $install_root = $scos::install_root,
-#  $ssl_dir = $scos::ssl_dir,
-#  $ssl_cert = $scos::ssl_cert,
-#  $ssl_key = $scos::ssl_key,
-#  $admin_email = $scos::admin_email,
-#  $admin_password = $scos::admin_password,
-#  $secret_key = $scos::setup::secret_key,
-#  $postgres_password = $scos::postgres_password,
   )
 
 inherits scos::setup
