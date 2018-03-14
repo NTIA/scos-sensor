@@ -1,19 +1,9 @@
 # Part 3: Start Docker container
 
 class scos::docker (
-  $install_source = $scos::install_source,
-  $install_version = $scos::install_version,
-  $git_username = $scos::git_username,
-  $git_password = $scos::git_password,
-  $install_root = $scos::install_root,
-  $ssl_dir = $scos::ssl_dir,
-  $ssl_cert = $scos::ssl_cert,
-  $ssl_key = $scos::ssl_key,
-  $admin_email = $scos::admin_email,
-  $admin_password = $scos::admin_password,
-  $secret_key = $scos::setup::secret_key,
-  $postgres_password = $scos::postgres_password,
   )
+
+inherits scos::setup
 
 {
 
@@ -27,7 +17,7 @@ class scos::docker (
         "REPO_ROOT=${install_root}", #Note this subtle change
         'DEBUG=false',
         "SECRET_KEY=${secret_key}",
-        "POSTGRES_PASSWORD=${postgres_password}",
+        "POSTGRES_PASSWORD=${postgres_password_actual}",
         "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
@@ -51,7 +41,7 @@ class scos::docker (
         "REPO_ROOT=${install_root}", #Note this subtle change
         'DEBUG=false',
         "SECRET_KEY=${secret_key}",
-        "POSTGRES_PASSWORD=${postgres_password}",
+        "POSTGRES_PASSWORD=${postgres_password_actual}",
         "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
@@ -63,6 +53,7 @@ class scos::docker (
     }
     notify {"*** ${hostname} is up and running. Woof! ***":}
   }
-  notify {"*** secret_key is ${secret_key}! ***":}
-  notify {"*** postgres_password is ${postgres_password}! ***":}
+  notify {"*** Nginx secret key is: ${secret_key} ***":}
+  notify {"*** Admin password is: ${admin_password_actual} ***":}
+  notify {"*** Postgres password is: ${postgres_password_actual} ***":}
 }
