@@ -7,12 +7,12 @@ class Location(models.Model):
     Primarily used for mapping and geo-filtering.
 
     """
-    longitude = models.DecimalField(
+    latitude = models.DecimalField(
         max_digits=8,
         decimal_places=5,
         help_text="Longitude of the sensor in decimal degrees.",
     )
-    latitude = models.DecimalField(
+    longitude = models.DecimalField(
         max_digits=8,
         decimal_places=5,
         help_text="Longitude of the sensor in decimal degrees.",
