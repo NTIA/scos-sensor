@@ -42,8 +42,8 @@ def test_undefined_stop_is_never():
 
 
 def test_relative_stop_becomes_absolute():
-    e = ScheduleEntry(name='t', start=20, stop=+10, interval=1,
-                      stop_is_relative=True, action='logger')
+    e = ScheduleEntry(name='t', start=20, relative_stop=10, interval=1,
+                      action='logger')
     assert e.start == 20
     assert e.stop == 30
     assert list(e.get_remaining_times()) == list(range(20, 30, 1))

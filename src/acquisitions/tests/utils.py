@@ -22,8 +22,7 @@ SINGLE_ACQUISITION = {
 MULTIPLE_ACQUISITIONS = {
     'name': 'test_multiple_acq',
     'start': None,
-    'stop': 5,
-    'stop_is_relative': True,
+    'relative_stop': 5,
     'interval': 1,
     'action': 'mock_acquire'
 }
