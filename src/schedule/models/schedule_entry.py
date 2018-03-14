@@ -82,8 +82,8 @@ class ScheduleEntry(models.Model):
         ).format(DEFAULT_PRIORITY)
     )
     start = models.BigIntegerField(
-        default=next_schedulable_timefn,
         blank=True,
+        default=next_schedulable_timefn,
         help_text="Absolute time (epoch) to start, or leave blank for 'now'"
     )
     stop = models.BigIntegerField(
@@ -107,7 +107,7 @@ class ScheduleEntry(models.Model):
         default=False,
         editable=True,
         help_text=("Indicates whether the entry, and resulting data, are only "
-                   "visible to admin")
+                   "visible to admins")
     )
     callback_url = models.URLField(
         blank=True,
@@ -119,7 +119,7 @@ class ScheduleEntry(models.Model):
     next_task_time = models.BigIntegerField(
         null=True,
         editable=False,
-        help_text="The time the next task is to be executed"
+        help_text="The time the next task is scheduled to be executed"
     )
     next_task_id = models.IntegerField(
         default=1,
@@ -141,7 +141,6 @@ class ScheduleEntry(models.Model):
         on_delete=models.CASCADE,
         help_text="The name of the user who owns the entry"
     )
-
     request = models.ForeignKey(
         'schedule.Request',
         null=True,  # null allowable for unit testing only
@@ -155,12 +154,15 @@ class ScheduleEntry(models.Model):
         ordering = ('created',)
 
     def __init__(self, *args, **kwargs):
-        stop_is_relative = kwargs.pop('stop_is_relative', False)
+        absolute_stop = kwargs.pop('absolute_stop', None)
+        relative_stop = kwargs.pop('relative_stop', None)
 
         super(ScheduleEntry, self).__init__(*args, **kwargs)
 
-        if stop_is_relative:
-            self.stop = self.start + self.stop
+        if relative_stop:
+            self.stop = self.start + relative_stop
+        elif absolute_stop is not None:
+            self.stop = absolute_stop
 
         if self.next_task_time is None:
             self.next_task_time = self.start
