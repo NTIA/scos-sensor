@@ -8,12 +8,12 @@ class Location(models.Model):
 
     """
     latitude = models.DecimalField(
-        max_digits=8,
-        decimal_places=5,
+        max_digits=9,
+        decimal_places=6,
         help_text="Longitude of the sensor in decimal degrees.",
     )
     longitude = models.DecimalField(
-        max_digits=8,
-        decimal_places=5,
+        max_digits=9,
+        decimal_places=6,
         help_text="Longitude of the sensor in decimal degrees.",
     )
