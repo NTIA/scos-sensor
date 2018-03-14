@@ -33,7 +33,7 @@ def get_actions(include_admin_actions=False):
 
 
 def get_sensor_definition():
-    """Returns SensorDefition object JSON if set or None and logs an error."""
+    """Returns SensorDefinition JSON if set or None and logs an error."""
     try:
         sensor_def = SensorDefinition.objects.get()
         return SensorDefinitionSerializer(sensor_def).data
