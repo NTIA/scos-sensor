@@ -1,10 +1,9 @@
-from datetime import datetime
-
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 import actions
 from sensor import V1
+from sensor.utils import get_datetime_from_timestamp
 from .models import ScheduleEntry
 
 
@@ -17,19 +16,29 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     )
     start = serializers.DateTimeField(
         required=False,
+        allow_null=True,
+        default=None,
         help_text="UTC time (ISO 8601) to start, or leave blank for 'now'"
     )
-    absolute_stop = serializers.DateTimeField(
+    stop = serializers.DateTimeField(
         required=False,
+        allow_null=True,
+        default=None,
+        label="Absolute stop",
         help_text=("UTC time (ISO 8601) to stop, "
-                   "or leave blank for 'never' (not valid with relative_stop)")
+                   "or leave blank for 'never' (not valid with relative stop)")
     )
     relative_stop = serializers.IntegerField(
         required=False,
+        write_only=True,
+        allow_null=True,
+        default=None,
+        min_value=1,
         help_text=("Integer seconds after start to stop, "
-                   "or leave blank for 'never' (not valid with absolute_stop)")
+                   "or leave blank for 'never' (not valid with absolute stop)")
     )
-    next_task_time = serializers.SerializerMethodField(
+    next_task_time = serializers.DateTimeField(
+        read_only=True,
         help_text="UTC time (ISO 8601) the next task is scheduled for"
     )
     action = serializers.ChoiceField(
@@ -45,7 +54,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'action',
             'priority',
             'start',
-            'absolute_stop',
+            'stop',
             'relative_stop',
             'interval',
             'is_active',
@@ -69,38 +78,35 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'help_text': "The name of the user who owns the entry"
             }
         }
-        read_only_fields = ('is_active', 'is_private', 'next_task_time',
-                            'stop')
-        write_only_fields = ('absolute_stop', 'relative_stop',)
+        read_only_fields = ('is_active', 'next_task_time')
+        write_only_fields = ('relative_stop',)
 
     def validate(self, data):
         """Do object-level validation."""
+
+        if 'start' in data and data['start'] is None:
+            data.pop('start')
+
         got_absolute_stop = False
         got_relative_stop = False
 
-        if 'absolute_stop' in data and data['absolute_stop'] is not None:
+        if 'stop' in data and data['stop'] is not None:
             got_absolute_stop = True
 
         if 'relative_stop' in data and data['relative_stop'] is not None:
             got_relative_stop = True
 
         if got_absolute_stop and got_relative_stop:
-            err = "pass only one of absolute_stop and relative_stop"
+            err = "pass only one of stop and relative_stop"
             raise serializers.ValidationError(err)
 
         return data
-
-    def get_absolute_stop(self, obj):
-        return datetime.fromtimestamp(obj.stop)
 
     def get_acquisitions(self, obj):
         request = self.context['request']
         kws = {'schedule_entry_name': obj.name}
         kws.update(V1)
         return reverse('acquisition-list', kwargs=kws, request=request)
-
-    def get_next_task_time(self, obj):
-        return datetime.fromtimestamp(obj.next_task_time)
 
     def get_results(self, obj):
         request = self.context['request']
@@ -109,16 +115,21 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         return reverse('result-list', kwargs=kws, request=request)
 
     def to_internal_value(self, data):
-        """Strip incoming start=None so that model uses default start value."""
-        if 'start' in data and data['start'] is None:
-            data.pop('start')
+        """Clean up input before starting validation."""
+        # Allow 'absolute_stop' to be a synonym for 'stop'
+        if 'absolute_stop' in data:
+            data['stop'] = data.pop('absolute_stop')
 
         # py2.7 compat -> super().to_internal...
         return super(ScheduleEntrySerializer, self).to_internal_value(data)
 
     def to_representation(self, obj):
         """Translate Unix timestamps to datetime format."""
-        obj.start = datetime.fromtimestamp(obj.start)
+        obj.start = get_datetime_from_timestamp(obj.start)
+        obj.next_task_time = get_datetime_from_timestamp(obj.next_task_time)
+
+        if obj.stop is not None:
+            obj.stop = get_datetime_from_timestamp(obj.stop)
 
         # py2.7 compat -> super().to_internal...
         return super(ScheduleEntrySerializer, self).to_representation(obj)

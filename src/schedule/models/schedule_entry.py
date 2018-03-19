@@ -110,6 +110,7 @@ class ScheduleEntry(models.Model):
                    "visible to admins")
     )
     callback_url = models.URLField(
+        null=True,
         blank=True,
         help_text=("If given, the scheduler will POST a `TaskResult` JSON "
                    "object to this URL after each task completes")
@@ -154,15 +155,12 @@ class ScheduleEntry(models.Model):
         ordering = ('created',)
 
     def __init__(self, *args, **kwargs):
-        absolute_stop = kwargs.pop('absolute_stop', None)
         relative_stop = kwargs.pop('relative_stop', None)
 
         super(ScheduleEntry, self).__init__(*args, **kwargs)
 
         if relative_stop:
             self.stop = self.start + relative_stop
-        elif absolute_stop is not None:
-            self.stop = absolute_stop
 
         if self.next_task_time is None:
             self.next_task_time = self.start
@@ -170,6 +168,9 @@ class ScheduleEntry(models.Model):
         # used by .save to detect whether to reset .next_task_time
         self.__start = self.start
         self.__interval = self.interval
+
+    def update(self, *args, **kwargs):
+        super(ScheduleEntry, self).update(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         if self.start != self.__start or self.interval != self.__interval:

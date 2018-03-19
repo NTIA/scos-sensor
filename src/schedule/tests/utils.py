@@ -33,6 +33,7 @@ def post_schedule(client, entry):
     kwargs = {
         'data': json.dumps(entry),
         'content_type': 'application/json',
+        'secure': True,
         'wsgi.url_scheme': 'https'
     }
 
@@ -50,6 +51,7 @@ def update_schedule(client, entry_name, new_entry):
     kwargs = {
         'data': json.dumps(new_entry),
         'content_type': 'application/json',
+        'secure': True,
         'wsgi.url_scheme': 'https'
     }
 

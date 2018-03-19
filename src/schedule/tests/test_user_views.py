@@ -103,12 +103,12 @@ def test_user_can_modify_their_entry(user_client):
     rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
 
-    user_adjust_repose = update_schedule(
+    user_adjust_response = update_schedule(
         user_client, entry_name, TEST_ALTERNATE_SCHEDULE_ENTRY)
 
-    validate_response(user_adjust_repose, status.HTTP_200_OK)
+    validate_response(user_adjust_response, status.HTTP_200_OK)
     assert rjson['priority'] == 10
-    assert user_adjust_repose.data['priority'] == 5
+    assert user_adjust_response.data['priority'] == 5
 
 
 def test_user_cannot_modify_any_other_entry(admin_client, user_client,
