@@ -182,6 +182,7 @@ REST_FRAMEWORK = {
     'ALLOWED_VERSIONS': ('v1',),
     'DATETIME_FORMAT': DATETIME_FORMAT,
     'DATETIME_INPUT_FORMATS': ('iso-8601',),
+    'COERCE_DECIMAL_TO_STRING': False,  # DecimalField should return floats
 }
 
 
