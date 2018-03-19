@@ -35,7 +35,7 @@ def simulate_acquisitions(client, n=1, is_private=False, name=None):
         schedule_entry = SINGLE_ACQUISITION.copy()
     else:
         schedule_entry = MULTIPLE_ACQUISITIONS.copy()
-        schedule_entry['stop'] = n + 1
+        schedule_entry['relative_stop'] = n + 1
 
     schedule_entry['is_private'] = is_private
 
