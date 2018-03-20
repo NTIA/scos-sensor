@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def get_location():
     """Returns Location object JSON if set or None and logs an error."""
     try:
-        sensor_def = Location.objects.get()
+        sensor_def = Location.objects.filter(active=True).get()
         return LocationSerializer(sensor_def).data
     except Location.DoesNotExist:
         logger.error("You must create a Location in /admin.")
