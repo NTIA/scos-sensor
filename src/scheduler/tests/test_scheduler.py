@@ -384,9 +384,9 @@ def test_starvation(test_scheduler):
     # higher-pri recurring task that takes 3 ticks to complete enters at t=0
     cb0, flag0 = create_action()
     create_entry('t0', 10, None, None, 3, cb0.__name__)
-    # lower-pri task enters at t=1
+    # lower-pri task enters at t=2
     cb1, flag1 = create_action()
-    create_entry('t1', 20,  1, None, None, cb1.__name__)
+    create_entry('t1', 20,  2, None, None, cb1.__name__)
     s = test_scheduler
     s.run(blocking=False)
     assert not flag1.is_set()
