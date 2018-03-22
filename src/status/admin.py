@@ -7,4 +7,4 @@ from .models import Location
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('longitude', 'latitude')
+    list_display = ('description', 'longitude', 'latitude', 'active')

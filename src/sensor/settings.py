@@ -44,6 +44,9 @@ try:
 except OSError:
     pass
 
+# As defined in SigMF
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
+
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
@@ -177,6 +180,9 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_VERSION': 'v1',  # this should always point to latest stable api
     'ALLOWED_VERSIONS': ('v1',),
+    'DATETIME_FORMAT': DATETIME_FORMAT,
+    'DATETIME_INPUT_FORMATS': ('iso-8601',),
+    'COERCE_DECIMAL_TO_STRING': False,  # DecimalField should return floats
 }
 
 

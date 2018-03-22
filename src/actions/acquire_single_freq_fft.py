@@ -3,7 +3,6 @@
 from __future__ import absolute_import
 
 import logging
-from datetime import datetime
 from itertools import compress
 
 import numpy as np
@@ -14,7 +13,7 @@ from sigmf.sigmffile import SigMFFile
 
 from capabilities.models import SensorDefinition
 from capabilities.serializers import SensorDefinitionSerializer
-from sensor import V1, settings
+from sensor import V1, settings, utils
 
 from .base import Action
 from . import usrp
@@ -29,23 +28,12 @@ GLOBAL_INFO = {
 }
 
 
-SIGMF_DATETIME_ISO8601_FMT = "%Y-%m-%dT%H:%M:%S.%fZ"
-
-
 class M4sDetector(Enum):
     min = 1
     max = 2
     mean = 3
     median = 4
     sample = 5
-
-
-def get_sigmf_iso8601_datetime_now():
-    return datetime.isoformat(datetime.utcnow()) + 'Z'
-
-
-def parse_iso8601_datetime(d):
-    return datetime.strptime(d, SIGMF_DATETIME_ISO8601_FMT)
 
 
 # FIXME: comes from initial amplitude accuracy calibration
@@ -186,7 +174,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         capture_md = {
             "core:frequency": self.frequency,
-            "core:time": get_sigmf_iso8601_datetime_now()
+            "core:time": utils.get_datetime_str_now()
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)

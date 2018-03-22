@@ -82,8 +82,8 @@ class ScheduleEntry(models.Model):
         ).format(DEFAULT_PRIORITY)
     )
     start = models.BigIntegerField(
-        default=next_schedulable_timefn,
         blank=True,
+        default=next_schedulable_timefn,
         help_text="Absolute time (epoch) to start, or leave blank for 'now'"
     )
     stop = models.BigIntegerField(
@@ -107,9 +107,10 @@ class ScheduleEntry(models.Model):
         default=False,
         editable=True,
         help_text=("Indicates whether the entry, and resulting data, are only "
-                   "visible to admin")
+                   "visible to admins")
     )
     callback_url = models.URLField(
+        null=True,
         blank=True,
         help_text=("If given, the scheduler will POST a `TaskResult` JSON "
                    "object to this URL after each task completes")
@@ -119,7 +120,7 @@ class ScheduleEntry(models.Model):
     next_task_time = models.BigIntegerField(
         null=True,
         editable=False,
-        help_text="The time the next task is to be executed"
+        help_text="The time the next task is scheduled to be executed"
     )
     next_task_id = models.IntegerField(
         default=1,
@@ -141,7 +142,6 @@ class ScheduleEntry(models.Model):
         on_delete=models.CASCADE,
         help_text="The name of the user who owns the entry"
     )
-
     request = models.ForeignKey(
         'schedule.Request',
         null=True,  # null allowable for unit testing only
@@ -155,12 +155,12 @@ class ScheduleEntry(models.Model):
         ordering = ('created',)
 
     def __init__(self, *args, **kwargs):
-        stop_is_relative = kwargs.pop('stop_is_relative', False)
+        relative_stop = kwargs.pop('relative_stop', None)
 
         super(ScheduleEntry, self).__init__(*args, **kwargs)
 
-        if stop_is_relative:
-            self.stop = self.start + self.stop
+        if relative_stop:
+            self.stop = self.start + relative_stop
 
         if self.next_task_time is None:
             self.next_task_time = self.start
@@ -168,6 +168,9 @@ class ScheduleEntry(models.Model):
         # used by .save to detect whether to reset .next_task_time
         self.__start = self.start
         self.__interval = self.interval
+
+    def update(self, *args, **kwargs):
+        super(ScheduleEntry, self).update(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         if self.start != self.__start or self.interval != self.__interval:
