@@ -403,7 +403,7 @@ def test_starvation(test_scheduler):
 @pytest.mark.django_db
 def test_task_pushed_past_stop_still_runs(test_scheduler):
     """A task pushed past `stop` by a long running task should still run."""
-    # create an entry that runs at time 1, 2, and 3
+    # create an entry that runs at time 1 and 2
     cb0, flag0 = create_action()
     create_entry('t0', 10, 1, 3, 1, cb0.__name__)
 
