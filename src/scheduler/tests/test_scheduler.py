@@ -400,5 +400,22 @@ def test_starvation(test_scheduler):
     assert flag1.is_set()
 
 
+@pytest.mark.django_db
+def test_task_pushed_past_stop_still_runs(test_scheduler):
+    """A task pushed past `stop` by a long running task should still run."""
+    # create an entry that runs at time 1, 2, and 3
+    cb0, flag0 = create_action()
+    create_entry('t0', 10, 1, 3, 1, cb0.__name__)
+
+    s = test_scheduler
+    s.run(blocking=False)
+
+    # simulate a long-running task that blocked until t=4
+    advance_testclock(s.timefn, 4)
+    s.run(blocking=False)
+    # ensure that task ran at least once even though we're past its stop time
+    assert flag0.is_set()
+
+
 def test_str():
     str(Scheduler())
