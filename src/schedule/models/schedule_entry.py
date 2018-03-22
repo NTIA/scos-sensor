@@ -216,11 +216,13 @@ class ScheduleEntry(models.Model):
                 return iter(range(next_time, next_time + 1))   # one-shot
 
         stop = min(t for t in (until, stop) if t is not None)
-        interval = self.interval or abs(stop - next_time)
-        if interval:
-            return range(next_time, stop, interval)
-        else:
-            return range(next_time, next_time + 1)
+
+        time_slice = stop - next_time
+        if time_slice <= 0:
+            return range(0)
+
+        interval = self.interval or time_slice
+        return range(next_time, stop, interval)
 
     def get_next_task_id(self):
         next_task_id = self.next_task_id
