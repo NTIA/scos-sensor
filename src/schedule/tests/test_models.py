@@ -54,30 +54,41 @@ def test_stop_before_start():
     assert list(e.get_remaining_times()) == list(range(0))
 
 
-def test_no_interval():
-    e1 = ScheduleEntry(name='t', action='logger')
-    remaining_times = list(e1.get_remaining_times())
+def test_no_interval_is_one_shot():
+    """Leaving `interval` blank should indicate "one-shot" entry."""
+    e = ScheduleEntry(name='t', action='logger')
+    remaining_times = list(e.get_remaining_times())
     assert len(remaining_times) == 1
 
-    times = list(e1.take_until(remaining_times[0]+1000))
+    times = list(e.take_until(remaining_times[0]+1000))
     assert len(times) == 1
 
     # when interval is None, consuming the single task time unsets `active`
-    assert not e1.is_active
-    assert not list(e1.get_remaining_times())
-    assert not list(e1.take_until(remaining_times[0]+1000))
+    assert not e.is_active
+    assert not list(e.get_remaining_times())
+    assert not list(e.take_until(remaining_times[0]+1000))
 
-    e2 = ScheduleEntry(name='t', action='logger', start=1)
-    remaining_times = list(e2.get_remaining_times())
+
+def test_no_interval_with_start_is_one_shot():
+    """Specifying start should not affect number of times."""
+    e = ScheduleEntry(name='t', action='logger', start=1)
+    remaining_times = list(e.get_remaining_times())
     assert len(remaining_times) == 1
 
-    times = list(e2.take_until(remaining_times[0]+1000))
+    times = list(e.take_until(remaining_times[0]+1000))
     assert len(times) == 1
 
     # when interval is None, consuming the single task time unsets `active`
-    assert not e2.is_active
-    assert not list(e2.get_remaining_times())
-    assert not list(e2.take_until(remaining_times[0]+1000))
+    assert not e.is_active
+    assert not list(e.get_remaining_times())
+    assert not list(e.take_until(remaining_times[0]+1000))
+
+
+def test_no_interval_future_start(testclock):
+    """One-shot entry should wait for start."""
+    # recall current t=0 so start=1 is 1 second in the future
+    e = ScheduleEntry(name='t', action='logger', start=1)
+    assert not e.take_pending()
 
 
 def test_bad_interval_raises():

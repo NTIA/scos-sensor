@@ -4,57 +4,14 @@ import threading
 import pytest
 import requests_mock
 
-import actions
-from authentication.models import User
-from schedule.models import ScheduleEntry
 from scheduler.scheduler import Scheduler, minimum_duration
-from .utils import advance_testclock
-
-
-BAD_ACTION_STR = "testing expected failure"
-
-
-def create_entry(name, priority, start, stop, interval, action, cb_url=None):
-    kwargs = {
-        'name': name,
-        'priority': priority,
-        'stop': stop,
-        'interval': interval,
-        'action': action,
-        'owner': User.objects.get_or_create(username='test')[0]
-    }
-
-    if start is not None:
-        kwargs['start'] = start
-
-    if cb_url is not None:
-        kwargs['callback_url'] = cb_url
-
-    return ScheduleEntry.objects.create(**kwargs)
-
-
-def create_action():
-    flag = threading.Event()
-
-    def cb(entry, task_id):
-        flag.set()
-        return "set flag"
-
-    cb.__name__ = 'testcb' + str(create_action.counter)
-    actions.by_name[cb.__name__] = cb
-    create_action.counter += 1
-    return cb, flag
-
-
-create_action.counter = 0
-
-
-def create_bad_action():
-    def bad_action(entry, task_id):
-        raise Exception(BAD_ACTION_STR)
-
-    actions.by_name['bad_action'] = bad_action
-    return bad_action
+from .utils import (
+    BAD_ACTION_STR,
+    advance_testclock,
+    create_action,
+    create_bad_action,
+    create_entry
+)
 
 
 @pytest.mark.django_db
@@ -190,6 +147,8 @@ def test_survives_failed_action(test_scheduler):
     # less priority to force run after bad_entry fails
     create_entry('t2', 20,  None, None, None, cb2.__name__)
     s = test_scheduler
+    advance_testclock(s.timefn, 1)
+    assert not flag.is_set()
     s.run(blocking=False)
     assert flag.is_set()
 
@@ -219,6 +178,7 @@ def test_compress_past_times_offset(test_scheduler):
 # XXX: refactor
 @pytest.mark.django_db
 def test_next_task_time_value_when_start_changes(test_scheduler):
+    """When an entry's start value changes, update `next_task_time`."""
     entry = create_entry('t', 1, 1, 10, 1, 'logger')
     s = test_scheduler
     s.run(blocking=False)
@@ -254,6 +214,7 @@ def test_next_task_time_value_when_start_changes(test_scheduler):
 # XXX: refactor
 @pytest.mark.django_db
 def test_next_task_time_value_when_interval_changes(test_scheduler):
+    """When an entry's interval value changes, update `next_task_time`."""
     entry = create_entry('t', 1, 1, 100, 1, 'logger')
     s = test_scheduler
     s.run(blocking=False)
@@ -284,6 +245,7 @@ def test_one_shot(test_scheduler):
     """If no start or interval given, entry should be run once and removed."""
     create_entry('t', 1, None, None, None, 'logger')
     s = test_scheduler
+    advance_testclock(s.timefn, 1)
     s.run(blocking=False)
     assert len(s.task_queue) == 0
     assert not s.schedule_has_entries
@@ -291,6 +253,7 @@ def test_one_shot(test_scheduler):
 
 @pytest.mark.django_db
 def test_task_queue(test_scheduler):
+    """The scheduler should maintain a queue of upcoming tasks."""
     e = create_entry('t', 1, 1, 100, 5, 'logger')
     s = test_scheduler
 
@@ -359,7 +322,10 @@ def test_failure_posted_to_callback_url(test_scheduler):
     cb = create_bad_action()
     create_entry('t', 10, None, None, None, cb.__name__, 'mock://cburl')
     s = test_scheduler
+    advance_testclock(s.timefn, 1)
     s._callback_response_handler = cb_request_handler
+
+    assert not cb_flag.is_set()
 
     request_json = None
     with requests_mock.Mocker() as m:
@@ -390,7 +356,10 @@ def test_success_posted_to_callback_url(test_scheduler):
     # less priority to force run after bad_entry fails
     create_entry('t', 20,  None, None, None, cb.__name__, 'mock://cburl')
     s = test_scheduler
+    advance_testclock(s.timefn, 1)
     s._callback_response_handler = cb_request_handler
+
+    assert not action_flag.is_set()
 
     request_json = None
     with requests_mock.Mocker() as m:
@@ -407,6 +376,28 @@ def test_success_posted_to_callback_url(test_scheduler):
     assert request_json['started']
     assert request_json['finished']
     assert request_json['duration']
+
+
+@pytest.mark.django_db
+def test_starvation(test_scheduler):
+    """A recurring high-pri task should not 'starve' a low-pri task."""
+    # higher-pri recurring task that takes 3 ticks to complete enters at t=0
+    cb0, flag0 = create_action()
+    create_entry('t0', 10, None, None, 3, cb0.__name__)
+    # lower-pri task enters at t=2
+    cb1, flag1 = create_action()
+    create_entry('t1', 20,  2, None, None, cb1.__name__)
+    s = test_scheduler
+    s.run(blocking=False)
+    assert not flag1.is_set()
+    # Move ahead to simulate the hi-pri task having taken ~3 ticks to complete.
+    # Since hi-pri has an `interval` of 3, it should be re-queued to run again,
+    # but low-pri should also be in the queue. If the scheduling algorithm is
+    # too simplistic, the second hi-pri task will keep the low-pri task from
+    # running, which is called "task starvation".
+    advance_testclock(s.timefn, 4)
+    s.run(blocking=False)
+    assert flag1.is_set()
 
 
 def test_str():

@@ -33,25 +33,25 @@ def django_db_setup(django_db_setup, django_db_blocker):
 
 
 @pytest.yield_fixture
-def test_scheduler(rf):
-    """Instantiate test scheduler with fake request context.
-
-    Replace scheduler's timefn with manually steppable test timefn.
-
-    """
+def testclock():
+    """Replace scheduler's timefn with manually steppable test timefn."""
     # Setup test clock
-    real_timefn = scheduler.scheduler.utils.timefn
+    real_timefn = scheduler.utils.timefn
     real_delayfun = scheduler.utils.delayfn
     scheduler.utils.timefn = scheduler.tests.utils.TestClock()
     scheduler.utils.delayfn = scheduler.tests.utils.delayfn
-
-    s = scheduler.scheduler.Scheduler()
-    s.request = rf.post('mock://cburl/schedule')
-    yield s
-
+    yield
     # Teardown test clock
     scheduler.utils.timefn = real_timefn
     scheduler.utils.delayfn = real_delayfun
+
+
+@pytest.fixture
+def test_scheduler(rf, testclock):
+    """Instantiate test scheduler with fake request context and testclock."""
+    s = scheduler.scheduler.Scheduler()
+    s.request = rf.post('mock://cburl/schedule')
+    return s
 
 
 @pytest.fixture

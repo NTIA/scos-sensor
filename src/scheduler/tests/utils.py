@@ -1,8 +1,15 @@
 import collections
+import threading
 import time
 from itertools import chain, count, islice
 
+import actions
+from authentication.models import User
+from schedule.models import ScheduleEntry
 from scheduler.scheduler import Scheduler
+
+
+BAD_ACTION_STR = "testing expected failure"
 
 
 class TestClock(object):
@@ -30,18 +37,9 @@ def delayfn(t):
     time.sleep(0)
 
 
-def fast_timefn():
-    """10 Hz clock"""
-    return int(time.time()*10)
-
-
-def fast_delayfn(d):
-    return time.sleep(d/10)
-
-
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
 def advance_testclock(iterator, n):
-    "Advance the iterator n-steps ahead. If n is none, consume entirely."
+    "Advance the iterator n-steps ahead. If n is None, consume entirely."
     # Use functions that consume iterators at C speed.
     if n is None:
         # feed the entire iterator into a zero-length deque
@@ -60,6 +58,57 @@ def simulate_scheduler_run(n=1):
     for _ in range(n):
         advance_testclock(s.timefn, 1)
         s.run(blocking=False)
+
+
+def create_entry(name, priority, start, stop, interval, action, cb_url=None):
+    kwargs = {
+        'name': name,
+        'priority': priority,
+        'stop': stop,
+        'interval': interval,
+        'action': action,
+        'owner': User.objects.get_or_create(username='test')[0],
+    }
+
+    if start is not None:
+        kwargs['start'] = start
+
+    if cb_url is not None:
+        kwargs['callback_url'] = cb_url
+
+    return ScheduleEntry.objects.create(**kwargs)
+
+
+def create_action():
+    """Register an action that sets a thread-safe event flag when run.
+
+    For each call, a separate named action is created using static `counter`
+    variable.
+
+    See `test_calls_actions` for usage example.
+
+    """
+    flag = threading.Event()
+
+    def cb(entry, task_id):
+        flag.set()
+        return "set flag"
+
+    cb.__name__ = 'testcb' + str(create_action.counter)
+    actions.by_name[cb.__name__] = cb
+    create_action.counter += 1
+    return cb, flag
+
+
+create_action.counter = 0
+
+
+def create_bad_action():
+    def bad_action(entry, task_id):
+        raise Exception(BAD_ACTION_STR)
+
+    actions.by_name['bad_action'] = bad_action
+    return bad_action
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
