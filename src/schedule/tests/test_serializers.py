@@ -42,11 +42,15 @@ from .utils import post_schedule
     },
     # 'stop' and 'absolute_stop' are synonyms
     {'name': 'test', 'action': 'logger', 'stop': '2018-03-16T17:12:35.0Z'},
-
+    # Subseconds are optional
+    {'name': 'test', 'action': 'logger', 'start': '2018-03-16T17:12:35Z'},
+    # sensor is timezone-aware
+    {'name': 'test', 'action': 'logger', 'start': '2018-03-22T13:53:25-06:00'},
 ])
-def test_valid_entries(entry_json):
+def test_valid_entries(entry_json, user):
     serializer = ScheduleEntrySerializer(data=entry_json)
     assert serializer.is_valid()
+    serializer.save(owner=user)  # if input is valid, model should accept it
 
 
 # Test that invalid input is invalid

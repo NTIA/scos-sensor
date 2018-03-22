@@ -1,10 +1,24 @@
+from datetime import datetime
+
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 import actions
 from sensor import V1
-from sensor.utils import get_datetime_from_timestamp
+from sensor.utils import (
+    get_datetime_from_timestamp,
+    get_timestamp_from_datetime
+)
 from .models import ScheduleEntry
+
+
+def datetimes_to_timestamps(validated_data):
+    """Covert datetimes to timestamp integers in validated_data."""
+    for k, v in validated_data.items():
+        if type(v) is datetime:
+            validated_data[k] = get_timestamp_from_datetime(v)
+
+    return validated_data
 
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
@@ -133,3 +147,13 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         # py2.7 compat -> super().to_internal...
         return super(ScheduleEntrySerializer, self).to_representation(obj)
+
+    def create(self, validated_data):
+        """Convert datetime to timestamp integers."""
+        validated_data = datetimes_to_timestamps(validated_data)
+        return super(ScheduleEntrySerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = datetimes_to_timestamps(validated_data)
+        parent = super(ScheduleEntrySerializer, self)
+        return parent.update(instance, validated_data)
