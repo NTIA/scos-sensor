@@ -11,6 +11,7 @@ gunicorn==19.7.1
 jsonfield==2.0.2
 numpy==1.14.2
 psycopg2-binary==2.7.4
+raven==6.6.0
 requests-futures==0.9.7
 requests-mock==1.4.0
 six==1.11.0

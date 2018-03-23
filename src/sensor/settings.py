@@ -13,12 +13,15 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import sys
 
-
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_ROOT = os.path.dirname(BASE_DIR)
+
+DOCKER_TAG = os.environ.get('DOCKER_TAG')
+GIT_BRANCH = os.environ.get('GIT_BRANCH')
+VERSION_STRING = GIT_BRANCH if DOCKER_TAG == 'latest' else DOCKER_TAG
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
@@ -120,6 +123,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_openapi',
+    'raven.contrib.django.raven_compat',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
@@ -128,6 +132,7 @@ INSTALLED_APPS = [
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
     'status.apps.StatusConfig',
+    'sensor.apps.SensorConfig',  # global settings/utils, etc
 ]
 
 MIDDLEWARE = [
@@ -153,6 +158,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': [
+                'sensor.templatetags.sensor_tags',
+            ]
         },
     },
 ]
@@ -317,3 +325,13 @@ LOGGING = {
         }
     }
 }
+
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN')
+if SENTRY_DSN:
+    import raven
+
+    RAVEN_CONFIG = {
+        'dsn': SENTRY_DSN,
+        'release': raven.fetch_git_sha(REPO_ROOT),
+    }
