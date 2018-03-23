@@ -67,6 +67,14 @@ $ ./manage.py runserver
 - The development server serves on `localhost:8000`, not `:80`
 - If you get a Forbidden (403) error, close any tabs and clear any cache and
   cookies related to SCOS Sensor and try again
+- If you're using a virtual environment and your SDR driver is installed
+  outside of it, you may need to allow access to system sitepackages. For
+  example, if you're using a virtualenv called `scos-sensor`, you can remove
+  the following text file: `rm -f
+  ~/.virtualenvs/scos-sensor/lib/python2.7/no-global-site-packages.txt`, and
+  thereafter use the `ignore-installed` flag to pip: `pip install -I -r
+  requirements.txt`. This should let the devserver fall back to system
+  sitepackages for the SDR driver only.
 
 
 Running Production Server with Local Changes
