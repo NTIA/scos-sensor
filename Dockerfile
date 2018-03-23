@@ -8,13 +8,13 @@ RUN apt-get update && \
 # Install python prerequisites
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-	    python-setuptools python-pip && \
+        python-setuptools python-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install numpy build requirements
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-	    python-all-dev libblas-dev liblapack-dev libatlas-base-dev gfortran && \
+        python-all-dev libblas-dev liblapack-dev libatlas-base-dev gfortran && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install GNURadio and UHD
@@ -41,7 +41,6 @@ RUN mkdir -p /scripts
 COPY ./scripts/create_superuser.py /scripts
 
 RUN chmod +x /entrypoints/api_entrypoint.sh
-RUN chmod +x /entrypoints/testing_entrypoint.sh # for jenkins CI
 
 # Args are passed in via docker-compose during build time
 ARG DEBUG
