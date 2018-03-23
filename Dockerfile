@@ -35,7 +35,6 @@ COPY ./gunicorn /gunicorn
 
 RUN mkdir -p /entrypoints
 COPY ./entrypoints/api_entrypoint.sh /entrypoints
-COPY ./entrypoints/testing_entrypoint.sh /entrypoints
 
 RUN mkdir -p /scripts
 COPY ./scripts/create_superuser.py /scripts
