@@ -15,8 +15,8 @@ before_install:
   # Setup shell environment
   - source env.template
   # Create fake usb device node to make api container happy
-  - sudo mkdir -p /dev/bus/usb/003
-  - sudo mknod c 189 260
+  - sudo mkdir -p /dev/bus/usb/001
+  - sudo mknod /dev/bus/usb/001/001 c 189 260
 
 install:
   - docker build -t smsntia/scos-sensor .
