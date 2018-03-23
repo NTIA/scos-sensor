@@ -1,4 +1,4 @@
-NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link]
+NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
 ====================
 
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
@@ -13,6 +13,8 @@ monitoring.
 [ieee-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
 [travis-link]: https://travis-ci.org/NTIA/scos-sensor
 [travis-badge]: https://travis-ci.org/NTIA/scos-sensor.svg?branch=master
+[api-docs-link]: https://ntia.github.io/scos-sensor/
+[api-docs-badge]: https://img.shields.io/badge/docs-available-brightgreen.svg
 
 
 Table of Contents
