@@ -14,8 +14,9 @@ before_install:
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   # Setup shell environment
   - source env.template
-  # Create usb bus device directory to make api container happy
-  - sudo mkdir -p /dev/bus/usb
+  # Create fake usb device node to make api container happy
+  - sudo mkdir -p /dev/bus/usb/003
+  - sudo mknod c 189 260
 
 install:
   - docker build -t smsntia/scos-sensor .
