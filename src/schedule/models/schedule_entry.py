@@ -68,12 +68,12 @@ class ScheduleEntry(models.Model):
 
     name = models.SlugField(
         primary_key=True,
-        help_text="The unique identifier used in URLs and filenames"
+        help_text="[Required] The unique identifier used in URLs and filenames"
     )
     action = models.CharField(
         choices=actions.CHOICES,
         max_length=actions.MAX_LENGTH,
-        help_text="The name of the action to be scheduled"
+        help_text="[Required] The name of the action to be scheduled"
     )
     priority = models.SmallIntegerField(
         default=DEFAULT_PRIORITY,

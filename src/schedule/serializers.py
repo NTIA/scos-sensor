@@ -57,7 +57,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     )
     action = serializers.ChoiceField(
         choices=actions.CHOICES,
-        help_text="The name of the action to be scheduled"
+        help_text="[Required] The name of the action to be scheduled"
     )
 
     class Meta:
