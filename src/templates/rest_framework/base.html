@@ -1,11 +1,12 @@
 {% extends "rest_framework/base.html" %}
+{% load sensor_tags %}
 
 {% block title %} SCOS Sensor {% endblock %}
 
 {% block branding %}
   <span>
     <a href="" ref="nofollow" class="navbar-brand">
-      SCOS Sensor <span class="version">0.0.1</span>
+      SCOS Sensor <span class="version">{% sensor_version_string %}</span>
     </a>
   </span>
 {% endblock %}
