@@ -14,6 +14,7 @@ class scos
   $admin_email = undef,
   $admin_password = undef,
   $postgres_password = undef,
+  $sentry_dsn = undef,
 )
 
 {
