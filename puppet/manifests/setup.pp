@@ -66,7 +66,7 @@ REPO_ROOT=${install_root}
 SSL_CERT_PATH=${ssl_dir}/ssl-cert-snakeoil.pem
 SSL_KEY_PATH=${ssl_dir}/ssl-cert-snakeoil.key
 DOCKER_TAG=${install_version}
-SENTRY_DSN='${sentry_dsn}'",
+SENTRY_DSN=${sentry_dsn}",
     }
   }
 
