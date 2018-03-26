@@ -7,23 +7,9 @@ set -e # exit on error
 
 cd $REPO_ROOT
 
-# Only remove the database if deployment has occured via Github
-
-if [ -e .github ]; then
-    if [ -e data ]; then
-        mv -f data data_backup
-    fi
-fi
-
 rm -f .deployed
 rm -f .github
 rm -f .dockerhub
-
-# Only move the environment file if it exists
-
-if [ -e /etc/environment ]; then
-    mv -f /etc/environment /etc/environment_backup
-fi
 
 touch /etc/environment
 
