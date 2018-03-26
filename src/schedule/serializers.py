@@ -21,6 +21,27 @@ def datetimes_to_timestamps(validated_data):
     return validated_data
 
 
+class DateTimeFromTimestampField(serializers.DateTimeField):
+    """DateTimeField with integer timestamp as internal value."""
+    def to_representation(self, ts):
+        """Convert integer timestamp to an ISO 8601 datetime string."""
+        if ts is None:
+            return None
+
+        dt = get_datetime_from_timestamp(ts)
+        dt_str = super(DateTimeFromTimestampField, self).to_representation(dt)
+
+        return dt_str
+
+    def to_internal_value(self, dt_str):
+        """Parse an ISO 8601 datetime string and return a timestamp integer."""
+        if dt_str is None:
+            return None
+
+        dt = super(DateTimeFromTimestampField, self).to_internal_value(dt_str)
+        return get_timestamp_from_datetime(dt)
+
+
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     acquisitions = serializers.SerializerMethodField(
         help_text="The list of acquisitions related to the entry"
@@ -28,13 +49,13 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     results = serializers.SerializerMethodField(
         help_text="The list of results related to the entry"
     )
-    start = serializers.DateTimeField(
+    start = DateTimeFromTimestampField(
         required=False,
         allow_null=True,
         default=None,
         help_text="UTC time (ISO 8601) to start, or leave blank for 'now'"
     )
-    stop = serializers.DateTimeField(
+    stop = DateTimeFromTimestampField(
         required=False,
         allow_null=True,
         default=None,
@@ -51,7 +72,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         help_text=("Integer seconds after start to stop, "
                    "or leave blank for 'never' (not valid with absolute stop)")
     )
-    next_task_time = serializers.DateTimeField(
+    next_task_time = DateTimeFromTimestampField(
         read_only=True,
         help_text="UTC time (ISO 8601) the next task is scheduled for"
     )
@@ -136,24 +157,3 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         # py2.7 compat -> super().to_internal...
         return super(ScheduleEntrySerializer, self).to_internal_value(data)
-
-    def to_representation(self, obj):
-        """Translate Unix timestamps to datetime format."""
-        obj.start = get_datetime_from_timestamp(obj.start)
-        obj.next_task_time = get_datetime_from_timestamp(obj.next_task_time)
-
-        if obj.stop is not None:
-            obj.stop = get_datetime_from_timestamp(obj.stop)
-
-        # py2.7 compat -> super().to_internal...
-        return super(ScheduleEntrySerializer, self).to_representation(obj)
-
-    def create(self, validated_data):
-        """Convert datetime to timestamp integers."""
-        validated_data = datetimes_to_timestamps(validated_data)
-        return super(ScheduleEntrySerializer, self).create(validated_data)
-
-    def update(self, instance, validated_data):
-        validated_data = datetimes_to_timestamps(validated_data)
-        parent = super(ScheduleEntrySerializer, self)
-        return parent.update(instance, validated_data)
