@@ -2,6 +2,20 @@
 
 This project provides support for automatically provisioning and deploying the sensor code through the use of [The Foreman](https://www.theforeman.org) and [Puppet](https://puppet.com). This documentation does not cover the installation and setup of these tools, and assumes you are familiar with their use.
 
+## Table of Contents
+
+ - [Initial Setup](#initial-setup)
+   - [Foreman](#foreman)
+   - [Puppet](#puppet)
+ - [Creating a New SCOS Sensor](#creating-a-new-scos-sensor)
+   - [Host Tab](#host-tab)
+   - [Operating System Tab](#operating-system-tab)
+   - [Interfaces Tab](#interfaces-tab)
+   - [Puppet Classes Tab](#puppet-classes-tab)
+   - [Parameters Tab](#parameters-tab)
+   - [Additional Information Tab](#additional-information-tab)
+ - [Rebuilding an Existing Sensor](#rebuilding-an-existing-sensor)
+
 ## Initial Setup
 
 ### Foreman
