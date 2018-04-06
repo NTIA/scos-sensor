@@ -149,7 +149,7 @@ You will need to go the sensor device and power it on. At startup press `F10` to
 Foreman offers the ability to completely rebuild ("greenfield") a sensor from bare metal using the existing provisioning configuration settings (hostname, MAC, IP, distro etc.). This will re-provision it using PXE, Preseed, and the Puppet configuration, and wipe any and all data on it, so it should be used with caution! **If you are doing this on remote sensors, they need to be configured to "network boot" as default (set in the BIOS of the hardware), or it will not work**.
 
 * Navigate to `Hosts > All Hosts`
-* Click on the `name` of the sensor you wish to reset
+* Click on the `name` of the sensor you wish to rebuild
 * In the top right, click the `Build` button
 * Click the pop-up confirmation `Build` button
 * SSH into the sensor and issue the `reboot` command
