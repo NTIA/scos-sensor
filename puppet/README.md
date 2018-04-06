@@ -129,3 +129,16 @@ With all these parameters configured, select the `Submit` button. Foreman is now
 ![Provisioning](/docs/img/foreman_provisioning.png?raw=true)
 
 You will need to go the sensor device and power it on. At startup press `F10` to select boot mode, and from there select `PXE boot`/`Network boot`. If configured correctly the sensor will contact Foreman and start building itself: installing the OS, Puppet, and the scos-sensor code.
+
+## Rebuilding an Existing Sensor
+
+Foreman offers the ability to completely rebuild ("greenfield") a sensor from bare metal using the existing provisioning configuration settings (hostname, MAC, IP, distro etc.). This will re-provision it using PXE, Preseed, and the Puppet configuration, and wipe any and all data on it, so it should be used with caution! **If you are doing this on remote sensors, they need to be configured to "network boot" as default (set in the BIOS of the hardware), or it will not work**.
+
+* Navigate to `Hosts > All Hosts`
+* Click on the `name` of the sensor you wish to reset
+* In the top right, click the `Build` button
+* Click the pop-up confirmation `Build` button
+* SSH into the sensor and issue the `reboot` command
+* The rebuild process will take anywhere from 20-30mins (it is downloading your choosen Linux distro, so it could take a lot longer depending on the speed of your network connection!). Foreman will show the status as "ok" on the sensor host screen when it is rebuilt. You should also start to see Puppet reports flowing in regularly. 
+
+You can also rebuild multiple sensors at once. Select the checkboxes of the appropriate sensors in the `All Hosts` screen, and click the `Select Action` dropdown button in the top right. From the dropdown click `Build`. You will still need to SSH into each sensor to issue the `reboot` command (or alternatively issue the `reboot` command via [Puppet Bolt](https://puppet.com/products/puppet-bolt)).
