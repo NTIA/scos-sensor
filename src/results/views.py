@@ -53,16 +53,29 @@ class MultipleFieldLookupMixin(object):
         return get_object_or_404(queryset, **filter)
 
 
-class ResultListViewSet(MultipleFieldLookupMixin,
-                        ListModelMixin,
-                        GenericViewSet):
+class ResultListViewSet(ListModelMixin, GenericViewSet):
     """
     list:
     Returns a list of all results created by the given schedule entry.
     """
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
-    lookup_fields = ('schedule_entry__name', 'task_id')
+    lookup_fields = ('schedule_entry__name',)
+
+    def get_queryset(self):
+        # .list() does not call .get_object(), which triggers permissions
+        # checks, so we need to filter our queryset based on `is_private` and
+        # request user.
+        base_queryset = self.filter_queryset(self.queryset)
+
+        filter = {'schedule_entry__name': self.kwargs['schedule_entry_name']}
+        if not self.request.user.is_staff:
+            filter.update({'schedule_entry__is_private': False})
+
+        queryset = base_queryset.filter(**filter)
+
+        if not queryset.exists():
+            raise Http404
 
 
 class ResultInstanceViewSet(MultipleFieldLookupMixin,

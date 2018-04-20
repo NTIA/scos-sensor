@@ -12,8 +12,8 @@ from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
 def test_non_existent_entry(user_client):
-    with pytest.raises(AssertionError):
-        get_result_list(user_client, 'doesntexist')
+    result_list = get_result_list(user_client, 'doesntexist')
+    assert result_list == []
 
 
 @pytest.mark.django_db
