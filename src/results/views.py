@@ -77,6 +77,8 @@ class ResultListViewSet(ListModelMixin, GenericViewSet):
         if not queryset.exists():
             raise Http404
 
+        return queryset.all()
+
 
 class ResultInstanceViewSet(MultipleFieldLookupMixin,
                             RetrieveModelMixin,
