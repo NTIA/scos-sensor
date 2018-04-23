@@ -68,10 +68,10 @@ api_urlpatterns = format_suffix_patterns((
 # Modify admin portal before including url
 
 # Text to put in each page's <h1> (and above login form).
-admin.site.site_header = 'SCOS Sensor Admin Portal'
+admin.site.site_header = 'SCOS Sensor Configuration Portal'
 
 # Text to put at the top of the admin index page.
-admin.site.index_title = 'SCOS Sensor Admin Portal'
+admin.site.index_title = 'SCOS Sensor Configuration Portal'
 
 urlpatterns = (
     url(r'^$', RedirectView.as_view(url='/api/')),
