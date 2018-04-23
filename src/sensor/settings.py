@@ -239,8 +239,8 @@ if not IN_DOCKER:
     DATABASES['default']['HOST'] = 'localhost'
 
 
-# Ensure not more than this many results are stored in db by removing oldest
-MAX_TASK_RESULTS = 10000
+# Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
+MAX_TASK_RESULTS = 100
 
 
 # Password validation

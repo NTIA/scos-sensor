@@ -30,6 +30,8 @@ services:
       - IPS
       - POSTGRES_PASSWORD
       - SECRET_KEY
+      - DOCKER_TAG
+      - GIT_BRANCH
       - IN_DOCKER=1
     expose:
       - '8000'

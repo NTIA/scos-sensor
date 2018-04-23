@@ -35,8 +35,12 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_schedule_entry(self, obj):
         request = self.context['request']
-        kwargs = {'pk': obj.name}
-        return reverse('schedule-detail', kwargs=kwargs, request=request)
+        route = 'schedule-detail'
+        kws = {'pk': obj.name}
+        kws.update(V1)
+        url = reverse(route, kwargs=kws, request=request)
+
+        return url
 
 
 # FIXME: this is identical to AcquisitionHyperlinkedRelatedField
@@ -51,12 +55,15 @@ class TaskResultHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
         return reverse(view_name, kwargs=kws, request=request, format=format)
 
 
-class TaskResultSerializer(serializers.ModelSerializer):
+class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
     url = TaskResultHyperlinkedRelatedField(
         view_name='result-detail',
         read_only=True,
         help_text="The url of the result",
         source='*'  # pass whole object
+    )
+    schedule_entry = serializers.SerializerMethodField(
+        help_text="The url of the parent schedule entry"
     )
 
     class Meta:
@@ -68,11 +75,15 @@ class TaskResultSerializer(serializers.ModelSerializer):
             'finished',
             'duration',
             'result',
-            'detail'
+            'detail',
+            'schedule_entry',
         )
-        extra_kwargs = {
-            'schedule_entry': {
-                'view_name': 'schedule-detail',
-                'lookup_field': 'name'
-            }
-        }
+
+    def get_schedule_entry(self, obj):
+        request = self.context['request']
+        route = 'schedule-detail'
+        kws = {'pk': obj.schedule_entry.name}
+        kws.update(V1)
+        url = reverse(route, kwargs=kws, request=request)
+
+        return url

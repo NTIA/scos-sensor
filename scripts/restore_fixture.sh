@@ -10,7 +10,7 @@ INPUT="$1"
 
 echo_usage() {
     cat << EOF
-Restore capabilities from a fixture file.
+Restore a fixture file.
 
 Usage: $PROGRAM_NAME filename
 
@@ -63,4 +63,4 @@ if [[ ! "$DB_RUNNING" ]]; then
     docker-compose -f ${REPO_ROOT}/docker-compose.yml stop db
 fi
 
-echo "Restored capabilities from $INPUT."
+echo "Restored fixture from $INPUT."

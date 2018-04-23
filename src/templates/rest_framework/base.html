@@ -1,4 +1,5 @@
 {% extends "rest_framework/base.html" %}
+{% load rest_framework %}
 {% load sensor_tags %}
 
 {% block title %} SCOS Sensor {% endblock %}
@@ -9,4 +10,15 @@
       SCOS Sensor <span class="version">{% sensor_version_string %}</span>
     </a>
   </span>
+{% endblock %}
+
+{% block userlinks %}
+  {% if user.is_authenticated %}
+    {% if user.is_staff %}
+      <li><a href={% url "admin:index" %}>Configuration</a></li>
+    {% endif %}
+    {% optional_logout request user %}
+  {% else %}
+    {% optional_login request %}
+  {% endif %}
 {% endblock %}

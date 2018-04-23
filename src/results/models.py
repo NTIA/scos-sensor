@@ -44,9 +44,11 @@ class TaskResult(models.Model):
 
     def save(self):
         """Limit number of results to MAX_TASK_RESULTS by removing oldest."""
-        objects = TaskResult.objects.all()
-        if objects.count() >= self.max_results:
-            objects[0].delete()
+        all_results = TaskResult.objects.all()
+        filter = {'schedule_entry__name': self.schedule_entry.name}
+        same_entry_results = all_results.filter(**filter)
+        if same_entry_results.count() >= self.max_results:
+            same_entry_results[0].delete()
 
         super(TaskResult, self).save()
 
