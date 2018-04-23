@@ -167,9 +167,7 @@ Architecture
 `scos-sensor` uses a open source software stack that should be comfortable for
 developers familiar with Python.
 
- - Persistent data is stored on disk in a file-based SQL database. If this
-   simple database doesn't meet your needs, a heavier-duty SQL database like
-   PostgreSQL or MariaDB can be dropped in with very little effort.
+ - Persistent data is stored on disk in a relational database.
  - A *scheduler* thread running in a [Gunicorn] worker process periodically reads
    the *schedule* from the database and performs the associated *actions*.
  - A website and JSON RESTful API using [Django REST framework] is served over
