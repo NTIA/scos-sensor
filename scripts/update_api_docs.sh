@@ -10,6 +10,6 @@ DOCS_ROOT="${REPO_ROOT}/docs"
 echo "Generating openapi.json ..."
 
 cd ${REPO_ROOT}/src
-tox -e update_api_docs
+tox -e update-api-docs || tox -r -e update-api-docs
 
 echo "Wrote ${REPO_ROOT}/docs/openapi.json"
