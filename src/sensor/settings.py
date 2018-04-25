@@ -207,9 +207,12 @@ SWAGGER_SETTINGS = {
                 "`auth_token` key. Non-admin user accounts do not initially "
                 "have a password and so can not log in to the browsable API. "
                 "To set a password for a user (for testing purposes), an "
-                "admin can use `manage.py changepassword <username>`, but "
+                "admin can do that in the Sensor Configuration Portal, but "
                 "only the account's token should be stored and used for "
-                "general purpose API access."
+                "general purpose API access. "
+                "Example cURL call: `curl -kLsS -H \"Authorization: Token"
+                " 529c30e6e04b3b546f2e073e879b75fdfa147c15\" "
+                "https://greyhound5.sms.internal/api/v1`"
             ),
             'name': 'Token',
             'in': 'header'
