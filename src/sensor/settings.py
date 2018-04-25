@@ -217,7 +217,10 @@ SWAGGER_SETTINGS = {
             'name': 'Token',
             'in': 'header'
         }
-    }
+    },
+    'APIS_SORTER': 'alpha',
+    'OPERATIONS_SORTER': 'method',
+    'VALIDATOR_URL': None
 }
 
 
