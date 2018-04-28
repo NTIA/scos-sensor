@@ -14,24 +14,24 @@ from .utils import post_schedule
 # Test that valid input is valid
 @pytest.mark.django_db
 @pytest.mark.parametrize('entry_json', [
-    # a name and action should be the minimum acceptable entry (one-shot, ASAP)
+    # A name and action should be the minimum acceptable entry (one-shot, ASAP)
     {'name': 'test', 'action': 'logger'},
-    # stop 10 seconds after starting, start ASAP
+    # Stop 10 seconds after starting, start ASAP
     {'name': 'test', 'action': 'logger', 'relative_stop': 10},
-    # min integer interval ok
+    # Min integer interval ok
     {'name': 'test', 'action': 'logger', 'interval': 10},
-    # max priority ok
+    # Max priority ok
     {'name': 'test', 'action': 'logger', 'priority': 19},
-    # min user priority ok
+    # Min user priority ok
     {'name': 'test', 'action': 'logger', 'priority': 0},
-    # stop 10 seconds after starting; start at absolute time
+    # Stop 10 seconds after starting; start at absolute time
     {
         'name': 'test',
         'action': 'logger',
         'start': '2018-03-16T17:12:25Z',
         'relative_stop': 10,
     },
-    # start and stop at absolute time; equivalent to above
+    # Start and stop at absolute time; equivalent to above
     {
         'name': 'test',
         'action': 'logger',
@@ -42,9 +42,9 @@ from .utils import post_schedule
     {'name': 'test', 'action': 'logger', 'stop': '2018-03-16T17:12:35.0Z'},
     # Subseconds are optional
     {'name': 'test', 'action': 'logger', 'start': '2018-03-16T17:12:35Z'},
-    # sensor is timezone-aware
+    # Sensor is timezone-aware
     {'name': 'test', 'action': 'logger', 'start': '2018-03-22T13:53:25-06:00'},
-    # all non-required fields accept null to mean same as not-specified
+    # All non-boolean, non-required fields accepts null to mean not specified
     {
         'name': 'test',
         'action': 'logger',
@@ -55,8 +55,10 @@ from .utils import post_schedule
         'start': None,
         'start': None,
         'interval': None,
-        'callback_url': None
-    }
+        'callback_url': None,
+    },
+    # Explicit validate_only is valid
+    {'name': 'test', 'action': 'logger', 'validate_only': False},
 ])
 def test_valid_entries(entry_json, user):
     serializer = ScheduleEntrySerializer(data=entry_json)

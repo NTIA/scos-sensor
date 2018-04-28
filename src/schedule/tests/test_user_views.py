@@ -148,27 +148,26 @@ def test_validate_only_does_not_modify_schedule_with_good_entry(user_client):
     # Ensure that a 200 "OK" is returned from the validator
     entry = TEST_SCHEDULE_ENTRY.copy()
     entry['validate_only'] = True
-    expected_status = status.HTTP_200_OK
-    rjson = post_schedule(user_client, entry, expected_status=expected_status)
+    expected_status = status.HTTP_204_NO_CONTENT
+    post_schedule(user_client, entry, expected_status=expected_status)
 
     # Ensure that the entry didn't make it into the schedule
-    entry_name = rjson['name']
+    entry_name = entry['name']
     url = reverse_detail_url(entry_name)
     response = user_client.get(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_404_NOT_FOUND)
 
 
 def test_validate_only_does_not_modify_schedule_with_bad_entry(user_client):
-    """A bad entry with validate_only should return 404 only."""
+    """A bad entry with validate_only should return 400 only."""
     # Ensure that a 400 "BAD REQUEST" is returned from the validator
     entry = TEST_SCHEDULE_ENTRY.copy()
     entry['interval'] = 1.5  # non-integer interval is invalid
     entry['validate_only'] = True
     expected_status = status.HTTP_400_BAD_REQUEST
-    rjson = post_schedule(user_client, entry, expected_status=expected_status)
+    post_schedule(user_client, entry, expected_status=expected_status)
 
     # Ensure that the entry didn't make it into the schedule
-    entry_name = rjson['name']
-    url = reverse_detail_url(entry_name)
+    url = reverse_detail_url(entry['name'])
     response = user_client.get(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_404_NOT_FOUND)
