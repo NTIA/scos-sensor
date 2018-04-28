@@ -18,14 +18,12 @@ from .utils import post_schedule
     {'name': 'test', 'action': 'logger'},
     # stop 10 seconds after starting, start ASAP
     {'name': 'test', 'action': 'logger', 'relative_stop': 10},
-    # positive integer interval ok
+    # min integer interval ok
     {'name': 'test', 'action': 'logger', 'interval': 10},
-    # positive integer priority ok
-    {'name': 'test', 'action': 'logger', 'priority': 1},
-    # zero integer priority ok
+    # max priority ok
+    {'name': 'test', 'action': 'logger', 'priority': 19},
+    # min user priority ok
     {'name': 'test', 'action': 'logger', 'priority': 0},
-    # negative integer priority ok
-    {'name': 'test', 'action': 'logger', 'priority': -1},
     # stop 10 seconds after starting; start at absolute time
     {
         'name': 'test',
@@ -46,6 +44,19 @@ from .utils import post_schedule
     {'name': 'test', 'action': 'logger', 'start': '2018-03-16T17:12:35Z'},
     # sensor is timezone-aware
     {'name': 'test', 'action': 'logger', 'start': '2018-03-22T13:53:25-06:00'},
+    # all non-required fields accept null to mean same as not-specified
+    {
+        'name': 'test',
+        'action': 'logger',
+        'start': None,
+        'absolute_stop': None,
+        'relative_stop': None,
+        'priority': None,
+        'start': None,
+        'start': None,
+        'interval': None,
+        'callback_url': None
+    }
 ])
 def test_valid_entries(entry_json, user):
     serializer = ScheduleEntrySerializer(data=entry_json)
@@ -62,6 +73,10 @@ def test_valid_entries(entry_json, user):
     {'name': 'test'},
     # non-integer priority
     {'name': 'test', 'action': 'logger', 'priority': 3.14},
+    # negative priority (for normal user)
+    {'name': 'test', 'action': 'logger', 'priority': -1},
+    # priority greater than max (19)
+    {'name': 'test', 'action': 'logger', 'priority': 20},
     # non-integer interval
     {'name': 'test', 'action': 'logger', 'interval': 3.14},
     # zero interval
@@ -82,6 +97,20 @@ def test_valid_entries(entry_json, user):
     {'name': 'test', 'action': 'logger', 'relative_stop': -10},
     # non-integer relative_stop
     {'name': 'test', 'action': 'logger', 'relative_stop': 3.14},
+    # stop is before start
+    {
+        'name': 'test',
+        'action': 'logger',
+        'start': '2018-03-16T17:12:35Z',
+        'stop': '2018-03-16T17:12:30Z'
+    },
+    # stop is same as start
+    {
+        'name': 'test',
+        'action': 'logger',
+        'start': '2018-03-16T17:12:35Z',
+        'stop': '2018-03-16T17:12:35Z',
+    },
 ])
 def test_invalid_entries(entry_json):
     serializer = ScheduleEntrySerializer(data=entry_json)

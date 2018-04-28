@@ -1,7 +1,7 @@
 import sys
 from itertools import count
 
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 import actions
@@ -77,6 +77,7 @@ class ScheduleEntry(models.Model):
     )
     priority = models.SmallIntegerField(
         default=DEFAULT_PRIORITY,
+        validators=(MinValueValidator(-20), MaxValueValidator(19)),
         help_text=(
             "Lower number is higher priority (default={})"
         ).format(DEFAULT_PRIORITY)

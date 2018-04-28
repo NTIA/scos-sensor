@@ -1,3 +1,5 @@
+import pytest
+
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -131,3 +133,11 @@ def test_user_cannot_modify_any_other_entry(admin_client, user_client,
         user_adjust_alt_user_response, status.HTTP_403_FORBIDDEN)
     # Admin's entry is private, hence 404 instead of 403
     validate_response(user_adjust_admin_response, status.HTTP_404_NOT_FOUND)
+
+
+def test_user_cannot_use_negative_priority(user_client):
+    """Unpriveleged users should not be able to use "high" priority."""
+    hipri = TEST_SCHEDULE_ENTRY.copy()
+    hipri['priority'] = -20
+    with pytest.raises(AssertionError):
+        post_schedule(user_client, hipri)

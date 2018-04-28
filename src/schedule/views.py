@@ -3,7 +3,7 @@ from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
 import actions
-from .models import ScheduleEntry, Request
+from .models import DEFAULT_PRIORITY, ScheduleEntry, Request
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers import ScheduleEntrySerializer
 
@@ -68,10 +68,26 @@ class ScheduleEntryViewSet(ModelViewSet):
         if self.request.user.is_staff:
             choices += actions.ADMIN_CHOICES
 
+        min_priority = 0
+        if self.request.user.is_staff:
+            min_priority = -20
+
+        priority_help_text = "Lower number is higher priority (default={})"
+        priority_help_text = priority_help_text.format(DEFAULT_PRIORITY)
+
         class Serializer(ScheduleEntrySerializer):
             action = serializers.ChoiceField(
                 choices=choices,
-                read_only=updating
+                read_only=updating,
+                help_text="[Required] The name of the action to be scheduled"
+            )
+
+            priority = serializers.IntegerField(
+                required=False,
+                allow_null=True,
+                min_value=min_priority,
+                max_value=19,
+                help_text=priority_help_text
             )
 
             class Meta(ScheduleEntrySerializer.Meta):
