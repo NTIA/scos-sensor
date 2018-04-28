@@ -29,7 +29,7 @@ TEST_PRIVATE_SCHEDULE_ENTRY = {
 }
 
 
-def post_schedule(client, entry):
+def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):
     kwargs = {
         'data': json.dumps(entry),
         'content_type': 'application/json',
@@ -40,7 +40,8 @@ def post_schedule(client, entry):
     r = client.post(reverse('schedule-list', kwargs=V1), **kwargs)
     rjson = r.json()
 
-    assert r.status_code == status.HTTP_201_CREATED, rjson
+    err = "Got status {}, expected {}".format(r.status_code, expected_status)
+    assert r.status_code == expected_status, err
 
     return rjson
 
