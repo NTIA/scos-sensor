@@ -1,4 +1,5 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
@@ -34,6 +35,21 @@ class ScheduleEntryViewSet(ModelViewSet):
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
         IsAdminOrOwnerOrReadOnly,
     ]
+
+    def create(self, request, *args, **kwargs):
+        """Return NO CONTENT when input is valid but validate_only is True."""
+        # https://github.com/encode/django-rest-framework/blob/master/
+        # rest_framework/mixins.py#L18
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if serializer.validated_data.get('validate_only'):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        created = status.HTTP_201_CREATED
+        return Response(serializer.data, status=created, headers=headers)
 
     def perform_create(self, serializer):
         r = Request()

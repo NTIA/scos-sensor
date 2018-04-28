@@ -92,6 +92,12 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             DEFAULT_PRIORITY
         )
     )
+    # validate_only is a serializer-only field
+    validate_only = serializers.BooleanField(
+        required=False,
+        default=False,
+        help_text="Only validate the input, do not modify the schedule"
+    )
 
     class Meta:
         model = ScheduleEntry
@@ -113,7 +119,8 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'modified',
             'owner',
             'acquisitions',
-            'results'
+            'results',
+            'validate_only'
         )
         extra_kwargs = {
             'url': {
@@ -126,7 +133,14 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             }
         }
         read_only_fields = ('is_active', 'next_task_time')
-        write_only_fields = ('relative_stop',)
+        write_only_fields = ('relative_stop', 'validate_only')
+
+    def save(self, *args, **kwargs):
+        """Don't save if validate_only is True."""
+        if self.validated_data.get('validate_only'):
+            return
+
+        super(ScheduleEntrySerializer, self).save(*args, **kwargs)
 
     def validate(self, data):
         """Do object-level validation."""
@@ -161,6 +175,9 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         if 'priority' in data and data['priority'] is None:
             data.pop('priority')
+
+        if 'validate_only' in data and data['validate_only'] is not True:
+            data.pop('validate_only')
 
         return data
 
