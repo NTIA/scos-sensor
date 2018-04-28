@@ -38,12 +38,14 @@ def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):
     }
 
     r = client.post(reverse('schedule-list', kwargs=V1), **kwargs)
-    rjson = r.json()
 
     err = "Got status {}, expected {}".format(r.status_code, expected_status)
     assert r.status_code == expected_status, err
 
-    return rjson
+    if r.status_code == status.HTTP_204_NO_CONTENT:
+        return None
+
+    return r.json()
 
 
 def update_schedule(client, entry_name, new_entry):
