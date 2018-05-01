@@ -1,9 +1,10 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
 import actions
-from .models import ScheduleEntry, Request
+from .models import DEFAULT_PRIORITY, ScheduleEntry, Request
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers import ScheduleEntrySerializer
 
@@ -34,6 +35,21 @@ class ScheduleEntryViewSet(ModelViewSet):
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
         IsAdminOrOwnerOrReadOnly,
     ]
+
+    def create(self, request, *args, **kwargs):
+        """Return NO CONTENT when input is valid but validate_only is True."""
+        # https://github.com/encode/django-rest-framework/blob/master/
+        # rest_framework/mixins.py#L18
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if serializer.validated_data.get('validate_only'):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        created = status.HTTP_201_CREATED
+        return Response(serializer.data, status=created, headers=headers)
 
     def perform_create(self, serializer):
         r = Request()
@@ -68,10 +84,26 @@ class ScheduleEntryViewSet(ModelViewSet):
         if self.request.user.is_staff:
             choices += actions.ADMIN_CHOICES
 
+        min_priority = 0
+        if self.request.user.is_staff:
+            min_priority = -20
+
+        priority_help_text = "Lower number is higher priority (default={})"
+        priority_help_text = priority_help_text.format(DEFAULT_PRIORITY)
+
         class Serializer(ScheduleEntrySerializer):
             action = serializers.ChoiceField(
                 choices=choices,
-                read_only=updating
+                read_only=updating,
+                help_text="[Required] The name of the action to be scheduled"
+            )
+
+            priority = serializers.IntegerField(
+                required=False,
+                allow_null=True,
+                min_value=min_priority,
+                max_value=19,
+                help_text=priority_help_text
             )
 
             class Meta(ScheduleEntrySerializer.Meta):

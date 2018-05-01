@@ -109,3 +109,18 @@ def test_admin_can_modify_all_entries(admin_client, user_client,
     assert admin_adjust_user_response.data['is_private']
     validate_response(admin_adjust_alt_admin_response, status.HTTP_200_OK)
     assert not admin_adjust_alt_admin_response.data['is_private']
+
+
+def test_admin_can_use_negative_priority(admin_client):
+    hipri = TEST_PRIVATE_SCHEDULE_ENTRY.copy()
+    hipri['priority'] = -20
+    rjson = post_schedule(admin_client, hipri)
+    entry_name = rjson['name']
+    kws = {'pk': entry_name}
+    kws.update(V1)
+    entry_url = reverse('schedule-detail', kwargs=kws)
+    admin_user_respose = admin_client.get(entry_url, **HTTPS_KWARG)
+
+    assert rjson['priority'] == -20
+    validate_response(admin_user_respose, status.HTTP_200_OK)
+    assert admin_user_respose.data['is_private']

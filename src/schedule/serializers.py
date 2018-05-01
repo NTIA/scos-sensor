@@ -9,7 +9,7 @@ from sensor.utils import (
     get_datetime_from_timestamp,
     get_timestamp_from_datetime
 )
-from .models import ScheduleEntry
+from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 
 def datetimes_to_timestamps(validated_data):
@@ -43,6 +43,7 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
 
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
+    """Covert ScheduleEntry to and from JSON."""
     acquisitions = serializers.SerializerMethodField(
         help_text="The list of acquisitions related to the entry"
     )
@@ -76,9 +77,26 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         help_text="UTC time (ISO 8601) the next task is scheduled for"
     )
+    # action choices is modified in schedule/views.py based on user
     action = serializers.ChoiceField(
         choices=actions.CHOICES,
         help_text="[Required] The name of the action to be scheduled"
+    )
+    # priority min_value is modified in schedule/views.py based on user
+    priority = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=0,
+        max_value=19,
+        help_text="Lower number is higher priority (default={})".format(
+            DEFAULT_PRIORITY
+        )
+    )
+    # validate_only is a serializer-only field
+    validate_only = serializers.BooleanField(
+        required=False,
+        default=False,
+        help_text="Only validate the input, do not modify the schedule"
     )
 
     class Meta:
@@ -101,7 +119,8 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             'modified',
             'owner',
             'acquisitions',
-            'results'
+            'results',
+            'validate_only'
         )
         extra_kwargs = {
             'url': {
@@ -114,16 +133,27 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             }
         }
         read_only_fields = ('is_active', 'next_task_time')
-        write_only_fields = ('relative_stop',)
+        write_only_fields = ('relative_stop', 'validate_only')
+
+    def save(self, *args, **kwargs):
+        """Don't save if validate_only is True."""
+        if self.validated_data.get('validate_only'):
+            return
+
+        super(ScheduleEntrySerializer, self).save(*args, **kwargs)
 
     def validate(self, data):
         """Do object-level validation."""
 
-        if 'start' in data and data['start'] is None:
-            data.pop('start')
-
+        got_start = False
         got_absolute_stop = False
         got_relative_stop = False
+
+        if 'start' in data:
+            if data['start'] is None:
+                data.pop('start')
+            else:
+                got_start = True
 
         if 'stop' in data and data['stop'] is not None:
             got_absolute_stop = True
@@ -134,6 +164,20 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         if got_absolute_stop and got_relative_stop:
             err = "pass only one of stop and relative_stop"
             raise serializers.ValidationError(err)
+
+        if got_start and got_absolute_stop:
+            # We should have timestamps at this point
+            assert type(data['start']) is int
+            assert type(data['stop']) is int
+            if data['stop'] <= data['start']:
+                err = "stop time is not after than start"
+                raise serializers.ValidationError(err)
+
+        if 'priority' in data and data['priority'] is None:
+            data.pop('priority')
+
+        if 'validate_only' in data and data['validate_only'] is not True:
+            data.pop('validate_only')
 
         return data
 
