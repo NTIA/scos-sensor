@@ -1,28 +1,16 @@
 FROM ubuntu
 
 # Update Ubuntu image
-RUN apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install python prerequisites
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        python-setuptools python-pip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install numpy build requirements
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        python-all-dev libblas-dev liblapack-dev libatlas-base-dev gfortran && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install GNURadio and UHD
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnuradio uhd-host && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN /usr/lib/uhd/utils/uhd_images_downloader.py
+RUN apt-get update -q && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -qy --no-install-recommends \
+            python-setuptools python-pip python-numpy \
+            gnuradio uhd-host && \
+                apt-get clean && rm -rf /var/lib/apt/lists/* && \
+                /usr/lib/uhd/utils/uhd_images_downloader.py && \
+                rm -f /usr/share/uhd/images/{octo,usrp{{1,2},_{x,e,n,b1}}}* && \
+                rm -rf /usr/share/uhd/images/winusb_driver && \
+                rm -rf /usr/lib/uhd/{examples,tests}
 
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /src
