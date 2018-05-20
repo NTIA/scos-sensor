@@ -35,6 +35,7 @@ STATICFILES_DIRS = (
 __cmd = os.path.split(sys.argv[0])[-1]
 IN_DOCKER = bool(os.environ.get('IN_DOCKER'))
 RUNNING_TESTS = 'test' in __cmd
+RUNNING_DEMO = bool(os.environ.get('DEMO'))
 
 # Healthchecks - the existance of any of these indicates an unhealth state
 SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
@@ -227,8 +228,13 @@ SWAGGER_SETTINGS = {
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-if RUNNING_TESTS:
-    DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3'}}
+if RUNNING_TESTS or RUNNING_DEMO:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'demo-db.sqlite3'
+        }
+    }
 else:
     DATABASES = {
         'default': {

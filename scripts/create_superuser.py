@@ -21,7 +21,7 @@ try:
 
 except IOError:
     print("Not on a managed sensor, so not auto-generating admin account.")
-    print("You can add an admin later with `./manage.py createsuperuser")
+    print("You can add an admin later with `./manage.py createsuperuser`")
     sys.exit(0)
 
 UserModel = get_user_model()

@@ -1,15 +1,22 @@
 #!/bin/bash
 
-set -e  # exit on error
+function cleanup_demodb {
+    local demodb_path=/src/demo-db.sqlite3
+    if [[ -e $demodb_path ]]; then
+        echo "Cleaning up demo db $demodb_path..."
+        rm -f $demodb_path
+    fi
+}
 
-echo "Ensuring Migrations are up-to-date"
-python manage.py makemigrations
+trap cleanup_demodb SIGTERM
+trap cleanup_demodb SIGINT
 
 echo "Starting Migrations"
 python manage.py migrate
 
-echo "Creating Superuser"
+echo "Creating superuser (if managed)"
 python /scripts/create_superuser.py
 
 echo "Starting Gunicorn"
-exec gunicorn sensor.wsgi -c ../gunicorn/config.py
+exec gunicorn sensor.wsgi -c ../gunicorn/config.py &
+wait
