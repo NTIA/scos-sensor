@@ -109,7 +109,7 @@ API, you should able to do so with little effort:
 
  - Change the `Install GNURadio and UHD` section of the
    [Dockerfile](Dockerfile) to install the required drivers.
- - Copy the [USRP adapater file](src/actions/usrp.py) and modify for your SDR.
+ - Copy the [USRP adapter file](src/actions/usrp.py) and modify for your SDR.
 
 If your SDR doesn't have a python API, you'll need a python adapater file that
 calls out to your SDRs available API and reads the samples back into python.
