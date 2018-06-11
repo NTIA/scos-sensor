@@ -5,6 +5,11 @@ from . import monitor_usrp
 
 # Actions initialized here are made available through the API
 registered_actions = {
+    "stepped_mean_power_100MHzTo6GHzAt100MHzSteps": time_domain_detection.TimeDomainDetection(
+        frequencies=[1:60]*100e6,
+        sample_rate=15.36e6,
+        number_of_samples=1000;
+    ),
     "acquire700c": acquire_single_freq_fft.SingleFrequencyFftAcquisition(
         frequency=751e6,
         sample_rate=15.36e6,
