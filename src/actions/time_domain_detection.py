@@ -48,9 +48,9 @@ def calculate_mean_power(array):
 
 
 class TimeDomainDetection(Action):
-    """Perform calculations on complex time series.
+    """Perform calculations on complex time series at set of frequencies.
 
-    :param frequency: requested center frequency in Hz
+    :param frequencies: requested center frequencies in Hz
     :param sample_rate: requested sample_rate in Hz
 
     """
