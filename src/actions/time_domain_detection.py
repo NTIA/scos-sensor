@@ -52,6 +52,7 @@ class TimeDomainDetection(Action):
 
     :param frequencies: requested center frequencies in Hz
     :param sample_rate: requested sample_rate in Hz
+    :param number_of_samples: requested number of samples to be processed
 
     """
     def __init__(self, frequency, sample_rate):
