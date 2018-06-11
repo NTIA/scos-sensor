@@ -72,7 +72,7 @@ class TimeDomainDetection(Action):
         data = self.acquire_data(parent_entry, task_id)
         detector_data = self.apply_detector(data)
         sigmf_md = self.build_sigmf_md()
-        self.archive(mean_power_data, sigmf_md, parent_entry, task_id)
+        self.archive(detector_data, sigmf_md, parent_entry, task_id)
 
         kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
         kws.update(V1)
