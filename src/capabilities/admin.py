@@ -2,7 +2,14 @@
 
 from django.contrib import admin
 
-from .models import Antenna, Preselector, Receiver, RFPath, SensorDefinition
+from .models import (
+    Antenna,
+    Preselector,
+    Receiver,
+    RFPath,
+    ScaleFactor,
+    SensorDefinition
+)
 
 
 @admin.register(Antenna)
@@ -28,6 +35,17 @@ class ReceiverAdmin(admin.ModelAdmin):
         'noise_figure',
         'max_power',
     )
+
+
+@admin.register(ScaleFactor)
+class ScaleFactorAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'receiver',
+        'frequency',
+        'scale_factor',
+    )
+    list_filter = ('receiver',)
 
 
 @admin.register(RFPath)
