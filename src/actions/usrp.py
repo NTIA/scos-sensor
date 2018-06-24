@@ -129,15 +129,14 @@ class RadioInterface(object):
         """
         default = 1
 
-
         try:
             sensor_def = SensorDefinition.objects.get()
         except SensorDefinition.DoesNotExist:
             msg = "No sensor definition exists, using default scale factor"
-            log.debug(msg)
+            logger.debug(msg)
             return default
 
-        scale_factors = sd.receiver.scale_factors.values()
+        scale_factors = sensor_def.receiver.scale_factors.values()
         nearest_factor_map = FindNearestDict(
             (sf['frequency'], sf['scale_factor']) for sf in scale_factors
         )
@@ -145,10 +144,10 @@ class RadioInterface(object):
         try:
             scale_factor = nearest_factor_map[self.frequency]
         except ValueError:
-            log.debug("No scale factors set, using default scale factor")
+            logger.debug("No scale factors set, using default scale factor")
             return default
 
-        log.debug("Using scale factor {}".format(scale_factor))
+        logger.debug("Using scale factor {}".format(scale_factor))
         return scale_factor
 
     def acquire_samples(self, n, nskip=1000):  # -> np.ndarray:
