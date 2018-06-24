@@ -36,9 +36,6 @@ class M4sDetector(Enum):
     sample = 5
 
 
-# FIXME: comes from initial amplitude accuracy calibration
-scale_factor = 1.0
-
 # FIXME: this needs to be defined globally somewhere
 SCOS_TRANSFER_SPEC_VER = '0.1'
 
@@ -216,10 +213,8 @@ class SingleFrequencyFftAcquisition(Action):
 
         Vsq2W_dB = -10.0 * np.log10(self.fft_size * window_power * impedance)
 
-        # Apply voltage scale factor
-        tdata_scaled = data * scale_factor
         # Apply window
-        tdata_windowed = tdata_scaled * window
+        tdata_windowed = data * window
         # Take FFT
         fdata = np.fft.fft(tdata_windowed)
         # Shift fc to center
