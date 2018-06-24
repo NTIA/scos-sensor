@@ -48,7 +48,7 @@ docker-compose -f ${REPO_ROOT}/docker-compose.yml up -d db
 # Load given fixture file into database
 if [[ "$API_RUNNING" ]]; then
     API_CONTAINER=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps -q api)
-    docker cp "$HOST_PATH" scossensor_api_1:/tmp
+    docker cp "$HOST_PATH" ${API_CONTAINER}:/tmp
     docker-compose -f ${REPO_ROOT}/docker-compose.yml exec api \
                    /src/manage.py loaddata "$CONTAINER_PATH"
 else
