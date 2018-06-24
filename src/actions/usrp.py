@@ -16,30 +16,32 @@ import logging
 
 import numpy as np
 
+from capabilities.models import SensorDefinition
+
+from .utils import FindNearestDict
+
 
 logger = logging.getLogger(__name__)
 
 
-try:
-    from gnuradio import uhd
-    driver_is_available = True
-except ImportError:
-    driver_is_available = False
-
-
+uhd = None
 radio = None
 is_available = False
 
 
 def connect():  # -> bool:
-    if not driver_is_available:
+    global uhd
+    global is_available
+    global radio
+
+    try:
+        from gnuradio import uhd
+    except ImportError:
         logger.warning("gnuradio.uhd not available - disabling radio")
         return False
 
     try:
         radio_iface = RadioInterface()
-        global is_available
-        global radio
         is_available = True
         radio = radio_iface
         return True
@@ -50,6 +52,9 @@ def connect():  # -> bool:
 
 class RadioInterface(object):
     def __init__(self):
+        if uhd is None:
+            raise RuntimeError("UHD not available, did you call connect()?")
+
         search_criteria = uhd.device_addr_t()
         search_criteria['type'] = 'b200'  # ensure we don't find networked usrp
         available_devices = list(uhd.find_devices(search_criteria))
@@ -116,11 +121,42 @@ class RadioInterface(object):
         self.usrp.set_gain(gain)
         logger.debug("set USRP gain: {:.2f} dB".format(self.usrp.get_gain()))
 
+    def _get_scale_factor(self):
+        """Find the scale factor closest to the current frequency.
+
+        If no sensor definition exists or no scale factors are set, return 1.
+
+        """
+        default = 1
+
+
+        try:
+            sensor_def = SensorDefinition.objects.get()
+        except SensorDefinition.DoesNotExist:
+            msg = "No sensor definition exists, using default scale factor"
+            log.debug(msg)
+            return default
+
+        scale_factors = sd.receiver.scale_factors.values()
+        nearest_factor_map = FindNearestDict(
+            (sf['frequency'], sf['scale_factor']) for sf in scale_factors
+        )
+
+        try:
+            scale_factor = nearest_factor_map[self.frequency]
+        except ValueError:
+            log.debug("No scale factors set, using default scale factor")
+            return default
+
+        log.debug("Using scale factor {}".format(scale_factor))
+        return scale_factor
+
     def acquire_samples(self, n, nskip=1000):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
         total_samples = nskip + n
         acquired_samples = self.usrp.finite_acquisition(total_samples)
-        data = np.array(acquired_samples[nskip:])
+        scale_factor = self._get_scale_factor()
+        data = np.array(acquired_samples[nskip:]) * scale_factor
         nreceived = len(data)
         if nreceived != n:
             err = "Requested {} samples, but received {}"
