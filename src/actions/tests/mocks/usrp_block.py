@@ -3,16 +3,15 @@
 import numpy as np
 
 
-class mock_usrp_block(object):
-
-    auto_dc_offset = False
-    gain = 0
-
-    # Hold variables for acquisition test
-    total_fail_results = 0
-    current_fail_results = 0
+class UsrpBlockMock(object):
 
     def __init__(self):
+        self.auto_dc_offset = False
+        self.gain = 0
+
+        # Hold variables for acquisition test
+        self.total_fail_results = 0
+        self.current_fail_results = 0
         return
 
     def set_auto_dc_offset(self, val):
@@ -20,11 +19,11 @@ class mock_usrp_block(object):
 
     def finite_acquisition(self, n):
         if self.current_fail_results < self.total_fail_results:
-            self.current_fail_results = self.current_fail_results + 1
+            self.current_fail_results += 1
             return []
         else:
             self.current_fail_results = 0
-            self.total_fail_results = self.total_fail_results + 1
+            self.total_fail_results += 1
             return np.ones(n).tolist()
 
     def reset_bad_acquisitions(self):
