@@ -153,10 +153,10 @@ class TestRadioInterface(object):
 
         """
             Test many scale factor calculations
-            sf_test_list = {
-                [SF]: (f_lo,gain),
+            sf_test_list = [
+                (SF, f_lo, gain),
                 ...
-            }
+            ]
         """
         sf_test_list = [
             (-7.47813046479, 70e6, 0),  # Outer boundary
