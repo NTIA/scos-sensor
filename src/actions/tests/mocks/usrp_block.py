@@ -32,16 +32,15 @@ class UsrpBlockMock(object):
         return
 
     def set_center_freq(self, f_lo, f_dsp):
-        f_lo = f_lo/1e6
-        f_dsp = f_dsp/1e6
-        return (
-            "    Target RF  Freq: {} (MHz)\r\n" +
-            "    Actual RF  Freq: {} (MHz)\r\n" +
-            "    Target DSP Freq: {} (MHz)\r\n" +
-            "    Actual DSP Freq: {} (MHz)\r\n"
-        ).format(
-            f_lo, f_lo, f_dsp, f_dsp
-        )
+        # Create and return the mock ture request response
+        f_lo /= 1e6
+        f_dsp /= 1e6
+        mock_response = "    Target RF  Freq: {} (MHz)\r\n"
+        mock_response += "    Actual RF  Freq: {} (MHz)\r\n"
+        mock_response += "    Target DSP Freq: {} (MHz)\r\n"
+        mock_response += "    Actual DSP Freq: {} (MHz)\r\n"
+        mock_response = mock_response.format(f_lo, f_lo, f_dsp, f_dsp)
+        return mock_response
 
     def set_gain(self, g):
         self.gain = g

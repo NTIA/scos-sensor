@@ -11,12 +11,11 @@ MOCK_BAD_SCALE_FACTOR_DIR = \
 
 
 def test_load_nonexistent_scale_factor_file():
-    s = 'dummy'
+    f = 'dummy'
     msg = "Should raise IOError when loading nonexistent file."
     with pytest.raises(IOError, message=msg):
-        sfs = ScaleFactors(  # noqa: F841 (This is to test the constructor)
-            fname=join(MOCK_SCALE_FACTOR_DIR, s)
-        )
+        sf_file = join(MOCK_SCALE_FACTOR_DIR, f)
+        sfs = ScaleFactors(fname=sf_file)  # noqa: F841
     return
 
 
@@ -37,9 +36,8 @@ def test_poorly_formatted_scale_factor_file():
     for f, err in bad_scale_factor_files.iteritems():
         msg = "Loading '{}' should raise {}".format(f, str(err))
         with pytest.raises(err, message=msg):
-            sfs = ScaleFactors(  # noqa: F841 (This is to test the constructor)
-                fname=join(MOCK_BAD_SCALE_FACTOR_DIR, f)
-            )
+            sf_file = join(MOCK_BAD_SCALE_FACTOR_DIR, f)
+            sfs = ScaleFactors(fname=sf_file)  # noqa: F841
     return
 
 
@@ -96,10 +94,8 @@ def test_scale_factor_calculation():
     ]
 
     # Load the mock scale factor file
-    sfs = ScaleFactors(
-        fname=join(MOCK_SCALE_FACTOR_DIR, 'mock_scale_factors.csv'),
-        default=default_test
-    )
+    sf_name = join(MOCK_SCALE_FACTOR_DIR, 'mock_scale_factors.csv')
+    sfs = ScaleFactors(fname=sf_name, default=default_test)
 
     # Test all cases (rounding to 5 decimals to avoid
     #   floating point errors)

@@ -41,26 +41,26 @@ class ScaleFactors(object):
                 # Skip an empty row
                 if len(row) < 1:
                     continue
+
                 # Check for a division row
                 if row[0] == 'div':
                     try:
-                        self.scale_factor_divisions.append([
-                            float(row[1]),
-                            float(row[2])
-                        ])
+                        lb = float(row[1])
+                        ub = float(row[2])
+                        div = [lb, ub]
+                        self.scale_factor_divisions.append(div)
                     except IndexError:
-                        raise IndexError(
-                            "Scale factor file improperly formatted.\r\n" +
-                            "Divisions need 2 bounds."
-                        )
+                        err = "Scale factor file improperly formatted.\r\n"
+                        err += "Divisions need 2 bounds."
+                        raise IndexError(err)
                     continue
+
                 # Check for the list of gains
                 if row[0] == '' or row[0] == 'freqs\gains':
                     for i in range(len(row)-1):
-                        self.scale_factor_gains.append(
-                            float(row[i+1])
-                        )
+                        self.scale_factor_gains.append(float(row[i+1]))
                     continue
+
                 # Must be a frequency row
                 self.scale_factor_frequencies.append(float(row[0]))
                 self.scale_factor_matrix.append([])
@@ -68,83 +68,62 @@ class ScaleFactors(object):
                     try:
                         self.scale_factor_matrix[-1].append(float(row[i+1]))
                     except ValueError:
-                        raise ValueError(
-                            (
-                                "Scale factor file improperly formatted.\r\n" +
-                                "Invalid scale factor data '{}' at\r\n" +
-                                "freq {}Hz in column {}."
-                            ).format(
-                                str(row[i+1]),
-                                self.scale_factor_frequencies[-1],
-                                i
-                            )
-                        )
+                        err = "Scale factor file improperly formatted.\r\n"
+                        err += "Invalid scale factor data '{}' at\r\n"
+                        err = err.format(str(row[i+1]))
+                        err += "freq {}Hz in column {}."
+                        err = err.format(self.scale_factor_frequencies[-1], i)
+                        raise ValueError(err)
             f.close()
 
         # Check that all divisions consist of two values
         for i in range(len(self.scale_factor_divisions)):
             div_len = len(self.scale_factor_divisions[i])
             if not div_len == 2:
-                raise RuntimeError(
-                    (
-                        "Scale factor file improperly formatted.\r\n" +
-                        "Division only has {} of 2 required bounds."
-                    ).format(div_len)
-                )
+                err = "Scale factor file improperly formatted.\r\n"
+                err += "Division only has {} of 2 required bounds."
+                err = err.format(div_len)
+                raise RuntimeError(err)
 
         # Check that frequency and gain arrays were populated
         if len(self.scale_factor_gains) < 1:
-            raise RuntimeError(
-                "Scale factor file improperly formatted.\r\n" +
-                "No gain values given."
-            )
+            err = "Scale factor file improperly formatted.\r\n"
+            err += "No gain values given."
+            raise RuntimeError(err)
         if len(self.scale_factor_frequencies) < 1:
-            raise RuntimeError(
-                "Scale factor file improperly formatted.\r\n" +
-                "No frequency values given."
-            )
+            err = "Scale factor file improperly formatted.\r\n"
+            err += "No frequency values given."
+            raise RuntimeError(err)
 
         # Check that the number of frequencies matches the SF matrix
-        if not len(self.scale_factor_frequencies) == \
-                len(self.scale_factor_matrix):
-            raise RuntimeError(
-                (
-                    "Scale factor file improperly formatted.\r\n" +
-                    "Number of frequencies ({}) does not match " +
-                    "row in SF matrix ({})."
-                ).format(
-                    len(self.scale_factor_frequencies),
-                    len(self.scale_factor_matrix)
-                )
-            )
+        l1 = len(self.scale_factor_frequencies)
+        l2 = len(self.scale_factor_matrix)
+        if not l1 == l2:
+            err = "Scale factor file improperly formatted.\r\n"
+            err += "Number of frequencies ({}) does not match "
+            err += "row in SF matrix ({})."
+            err = err.format(l1, l2)
+            raise RuntimeError(err)
 
         # Check that the number of gains matches the SF matrix
         for i in range(len(self.scale_factor_frequencies)):
-            if not len(self.scale_factor_matrix[i]) == \
-                    len(self.scale_factor_gains):
-                raise RuntimeError(
-                    (
-                        "Scale factor file improperly formatted.\r\n" +
-                        "Number of gains ({}) does not match row in " +
-                        "SF matrix ({})\r\nin frequency row {} ({}Hz)."
-                    ).format(
-                        len(self.scale_factor_gains),
-                        len(self.scale_factor_matrix[i]),
-                        i,
-                        self.scale_factor_frequencies[i]
-                    )
-                )
+            l1 = len(self.scale_factor_matrix[i])
+            l2 = len(self.scale_factor_gains)
+            if not l1 == l2:
+                err = "Scale factor file improperly formatted.\r\n"
+                err += "Number of gains ({}) does not match row in "
+                err += "SF matrix ({})\r\nin frequency row {} ({}Hz)."
+                err = err.format(l2, l1, i, self.scale_factor_frequencies[i])
+                raise RuntimeError(err)
 
         # Sort the data
-        (
-            self.scale_factor_matrix,
-            self.scale_factor_gains,
-            self.scale_factor_frequencies
-        ) = self.sort_matrix_by_lists(
-            self.scale_factor_matrix,
-            self.scale_factor_gains,
-            self.scale_factor_frequencies
-        )
+        sfm = self.scale_factor_matrix
+        sfg = self.scale_factor_gains
+        sff = self.scale_factor_frequencies
+        (sfm, sfg, sff) = self.sort_matrix_by_lists(sfm, sfg, sff)
+        self.scale_factor_matrix = sfm
+        self.scale_factor_gains = sfg
+        self.scale_factor_frequencies = sff
 
         # Successfully loaded the scale factor file
         self.scale_factors_loaded = True
@@ -194,12 +173,13 @@ class ScaleFactors(object):
                     if f > self.scale_factor_divisions[i][0]:
                         logger.warning("SDR tuned to within a division:")
                         logger.warning("    LO frequency: {}".format(f))
-                        logger.warning("    Division: [{},{}]".format(
-                            self.scale_factor_divisions[i][0],
-                            self.scale_factor_divisions[i][1]
-                        ))
-                        logger.warning(
-                            "Assumed scale factor of lower boundary.")
+                        msg = "    Division: [{},{}]"
+                        lb = self.scale_factor_divisions[i][0]
+                        ub = self.scale_factor_divisions[i][1]
+                        msg = msg.format(lb, ub)
+                        logger.warning(msg)
+                        msg = "Assumed scale factor of lower boundary."
+                        logger.warning(msg)
                         f_div_min = self.scale_factor_divisions[i][0]
                         f_div_max = self.scale_factor_divisions[i][0]
                         bypass_freq_interpolation = True
@@ -257,9 +237,9 @@ class ScaleFactors(object):
     def get_scale_factor(self, lo_frequency, gain):
         # Ensure scale factors were loaded
         if not self.scale_factors_loaded:
-            logger.debug("Defaulting scale factor to: {}".format(
-                self.default_scale_factor
-            ))
+            msg = "Defaulting scale factor to: {}"
+            msg = msg.format(self.default_scale_factor)
+            logger.debug(msg)
             return self.default_scale_factor
 
         # Get the power scaling factor and convert to linear

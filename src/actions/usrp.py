@@ -56,10 +56,9 @@ class RadioInterface(object):
 
     def __init__(self, sf_file=None, use_mock_usrp=False):
         # Load a mock object is needed
-        logger.warning(use_mock_usrp)
         self.mocked_usrp = use_mock_usrp
-        logger.warning(self.mocked_usrp)
         if self.mocked_usrp:
+            logger.warning("Using mock USRP.")
             from actions.tests.mocks.usrp_block import UsrpBlockMock
             self.mocked_usrp = True
             self.usrp = UsrpBlockMock()
@@ -93,6 +92,7 @@ class RadioInterface(object):
             stream_args = uhd.stream_args('fc32')
             self.usrp = uhd.usrp_source(device_addr=device,
                                         stream_args=stream_args)
+            self.sf_file = sf_file
 
         # Load the scale factors
         self.scale_factors = ScaleFactors(
@@ -145,27 +145,36 @@ class RadioInterface(object):
 
         # Extract the LO and DSP frequencies
         try:
+            """
+            Example UHD tune result:
+                Tune Result:
+                    Target RF  Freq: 73.000000 (MHz)
+                    Actual RF  Freq: 73.000000 (MHz)
+                    Target DSP Freq: -0.000000 (MHz)
+                    Actual DSP Freq: -0.000000 (MHz)
+
+            """
+            # Convert the tune result to a string
             tr = str(tune_result)
-            tr = tr[
-                    tr.index("Actual RF  Freq:")+17:
-                ]
-            self.lo_freq = float(
-                    tr[
-                        :tr.index(" ")
-                    ]
-                )*1e6
-            tr = tr[
-                    tr.index("Actual DSP Freq:")+17:
-                ]
-            self.dsp_freq = float(
-                    tr[
-                        :tr.index(" ")
-                    ]
-                )*1e6
+
+            # Cut out everything before the actual LO (RF) freq
+            lo_start_i = tr.index("Actual RF  Freq:")+17
+            tr = tr[lo_start_i:]
+
+            # Retrieve the LO freq string and convert to float
+            lo_str = tr[:tr.index(" ")]
+            self.lo_freq = float(lo_str)*1e6
+
+            # Cut out everything actual DSP freq
+            dsp_start_i = tr.index("Actual DSP Freq:")+17
+            tr = tr[dsp_start_i:]
+
+            # Retrieve the DSP freq string and convert to float
+            dsp_str = tr[:tr.index(" ")]
+            self.dsp_freq = float(dsp_str)*1e6
         except Exception:
-            raise RuntimeError(
-                "Could not parse SDR tune result."
-            )
+            err = "Could not parse SDR tune result."
+            raise RuntimeError(err)
 
         # Request new scale factor
         self.request_scale_factor()
@@ -200,9 +209,8 @@ class RadioInterface(object):
                     logger.warning("Retrying {} more times.".format(retries))
                     retries = retries - 1
                 else:
-                    raise RuntimeError(
-                        "Failed to acquire correct number of samples " +
-                        "{} times in a row.".format(o_retries)
-                    )
+                    err = "Failed to acquire correct number of samples "
+                    err += "{} times in a row.".format(o_retries)
+                    raise RuntimeError(err)
             else:
                 return data
