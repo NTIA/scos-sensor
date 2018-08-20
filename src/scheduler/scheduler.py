@@ -1,6 +1,7 @@
 """Queue and run tasks."""
 
 import logging
+import os
 import threading
 from contextlib import contextmanager
 
@@ -11,6 +12,8 @@ from results.consts import MAX_DETAIL_LEN
 from results.models import TaskResult
 from results.serializers import TaskResultSerializer
 from schedule.models import ScheduleEntry
+from sensor.settings import SCHEDULER_HEALTHCHECK_FILE
+from sensor.utils import touch
 from . import utils
 from .tasks import TaskQueue
 
@@ -66,13 +69,24 @@ class Scheduler(threading.Thread):
         :param blocking: block until stopped or return control after each task
 
         """
-        while True:
-            with minimum_duration(blocking):
-                self._consume_schedule(blocking)
+        if blocking:
+            try:
+                os.remove(SCHEDULER_HEALTHCHECK_FILE)
+            except OSError:
+                pass
 
-            if not blocking or self.interrupt_flag.is_set():
-                logger.info("scheduler interrupted")
-                break
+        try:
+            while True:
+                with minimum_duration(blocking):
+                    self._consume_schedule(blocking)
+
+                if not blocking or self.interrupt_flag.is_set():
+                    logger.info("scheduler interrupted")
+                    break
+        except Exception as err:
+            logger.warn("scheduler dead")
+            logger.exception(err)
+            touch(SCHEDULER_HEALTHCHECK_FILE)
 
     def _consume_schedule(self, blocking):
         while self.schedule_has_entries:

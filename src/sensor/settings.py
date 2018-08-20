@@ -39,6 +39,7 @@ RUNNING_DEMO = bool(os.environ.get('DEMO'))
 
 # Healthchecks - the existance of any of these indicates an unhealth state
 SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
+SCHEDULER_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'scheduler_dead')
 
 OPENAPI_FILE = os.path.join(REPO_ROOT, 'docs', 'openapi.json')
 

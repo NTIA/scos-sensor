@@ -6,14 +6,14 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD
-    expose:
-      - '5432'
+    ports:
+      - '127.0.0.1:5432:5432'
     volumes:
       - ./data:/var/lib/postgresql/data
 
   api:
     healthcheck:
-      test: test ! -e /sdr_unhealthy
+      test: test ! -e /sdr_unhealthy && test ! -e /scheduler_dead
       interval: 10s
       timeout: 1s
       retries: 1

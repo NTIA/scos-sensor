@@ -8,22 +8,17 @@ from itertools import compress
 
 from hardware import usrp
 from sensor.settings import SDR_HEALTHCHECK_FILE
+from sensor.utils import touch
 from .base import Action
 
 
 logger = logging.getLogger(__name__)
 
 
-def touch(fname, times=None):
-    """Emulates unix `touch` utility."""
-    with open(fname, 'a'):
-        os.utime(fname, times)
-
-
-class USRPMonitor(Action):
+class UsrpMonitor(Action):
     """Monitor USRP connection and restart container if unreachable."""
     def __init__(self, admin_only=True):
-        super(USRPMonitor, self).__init__(admin_only=admin_only)
+        super(UsrpMonitor, self).__init__(admin_only=admin_only)
 
         self.usrp = usrp  # make instance variable to allow hotswapping mock
 

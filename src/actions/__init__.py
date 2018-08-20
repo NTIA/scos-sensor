@@ -13,7 +13,7 @@ registered_actions = {
     ),
     "logger": logger.Logger(),
     "admin_logger": logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),
-    "monitor_usrp": monitor_usrp.USRPMonitor(admin_only=True)
+    "monitor_usrp": monitor_usrp.UsrpMonitor(admin_only=True)
 }
 
 
