@@ -45,16 +45,14 @@ docker-compose -f ${REPO_ROOT}/docker-compose.yml up -d db
 echo "Querying location fixture"
 echo "=============================="
 
-# tail +4 strips off the output from the USRP driver
-
 if [[ "$API_RUNNING" ]]; then
     docker-compose  -f ${REPO_ROOT}/docker-compose.yml exec api \
-                    /bin/bash -c "echo -e '\u001E' && /src/manage.py dumpdata status --indent=4" \
-        | tail +4 | tee "$OUTPUT_FILE"
+                    /bin/bash -c "/src/manage.py dumpdata status --indent=4" \
+        | tee "$OUTPUT_FILE"
 else
     docker-compose  -f ${REPO_ROOT}/docker-compose.yml run --rm api \
-                    /bin/bash -c "echo -e '\u001E' && /src/manage.py dumpdata status --indent=4" \
-        | tail +4 | tee "$OUTPUT_FILE"
+                    /bin/bash -c "/src/manage.py dumpdata status --indent=4" \
+        | tee "$OUTPUT_FILE"
 fi
 
 echo "=============================="
