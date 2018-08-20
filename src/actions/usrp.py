@@ -1,8 +1,9 @@
 """Maintains a persistent connection to the USRP.
 
 Example usage:
+    $ ./src/manage.py shell
     >>> from actions import usrp
-    >>> usrp.connect(config.RADIO_ID)
+    >>> usrp.connect()
     >>> usrp.is_available
     True
     >>> rx = usrp.radio
@@ -23,24 +24,30 @@ from .utils import FindNearestDict
 
 logger = logging.getLogger(__name__)
 
-
 uhd = None
 radio = None
 is_available = False
+driver_is_available = False
 
 
 def connect():  # -> bool:
     global uhd
-    global is_available
     global radio
+    global is_available
+    global driver_is_available
 
     try:
-        from gnuradio import uhd
+        from gnuradio import uhd as gr_uhd
+        driver_is_available = True
     except ImportError:
+        driver_is_available = False
+
+    if not driver_is_available:
         logger.warning("gnuradio.uhd not available - disabling radio")
         return False
 
     try:
+        uhd = gr_uhd
         radio_iface = RadioInterface()
         is_available = True
         radio = radio_iface
@@ -53,7 +60,7 @@ def connect():  # -> bool:
 class RadioInterface(object):
     def __init__(self):
         if uhd is None:
-            raise RuntimeError("UHD not available, did you call connect()?")
+            raise RuntimeError("UHD not available - did you call connect()?")
 
         search_criteria = uhd.device_addr_t()
         search_criteria['type'] = 'b200'  # ensure we don't find networked usrp
