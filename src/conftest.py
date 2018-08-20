@@ -3,7 +3,7 @@ from django.core.management import call_command
 from django.test.client import Client
 
 import actions
-import actions.tests.mocks.usrp
+import hardware.mocks.usrp
 import scheduler
 from authentication.models import User
 
@@ -150,7 +150,7 @@ mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
     fft_size=16,
     nffts=11
 )
-mock_acquire.usrp = actions.tests.mocks.usrp
+mock_acquire.usrp = hardware.mocks.usrp
 
 actions.by_name['mock_acquire'] = mock_acquire
 actions.init()

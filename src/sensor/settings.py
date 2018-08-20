@@ -129,6 +129,7 @@ INSTALLED_APPS = [
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
     'capabilities.apps.CapabilitiesConfig',
+    'hardware.apps.HardwareConfig',
     'results.apps.ResultsConfig',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
@@ -316,6 +317,10 @@ LOGGING = {
             'level': LOGLEVEL
         },
         'capabilities': {
+            'handlers': ['console'],
+            'level': LOGLEVEL
+        },
+        'hardware': {
             'handlers': ['console'],
             'level': LOGLEVEL
         },

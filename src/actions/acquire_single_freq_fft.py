@@ -13,10 +13,10 @@ from sigmf.sigmffile import SigMFFile
 
 from capabilities.models import SensorDefinition
 from capabilities.serializers import SensorDefinitionSerializer
+from hardware import usrp
 from sensor import V1, settings, utils
 
 from .base import Action
-from . import usrp
 
 
 logger = logging.getLogger(__name__)

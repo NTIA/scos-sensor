@@ -6,9 +6,9 @@ import os
 import logging
 from itertools import compress
 
+from hardware import usrp
 from sensor.settings import SDR_HEALTHCHECK_FILE
 from .base import Action
-from . import usrp
 
 
 logger = logging.getLogger(__name__)

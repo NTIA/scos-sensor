@@ -2,7 +2,7 @@
 
 Example usage:
     $ ./src/manage.py shell
-    >>> from actions import usrp
+    >>> from hardware import usrp
     >>> usrp.connect()
     >>> usrp.is_available
     True
@@ -18,8 +18,7 @@ import logging
 import numpy as np
 
 from capabilities.models import SensorDefinition
-
-from .utils import FindNearestDict
+from sensor.utils import FindNearestDict
 
 
 logger = logging.getLogger(__name__)
