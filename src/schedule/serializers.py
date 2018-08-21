@@ -170,7 +170,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             assert type(data['start']) is int
             assert type(data['stop']) is int
             if data['stop'] <= data['start']:
-                err = "stop time is not after than start"
+                err = "stop time is not after start"
                 raise serializers.ValidationError(err)
 
         if 'priority' in data and data['priority'] is None:
