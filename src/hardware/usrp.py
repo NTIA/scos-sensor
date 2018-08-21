@@ -11,6 +11,7 @@ Example usage:
     >>> rx.frequency = 700e6
     >>> rx.gain = 30
     >>> samples = rx.acquire_samples(1000)
+
 """
 
 import logging
