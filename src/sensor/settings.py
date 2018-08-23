@@ -12,36 +12,39 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import sys
+from os import environ, path
 
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-REPO_ROOT = os.path.dirname(BASE_DIR)
+# Build paths inside the project like this: path.join(BASE_DIR, ...)
+BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
+REPO_ROOT = path.dirname(BASE_DIR)
 
-DOCKER_TAG = os.environ.get('DOCKER_TAG')
-GIT_BRANCH = os.environ.get('GIT_BRANCH')
+DOCKER_TAG = environ.get('DOCKER_TAG')
+GIT_BRANCH = environ.get('GIT_BRANCH')
 VERSION_STRING = GIT_BRANCH if DOCKER_TAG == 'latest' else DOCKER_TAG
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    ('js', os.path.join(STATIC_ROOT, 'js')),
-    ('css', os.path.join(STATIC_ROOT, 'css')),
-    ('images', os.path.join(STATIC_ROOT, 'images')),
-    ('fonts', os.path.join(STATIC_ROOT, 'fonts')),
+    ('js', path.join(STATIC_ROOT, 'js')),
+    ('css', path.join(STATIC_ROOT, 'css')),
+    ('images', path.join(STATIC_ROOT, 'images')),
+    ('fonts', path.join(STATIC_ROOT, 'fonts')),
 )
 
-__cmd = os.path.split(sys.argv[0])[-1]
-IN_DOCKER = bool(os.environ.get('IN_DOCKER'))
+__cmd = path.split(sys.argv[0])[-1]
+IN_DOCKER = bool(environ.get('IN_DOCKER'))
 RUNNING_TESTS = 'test' in __cmd
-RUNNING_DEMO = bool(os.environ.get('DEMO'))
+RUNNING_DEMO = bool(environ.get('DEMO'))
 
 # Healthchecks - the existance of any of these indicates an unhealth state
-SDR_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'sdr_unhealthy')
-SCHEDULER_HEALTHCHECK_FILE = os.path.join(REPO_ROOT, 'scheduler_dead')
+SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'sdr_unhealthy')
+SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'scheduler_dead')
 
-OPENAPI_FILE = os.path.join(REPO_ROOT, 'docs', 'openapi.json')
+OPENAPI_FILE = path.join(REPO_ROOT, 'docs', 'openapi.json')
+
+SCALE_FACTORS_SCHEMA_FILE = path.join(REPO_ROOT, 'scale_factors_schema.json')
 
 # Cleanup any existing healtcheck files
 try:
@@ -59,10 +62,10 @@ if not IN_DOCKER or RUNNING_TESTS:
     ALLOWED_HOSTS = []
 else:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECRET_KEY = os.environ['SECRET_KEY']
-    DEBUG = bool(os.environ['DEBUG'] == "true")
-    ALLOWED_HOSTS = os.environ['DOMAINS'].split() + os.environ['IPS'].split()
-    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
+    SECRET_KEY = environ['SECRET_KEY']
+    DEBUG = bool(environ['DEBUG'] == "true")
+    ALLOWED_HOSTS = environ['DOMAINS'].split() + environ['IPS'].split()
+    POSTGRES_PASSWORD = environ['POSTGRES_PASSWORD']
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
@@ -153,7 +156,7 @@ ROOT_URLCONF = 'sensor.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -243,7 +246,7 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'postgres',
             'USER': 'postgres',
-            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+            'PASSWORD': environ['POSTGRES_PASSWORD'],
             'HOST': 'db',
             'PORT': '5432',
         }
@@ -345,7 +348,7 @@ LOGGING = {
 }
 
 
-SENTRY_DSN = os.environ.get('SENTRY_DSN')
+SENTRY_DSN = environ.get('SENTRY_DSN')
 if SENTRY_DSN:
     import raven
 
