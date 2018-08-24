@@ -97,6 +97,6 @@ SENTRY_DSN=${sentry_dsn}",
   }
 
   file { "${install_root}/scale_factors.json":
-    content => '${scale_factors}',
+    content => \"${scale_factors}\",
   }
 }
