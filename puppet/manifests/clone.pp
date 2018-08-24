@@ -1,19 +1,9 @@
 # Part 1: Clone/copy repo/container to sensor
 
 class scos::clone (
-  $install_source = $scos::install_source,
-  $install_version = $scos::install_version,
-  $git_username = $scos::git_username,
-  $git_password = $scos::git_password,
-  $install_root = $scos::install_root,
-  $ssl_dir = $scos::ssl_dir,
-  $ssl_cert = $scos::ssl_cert,
-  $ssl_key = $scos::ssl_key,
-  $admin_email = $scos::admin_email,
-  $admin_password = $scos::admin_password,
-  $postgres_password = $scos::postgres_password,
-  $sentry_dsn = $scos::sentry_dsn,
   )
+
+inherits scos
 
 {
 
