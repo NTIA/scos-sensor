@@ -96,8 +96,7 @@ SENTRY_DSN=${sentry_dsn}",
     environment => ["DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost"],
   }
 
-  exec { 'scale_factors':
-    command => "/bin/echo \"${scale_factors}\" | python -m json.tool > ${install_root}/scale_factors.json",
+  file { "${install_root}/scale_factors.json":
+    content => $scale_factors,
   }
-
 }
