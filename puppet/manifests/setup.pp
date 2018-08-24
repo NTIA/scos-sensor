@@ -97,7 +97,7 @@ SENTRY_DSN=${sentry_dsn}",
   }
 
   exec { 'scale_factors':
-    command => "/bin/echo ${scale_factors} | python -m json.tool > ${install_root}/scale_factors.json",
+    command => "/bin/echo \'"${scale_factors}"\' | python -m json.tool > ${install_root}/scale_factors.json",
   }
 
 }
