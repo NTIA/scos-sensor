@@ -95,10 +95,8 @@ SENTRY_DSN=${sentry_dsn}",
     command     => "/usr/bin/envsubst \'\$DOMAINS\' < ${install_root}/nginx/conf.template > ${install_root}/nginx/conf.d/scos-sensor.conf",
     environment => ["DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost"],
   }
-
-  $parsed_scale_factors = parsejson($scale_factors)
-  
+ 
   file { "${install_root}/scale_factors.json":
-    content => $parsed_scale_factors,
+    content => $scale_factors,
   }
 }
