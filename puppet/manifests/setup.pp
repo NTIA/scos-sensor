@@ -96,7 +96,7 @@ SENTRY_DSN=${sentry_dsn}",
     environment => ["DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost"],
   }
 
-  parsed_scale_factors = parsejson($scale_factors)
+  $parsed_scale_factors = parsejson($scale_factors)
   
   file { "${install_root}/scale_factors.json":
     content => $parsed_scale_factors,
