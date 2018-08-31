@@ -29,6 +29,9 @@ COPY ./scripts/create_superuser.py /scripts
 
 RUN chmod +x /entrypoints/api_entrypoint.sh
 
+COPY ./scale_factors_schema.json /scale_factors_schema.json
+COPY ./scale_factors.json /scale_factors.json
+
 # Args are passed in via docker-compose during build time
 ARG DEBUG
 ARG DOMAINS
