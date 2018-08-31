@@ -1,69 +1,57 @@
 """Maintains a persistent connection to the USRP.
 
 Example usage:
-    $ ./src/manage.py shell
-    >>> from hardware import usrp
-    >>> usrp.connect()
-    >>> usrp.is_available
+    >>> from hardware import usrp_iface
+    >>> usrp_iface.connect()
+    >>> usrp_iface.is_available
     True
-    >>> rx = usrp.radio
+    >>> rx = usrp_iface.radio
     >>> rx.sample_rate = 10e6
     >>> rx.frequency = 700e6
     >>> rx.gain = 30
     >>> samples = rx.acquire_samples(1000)
-
 """
 
 import logging
+from os import path
 
 import numpy as np
 
-from capabilities.models import SensorDefinition
-from sensor.utils import FindNearestDict
-
+from hardware import scale_factors
+from hardware.mocks.usrp_block import MockUsrpBlock
+from sensor import settings
+from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
+
 
 uhd = None
 radio = None
 is_available = False
-driver_is_available = False
 
 
-def connect():  # -> bool:
+def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
     global uhd
-    global radio
     global is_available
-    global driver_is_available
+    global radio
 
-    try:
-        from gnuradio import uhd as gr_uhd
-        driver_is_available = True
-    except ImportError:
-        driver_is_available = False
+    if settings.RUNNING_DEMO or settings.RUNNING_TESTS:
+        logger.warning("Using mock USRP.")
 
-    if not driver_is_available:
-        logger.warning("gnuradio.uhd not available - disabling radio")
-        return False
-
-    try:
-        uhd = gr_uhd
-        radio_iface = RadioInterface()
+        usrp = MockUsrpBlock()
         is_available = True
-        radio = radio_iface
-        return True
-    except RuntimeError as err:
-        logger.error(err)
-        return False
+        RESOURCES_DIR = path.join(REPO_ROOT, './src/hardware/tests/resources')
+        sf_file = path.join(RESOURCES_DIR, 'test_scale_factors.json')
+    else:
 
-
-class RadioInterface(object):
-    def __init__(self):
-        if uhd is None:
-            raise RuntimeError("UHD not available - did you call connect()?")
+        try:
+            from gnuradio import uhd
+        except ImportError:
+            logger.warning("gnuradio.uhd not available - disabling radio")
+            return False
 
         search_criteria = uhd.device_addr_t()
-        search_criteria['type'] = 'b200'  # ensure we don't find networked usrp
+        search_criteria['type'] = 'b200'  # ensure this isnt networked usrp
         available_devices = list(uhd.find_devices(search_criteria))
         ndevices_found = len(available_devices)
 
@@ -84,9 +72,26 @@ class RadioInterface(object):
         logger.debug(device.to_pp_string())
 
         stream_args = uhd.stream_args('fc32')
-        self.usrp = uhd.usrp_source(device_addr=device,
-                                    stream_args=stream_args)
+        usrp = uhd.usrp_source(device_addr=device, stream_args=stream_args)
 
+    try:
+        radio_iface = RadioInterface(usrp=usrp, sf_file=sf_file)
+        is_available = True
+        radio = radio_iface
+        return True
+    except Exception as err:
+        logger.exception(err)
+        return False
+
+
+class RadioInterface(object):
+
+    def __init__(self, usrp, sf_file=settings.SCALE_FACTORS_FILE):
+        self.usrp = usrp
+        self.scale_factor = 1
+        self.scale_factors = scale_factors.load_from_json(sf_file)
+
+        # Set USRP defaults
         self.usrp.set_auto_dc_offset(True)
 
     @property
@@ -115,9 +120,22 @@ class RadioInterface(object):
 
     @frequency.setter
     def frequency(self, freq):
-        tune_request = uhd.tune_request(freq)
-        tune_result = self.usrp.set_center_freq(tune_request)
-        logger.debug(tune_result.to_pp_string())
+        self.tune_frequency(freq)
+
+    def tune_frequency(self, freq, dsp_freq=0.0):
+        # If mocking the usrp, work around the uhd
+        if isinstance(self.usrp, MockUsrpBlock):
+            tune_result = self.usrp.set_center_freq(freq, dsp_freq)
+            logger.debug(tune_result)
+        else:
+            tune_request = uhd.tune_request(freq, dsp_freq)
+            tune_result = self.usrp.set_center_freq(tune_request)
+            logger.debug(tune_result.to_pp_string())
+
+        self.lo_freq = tune_result.actual_rf_freq
+        self.dsp_freq = tune_result.actual_dsp_freq
+
+        self.recompute_scale_factor()
 
     @property
     def gain(self):  # -> float:
@@ -127,45 +145,30 @@ class RadioInterface(object):
     def gain(self, gain):
         self.usrp.set_gain(gain)
         logger.debug("set USRP gain: {:.2f} dB".format(self.usrp.get_gain()))
+        self.recompute_scale_factor()
 
-    def _get_scale_factor(self):
-        """Find the scale factor closest to the current frequency.
-
-        If no sensor definition exists or no scale factors are set, return 1.
-
-        """
-        default = 1
-
-        try:
-            sensor_def = SensorDefinition.objects.get()
-        except SensorDefinition.DoesNotExist:
-            msg = "No sensor definition exists, using default scale factor"
-            logger.debug(msg)
-            return default
-
-        scale_factors = sensor_def.receiver.scale_factors.values()
-        nearest_factor_map = FindNearestDict(
-            (sf['frequency'], sf['scale_factor']) for sf in scale_factors
+    def recompute_scale_factor(self):
+        """Set the scale factor based on USRP gain and LO freq"""
+        self.scale_factor = self.scale_factors.get_scale_factor(
+            lo_frequency=self.lo_freq,
+            gain=self.gain
         )
 
-        try:
-            scale_factor = nearest_factor_map[self.frequency]
-        except ValueError:
-            logger.debug("No scale factors set, using default scale factor")
-            return default
-
-        logger.debug("Using scale factor {}".format(scale_factor))
-        return scale_factor
-
-    def acquire_samples(self, n, nskip=1000):  # -> np.ndarray:
+    def acquire_samples(self, n, nskip=1000, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
-        total_samples = nskip + n
-        acquired_samples = self.usrp.finite_acquisition(total_samples)
-        scale_factor = self._get_scale_factor()
-        data = np.array(acquired_samples[nskip:]) * scale_factor
-        nreceived = len(data)
-        if nreceived != n:
-            err = "Requested {} samples, but received {}"
-            raise RuntimeError(err.format(n, nreceived))
-
-        return data
+        o_retries = retries
+        while True:
+            samples = self.usrp.finite_acquisition(n+nskip)
+            data = np.array(samples[nskip:])
+            data = data * self.scale_factor
+            if not len(data) == n:
+                if retries > 0:
+                    logger.warning("Acquisition errored.")
+                    logger.warning("Retrying {} more times.".format(retries))
+                    retries = retries - 1
+                else:
+                    err = "Failed to acquire correct number of samples "
+                    err += "{} times in a row.".format(o_retries)
+                    raise RuntimeError(err)
+            else:
+                return data

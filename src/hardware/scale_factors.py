@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class ScaleFactors(object):
-
-    # Initialize the class and load the file if given
     def __init__(self, frequencies, gains, factors, divisions=None):
         self.frequencies = frequencies
         self.gains = gains
@@ -121,27 +119,19 @@ class ScaleFactors(object):
         logger.debug("Using power scale factor: {}".format(scale_factor))
         return scale_factor
 
-    # Get the linear scale factor for the current setup
     def get_scale_factor(self, lo_frequency, gain):
-        # Ensure scale factors were loaded
-        if not self.scale_factors_loaded:
-            msg = "Defaulting scale factor to: {}"
-            msg = msg.format(self.default_scale_factor)
-            logger.debug(msg)
-            return self.default_scale_factor
-
-        # Get the power scaling factor and convert to linear
+        """Get the linear scale factor for the current setup."""
         psf = self.get_power_scale_factor(lo_frequency, gain)
-        sf = (10**(psf/20.0))
+        sf = 10**(psf/20.0)
         logger.debug("Using linear scale factor: {}".format(sf))
         return sf
 
-    # Interpolate between points in one dimension
     def interpolate_1d(self, x, x1, x2, y1, y2):
+        """Interpolate between points in one dimension."""
         return y1*(x2-x)/(x2-x1) + y2*(x-x1)/(x2-x1)
 
-    # Interpolate between points in two dimensions
     def interpolate_2d(self, x, y, x1, x2, y1, y2, z11, z21, z12, z22):
+        """Interpolate between points in two dimensions."""
         z_y1 = self.interpolate_1d(x, x1, x2, z11, z21)
         z_y2 = self.interpolate_1d(x, x1, x2, z12, z22)
         return self.interpolate_1d(y, y1, y2, z_y1, z_y2)
