@@ -7,7 +7,6 @@ from .models import (
     Preselector,
     Receiver,
     RFPath,
-    ScaleFactor,
     SensorDefinition
 )
 
@@ -35,17 +34,6 @@ class ReceiverAdmin(admin.ModelAdmin):
         'noise_figure',
         'max_power',
     )
-
-
-@admin.register(ScaleFactor)
-class ScaleFactorAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'receiver',
-        'frequency',
-        'scale_factor',
-    )
-    list_filter = ('receiver',)
 
 
 @admin.register(RFPath)

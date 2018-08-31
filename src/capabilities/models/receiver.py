@@ -37,18 +37,3 @@ class Receiver(models.Model):
 
     def __str__(self):
         return self.model
-
-
-class ScaleFactor(models.Model):
-    """A voltage scaling factor for IQ samples near a given frequency."""
-    receiver = models.ForeignKey(
-        Receiver,
-        on_delete=models.CASCADE,
-        related_name='scale_factors'
-    )
-    frequency = models.FloatField(
-        help_text="Frequency at which scale factor was computed. [Hz]"
-    )
-    scale_factor = models.FloatField(
-        help_text="Real multiplicative voltage scaling factor."
-    )
