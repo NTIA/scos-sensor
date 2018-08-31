@@ -91,7 +91,12 @@ class RadioInterface(object):
     def __init__(self, usrp, sf_file=settings.SCALE_FACTORS_FILE):
         self.usrp = usrp
         self.scale_factor = 1
-        self.scale_factors = scale_factors.load_from_json(sf_file)
+        try:
+            self.scale_factors = scale_factors.load_from_json(sf_file)
+        except Exception as err:
+            logger.error("Unable to load scale factors, falling back to to 1")
+            logger.exception(err)
+            self.scale_factors = None
 
         # Set USRP defaults
         self.usrp.set_auto_dc_offset(True)
@@ -151,6 +156,9 @@ class RadioInterface(object):
 
     def recompute_scale_factor(self):
         """Set the scale factor based on USRP gain and LO freq"""
+        if self.scale_factors is None:
+            return
+
         self.scale_factor = self.scale_factors.get_scale_factor(
             lo_frequency=self.lo_freq,
             gain=self.gain
