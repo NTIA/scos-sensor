@@ -35,6 +35,9 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
     global is_available
     global radio
 
+    if is_available and radio is not None:
+        return True
+
     if settings.RUNNING_DEMO or settings.RUNNING_TESTS:
         logger.warning("Using mock USRP.")
 

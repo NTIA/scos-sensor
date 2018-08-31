@@ -26,20 +26,7 @@ class UsrpMonitor(Action):
         healthy = True
 
         logger.debug("Performing USRP health check")
-
-        if self.usrp.driver_is_available and not self.usrp.is_available:
-            self.usrp.connect()
-
-        required_components = (
-            self.usrp.driver_is_available,
-            self.usrp.is_available
-        )
-        missing_components = [not rc for rc in required_components]
-        component_names = ("UHD", "USRP")
-        if any(missing_components):
-            missing = tuple(compress(component_names, missing_components))
-            logger.warn("{} required but not available".format(missing))
-            healthy = False
+        self.test_required_components()
 
         requested_samples = 100000  # Issue #42 hit error at ~70k, so test more
 
@@ -67,3 +54,10 @@ class UsrpMonitor(Action):
             logger.warn("USRP unhealthy")
             touch(SDR_HEALTHCHECK_FILE)
             raise RuntimeError(detail)
+
+    def test_required_components(self):
+        """Fail acquisition if a required component is not available."""
+        self.usrp.connect()
+        if not self.usrp.is_available:
+            msg = "acquisition failed: USRP required but not available"
+            raise RuntimeError(msg)
