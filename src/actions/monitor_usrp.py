@@ -4,7 +4,6 @@ from __future__ import absolute_import
 
 import os
 import logging
-from itertools import compress
 
 from hardware import usrp_iface
 from sensor.settings import SDR_HEALTHCHECK_FILE
