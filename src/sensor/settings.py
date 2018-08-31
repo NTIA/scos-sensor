@@ -38,12 +38,13 @@ IN_DOCKER = bool(environ.get('IN_DOCKER'))
 RUNNING_TESTS = 'test' in __cmd
 RUNNING_DEMO = bool(environ.get('DEMO'))
 
-# Healthchecks - the existance of any of these indicates an unhealth state
+# Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'sdr_unhealthy')
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'scheduler_dead')
 
 OPENAPI_FILE = path.join(REPO_ROOT, 'docs', 'openapi.json')
 
+SCALE_FACTORS_FILE = path.join(REPO_ROOT, 'scale_factors.json')
 SCALE_FACTORS_SCHEMA_FILE = path.join(REPO_ROOT, 'scale_factors_schema.json')
 
 # Cleanup any existing healtcheck files

@@ -6,7 +6,7 @@ import os
 import logging
 from itertools import compress
 
-from hardware import usrp
+from hardware import usrp_iface
 from sensor.settings import SDR_HEALTHCHECK_FILE
 from sensor.utils import touch
 from .base import Action
@@ -20,7 +20,7 @@ class UsrpMonitor(Action):
     def __init__(self, admin_only=True):
         super(UsrpMonitor, self).__init__(admin_only=admin_only)
 
-        self.usrp = usrp  # make instance variable to allow hotswapping mock
+        self.usrp = usrp_iface
 
     def __call__(self, name, tid):
         healthy = True

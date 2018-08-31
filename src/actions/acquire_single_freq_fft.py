@@ -3,7 +3,6 @@
 from __future__ import absolute_import
 
 import logging
-from itertools import compress
 
 import numpy as np
 from enum import Enum
@@ -13,7 +12,7 @@ from sigmf.sigmffile import SigMFFile
 
 from capabilities.models import SensorDefinition
 from capabilities.serializers import SensorDefinitionSerializer
-from hardware import usrp
+from hardware import usrp_iface
 from sensor import V1, settings, utils
 
 from .base import Action
@@ -77,7 +76,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.sample_rate = sample_rate
         self.fft_size = fft_size
         self.nffts = nffts
-        self.usrp = usrp  # make instance variable to allow hotswapping mock
+        self.usrp = usrp_iface  # make instance variable to allow mocking
         self.enbw = None
 
     def __call__(self, schedule_entry_name, task_id):
@@ -106,17 +105,9 @@ class SingleFrequencyFftAcquisition(Action):
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
         self.usrp.connect()
-
-        required_components = (
-            self.usrp.driver_is_available,
-            self.usrp.is_available
-        )
-        component_names = ("UHD", "USRP")
-        missing_components = [not rc for rc in required_components]
-        if any(missing_components):
-            missing = tuple(compress(component_names, missing_components))
-            msg = "acquisition failed: {} required but not available"
-            raise RuntimeError(msg.format(missing))
+        if not self.usrp.is_available:
+            msg = "acquisition failed: USRP required but not available"
+            raise RuntimeError(msg)
 
     def configure_usrp(self):
         self.set_usrp_clock_rate()
