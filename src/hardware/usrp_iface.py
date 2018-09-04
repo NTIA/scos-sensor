@@ -164,7 +164,7 @@ class RadioInterface(object):
             gain=self.gain
         )
 
-    def acquire_samples(self, n, nskip=1000, retries=5):  # -> np.ndarray:
+    def acquire_samples(self, n, nskip=200000, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
         o_retries = retries
         while True:
