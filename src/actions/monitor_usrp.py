@@ -22,14 +22,18 @@ class UsrpMonitor(Action):
         self.usrp = usrp_iface
 
     def __call__(self, name, tid):
-        healthy = True
-
         logger.debug("Performing USRP health check")
-        self.test_required_components()
+
+        healthy = True
+        detail = ""
+
+        try:
+            self.test_required_components()
+        except RuntimeError as err:
+            healthy = False
+            detail = str(err)
 
         requested_samples = 100000  # Issue #42 hit error at ~70k, so test more
-
-        detail = ""
 
         if healthy:
             try:
