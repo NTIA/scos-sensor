@@ -3,7 +3,7 @@ import tempfile
 from django.core.files import File
 from django.http import Http404, HttpResponse
 from rest_framework import status
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import (ListModelMixin,
                                    RetrieveModelMixin,
@@ -80,7 +80,7 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
         api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
     lookup_fields = ('schedule_entry__name', 'task_id')
 
-    @list_route(methods=('delete',))
+    @action(detail=False, methods=('delete',))
     def destroy_all(self, request, version, schedule_entry_name):
         queryset = self.get_queryset()
         queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
@@ -113,7 +113,7 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
         api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
     lookup_fields = ('schedule_entry__name', 'task_id')
 
-    @detail_route()
+    @action(detail=True)
     def archive(self, request, version, schedule_entry_name, task_id):
         entry_name = schedule_entry_name
         acq = self.get_object()
