@@ -30,7 +30,7 @@ radio = None
 is_available = False
 
 # Testing determined these gain values provide
-VALID_GAINS = frozenset([0, 20, 40, 60])
+VALID_GAINS = (0, 20, 40, 60)
 
 
 def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
@@ -153,8 +153,8 @@ class RadioInterface(object):
 
     @gain.setter
     def gain(self, gain):
-        if not gain in VALID_GAINS:
-            err = "Requested gain {} not a valid gain. ".format(gain)
+        if gain not in VALID_GAINS:
+            err = "Requested invalid gain {}. ".format(gain)
             err += "Choose one of {!r}.".format(VALID_GAINS)
             logger.error(err)
             return

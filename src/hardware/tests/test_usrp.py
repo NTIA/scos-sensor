@@ -66,12 +66,12 @@ def test_scaled_data_acquisition():
     # Do an arbitrary data collection
     rx.usrp.reset_bad_acquisitions()
     rx.frequency = 1900e6
-    rx.gain = 23
+    rx.gain = 20
     data = rx.acquire_samples(1000)
 
     # Pick an arbitrary sample and round to 5 decimal places
     datum = int(data[236]*1e6)
-    true_val = 76415
+    true_val = 104190
 
     # Assert the value
     msg = "Scale factor not correctly applied to acquisition.\n"
