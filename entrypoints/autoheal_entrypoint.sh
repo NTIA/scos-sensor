@@ -46,6 +46,7 @@ if [ -e ${DOCKER_SOCK} ]; then
                 touch "$TMP_DIR/$CONTAINER"
             fi
         done
+
         for CONTAINER in `ls $TMP_DIR`; do
             DATE=$(date +%d-%m-%Y" "%H:%M:%S)
             echo "$DATE Restarting container ${CONTAINER:0:12}"

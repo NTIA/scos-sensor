@@ -69,10 +69,11 @@ class SingleFrequencyFftAcquisition(Action):
     :param nffts: number of consecutive FFTs to pass to detector
 
     """
-    def __init__(self, frequency, sample_rate, fft_size, nffts):
+    def __init__(self, frequency, gain, sample_rate, fft_size, nffts):
         super(SingleFrequencyFftAcquisition, self).__init__()
 
         self.frequency = frequency
+        self.gain = gain
         self.sample_rate = sample_rate
         self.fft_size = fft_size
         self.nffts = nffts
@@ -113,6 +114,10 @@ class SingleFrequencyFftAcquisition(Action):
         self.set_usrp_clock_rate()
         self.set_usrp_sample_rate()
         self.set_usrp_frequency()
+        self.set_usrp_gain()
+
+    def set_usrp_gain(self):
+        self.usrp.radio.gain = self.gain
 
     def set_usrp_sample_rate(self):
         self.usrp.radio.sample_rate = self.sample_rate

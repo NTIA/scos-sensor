@@ -8,7 +8,6 @@
 set -e # exit on error
 
 cd $REPO_ROOT
-./scripts/build_api.sh
-docker-compose up -d --no-build
+docker-compose up -d
 touch .deployed
 touch .github

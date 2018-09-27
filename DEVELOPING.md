@@ -92,11 +92,11 @@ $ source ./env
 ```
 
 Then, build the API docker image locally, which will satisfy the
-`smsntia/scos-sensor` image in the Docker compose file and bring up the sensor.
+`smsntia/scos-sensor` and `smsntia/autoheal` images in the Docker compose file
+and bring up the sensor.
 
 ```bash
-$ ./scripts/build_api.sh
-$ docker-compose up
+$ docker-compose up -d
 ```
 
 

@@ -8,7 +8,7 @@ Example usage:
     >>> rx = usrp_iface.radio
     >>> rx.sample_rate = 10e6
     >>> rx.frequency = 700e6
-    >>> rx.gain = 30
+    >>> rx.gain = 40
     >>> samples = rx.acquire_samples(1000)
 """
 
@@ -28,6 +28,9 @@ logger = logging.getLogger(__name__)
 uhd = None
 radio = None
 is_available = False
+
+# Testing determined these gain values provide
+VALID_GAINS = frozenset([0, 20, 40, 60])
 
 
 def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:

@@ -8,6 +8,7 @@ registered_actions = {
     "acquire700c": acquire_single_freq_fft.SingleFrequencyFftAcquisition(
         frequency=751e6,
         sample_rate=15.36e6,
+        gain=40,
         fft_size=1024,
         nffts=300
     ),

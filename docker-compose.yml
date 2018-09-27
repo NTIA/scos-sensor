@@ -23,6 +23,9 @@ services:
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
+    build:
+      context: .
+      dockerfile: Dockerfile-api
     environment:
       - DEBUG
       - DOMAINS
@@ -77,13 +80,11 @@ services:
     restart: always
     depends_on:
       - api
+    build:
+      context: .
+      dockerfile: Dockerfile-autoheal
+    image: smsntia/autoheal
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
-    command: /bin/sh -c "apk add --no-cache jq curl && exec /entrypoints/autoheal_entrypoint.sh"
-
-  # logspout:
-  #   restart: always
-  #   image: gliderlabs/logspout
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
+    command: /entrypoints/autoheal_entrypoint.sh
