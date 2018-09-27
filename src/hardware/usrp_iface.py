@@ -153,8 +153,14 @@ class RadioInterface(object):
 
     @gain.setter
     def gain(self, gain):
+        if not gain in VALID_GAINS:
+            err = "Requested gain {} not a valid gain. ".format(gain)
+            err += "Choose one of {!r}.".format(VALID_GAINS)
+            logger.error(err)
+            return
+
         self.usrp.set_gain(gain)
-        logger.debug("set USRP gain: {:.2f} dB".format(self.usrp.get_gain()))
+        logger.debug("set USRP gain: {:.1f} dB".format(self.usrp.get_gain()))
         self.recompute_scale_factor()
 
     def recompute_scale_factor(self):
