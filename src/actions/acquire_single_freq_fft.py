@@ -152,9 +152,12 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        sensor_def_obj = SensorDefinition.objects.get()
-        sensor_def_json = SensorDefinitionSerializer(sensor_def_obj).data
-        sigmf_md.set_global_field("scos:sensor_definition", sensor_def_json)
+        try:
+            sensor_def_obj = SensorDefinition.objects.get()
+            sensor_def = SensorDefinitionSerializer(sensor_def_obj).data
+            sigmf_md.set_global_field("scos:sensor_definition", sensor_def)
+        except SensorDefinition.DoesNotExist:
+            pass
 
         try:
             fqdn = settings.ALLOWED_HOSTS[1]

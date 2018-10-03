@@ -1,5 +1,4 @@
 import pytest
-from django.core.management import call_command
 from django.test.client import Client
 
 import actions
@@ -21,14 +20,6 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if 'update_api_docs' in item.keywords:
             item.add_marker(skip_api_gen)
-
-
-@pytest.fixture(scope='session')
-def django_db_setup(django_db_setup, django_db_blocker):
-    # https://pytest-django.readthedocs.io/en/latest/
-    # database.html#populate-the-database-with-initial-test-data
-    with django_db_blocker.unblock():
-        call_command('loaddata', 'capabilities/fixtures/greyhound.json')
 
 
 @pytest.yield_fixture
