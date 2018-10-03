@@ -24,7 +24,6 @@ from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
 
-
 uhd = None
 radio = None
 is_available = False
@@ -90,7 +89,6 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
 
 
 class RadioInterface(object):
-
     def __init__(self, usrp, sf_file=settings.SCALE_FACTORS_FILE):
         self.usrp = usrp
         self.scale_factor = 1
@@ -169,15 +167,13 @@ class RadioInterface(object):
             return
 
         self.scale_factor = self.scale_factors.get_scale_factor(
-            lo_frequency=self.lo_freq,
-            gain=self.gain
-        )
+            lo_frequency=self.lo_freq, gain=self.gain)
 
     def acquire_samples(self, n, nskip=200000, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
         o_retries = retries
         while True:
-            samples = self.usrp.finite_acquisition(n+nskip)
+            samples = self.usrp.finite_acquisition(n + nskip)
             data = np.array(samples[nskip:])
             data = data * self.scale_factor
             if not len(data) == n:

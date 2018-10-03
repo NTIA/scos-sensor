@@ -11,8 +11,9 @@ class SensorUserAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (
         # server_url unforunately gets placed at bottom of User admin page
-        (None, {'fields': ('server_url',)}),
-    )
+        (None, {
+            'fields': ('server_url', )
+        }), )
 
 
 admin.site.register(User, SensorUserAdmin)

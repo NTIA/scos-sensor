@@ -2,7 +2,6 @@ from django import template
 
 from sensor.settings import VERSION_STRING
 
-
 register = template.Library()
 
 

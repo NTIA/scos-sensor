@@ -32,13 +32,12 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .settings import REST_FRAMEWORK
 from .views import SchemaView
 
-
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r'^api/(?P<version>v[0-9]+)/'
 DEFAULT_API_VERSION = REST_FRAMEWORK['DEFAULT_VERSION']
 
 
-@api_view(('GET',))
+@api_view(('GET', ))
 def api_v1_root(request, version, format=None):
     """SCOS sensor API root."""
     reverse_ = partial(reverse, request=request, format=format)
@@ -54,16 +53,15 @@ def api_v1_root(request, version, format=None):
     return Response(list_endpoints)
 
 
-api_urlpatterns = format_suffix_patterns((
-    url(r'^$', api_v1_root, name='api-root'),
-    url(r'^acquisitions/', include('acquisitions.urls')),
-    url(r'^capabilities/', include('capabilities.urls')),
-    url(r'^schedule/', include('schedule.urls')),
-    url(r'^status', include('status.urls')),
-    url(r'^users/', include('authentication.urls')),
-    url(r'^results/', include('results.urls')),
-    url(r'^schema/$', SchemaView.as_view(), name='api_schema')
-))
+api_urlpatterns = format_suffix_patterns(
+    (url(r'^$', api_v1_root, name='api-root'),
+     url(r'^acquisitions/', include('acquisitions.urls')),
+     url(r'^capabilities/', include('capabilities.urls')),
+     url(r'^schedule/', include('schedule.urls')),
+     url(r'^status', include('status.urls')),
+     url(r'^users/', include('authentication.urls')),
+     url(r'^results/', include('results.urls')),
+     url(r'^schema/$', SchemaView.as_view(), name='api_schema')))
 
 # Modify admin portal before including url
 

@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 # flake8: noqa Not our file
-
 """
 Utilities
 """
@@ -28,7 +27,6 @@ from copy import deepcopy
 from datetime import datetime
 
 from six import iteritems
-
 
 SIGMF_DATETIME_ISO8601_FMT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
@@ -55,6 +53,7 @@ def dict_merge(a, b):
             result[k] = deepcopy(v)
     return result
 
+
 def insert_sorted_dict_list(dict_list, new_entry, key):
     """
     Insert new_entry (which must be a dict) into a sorted list of other dicts.
@@ -71,6 +70,7 @@ def insert_sorted_dict_list(dict_list, new_entry, key):
             return dict_list
     dict_list = dict_list + [new_entry]
     return dict_list
+
 
 def get_schema_path(module_path):
     """

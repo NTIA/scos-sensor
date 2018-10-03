@@ -19,7 +19,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='acquisition',
             name='schedule_entry',
-            field=models.ForeignKey(help_text=b'The schedule entry relative to the acquisition', on_delete=django.db.models.deletion.PROTECT, related_name='acquisitions', to='schedule.ScheduleEntry'),
+            field=models.ForeignKey(
+                help_text=b'The schedule entry relative to the acquisition',
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name='acquisitions',
+                to='schedule.ScheduleEntry'),
         ),
         migrations.AlterUniqueTogether(
             name='acquisition',

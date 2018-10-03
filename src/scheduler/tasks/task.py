@@ -8,14 +8,7 @@ from collections import namedtuple
 
 import actions
 
-
-attributes = (
-    'time',
-    'priority',
-    'action',
-    'schedule_entry_name',
-    'task_id'
-)
+attributes = ('time', 'priority', 'action', 'schedule_entry_name', 'task_id')
 TaskTuple = namedtuple('Task', attributes)
 
 

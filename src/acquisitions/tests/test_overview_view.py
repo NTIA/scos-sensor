@@ -1,13 +1,9 @@
 from rest_framework import status
 
 from acquisitions.tests.utils import (
-    SINGLE_ACQUISITION,
-    EMPTY_ACQUISITIONS_RESPONSE,
-    reverse_acquisitions_overview,
-    reverse_acquisition_list,
-    simulate_acquisitions,
-    get_acquisitions_overview
-)
+    SINGLE_ACQUISITION, EMPTY_ACQUISITIONS_RESPONSE,
+    reverse_acquisitions_overview, reverse_acquisition_list,
+    simulate_acquisitions, get_acquisitions_overview)
 from schedule.tests.utils import post_schedule
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 

@@ -11,7 +11,6 @@ from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
-
 TEST_MAX_TASK_RESULTS = 100  # Reduce from default of settings.MAX_TASK_RESULTS
 ONE_MICROSECOND = datetime.timedelta(0, 0, 1)
 
@@ -35,13 +34,12 @@ def create_task_results(n, user_client, entry_name=None):
         started = timezone.now()
         tr = TaskResult(
             schedule_entry=entry,
-            task_id=i+1,
+            task_id=i + 1,
             started=started,
-            finished=started+ONE_MICROSECOND,
+            finished=started + ONE_MICROSECOND,
             duration=ONE_MICROSECOND,
             result='success',
-            detail=''
-        )
+            detail='')
         tr.max_results = TEST_MAX_TASK_RESULTS
         tr.save()
 

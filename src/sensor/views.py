@@ -9,7 +9,7 @@ from .settings import API_TITLE, API_DESCRIPTION
 class SchemaView(APIView):
     """The schema overview for the API."""
     renderer_classes = (SwaggerUIRenderer, OpenAPIRenderer)
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, )
     url = ''
 
     def get(self, request, version):

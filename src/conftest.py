@@ -7,8 +7,11 @@ from authentication.models import User
 
 
 def pytest_addoption(parser):
-    parser.addoption('--update-api-docs', action='store_true',
-                     default=False, help="Ensure API docs match code")
+    parser.addoption(
+        '--update-api-docs',
+        action='store_true',
+        default=False,
+        help="Ensure API docs match code")
 
 
 def pytest_collection_modifyitems(config, items):
@@ -91,8 +94,7 @@ def alt_user(db):
 def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
     client = Client()
-    client.login(
-        username=alt_user.username, password=alt_user.password)
+    client.login(username=alt_user.username, password=alt_user.password)
 
     return client
 
@@ -135,11 +137,10 @@ def alt_admin_client(db, alt_admin_user):
 
 # Add mock acquisitions for tests
 mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
-    frequency=1e9,    # 1 GHz
+    frequency=1e9,  # 1 GHz
     gain=40,
     sample_rate=1e6,  # 1 MSa/s
     fft_size=16,
-    nffts=11
-)
+    nffts=11)
 actions.by_name['mock_acquire'] = mock_acquire
 actions.init()

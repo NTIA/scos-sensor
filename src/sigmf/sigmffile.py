@@ -92,9 +92,8 @@ class SigMFFile(object):
         """
         schema_section = self.get_schema()[section_key]
         for k, v in iteritems(entries):
-            validate.validate_key_throw(
-                v, schema_section.get(k, {}), schema_section, k
-            )
+            validate.validate_key_throw(v, schema_section.get(k, {}),
+                                        schema_section, k)
 
     def get_schema(self):
         """
@@ -130,12 +129,8 @@ class SigMFFile(object):
         Will throw a ValueError if the key/value pair is invalid.
         """
         schema_section = self.get_schema()[self.GLOBAL_KEY].get('keys', {})
-        validate.validate_key_throw(
-            value,
-            schema_section.get(key, {}),
-            self.GLOBAL_KEY,
-            key
-        )
+        validate.validate_key_throw(value, schema_section.get(key, {}),
+                                    self.GLOBAL_KEY, key)
         self._metadata[self.GLOBAL_KEY][key] = value
         return value
 
@@ -269,12 +264,12 @@ class SigMFFile(object):
 
 def get_default_metadata(schema):
     """Return the minimal metadata that will pass the validator."""
+
     def get_default_dict(keys_dict):
         " Return a dict with all default values from keys_dict "
         return {
             key: desc.get("default")
-            for key, desc in iteritems(keys_dict)
-            if "default" in desc
+            for key, desc in iteritems(keys_dict) if "default" in desc
         }
 
     def default_category_data(cat_type, defaults):
@@ -285,7 +280,8 @@ def get_default_metadata(schema):
         }[cat_type](defaults)
 
     return {
-        category: default_category_data(desc["type"], get_default_dict(desc["keys"]))
+        category: default_category_data(desc["type"],
+                                        get_default_dict(desc["keys"]))
         for category, desc in iteritems(schema)
     }
 

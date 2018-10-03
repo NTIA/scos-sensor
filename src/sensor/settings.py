@@ -71,7 +71,6 @@ else:
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 
-
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -174,62 +173,65 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sensor.wsgi.application'
 
-
 # Django Rest Framework
 # http://www.django-rest-framework.org/
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'sensor.exceptions.exception_handler',
+    'EXCEPTION_HANDLER':
+    'sensor.exceptions.exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    'DEFAULT_PERMISSION_CLASSES':
+    ('rest_framework.permissions.IsAuthenticated', ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     # Versioning
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
-    'DEFAULT_VERSION': 'v1',  # this should always point to latest stable api
-    'ALLOWED_VERSIONS': ('v1',),
-    'DATETIME_FORMAT': DATETIME_FORMAT,
-    'DATETIME_INPUT_FORMATS': ('iso-8601',),
-    'COERCE_DECIMAL_TO_STRING': False,  # DecimalField should return floats
+    'DEFAULT_VERSIONING_CLASS':
+    'rest_framework.versioning.URLPathVersioning',
+    'DEFAULT_VERSION':
+    'v1',  # this should always point to latest stable api
+    'ALLOWED_VERSIONS': ('v1', ),
+    'DATETIME_FORMAT':
+    DATETIME_FORMAT,
+    'DATETIME_INPUT_FORMATS': ('iso-8601', ),
+    'COERCE_DECIMAL_TO_STRING':
+    False,  # DecimalField should return floats
 }
-
 
 # Django Rest Swagger
 # http://marcgibbons.github.io/django-rest-swagger/
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'token': {
-            'type': 'apiKey',
-            'description': (
-                "Tokens are automatically generated for all users. You can "
-                "view yours by going to your User Details view in the "
-                "browsable API at `/api/v1/users/me` and looking for the "
-                "`auth_token` key. Non-admin user accounts do not initially "
-                "have a password and so can not log in to the browsable API. "
-                "To set a password for a user (for testing purposes), an "
-                "admin can do that in the Sensor Configuration Portal, but "
-                "only the account's token should be stored and used for "
-                "general purpose API access. "
-                "Example cURL call: `curl -kLsS -H \"Authorization: Token"
-                " 529c30e6e04b3b546f2e073e879b75fdfa147c15\" "
-                "https://greyhound5.sms.internal/api/v1`"
-            ),
-            'name': 'Token',
-            'in': 'header'
+            'type':
+            'apiKey',
+            'description':
+            ("Tokens are automatically generated for all users. You can "
+             "view yours by going to your User Details view in the "
+             "browsable API at `/api/v1/users/me` and looking for the "
+             "`auth_token` key. Non-admin user accounts do not initially "
+             "have a password and so can not log in to the browsable API. "
+             "To set a password for a user (for testing purposes), an "
+             "admin can do that in the Sensor Configuration Portal, but "
+             "only the account's token should be stored and used for "
+             "general purpose API access. "
+             "Example cURL call: `curl -kLsS -H \"Authorization: Token"
+             " 529c30e6e04b3b546f2e073e879b75fdfa147c15\" "
+             "https://greyhound5.sms.internal/api/v1`"),
+            'name':
+            'Token',
+            'in':
+            'header'
         }
     },
     'APIS_SORTER': 'alpha',
     'OPERATIONS_SORTER': 'method',
     'VALIDATOR_URL': None
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -256,26 +258,28 @@ else:
 if not IN_DOCKER:
     DATABASES['default']['HOST'] = 'localhost'
 
-
 # Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
 MAX_TASK_RESULTS = 100
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -289,7 +293,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
 
 LOGLEVEL = 'DEBUG' if DEBUG else 'INFO'
 
@@ -347,7 +350,6 @@ LOGGING = {
         }
     }
 }
-
 
 SENTRY_DSN = environ.get('SENTRY_DSN')
 if SENTRY_DSN:

@@ -17,13 +17,13 @@ from sensor.utils import touch
 from . import utils
 from .tasks import TaskQueue
 
-
 logger = logging.getLogger(__name__)
 requests_futures_session = FuturesSession()
 
 
 class Scheduler(threading.Thread):
     """A memory-friendly task scheduler."""
+
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -53,7 +53,7 @@ class Scheduler(threading.Thread):
     def cancel(entry):
         """Remove an entry from the scheduler without deleting it."""
         entry.is_active = False
-        entry.save(update_fields=('is_active',))
+        entry.save(update_fields=('is_active', ))
 
     def stop(self):
         """Complete the current task, then return control."""
@@ -150,8 +150,7 @@ class Scheduler(threading.Thread):
             finished=finished,
             duration=(finished - started),
             result=result,
-            detail=detail
-        )
+            detail=detail)
         tr.save()
 
         if entry.callback_url:
@@ -180,7 +179,7 @@ class Scheduler(threading.Thread):
                 continue
 
             task_id = entry.get_next_task_id()
-            entry.save(update_fields=('next_task_id',))
+            entry.save(update_fields=('next_task_id', ))
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
@@ -231,7 +230,7 @@ class Scheduler(threading.Thread):
 
     def _get_min_interval(self, schedule_snapshot):
         intervals = [e.interval for e in schedule_snapshot if e.interval]
-        return min(intervals or (1,))  # py2.7 compat -> min(ivals, default=1)
+        return min(intervals or (1, ))  # py2.7 compat -> min(ivals, default=1)
 
     def _cancel_if_completed(self, entry):
         if not entry.has_remaining_times():

@@ -1,6 +1,5 @@
 from django.db import models
 
-
 MAX_CHARFIELD_LEN = 255
 
 
@@ -60,11 +59,10 @@ class RFPath(models.Model):
         help_text=("Excess noise ratio of calibrated noise source at "
                    "frequency of RF path. [dB]"),
         blank=True,
-        null=True
-    )
+        null=True)
 
     class Meta:
-        ordering = ('rf_path_number',)
+        ordering = ('rf_path_number', )
 
     def __str__(self):
         path_number = ""

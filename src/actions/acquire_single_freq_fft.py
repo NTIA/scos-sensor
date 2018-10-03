@@ -17,9 +17,7 @@ from sensor import V1, settings, utils
 
 from .base import Action
 
-
 logger = logging.getLogger(__name__)
-
 
 GLOBAL_INFO = {
     "core:datatype": "f32_le",  # 32-bit float, Little Endian
@@ -54,8 +52,7 @@ def m4s_detector(array):
     mean = np.mean(array, axis=0)
     median = np.median(array, axis=0)
     random_sample = array[np.random.randint(0, array.shape[0], 1)][0]
-    m4s = np.array(
-        [amin, amax, mean, median, random_sample], dtype=np.float32)
+    m4s = np.array([amin, amax, mean, median, random_sample], dtype=np.float32)
 
     return m4s
 
@@ -69,6 +66,7 @@ class SingleFrequencyFftAcquisition(Action):
     :param nffts: number of consecutive FFTs to pass to detector
 
     """
+
     def __init__(self, frequency, gain, sample_rate, fft_size, nffts):
         super(SingleFrequencyFftAcquisition, self).__init__()
 
@@ -96,10 +94,7 @@ class SingleFrequencyFftAcquisition(Action):
         kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
         kws.update(V1)
         detail = reverse(
-            'acquisition-detail',
-            kwargs=kws,
-            request=parent_entry.request
-        )
+            'acquisition-detail', kwargs=kws, request=parent_entry.request)
 
         return detail
 
@@ -194,8 +189,7 @@ class SingleFrequencyFftAcquisition(Action):
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
-                metadata=annotation_md
-            )
+                metadata=annotation_md)
 
         return sigmf_md
 
@@ -235,8 +229,7 @@ class SingleFrequencyFftAcquisition(Action):
             schedule_entry=parent_entry,
             task_id=task_id,
             sigmf_metadata=sigmf_md._metadata,
-            data=m4s_data
-        ).save()
+            data=m4s_data).save()
 
     @property
     def description(self):
@@ -250,9 +243,5 @@ class SingleFrequencyFftAcquisition(Action):
         The FFTs are taken gap-free in time and a Blackman window is applied.
         The resulting data is real-valued with units of dBm.
 
-        """.format(
-            self.nffts,
-            self.fft_size,
-            self.frequency / 1e6,
-            self.sample_rate / 1e6
-        )
+        """.format(self.nffts, self.fft_size, self.frequency / 1e6,
+                   self.sample_rate / 1e6)

@@ -8,7 +8,6 @@ from scheduler.tests.utils import simulate_scheduler_run
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
-
 EMPTY_ACQUISITIONS_RESPONSE = []
 
 SINGLE_ACQUISITION = {

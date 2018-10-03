@@ -10,7 +10,6 @@ from sigmf.validate import validate as sigmf_validate
 import json
 import os
 
-
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"
 SCHEMA_PATH = os.path.join(settings.REPO_ROOT, SCHEMA_FNAME)
 

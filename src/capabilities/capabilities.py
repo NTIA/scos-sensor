@@ -7,7 +7,6 @@
 # global namespace (using `del`) in the cleanup section at the bottom of the
 # file.
 
-
 # setup - imports and helpers
 
 # capabilities
@@ -25,5 +24,4 @@ mobility = False
 
 assert 'actions' not in globals(), (
     "Actions are added automatically by the capabilities serializer. "
-    "Do not define them explicitely in capabilities.py."
-)
+    "Do not define them explicitely in capabilities.py.")

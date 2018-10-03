@@ -13,7 +13,6 @@ import actions
 from .models import SensorDefinition
 from .serializers import SensorDefinitionSerializer
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -24,9 +23,12 @@ def get_actions(include_admin_actions=False):
             continue
 
         serialized_actions.append({
-            'name': action,
-            'summary': actions.get_summary(actions.by_name[action]),
-            'description': actions.by_name[action].description
+            'name':
+            action,
+            'summary':
+            actions.get_summary(actions.by_name[action]),
+            'description':
+            actions.by_name[action].description
         })
 
     return serialized_actions

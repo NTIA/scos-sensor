@@ -8,7 +8,6 @@ from scheduler.serializers import TaskSerializer
 from .models import Location
 from .serializers import LocationSerializer
 
-
 logger = logging.getLogger(__name__)
 
 

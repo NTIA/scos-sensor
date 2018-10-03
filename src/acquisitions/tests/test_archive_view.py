@@ -6,12 +6,8 @@ from rest_framework import status
 
 import sigmf.sigmffile
 
-
-from acquisitions.tests.utils import (
-    reverse_acquisition_archive,
-    simulate_acquisitions,
-    HTTPS_KWARG
-)
+from acquisitions.tests.utils import (reverse_acquisition_archive,
+                                      simulate_acquisitions, HTTPS_KWARG)
 
 
 def test_archive_download(user_client, test_scheduler):

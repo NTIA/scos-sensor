@@ -1,11 +1,8 @@
 from rest_framework import status
 
-from acquisitions.tests.utils import (
-    reverse_acquisition_detail,
-    update_acquisition_detail,
-    simulate_acquisitions,
-    HTTPS_KWARG
-)
+from acquisitions.tests.utils import (reverse_acquisition_detail,
+                                      update_acquisition_detail,
+                                      simulate_acquisitions, HTTPS_KWARG)
 from sensor.tests.utils import validate_response
 
 
@@ -31,16 +28,15 @@ def test_user_cant_create_private_acquisition(user_client, alt_user_client,
     validate_response(response, status.HTTP_200_OK)
 
 
-def test_user_can_view_other_nonprivate_acquisitions(admin_client, user_client,
-                                                     alt_user_client,
-                                                     test_scheduler):
+def test_user_can_view_other_nonprivate_acquisitions(
+        admin_client, user_client, alt_user_client, test_scheduler):
     # alt user schedule entry
     alt_user_entry_name = simulate_acquisitions(
         alt_user_client, name='alt_user_single_acq')
     alt_user_acq_url = reverse_acquisition_detail(alt_user_entry_name, 1)
 
-    user_view_alt_user_response = user_client.get(
-        alt_user_acq_url, **HTTPS_KWARG)
+    user_view_alt_user_response = user_client.get(alt_user_acq_url,
+                                                  **HTTPS_KWARG)
 
     # admin user schedule entry
     admin_acq_name = simulate_acquisitions(
@@ -75,27 +71,25 @@ def test_user_can_delete_their_acquisition(user_client, test_scheduler):
 
 
 def test_user_cant_delete_other_acquisitions(admin_client, user_client,
-                                             alt_user_client,
-                                             test_scheduler):
+                                             alt_user_client, test_scheduler):
     # alt user schedule entry
     alt_user_entry_name = simulate_acquisitions(
         alt_user_client, name='alt_user_single_acq')
     alt_user_acq_url = reverse_acquisition_detail(alt_user_entry_name, 1)
 
-    user_delete_alt_user_response = user_client.delete(
-        alt_user_acq_url, **HTTPS_KWARG)
+    user_delete_alt_user_response = user_client.delete(alt_user_acq_url,
+                                                       **HTTPS_KWARG)
 
     # admin user schedule entry
     admin_acq_name = simulate_acquisitions(
         admin_client, name='admin_single_acq')
     admin_acq_url = reverse_acquisition_detail(admin_acq_name, 1)
 
-    user_delete_admin_response = user_client.delete(
-        admin_acq_url, **HTTPS_KWARG)
+    user_delete_admin_response = user_client.delete(admin_acq_url,
+                                                    **HTTPS_KWARG)
 
     validate_response(user_delete_admin_response, status.HTTP_403_FORBIDDEN)
-    validate_response(
-        user_delete_alt_user_response, status.HTTP_403_FORBIDDEN)
+    validate_response(user_delete_alt_user_response, status.HTTP_403_FORBIDDEN)
 
 
 def test_user_cant_modify_their_acquisition(user_client, test_scheduler):
@@ -106,15 +100,14 @@ def test_user_cant_modify_their_acquisition(user_client, test_scheduler):
 
     new_acquisition_detail['task_id'] = 2
 
-    response = update_acquisition_detail(
-        user_client, entry_name, 1, new_acquisition_detail)
+    response = update_acquisition_detail(user_client, entry_name, 1,
+                                         new_acquisition_detail)
 
     validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 def test_user_cant_modify_other_acquisitions(admin_client, user_client,
-                                             alt_user_client,
-                                             test_scheduler):
+                                             alt_user_client, test_scheduler):
     # alt user schedule entry
     alt_user_entry_name = simulate_acquisitions(
         alt_user_client, name='alt_user_single_acq')

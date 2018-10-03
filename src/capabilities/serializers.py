@@ -56,7 +56,7 @@ def validate_array_of_float_field(self, value):
 class AntennaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Antenna
-        exclude = ('id',)
+        exclude = ('id', )
 
     def to_representation(self, obj):
         hgains = serialize_array_of_floats(obj.horizontal_gain_pattern)
@@ -68,17 +68,15 @@ class AntennaSerializer(serializers.ModelSerializer):
 
 
 AntennaSerializer.validate_horizontal_gain_pattern = (
-    validate_array_of_float_field
-)
+    validate_array_of_float_field)
 AntennaSerializer.validate_vertical_gain_pattern = (
-    validate_array_of_float_field
-)
+    validate_array_of_float_field)
 
 
 class ReceiverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Receiver
-        exclude = ('id',)
+        exclude = ('id', )
 
 
 ReceiverSerializer.to_representation = filter_null_fields
@@ -98,12 +96,10 @@ class PreselectorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Preselector
-        exclude = ('id',)
+        exclude = ('id', )
 
 
-PreselectorSerializer.to_representation = (
-    filter_null_fields_and_empty_ararys
-)
+PreselectorSerializer.to_representation = (filter_null_fields_and_empty_ararys)
 
 
 class SensorDefinitionSerializer(serializers.ModelSerializer):
@@ -113,4 +109,4 @@ class SensorDefinitionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SensorDefinition
-        exclude = ('id',)
+        exclude = ('id', )

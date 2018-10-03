@@ -4,7 +4,6 @@ from collections import namedtuple
 
 import numpy as np
 
-
 tune_result_params = ['actual_dsp_freq', 'actual_rf_freq']
 MockTuneResult = namedtuple('MockTuneResult', tune_result_params)
 

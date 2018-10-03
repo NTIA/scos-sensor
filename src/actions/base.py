@@ -16,6 +16,7 @@ class Action(object):
         added to the task result's detail field.
 
     """
+
     def __init__(self, admin_only=False):
         self.admin_only = admin_only
 

@@ -20,7 +20,6 @@
 # SOFTWARE.
 
 # flake8: noqa Not our file
-
 """
 SigMF Tool
 """
@@ -60,6 +59,7 @@ def main():
     """
     args = setup_parser().parse_args()
     return cmd_validate(args)
+
 
 if __name__ == '__main__':
     main()

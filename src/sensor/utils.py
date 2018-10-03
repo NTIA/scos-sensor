@@ -21,6 +21,7 @@ class FindNearestDict(dict):
         >>> nearest_cal[400e6]
         1.5
     """
+
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
         self._check_keys(self.keys())

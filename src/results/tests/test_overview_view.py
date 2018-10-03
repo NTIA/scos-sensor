@@ -1,12 +1,9 @@
 from rest_framework import status
 
 from acquisitions.tests.utils import simulate_acquisitions
-from results.tests.utils import (
-    EMPTY_RESULTS_RESPONSE,
-    create_task_results,
-    reverse_results_overview,
-    get_results_overview
-)
+from results.tests.utils import (EMPTY_RESULTS_RESPONSE, create_task_results,
+                                 reverse_results_overview,
+                                 get_results_overview)
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 

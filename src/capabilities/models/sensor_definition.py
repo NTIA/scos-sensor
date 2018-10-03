@@ -1,6 +1,5 @@
 from django.db import models
 
-
 MAX_CHARFIELD_LEN = 1024
 
 

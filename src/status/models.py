@@ -1,6 +1,5 @@
 from django.db import models
 
-
 MAX_DESCRIPTION_LEN = 1024
 
 
@@ -11,14 +10,11 @@ class Location(models.Model):
 
     """
     active = models.BooleanField(
-        default=True,
-        help_text="Display this location on /status."
-    )
+        default=True, help_text="Display this location on /status.")
     description = models.CharField(
         max_length=MAX_DESCRIPTION_LEN,
         blank=True,
-        help_text="Freeform text description of this location."
-    )
+        help_text="Freeform text description of this location.")
     latitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,

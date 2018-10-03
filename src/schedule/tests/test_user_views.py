@@ -3,15 +3,10 @@ import pytest
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from schedule.tests.utils import (
-    EMPTY_SCHEDULE_RESPONSE,
-    TEST_SCHEDULE_ENTRY,
-    TEST_PRIVATE_SCHEDULE_ENTRY,
-    TEST_ALTERNATE_SCHEDULE_ENTRY,
-    post_schedule,
-    update_schedule,
-    reverse_detail_url
-)
+from schedule.tests.utils import (EMPTY_SCHEDULE_RESPONSE, TEST_SCHEDULE_ENTRY,
+                                  TEST_PRIVATE_SCHEDULE_ENTRY,
+                                  TEST_ALTERNATE_SCHEDULE_ENTRY, post_schedule,
+                                  update_schedule, reverse_detail_url)
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
@@ -85,16 +80,16 @@ def test_user_cannot_delete_any_other_entry(admin_client, user_client,
     alt_user_entry_name = alt_user_rjson['name']
     alt_user_entry_url = reverse_detail_url(alt_user_entry_name)
 
-    user_delete_alt_user_response = user_client.delete(
-        alt_user_entry_url, **HTTPS_KWARG)
+    user_delete_alt_user_response = user_client.delete(alt_user_entry_url,
+                                                       **HTTPS_KWARG)
 
     # admin user schedule entry
     admin_rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     admin_entry_name = admin_rjson['name']
     admin_entry_url = reverse_detail_url(admin_entry_name)
 
-    user_delete_admin_response = user_client.delete(
-        admin_entry_url, **HTTPS_KWARG)
+    user_delete_admin_response = user_client.delete(admin_entry_url,
+                                                    **HTTPS_KWARG)
 
     validate_response(user_delete_alt_user_response, status.HTTP_403_FORBIDDEN)
     # Admin's entry is private, hence 404 instead of 403
@@ -105,8 +100,8 @@ def test_user_can_modify_their_entry(user_client):
     rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     entry_name = rjson['name']
 
-    user_adjust_response = update_schedule(
-        user_client, entry_name, TEST_ALTERNATE_SCHEDULE_ENTRY)
+    user_adjust_response = update_schedule(user_client, entry_name,
+                                           TEST_ALTERNATE_SCHEDULE_ENTRY)
 
     validate_response(user_adjust_response, status.HTTP_200_OK)
     assert rjson['priority'] == 10
@@ -126,11 +121,10 @@ def test_user_cannot_modify_any_other_entry(admin_client, user_client,
     admin_rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     admin_entry_name = admin_rjson['name']
 
-    user_adjust_admin_response = update_schedule(
-        user_client, admin_entry_name, TEST_SCHEDULE_ENTRY)
+    user_adjust_admin_response = update_schedule(user_client, admin_entry_name,
+                                                 TEST_SCHEDULE_ENTRY)
 
-    validate_response(
-        user_adjust_alt_user_response, status.HTTP_403_FORBIDDEN)
+    validate_response(user_adjust_alt_user_response, status.HTTP_403_FORBIDDEN)
     # Admin's entry is private, hence 404 instead of 403
     validate_response(user_adjust_admin_response, status.HTTP_404_NOT_FOUND)
 

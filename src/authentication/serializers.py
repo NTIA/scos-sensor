@@ -8,19 +8,12 @@ from .models import User
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     """Public user account view."""
     schedule_entries = serializers.SerializerMethodField(
-        help_text="The list of schedule entries owned by the user"
-    )
+        help_text="The list of schedule entries owned by the user")
 
     class Meta:
         model = User
-        fields = (
-            'url',
-            'username',
-            'is_active',
-            'date_joined',
-            'last_login',
-            'schedule_entries'
-        )
+        fields = ('url', 'username', 'is_active', 'date_joined', 'last_login',
+                  'schedule_entries')
         extra_kwargs = {
             'url': {
                 'view_name': 'user-detail'
@@ -32,11 +25,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
                 'view_name': 'schedule-detail'
             },
         }
-        read_only_fields = (
-            'schedule_entries',
-            'date_joined',
-            'last_login'
-        )
+        read_only_fields = ('schedule_entries', 'date_joined', 'last_login')
 
     def get_schedule_entries(self, obj):
         """Filter private schedule entries if requester is not an admin."""
@@ -66,15 +55,10 @@ class UserDetailsSerializer(UserProfileSerializer):
 
     class Meta(UserProfileSerializer.Meta):
         fields = UserProfileSerializer.Meta.fields + (
-            'email',
-            'server_url',
-            'auth_token',
-            'has_usable_password',
-            'is_admin'
-        )
+            'email', 'server_url', 'auth_token', 'has_usable_password',
+            'is_admin')
         read_only_fields = UserProfileSerializer.Meta.read_only_fields + (
-            'auth_token',
-        )
+            'auth_token', )
 
     def get_auth_token(self, obj):
         return obj.auth_token.key

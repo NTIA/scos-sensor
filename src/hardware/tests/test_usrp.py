@@ -3,7 +3,6 @@
 import pytest
 from hardware import usrp_iface
 
-
 # Create the RadioInterface with the mock usrp_block
 usrp_iface.connect()
 if not usrp_iface.is_available:
@@ -23,7 +22,7 @@ def test_acquisition_errors():
     """
     rx.usrp.reset_bad_acquisitions()
     max_retries = 5
-    for i in range(max_retries+2):
+    for i in range(max_retries + 2):
         if i <= max_retries:
             try:
                 rx.acquire_samples(1000, 1000, max_retries)
@@ -70,11 +69,11 @@ def test_scaled_data_acquisition():
     data = rx.acquire_samples(1000)
 
     # Pick an arbitrary sample and round to 5 decimal places
-    datum = int(data[236]*1e6)
+    datum = int(data[236] * 1e6)
     true_val = 104190
 
     # Assert the value
     msg = "Scale factor not correctly applied to acquisition.\n"
-    msg += "Algorithm: {}\n".format(datum/1e6)
-    msg += "Expected: {}\n".format(true_val/1e6)
+    msg += "Algorithm: {}\n".format(datum / 1e6)
+    msg += "Expected: {}\n".format(true_val / 1e6)
     assert (datum == true_val), msg

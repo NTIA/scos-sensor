@@ -5,7 +5,6 @@ from jsonschema import validate
 
 from sensor.settings import SCALE_FACTORS_SCHEMA_FILE
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -30,11 +29,11 @@ class ScaleFactors(object):
         if g <= self.gains[0]:
             g_i = 0
         elif g >= self.gains[-1]:
-            g_i = len(self.gains)-1
+            g_i = len(self.gains) - 1
         else:
             bypass_gain_interpolation = False
-            for i in range(len(self.gains)-1):
-                if self.gains[i+1] > g:
+            for i in range(len(self.gains) - 1):
+                if self.gains[i + 1] > g:
                     g_i = i
                     break
 
@@ -44,7 +43,7 @@ class ScaleFactors(object):
         if f <= self.frequencies[0]:
             f_i = 0
         elif f >= self.frequencies[-1]:
-            f_i = len(self.frequencies)-1
+            f_i = len(self.frequencies) - 1
         else:
             # Narrow the frequency range to a division
             bypass_freq_interpolation = False
@@ -73,13 +72,13 @@ class ScaleFactors(object):
 
                     break
             # Determine the index associated with the frequency/ies
-            for i in range(len(self.frequencies)-1):
+            for i in range(len(self.frequencies) - 1):
                 if self.frequencies[i] < f_div_min:
                     continue
-                if self.frequencies[i+1] > f_div_max:
+                if self.frequencies[i + 1] > f_div_max:
                     f_i = i
                     break
-                if self.frequencies[i+1] > f:
+                if self.frequencies[i + 1] > f:
                     f_i = i
                     break
 
@@ -88,33 +87,18 @@ class ScaleFactors(object):
             scale_factor = self.factors[f_i][g_i]
         elif bypass_freq_interpolation:
             scale_factor = self.interpolate_1d(
-                g,
-                self.gains[g_i],
-                self.gains[g_i+1],
-                self.factors[f_i][g_i],
-                self.factors[f_i][g_i+1]
-            )
+                g, self.gains[g_i], self.gains[g_i + 1],
+                self.factors[f_i][g_i], self.factors[f_i][g_i + 1])
         elif bypass_gain_interpolation:
             scale_factor = self.interpolate_1d(
-                f,
-                self.frequencies[f_i],
-                self.frequencies[f_i+1],
-                self.factors[f_i][g_i],
-                self.factors[f_i+1][g_i]
-            )
+                f, self.frequencies[f_i], self.frequencies[f_i + 1],
+                self.factors[f_i][g_i], self.factors[f_i + 1][g_i])
         else:
             scale_factor = self.interpolate_2d(
-                f,
-                g,
-                self.frequencies[f_i],
-                self.frequencies[f_i+1],
-                self.gains[g_i],
-                self.gains[g_i+1],
-                self.factors[f_i][g_i],
-                self.factors[f_i+1][g_i],
-                self.factors[f_i][g_i+1],
-                self.factors[f_i+1][g_i+1]
-            )
+                f, g, self.frequencies[f_i], self.frequencies[f_i + 1],
+                self.gains[g_i], self.gains[g_i + 1], self.factors[f_i][g_i],
+                self.factors[f_i + 1][g_i], self.factors[f_i][g_i + 1],
+                self.factors[f_i + 1][g_i + 1])
 
         logger.debug("Using power scale factor: {}".format(scale_factor))
         return scale_factor
@@ -122,13 +106,13 @@ class ScaleFactors(object):
     def get_scale_factor(self, lo_frequency, gain):
         """Get the linear scale factor for the current setup."""
         psf = self.get_power_scale_factor(lo_frequency, gain)
-        sf = 10**(psf/20.0)
+        sf = 10**(psf / 20.0)
         logger.debug("Using linear scale factor: {}".format(sf))
         return sf
 
     def interpolate_1d(self, x, x1, x2, y1, y2):
         """Interpolate between points in one dimension."""
-        return y1*(x2-x)/(x2-x1) + y2*(x-x1)/(x2-x1)
+        return y1 * (x2 - x) / (x2 - x1) + y2 * (x - x1) / (x2 - x1)
 
     def interpolate_2d(self, x, y, x1, x2, y1, y2, z11, z21, z12, z22):
         """Interpolate between points in two dimensions."""

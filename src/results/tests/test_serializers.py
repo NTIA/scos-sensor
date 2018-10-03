@@ -1,10 +1,8 @@
 import pytest
 
 from results.models import TaskResult
-from results.serializers import (
-    TaskResultSerializer,
-    TaskResultsOverviewSerializer
-)
+from results.serializers import (TaskResultSerializer,
+                                 TaskResultsOverviewSerializer)
 from results.tests.utils import create_task_results
 
 

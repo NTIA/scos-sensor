@@ -5,13 +5,8 @@ import pytest
 import requests_mock
 
 from scheduler.scheduler import Scheduler, minimum_duration
-from .utils import (
-    BAD_ACTION_STR,
-    advance_testclock,
-    create_action,
-    create_bad_action,
-    create_entry
-)
+from .utils import (BAD_ACTION_STR, advance_testclock, create_action,
+                    create_bad_action, create_entry)
 
 
 @pytest.mark.django_db
@@ -34,7 +29,7 @@ def test_priority(test_scheduler):
     s.run(blocking=False)
     q = s.task_queue.to_list()
     assert len(test_scheduler.task_queue) == 8
-    assert all(e.priority is hipri for e in q[::2])   # tasks at 0, 2...
+    assert all(e.priority is hipri for e in q[::2])  # tasks at 0, 2...
     assert all(e.priority is lopri for e in q[1::2])  # tasks at 1, 3...
 
 
@@ -145,7 +140,7 @@ def test_survives_failed_action(test_scheduler):
     create_entry('t1', 10, None, None, None, cb1.__name__)
     cb2, flag = create_action()
     # less priority to force run after bad_entry fails
-    create_entry('t2', 20,  None, None, None, cb2.__name__)
+    create_entry('t2', 20, None, None, None, cb2.__name__)
     s = test_scheduler
     advance_testclock(s.timefn, 1)
     assert not flag.is_set()
@@ -267,7 +262,7 @@ def test_task_queue(test_scheduler):
     s.run(blocking=False)  # consume 2 tasks and queue 2 more tasks
     assert len(s.task_queue) == 10
     e.refresh_from_db()
-    assert len(e.get_remaining_times()) == 100/5 - 2
+    assert len(e.get_remaining_times()) == 100 / 5 - 2
 
     # canceled tasks are removed from task queue
     s.cancel(e)
@@ -354,7 +349,7 @@ def test_success_posted_to_callback_url(test_scheduler):
 
     cb, action_flag = create_action()
     # less priority to force run after bad_entry fails
-    create_entry('t', 20,  None, None, None, cb.__name__, 'mock://cburl')
+    create_entry('t', 20, None, None, None, cb.__name__, 'mock://cburl')
     s = test_scheduler
     advance_testclock(s.timefn, 1)
     s._callback_response_handler = cb_request_handler
@@ -386,7 +381,7 @@ def test_starvation(test_scheduler):
     create_entry('t0', 10, None, None, 3, cb0.__name__)
     # lower-pri task enters at t=2
     cb1, flag1 = create_action()
-    create_entry('t1', 20,  2, None, None, cb1.__name__)
+    create_entry('t1', 20, 2, None, None, cb1.__name__)
     s = test_scheduler
     s.run(blocking=False)
     assert not flag1.is_set()

@@ -7,15 +7,15 @@ import pytest
 from hardware import scale_factors
 from sensor.settings import REPO_ROOT
 
-
 RESOURCES_DIR = path.join(REPO_ROOT, './src/hardware/tests/resources')
 TEST_SCALE_FACTORS_FILE = path.join(RESOURCES_DIR, 'test_scale_factors.json')
-
 
 sfs = scale_factors.load_from_json(TEST_SCALE_FACTORS_FILE)
 
 
-@pytest.mark.parametrize('sf,f,g', [
+@pytest.mark.parametrize(
+    'sf,f,g',
+    [
         # (scale_factor, lo_frequency, gain)
 
         # Outer boundary
@@ -51,8 +51,7 @@ sfs = scale_factors.load_from_json(TEST_SCALE_FACTORS_FILE)
         (-32.2959584348, 3000e6, 37),
         (-51.2041078009, 4100e6, 58),
         (-11.4556252931, 5000e6, 19),
-    ]
-)
+    ])
 def test_scale_factor_calculation(sf, f, g):
     """Test that the default scale factor is used if not file was loaded."""
 
@@ -61,7 +60,7 @@ def test_scale_factor_calculation(sf, f, g):
     csf = int(1e5 * sfs.get_power_scale_factor(f, g))
 
     msg = "Scale factor calculation failed.\n"
-    msg += "Algorithm: {}\n".format(csf/1e5)
-    msg += "Expected: {}\n".format(sf/1e5)
+    msg += "Algorithm: {}\n".format(csf / 1e5)
+    msg += "Expected: {}\n".format(sf / 1e5)
     msg += "Test case: ({}, {}, {})".format(sf, f, g)
     assert sf == csf, msg

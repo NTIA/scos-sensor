@@ -2,11 +2,8 @@ import pytest
 from rest_framework import status
 
 from acquisitions.tests.utils import (
-    get_acquisition_list,
-    reverse_acquisition_detail,
-    reverse_acquisition_list,
-    simulate_acquisitions
-)
+    get_acquisition_list, reverse_acquisition_detail, reverse_acquisition_list,
+    simulate_acquisitions)
 from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 

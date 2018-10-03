@@ -31,6 +31,7 @@ class ResultsOverviewViewSet(ListModelMixin, GenericViewSet):
 
 class MultipleFieldLookupMixin(object):
     """Get multiple field filtering based on a `lookup_fields` attribute."""
+
     def get_queryset(self):
         base_queryset = super(MultipleFieldLookupMixin, self).get_queryset()
         base_queryset = self.filter_queryset(base_queryset)
@@ -60,7 +61,7 @@ class ResultListViewSet(ListModelMixin, GenericViewSet):
     """
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
-    lookup_fields = ('schedule_entry__name',)
+    lookup_fields = ('schedule_entry__name', )
 
     def get_queryset(self):
         # .list() does not call .get_object(), which triggers permissions
@@ -80,8 +81,7 @@ class ResultListViewSet(ListModelMixin, GenericViewSet):
         return queryset.all()
 
 
-class ResultInstanceViewSet(MultipleFieldLookupMixin,
-                            RetrieveModelMixin,
+class ResultInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
                             GenericViewSet):
     """
     retrieve:

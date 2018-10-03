@@ -2,13 +2,7 @@
 
 from django.contrib import admin
 
-from .models import (
-    Antenna,
-    Preselector,
-    Receiver,
-    RFPath,
-    SensorDefinition
-)
+from .models import (Antenna, Preselector, Receiver, RFPath, SensorDefinition)
 
 
 @admin.register(Antenna)
@@ -45,12 +39,12 @@ class RFPathAdmin(admin.ModelAdmin):
         'low_frequency_passband',
         'high_frequency_passband',
     )
-    list_filter = ('preselector',)
+    list_filter = ('preselector', )
 
 
 @admin.register(Preselector)
 class PreselectorAdmin(admin.ModelAdmin):
-    list_display = ('id',)
+    list_display = ('id', )
 
 
 @admin.register(SensorDefinition)

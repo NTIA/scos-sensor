@@ -8,19 +8,13 @@ from .models import TaskResult
 
 class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
     schedule_entry = serializers.SerializerMethodField(
-        help_text="The related schedule entry for the result"
-    )
+        help_text="The related schedule entry for the result")
     results_available = serializers.SerializerMethodField(
-        help_text="The number of available results"
-    )
+        help_text="The number of available results")
 
     class Meta:
         model = ScheduleEntry
-        fields = (
-            'url',
-            'results_available',
-            'schedule_entry'
-        )
+        fields = ('url', 'results_available', 'schedule_entry')
         extra_kwargs = {
             'url': {
                 'view_name': 'result-list',
@@ -63,8 +57,7 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
         source='*'  # pass whole object
     )
     schedule_entry = serializers.SerializerMethodField(
-        help_text="The url of the parent schedule entry"
-    )
+        help_text="The url of the parent schedule entry")
 
     class Meta:
         model = TaskResult

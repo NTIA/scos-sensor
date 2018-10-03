@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-
 server_url_help = "URL of server if account belongs to a sensor manager"
 
 

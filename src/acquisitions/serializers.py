@@ -8,19 +8,13 @@ from .models import Acquisition
 
 class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
     schedule_entry = serializers.SerializerMethodField(
-        help_text="The related schedule entry for the acquisition"
-    )
+        help_text="The related schedule entry for the acquisition")
     acquisitions_available = serializers.SerializerMethodField(
-        help_text="The number of available acquisitions"
-    )
+        help_text="The number of available acquisitions")
 
     class Meta:
         model = ScheduleEntry
-        fields = (
-            'url',
-            'acquisitions_available',
-            'schedule_entry'
-        )
+        fields = ('url', 'acquisitions_available', 'schedule_entry')
         extra_kwargs = {
             'url': {
                 'view_name': 'acquisition-list',
@@ -64,18 +58,11 @@ class AcquisitionSerializer(serializers.ModelSerializer):
         source='*'  # pass whole object
     )
     sigmf_metadata = serializers.DictField(
-        help_text="The sigmf meta data for the acquisition"
-    )
+        help_text="The sigmf meta data for the acquisition")
 
     class Meta:
         model = Acquisition
-        fields = (
-            'url',
-            'task_id',
-            'created',
-            'archive',
-            'sigmf_metadata'
-        )
+        fields = ('url', 'task_id', 'created', 'archive', 'sigmf_metadata')
         extra_kwargs = {
             'schedule_entry': {
                 'view_name': 'schedule-detail',

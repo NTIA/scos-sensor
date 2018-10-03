@@ -1,6 +1,5 @@
 from django.db import models
 
-
 MAX_CHARFIELD_LEN = 255
 MAX_FLOAT_ARRAY_CHARFIELD_LEN = 1023
 

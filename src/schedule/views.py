@@ -73,12 +73,12 @@ class ScheduleEntryViewSet(ModelViewSet):
 
         ro_fields = ()
         if updating:
-            ro_fields += ('name',)
+            ro_fields += ('name', )
         else:
-            ro_fields += ('is_active',)
+            ro_fields += ('is_active', )
 
         if not self.request.user.is_staff:
-            ro_fields += ('is_private',)
+            ro_fields += ('is_private', )
 
         choices = actions.CHOICES
         if self.request.user.is_staff:
@@ -95,16 +95,14 @@ class ScheduleEntryViewSet(ModelViewSet):
             action = serializers.ChoiceField(
                 choices=choices,
                 read_only=updating,
-                help_text="[Required] The name of the action to be scheduled"
-            )
+                help_text="[Required] The name of the action to be scheduled")
 
             priority = serializers.IntegerField(
                 required=False,
                 allow_null=True,
                 min_value=min_priority,
                 max_value=19,
-                help_text=priority_help_text
-            )
+                help_text=priority_help_text)
 
             class Meta(ScheduleEntrySerializer.Meta):
                 read_only_fields = ro_fields

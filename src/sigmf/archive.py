@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 # flake8: noqa Not our file
-
 """Create and extract SigMF archives."""
 
 import os
@@ -28,7 +27,6 @@ import tarfile
 import tempfile
 
 from . import error
-
 
 SIGMF_ARCHIVE_EXT = ".sigmf"
 SIGMF_METADATA_EXT = ".sigmf-meta"
@@ -68,6 +66,7 @@ class SigMFArchive(object):
                          - archive1.sigmf-data
 
     """
+
     def __init__(self, sigmffile, name=None, fileobj=None):
         self.sigmffile = sigmffile
         self.name = name
@@ -77,9 +76,8 @@ class SigMFArchive(object):
 
         archive_name = self._get_archive_name()
         sigmf_fileobj = self._get_output_fileobj()
-        sigmf_archive = tarfile.TarFile(mode="w", 
-                                        fileobj=sigmf_fileobj,
-                                        format=tarfile.PAX_FORMAT)
+        sigmf_archive = tarfile.TarFile(
+            mode="w", fileobj=sigmf_fileobj, format=tarfile.PAX_FORMAT)
         tmpdir = tempfile.mkdtemp()
         sigmf_md_filename = archive_name + SIGMF_METADATA_EXT
         sigmf_md_path = os.path.join(tmpdir, sigmf_md_filename)

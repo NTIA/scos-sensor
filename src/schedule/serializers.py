@@ -5,10 +5,8 @@ from rest_framework.reverse import reverse
 
 import actions
 from sensor import V1
-from sensor.utils import (
-    get_datetime_from_timestamp,
-    get_timestamp_from_datetime
-)
+from sensor.utils import (get_datetime_from_timestamp,
+                          get_timestamp_from_datetime)
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 
@@ -23,6 +21,7 @@ def datetimes_to_timestamps(validated_data):
 
 class DateTimeFromTimestampField(serializers.DateTimeField):
     """DateTimeField with integer timestamp as internal value."""
+
     def to_representation(self, ts):
         """Convert integer timestamp to an ISO 8601 datetime string."""
         if ts is None:
@@ -45,43 +44,38 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     """Covert ScheduleEntry to and from JSON."""
     acquisitions = serializers.SerializerMethodField(
-        help_text="The list of acquisitions related to the entry"
-    )
+        help_text="The list of acquisitions related to the entry")
     results = serializers.SerializerMethodField(
-        help_text="The list of results related to the entry"
-    )
+        help_text="The list of results related to the entry")
     start = DateTimeFromTimestampField(
         required=False,
         allow_null=True,
         default=None,
-        help_text="UTC time (ISO 8601) to start, or leave blank for 'now'"
-    )
+        help_text="UTC time (ISO 8601) to start, or leave blank for 'now'")
     stop = DateTimeFromTimestampField(
         required=False,
         allow_null=True,
         default=None,
         label="Absolute stop",
-        help_text=("UTC time (ISO 8601) to stop, "
-                   "or leave blank for 'never' (not valid with relative stop)")
-    )
+        help_text=(
+            "UTC time (ISO 8601) to stop, "
+            "or leave blank for 'never' (not valid with relative stop)"))
     relative_stop = serializers.IntegerField(
         required=False,
         write_only=True,
         allow_null=True,
         default=None,
         min_value=1,
-        help_text=("Integer seconds after start to stop, "
-                   "or leave blank for 'never' (not valid with absolute stop)")
-    )
+        help_text=(
+            "Integer seconds after start to stop, "
+            "or leave blank for 'never' (not valid with absolute stop)"))
     next_task_time = DateTimeFromTimestampField(
         read_only=True,
-        help_text="UTC time (ISO 8601) the next task is scheduled for"
-    )
+        help_text="UTC time (ISO 8601) the next task is scheduled for")
     # action choices is modified in schedule/views.py based on user
     action = serializers.ChoiceField(
         choices=actions.CHOICES,
-        help_text="[Required] The name of the action to be scheduled"
-    )
+        help_text="[Required] The name of the action to be scheduled")
     # priority min_value is modified in schedule/views.py based on user
     priority = serializers.IntegerField(
         required=False,
@@ -89,39 +83,20 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         min_value=0,
         max_value=19,
         help_text="Lower number is higher priority (default={})".format(
-            DEFAULT_PRIORITY
-        )
-    )
+            DEFAULT_PRIORITY))
     # validate_only is a serializer-only field
     validate_only = serializers.BooleanField(
         required=False,
         default=False,
-        help_text="Only validate the input, do not modify the schedule"
-    )
+        help_text="Only validate the input, do not modify the schedule")
 
     class Meta:
         model = ScheduleEntry
-        fields = (
-            'url',
-            'name',
-            'action',
-            'priority',
-            'start',
-            'stop',
-            'relative_stop',
-            'interval',
-            'is_active',
-            'is_private',
-            'callback_url',
-            'next_task_time',
-            'next_task_id',
-            'created',
-            'modified',
-            'owner',
-            'acquisitions',
-            'results',
-            'validate_only'
-        )
+        fields = ('url', 'name', 'action', 'priority', 'start', 'stop',
+                  'relative_stop', 'interval', 'is_active', 'is_private',
+                  'callback_url', 'next_task_time', 'next_task_id', 'created',
+                  'modified', 'owner', 'acquisitions', 'results',
+                  'validate_only')
         extra_kwargs = {
             'url': {
                 'view_name': 'schedule-detail',

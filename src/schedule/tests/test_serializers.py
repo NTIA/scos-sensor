@@ -5,7 +5,6 @@ from sensor.utils import parse_datetime_str
 
 from .utils import post_schedule
 
-
 #
 # Test deserialization
 #
@@ -13,53 +12,91 @@ from .utils import post_schedule
 
 # Test that valid input is valid
 @pytest.mark.django_db
-@pytest.mark.parametrize('entry_json', [
-    # A name and action should be the minimum acceptable entry (one-shot, ASAP)
-    {'name': 'test', 'action': 'logger'},
-    # Stop 10 seconds after starting, start ASAP
-    {'name': 'test', 'action': 'logger', 'relative_stop': 10},
-    # Min integer interval ok
-    {'name': 'test', 'action': 'logger', 'interval': 10},
-    # Max priority ok
-    {'name': 'test', 'action': 'logger', 'priority': 19},
-    # Min user priority ok
-    {'name': 'test', 'action': 'logger', 'priority': 0},
-    # Stop 10 seconds after starting; start at absolute time
-    {
-        'name': 'test',
-        'action': 'logger',
-        'start': '2018-03-16T17:12:25Z',
-        'relative_stop': 10,
-    },
-    # Start and stop at absolute time; equivalent to above
-    {
-        'name': 'test',
-        'action': 'logger',
-        'start': '2018-03-16T17:12:25Z',
-        'absolute_stop': '2018-03-16T17:12:35Z',
-    },
-    # 'stop' and 'absolute_stop' are synonyms
-    {'name': 'test', 'action': 'logger', 'stop': '2018-03-16T17:12:35.0Z'},
-    # Subseconds are optional
-    {'name': 'test', 'action': 'logger', 'start': '2018-03-16T17:12:35Z'},
-    # Sensor is timezone-aware
-    {'name': 'test', 'action': 'logger', 'start': '2018-03-22T13:53:25-06:00'},
-    # All non-boolean, non-required fields accepts null to mean not specified
-    {
-        'name': 'test',
-        'action': 'logger',
-        'start': None,
-        'absolute_stop': None,
-        'relative_stop': None,
-        'priority': None,
-        'start': None,
-        'start': None,
-        'interval': None,
-        'callback_url': None,
-    },
-    # Explicit validate_only is valid
-    {'name': 'test', 'action': 'logger', 'validate_only': False},
-])
+@pytest.mark.parametrize(
+    'entry_json',
+    [
+        # A name and action should be the minimum acceptable entry
+        # i.e., (one-shot, ASAP)
+        {
+            'name': 'test',
+            'action': 'logger'
+        },
+        # Stop 10 seconds after starting, start ASAP
+        {
+            'name': 'test',
+            'action': 'logger',
+            'relative_stop': 10
+        },
+        # Min integer interval ok
+        {
+            'name': 'test',
+            'action': 'logger',
+            'interval': 10
+        },
+        # Max priority ok
+        {
+            'name': 'test',
+            'action': 'logger',
+            'priority': 19
+        },
+        # Min user priority ok
+        {
+            'name': 'test',
+            'action': 'logger',
+            'priority': 0
+        },
+        # Stop 10 seconds after starting; start at absolute time
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-16T17:12:25Z',
+            'relative_stop': 10,
+        },
+        # Start and stop at absolute time; equivalent to above
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-16T17:12:25Z',
+            'absolute_stop': '2018-03-16T17:12:35Z',
+        },
+        # 'stop' and 'absolute_stop' are synonyms
+        {
+            'name': 'test',
+            'action': 'logger',
+            'stop': '2018-03-16T17:12:35.0Z'
+        },
+        # Subseconds are optional
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-16T17:12:35Z'
+        },
+        # Sensor is timezone-aware
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-22T13:53:25-06:00'
+        },
+        # All non-boolean, non-required fields accepts null to mean not defined
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': None,
+            'absolute_stop': None,
+            'relative_stop': None,
+            'priority': None,
+            'start': None,
+            'start': None,
+            'interval': None,
+            'callback_url': None,
+        },
+        # Explicit validate_only is valid
+        {
+            'name': 'test',
+            'action': 'logger',
+            'validate_only': False
+        },
+    ])
 def test_valid_entries(entry_json, user):
     serializer = ScheduleEntrySerializer(data=entry_json)
     assert serializer.is_valid()
@@ -68,52 +105,94 @@ def test_valid_entries(entry_json, user):
 
 # Test that invalid input is invalid
 @pytest.mark.django_db
-@pytest.mark.parametrize('entry_json', [
-    # name is a required field
-    {'action': 'logger'},
-    # action is a required field
-    {'name': 'test'},
-    # non-integer priority
-    {'name': 'test', 'action': 'logger', 'priority': 3.14},
-    # negative priority (for normal user)
-    {'name': 'test', 'action': 'logger', 'priority': -1},
-    # priority greater than max (19)
-    {'name': 'test', 'action': 'logger', 'priority': 20},
-    # non-integer interval
-    {'name': 'test', 'action': 'logger', 'interval': 3.14},
-    # zero interval
-    {'name': 'test', 'action': 'logger', 'interval': 0},
-    # negative interval
-    {'name': 'test', 'action': 'logger', 'interval': -1},
-    # can't interpret both absolute and relative stop
-    {
-        'name': 'test',
-        'action': 'logger',
-        'start': '2018-03-16T17:12:25.0Z',
-        'absolute_stop': '2018-03-16T17:12:35.0Z',
-        'relative_stop': 10,
-    },
-    # 0 relative_stop
-    {'name': 'test', 'action': 'logger', 'relative_stop': 0},
-    # negative relative_stop
-    {'name': 'test', 'action': 'logger', 'relative_stop': -10},
-    # non-integer relative_stop
-    {'name': 'test', 'action': 'logger', 'relative_stop': 3.14},
-    # stop is before start
-    {
-        'name': 'test',
-        'action': 'logger',
-        'start': '2018-03-16T17:12:35Z',
-        'stop': '2018-03-16T17:12:30Z'
-    },
-    # stop is same as start
-    {
-        'name': 'test',
-        'action': 'logger',
-        'start': '2018-03-16T17:12:35Z',
-        'stop': '2018-03-16T17:12:35Z',
-    },
-])
+@pytest.mark.parametrize(
+    'entry_json',
+    [
+        # name is a required field
+        {
+            'action': 'logger'
+        },
+        # action is a required field
+        {
+            'name': 'test'
+        },
+        # non-integer priority
+        {
+            'name': 'test',
+            'action': 'logger',
+            'priority': 3.14
+        },
+        # negative priority (for normal user)
+        {
+            'name': 'test',
+            'action': 'logger',
+            'priority': -1
+        },
+        # priority greater than max (19)
+        {
+            'name': 'test',
+            'action': 'logger',
+            'priority': 20
+        },
+        # non-integer interval
+        {
+            'name': 'test',
+            'action': 'logger',
+            'interval': 3.14
+        },
+        # zero interval
+        {
+            'name': 'test',
+            'action': 'logger',
+            'interval': 0
+        },
+        # negative interval
+        {
+            'name': 'test',
+            'action': 'logger',
+            'interval': -1
+        },
+        # can't interpret both absolute and relative stop
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-16T17:12:25.0Z',
+            'absolute_stop': '2018-03-16T17:12:35.0Z',
+            'relative_stop': 10,
+        },
+        # 0 relative_stop
+        {
+            'name': 'test',
+            'action': 'logger',
+            'relative_stop': 0
+        },
+        # negative relative_stop
+        {
+            'name': 'test',
+            'action': 'logger',
+            'relative_stop': -10
+        },
+        # non-integer relative_stop
+        {
+            'name': 'test',
+            'action': 'logger',
+            'relative_stop': 3.14
+        },
+        # stop is before start
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-16T17:12:35Z',
+            'stop': '2018-03-16T17:12:30Z'
+        },
+        # stop is same as start
+        {
+            'name': 'test',
+            'action': 'logger',
+            'start': '2018-03-16T17:12:35Z',
+            'stop': '2018-03-16T17:12:35Z',
+        },
+    ])
 def test_invalid_entries(entry_json):
     serializer = ScheduleEntrySerializer(data=entry_json)
     assert not serializer.is_valid()

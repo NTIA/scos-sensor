@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 # flake8: noqa Not our file
-
 """SigMF Validation routines"""
 
 from __future__ import print_function
@@ -29,12 +28,14 @@ import json
 
 class ValidationResult(object):
     " Amends a validation result (True, False) with an error string. "
+
     def __init__(self, value=False, error=None):
         self.error = error
         self.value = value
 
     def __bool__(self):
         return self.value
+
     __nonzero__ = __bool__
 
     def __str__(self):
@@ -42,10 +43,12 @@ class ValidationResult(object):
             return str(self.value)
         return str(self.error)
 
+
 def match_type(value, our_type):
     " Checks if value matches our_type "
     return value is None or {
-        'string': lambda x: isinstance(x, str) or isinstance(x, unicode), # FIXME make py3k compatible
+        'string':
+        lambda x: isinstance(x, str) or isinstance(x, unicode),  # FIXME make py3k compatible
         'uint': lambda x: isinstance(x, int) and x >= 0,
         'double': lambda x: isinstance(x, float) or isinstance(x, int),
     }[our_type](value)
@@ -66,22 +69,18 @@ def validate_key(data_value, ref_dict, section, key):
     if ref_dict.get('required') and data_value is None:
         return ValidationResult(
             False,
-            "In Section `{sec}', an entry is missing required key `{key}'.".format(
-                sec=section,
-                key=key
-            ))
+            "In Section `{sec}', an entry is missing required key `{key}'.".
+            format(sec=section, key=key))
     if 'type' in ref_dict and not match_type(data_value, ref_dict["type"]):
         return ValidationResult(
             False,
-            "In Section `{sec}', entry `{key}={value}' is not of type `{type}'.".format(
-                sec=section,
-                value=data_value,
-                key=key,
-                type=ref_dict["type"]
-            ))
+            "In Section `{sec}', entry `{key}={value}' is not of type `{type}'."
+            .format(
+                sec=section, value=data_value, key=key, type=ref_dict["type"]))
     # if "py_re" in ref_dict and not re.match(ref_dict["py_re"], data_value):
-        # return ValidationResult(False, "regex fail")
+    # return ValidationResult(False, "regex fail")
     return True
+
 
 def validate_key_throw(*args):
     """
@@ -92,41 +91,35 @@ def validate_key_throw(*args):
         raise ValueError(str(validation_result))
     return validation_result
 
+
 def validate_section_dict(data_section, ref_section, section):
     if not isinstance(data_section, dict):
         return ValidationResult(
             False,
-            "Section `{sec}' exists, but is not a dict.".format(sec=section)
-        )
-    key_validation_results = (
-        validate_key(
-            data_section.get(key),
-            ref_section["keys"].get(key),
-            section, key
-        ) for key in ref_section["keys"]
-    )
+            "Section `{sec}' exists, but is not a dict.".format(sec=section))
+    key_validation_results = (validate_key(
+        data_section.get(key), ref_section["keys"].get(key), section, key)
+                              for key in ref_section["keys"])
     for result in key_validation_results:
         if not bool(result):
             return result
     return True
+
 
 def validate_section_dict_list(data_section, ref_section, section):
     if not isinstance(data_section, list) or \
             not all((isinstance(x, dict) for x in data_section)):
         return ValidationResult(
             False,
-            "Section `{sec}' exists, but is not a list of dicts.".format(sec=section)
-        )
+            "Section `{sec}' exists, but is not a list of dicts.".format(
+                sec=section))
     sort_key = ref_section.get("sort")
-    last_index = (data_section[0].get(sort_key, 0) if len(data_section) else 0) - 1
+    last_index = (data_section[0].get(sort_key, 0)
+                  if len(data_section) else 0) - 1
     for chunk in data_section:
-        key_validation_results = (
-            validate_key(
-                chunk.get(key),
-                ref_section["keys"].get(key),
-                section, key
-            ) for key in ref_section["keys"]
-        )
+        key_validation_results = (validate_key(
+            chunk.get(key), ref_section["keys"].get(key), section, key)
+                                  for key in ref_section["keys"])
         for result in key_validation_results:
             if not bool(result):
                 return result
@@ -142,28 +135,30 @@ def validate_section_dict_list(data_section, ref_section, section):
         last_index = this_index
     return True
 
+
 def validate_section(data_section, ref_section, section):
     """
     Validates a section (e.g. global, capture, etc.).
     """
     if ref_section["required"] and data_section is None:
         return ValidationResult(
-            False,
-            "Required section `{sec}' not found.".format(sec=section)
-        )
+            False, "Required section `{sec}' not found.".format(sec=section))
     return {
         'dict': validate_section_dict,
         'dict_list': validate_section_dict_list,
     }[ref_section["type"]](data_section, ref_section, section)
 
+
 def validate(data, ref=None):
     if ref is None:
         from sigmf import schema
         ref = schema.get_schema()
-    for result in (validate_section(data.get(key), ref.get(key), key) for key in ref):
+    for result in (validate_section(data.get(key), ref.get(key), key)
+                   for key in ref):
         if not result:
             return result
     return True
+
 
 if __name__ == "__main__":
     data_dict_ = json.load(open("../example_metadata_clean.json"))

@@ -28,7 +28,5 @@ from . import utils
 
 def get_schema(version=None):
     schema_file = os.path.join(
-        utils.get_schema_path(os.path.dirname(utils.__file__)),
-        'schema.json'
-    )
+        utils.get_schema_path(os.path.dirname(utils.__file__)), 'schema.json')
     return json.load(open(schema_file))

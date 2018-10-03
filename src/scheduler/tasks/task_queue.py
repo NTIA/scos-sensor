@@ -11,6 +11,7 @@ from . import Task
 
 class TaskQueue(list):
     """A priority queue for tasks."""
+
     def __init__(self, *args, **kwargs):
         super(TaskQueue, self).__init__(*args, **kwargs)
         heapq.heapify(self)
@@ -24,7 +25,7 @@ class TaskQueue(list):
         """Retun a list of up upcoming tasks in priority queue order."""
         tasks = self.copy()
         # sort method pulled from stdlib sched.py ensures same ordering as pop
-        return list(map(heapq.heappop, [tasks]*len(tasks)))
+        return list(map(heapq.heappop, [tasks] * len(tasks)))
 
     def cancel(self, task):
         self.remove(task)

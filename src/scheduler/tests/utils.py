@@ -8,12 +8,12 @@ from authentication.models import User
 from schedule.models import ScheduleEntry
 from scheduler.scheduler import Scheduler
 
-
 BAD_ACTION_STR = "testing expected failure"
 
 
 class TestClock(object):
     """Manually-incremented clock counter"""
+
     def __init__(self):
         self.clock = count()
         self.t = next(self.clock)

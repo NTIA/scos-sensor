@@ -6,14 +6,9 @@ from rest_framework.reverse import reverse
 
 from sensor import V1
 
-
 EMPTY_SCHEDULE_RESPONSE = []
 
-TEST_SCHEDULE_ENTRY = {
-    'name': 'test',
-    'action': 'logger',
-    'is_private': False
-}
+TEST_SCHEDULE_ENTRY = {'name': 'test', 'action': 'logger', 'is_private': False}
 
 TEST_ALTERNATE_SCHEDULE_ENTRY = {
     'name': 'test_alternate',

@@ -9,18 +9,37 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Location',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('active', models.BooleanField(default=True, help_text=b'Display this location on /status.')),
-                ('description', models.CharField(blank=True, help_text=b'Freeform text description of this location.', max_length=1024)),
-                ('latitude', models.DecimalField(decimal_places=6, help_text=b'Longitude of the sensor in decimal degrees.', max_digits=9)),
-                ('longitude', models.DecimalField(decimal_places=6, help_text=b'Longitude of the sensor in decimal degrees.', max_digits=9)),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
+                ('active',
+                 models.BooleanField(
+                     default=True,
+                     help_text=b'Display this location on /status.')),
+                ('description',
+                 models.CharField(
+                     blank=True,
+                     help_text=b'Freeform text description of this location.',
+                     max_length=1024)),
+                ('latitude',
+                 models.DecimalField(
+                     decimal_places=6,
+                     help_text=b'Longitude of the sensor in decimal degrees.',
+                     max_digits=9)),
+                ('longitude',
+                 models.DecimalField(
+                     decimal_places=6,
+                     help_text=b'Longitude of the sensor in decimal degrees.',
+                     max_digits=9)),
             ],
         ),
     ]

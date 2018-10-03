@@ -1,13 +1,9 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from schedule.tests.utils import (
-    EMPTY_SCHEDULE_RESPONSE,
-    TEST_SCHEDULE_ENTRY,
-    TEST_PRIVATE_SCHEDULE_ENTRY,
-    post_schedule,
-    update_schedule
-)
+from schedule.tests.utils import (EMPTY_SCHEDULE_RESPONSE, TEST_SCHEDULE_ENTRY,
+                                  TEST_PRIVATE_SCHEDULE_ENTRY, post_schedule,
+                                  update_schedule)
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 
@@ -46,8 +42,8 @@ def test_admin_can_view_all_entries(admin_client, user_client,
     user_url = reverse('schedule-detail', kwargs=kws)
 
     # alt admin user schedule entry
-    alt_admin_rjson = post_schedule(
-        alt_admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+    alt_admin_rjson = post_schedule(alt_admin_client,
+                                    TEST_PRIVATE_SCHEDULE_ENTRY)
     alt_admin_entry_name = alt_admin_rjson['name']
     kws = {'pk': alt_admin_entry_name}
     kws.update(V1)
@@ -70,8 +66,8 @@ def test_admin_can_delete_all_entries(admin_client, user_client,
     user_url = reverse('schedule-detail', kwargs=kws)
 
     # admin user schedule entry
-    alt_admin_rjson = post_schedule(
-        alt_admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+    alt_admin_rjson = post_schedule(alt_admin_client,
+                                    TEST_PRIVATE_SCHEDULE_ENTRY)
     alt_admin_entry_name = alt_admin_rjson['name']
     kws = {'pk': alt_admin_entry_name}
     kws.update(V1)
@@ -94,12 +90,12 @@ def test_admin_can_modify_all_entries(admin_client, user_client,
     user_rjson = post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     user_entry_name = user_rjson['name']
 
-    admin_adjust_user_response = update_schedule(
-        admin_client, user_entry_name, TEST_PRIVATE_SCHEDULE_ENTRY)
+    admin_adjust_user_response = update_schedule(admin_client, user_entry_name,
+                                                 TEST_PRIVATE_SCHEDULE_ENTRY)
 
     # admin user schedule entry
-    alt_admin_rjson = post_schedule(
-        alt_admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
+    alt_admin_rjson = post_schedule(alt_admin_client,
+                                    TEST_PRIVATE_SCHEDULE_ENTRY)
     alt_admin_entry_name = alt_admin_rjson['name']
 
     admin_adjust_alt_admin_response = update_schedule(

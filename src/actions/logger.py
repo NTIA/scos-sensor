@@ -6,7 +6,6 @@ import logging
 
 from .base import Action
 
-
 logger = logging.getLogger(__name__)
 
 LOGLVL_INFO = 20
@@ -22,6 +21,7 @@ class Logger(Action):
     `{tid}` will be replaced with the sequential task id.
 
     """
+
     def __init__(self, loglvl=LOGLVL_INFO, admin_only=False):
         super(Logger, self).__init__(admin_only=admin_only)
         self.loglvl = loglvl

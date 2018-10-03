@@ -2,21 +2,22 @@ from . import acquire_single_freq_fft
 from . import logger
 from . import monitor_usrp
 
-
 # Actions initialized here are made available through the API
 registered_actions = {
-    "acquire700c": acquire_single_freq_fft.SingleFrequencyFftAcquisition(
+    "acquire700c":
+    acquire_single_freq_fft.SingleFrequencyFftAcquisition(
         frequency=751e6,
         sample_rate=15.36e6,
         gain=40,
         fft_size=1024,
-        nffts=300
-    ),
-    "logger": logger.Logger(),
-    "admin_logger": logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),
-    "monitor_usrp": monitor_usrp.UsrpMonitor(admin_only=True)
+        nffts=300),
+    "logger":
+    logger.Logger(),
+    "admin_logger":
+    logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),
+    "monitor_usrp":
+    monitor_usrp.UsrpMonitor(admin_only=True)
 }
-
 
 by_name = registered_actions
 

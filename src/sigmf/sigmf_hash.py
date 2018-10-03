@@ -19,12 +19,12 @@
 # SOFTWARE.
 
 # flake8: noqa Not our file
-
 """
 Hashing functions
 """
 
 import hashlib
+
 
 def calculate_sha512(filename):
     """
@@ -35,4 +35,3 @@ def calculate_sha512(filename):
         for buff in iter(lambda: f.read(4096), b""):
             the_hash.update(buff)
     return the_hash.hexdigest()
-

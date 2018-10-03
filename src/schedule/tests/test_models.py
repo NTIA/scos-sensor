@@ -9,14 +9,13 @@ from scheduler import utils
 from schedule.models import ScheduleEntry, DEFAULT_PRIORITY
 
 
-@pytest.mark.parametrize('test_input,future_t,expected', [
-    ((0, 5, 1), 2, [[0, 1], [2, 3], [4]]),
-    ((1, 5, 2), 8, [[1, 3]])
-])
+@pytest.mark.parametrize('test_input,future_t,expected',
+                         [((0, 5, 1), 2, [[0, 1], [2, 3], [4]]),
+                          ((1, 5, 2), 8, [[1, 3]])])
 def test_take_until(test_input, future_t, expected):
     start, stop, interval = test_input
-    entry = ScheduleEntry(name='t', start=start, stop=stop, interval=interval,
-                          action='logger')
+    entry = ScheduleEntry(
+        name='t', start=start, stop=stop, interval=interval, action='logger')
     initial_times = list(entry.get_remaining_times())
     r = []
     for t in count(future_t, future_t):
@@ -32,7 +31,7 @@ def test_take_until(test_input, future_t, expected):
 def test_undefined_start_is_now():
     entry = ScheduleEntry(name='t', action='logger')
     now = utils.timefn()
-    assert entry.start in (now-1, now, now+1)
+    assert entry.start in (now - 1, now, now + 1)
 
 
 def test_undefined_stop_is_never():
@@ -42,8 +41,8 @@ def test_undefined_stop_is_never():
 
 
 def test_relative_stop_becomes_absolute():
-    e = ScheduleEntry(name='t', start=20, relative_stop=10, interval=1,
-                      action='logger')
+    e = ScheduleEntry(
+        name='t', start=20, relative_stop=10, interval=1, action='logger')
     assert e.start == 20
     assert e.stop == 30
     assert list(e.get_remaining_times()) == list(range(20, 30, 1))
@@ -60,13 +59,13 @@ def test_no_interval_is_one_shot():
     remaining_times = list(e.get_remaining_times())
     assert len(remaining_times) == 1
 
-    times = list(e.take_until(remaining_times[0]+1000))
+    times = list(e.take_until(remaining_times[0] + 1000))
     assert len(times) == 1
 
     # when interval is None, consuming the single task time unsets `active`
     assert not e.is_active
     assert not list(e.get_remaining_times())
-    assert not list(e.take_until(remaining_times[0]+1000))
+    assert not list(e.take_until(remaining_times[0] + 1000))
 
 
 def test_no_interval_with_start_is_one_shot():
@@ -75,13 +74,13 @@ def test_no_interval_with_start_is_one_shot():
     remaining_times = list(e.get_remaining_times())
     assert len(remaining_times) == 1
 
-    times = list(e.take_until(remaining_times[0]+1000))
+    times = list(e.take_until(remaining_times[0] + 1000))
     assert len(times) == 1
 
     # when interval is None, consuming the single task time unsets `active`
     assert not e.is_active
     assert not list(e.get_remaining_times())
-    assert not list(e.take_until(remaining_times[0]+1000))
+    assert not list(e.take_until(remaining_times[0] + 1000))
 
 
 def test_no_interval_future_start(testclock):

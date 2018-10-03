@@ -9,32 +9,28 @@ class TaskResult(models.Model):
     """Map between schedule entries and their task results."""
     SUCCESS = 1
     FAILURE = 2
-    RESULT_CHOICES = (
-        (SUCCESS, 'success'),
-        (FAILURE, 'failure')
-    )
+    RESULT_CHOICES = ((SUCCESS, 'success'), (FAILURE, 'failure'))
     schedule_entry = models.ForeignKey(
         ScheduleEntry,
         related_name='results',
-        help_text="The schedule entry relative to the result"
-    )
+        help_text="The schedule entry relative to the result")
     task_id = models.IntegerField(
-        help_text="The id of the task relative to the result"
-    )
+        help_text="The id of the task relative to the result")
     started = models.DateTimeField(help_text="The time the task started")
     finished = models.DateTimeField(help_text="The time the task finished")
     duration = models.DurationField(help_text="Task duration in seconds")
-    result = models.CharField(max_length=7, help_text='"success" or "failure"',
-                              choices=RESULT_CHOICES)
+    result = models.CharField(
+        max_length=7,
+        help_text='"success" or "failure"',
+        choices=RESULT_CHOICES)
     detail = models.CharField(
         max_length=MAX_DETAIL_LEN,
         blank=True,
-        help_text="Arbitrary detail string"
-    )
+        help_text="Arbitrary detail string")
 
     class Meta:
-        ordering = ('task_id',)
-        unique_together = (('schedule_entry', 'task_id'),)
+        ordering = ('task_id', )
+        unique_together = (('schedule_entry', 'task_id'), )
 
     def __init__(self, *args, **kwargs):
         super(TaskResult, self).__init__(*args, **kwargs)

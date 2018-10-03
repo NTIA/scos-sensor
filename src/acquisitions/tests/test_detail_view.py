@@ -2,12 +2,9 @@ import pytest
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from acquisitions.tests.utils import (
-    get_acquisition_detail,
-    reverse_acquisition_detail,
-    simulate_acquisitions,
-    HTTPS_KWARG
-)
+from acquisitions.tests.utils import (get_acquisition_detail,
+                                      reverse_acquisition_detail,
+                                      simulate_acquisitions, HTTPS_KWARG)
 from sensor import V1
 from sensor.tests.utils import validate_response
 

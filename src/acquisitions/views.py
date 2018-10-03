@@ -5,8 +5,7 @@ from django.http import Http404, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.mixins import (ListModelMixin,
-                                   RetrieveModelMixin,
+from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
                                    DestroyModelMixin)
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
@@ -44,6 +43,7 @@ class AcquisitionsOverviewViewSet(ListModelMixin, GenericViewSet):
 
 class MultipleFieldLookupMixin(object):
     """Get multiple field filtering based on a `lookup_fields` attribute."""
+
     def get_queryset(self):
         base_queryset = super(MultipleFieldLookupMixin, self).get_queryset()
         base_queryset = self.filter_queryset(base_queryset)
@@ -64,8 +64,7 @@ class MultipleFieldLookupMixin(object):
         return get_object_or_404(queryset, **filter)
 
 
-class AcquisitionListViewSet(MultipleFieldLookupMixin,
-                             ListModelMixin,
+class AcquisitionListViewSet(MultipleFieldLookupMixin, ListModelMixin,
                              GenericViewSet):
     """
     list:
@@ -80,7 +79,7 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
         api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
     lookup_fields = ('schedule_entry__name', 'task_id')
 
-    @action(detail=False, methods=('delete',))
+    @action(detail=False, methods=('delete', ))
     def destroy_all(self, request, version, schedule_entry_name):
         queryset = self.get_queryset()
         queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
@@ -93,10 +92,8 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin,
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AcquisitionInstanceViewSet(MultipleFieldLookupMixin,
-                                 RetrieveModelMixin,
-                                 DestroyModelMixin,
-                                 GenericViewSet):
+class AcquisitionInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
+                                 DestroyModelMixin, GenericViewSet):
     """
     destroy:
     Deletes the specified acquisition.

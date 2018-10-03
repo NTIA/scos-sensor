@@ -1,9 +1,7 @@
 from django.conf.urls import url
 
-from .views import (AcquisitionsOverviewViewSet,
-                    AcquisitionListViewSet,
+from .views import (AcquisitionsOverviewViewSet, AcquisitionListViewSet,
                     AcquisitionInstanceViewSet)
-
 
 urlpatterns = (
     url(r'^$',
@@ -27,5 +25,4 @@ urlpatterns = (
         view=AcquisitionInstanceViewSet.as_view({
             'get': 'archive',
         }),
-        name='acquisition-archive')
-)
+        name='acquisition-archive'))
