@@ -5,7 +5,7 @@ jedi==0.13.1
 jsonschema==2.6.0
 mkdocs==1.0.4
 pytest-cov==2.6.0
-pytest-django==3.4.2
+pytest-django==3.4.3
 pytest-flake8==1.0.2
-tox==3.3.0
+tox==3.4.0
 yapf==0.24.0
