@@ -19,7 +19,7 @@ before_install:
   - sudo mknod /dev/bus/usb/001/001 c 189 260
 
 install:
-  - docker build -t smsntia/scos-sensor .
+  - docker-compose build
   - docker-compose up -d
 
 before_script:
