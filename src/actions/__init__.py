@@ -1,6 +1,7 @@
 from . import acquire_single_freq_fft
 from . import logger
 from . import monitor_usrp
+from . import sync_gps
 
 # Actions initialized here are made available through the API
 registered_actions = {
@@ -16,7 +17,9 @@ registered_actions = {
     "admin_logger":
     logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),
     "monitor_usrp":
-    monitor_usrp.UsrpMonitor(admin_only=True)
+    monitor_usrp.UsrpMonitor(admin_only=True),
+    "sync_gps":
+    sync_gps.SyncGps(admin_only=True)
 }
 
 by_name = registered_actions
