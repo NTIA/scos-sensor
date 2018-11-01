@@ -47,12 +47,41 @@ $ tox -e coverage # check where test coverage lacks
 ```
 
 
-Running Development Server
---------------------------
+Running Production Server with Local Changes
+--------------------------------------------
 
-It's also useful to run a development server locally. The following steps
-assume you've already setup some kind of virtual environment and installed
-python dev requirements from "Running Tests".
+The Docker compose file and application code looks for information from the
+environment when run in production mode, so it's necessary to source the
+following file in each shell that you intend to launch the sensor from. (HINT:
+it can be useful to add the `source` command to a post-activate file in
+whatever virtual environment you're using).
+
+```bash
+$ cp env.template env     # modify if necessary, defaults are okay for testing
+$ source ./env
+```
+
+Then, build the API docker image locally, which will satisfy the
+`smsntia/scos-sensor` and `smsntia/autoheal` images in the Docker compose file
+and bring up the sensor.
+
+```bash
+$ docker-compose down
+$ docker-compose build
+$ docker-compose up -d
+$ docker-compose logs --follow api
+```
+
+
+Running Development Server (Not Recommended)
+--------------------------------------------
+
+Running the sensor API outside of Docker is possible but not recommended, since
+Django is being asked to run without several security features it expects. See
+[Common Issues](#common_issues) for some hints when running the sensor in this
+way. The following steps assume you've already setup some kind of virtual
+environment and installed python dev requirements from [Running
+Tests](#running_tests).
 
 ```bash
 $ docker-compose up -d db
@@ -75,29 +104,6 @@ $ ./manage.py runserver
   thereafter use the `ignore-installed` flag to pip: `pip install -I -r
   requirements.txt`. This should let the devserver fall back to system
   sitepackages for the SDR driver only.
-
-
-Running Production Server with Local Changes
---------------------------------------------
-
-The Docker compose file and application code look for information from the
-environment when run in production mode, so it's necessary to source the
-following file in each shell that you intend to launch the sensor from. (HINT:
-it can be useful to add the `source` command to a post-activate file in
-whatever virtual environment you're using).
-
-```bash
-$ cp env.template env     # modify if necessary, defaults are okay for testing
-$ source ./env
-```
-
-Then, build the API docker image locally, which will satisfy the
-`smsntia/scos-sensor` and `smsntia/autoheal` images in the Docker compose file
-and bring up the sensor.
-
-```bash
-$ docker-compose up -d
-```
 
 
 Supporting a Different SDR
