@@ -20,7 +20,6 @@ def test_archive_download(user_client, test_scheduler):
     assert response.status_code == status.HTTP_200_OK
     assert response['content-disposition'] == disposition
     assert response['content-type'] == 'application/x-tar'
-    assert response['content-length'] == '10240'
 
     with tempfile.NamedTemporaryFile() as tf:
         tf.write(response.content)
