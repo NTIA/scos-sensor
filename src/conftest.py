@@ -137,6 +137,7 @@ def alt_admin_client(db, alt_admin_user):
 
 # Add mock acquisitions for tests
 mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
+    name='mock_acquire',
     frequency=1e9,  # 1 GHz
     gain=40,
     sample_rate=1e6,  # 1 MSa/s

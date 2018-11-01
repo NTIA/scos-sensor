@@ -1,4 +1,63 @@
-"""Take an acquisition."""
+r"""Apply m4s detector over {nffts} {fft_size}-pt FFTs at {frequency:.2f} MHz.
+
+# {name}
+
+## Radio setup and sample acquisition
+
+This action first tunes the radio to {frequency:.2f} MHz and requests and
+sample rate of {sample_rate:.2f} Msps and {gain} dB of gain.
+
+It then begins acquiring, and discards an appropriate number of samples while
+the radio's IQ balance algorithm runs. Then, ${nffts} \times {fft_size}$
+samples are acquired gap-free.
+
+## Time-domain processing
+
+First, the ${nffts} \times {fft_size}$ continuous samples are acquired from
+the radio. If specified, a voltage scaling factor is applied to the complex
+time-domain signals. Then, the data is reshaped into a ${nffts} \times
+{fft_size}$ matrix:
+
+$$
+\begin{{pmatrix}}
+a_{{1,1}}      & a_{{1,2}}     & \cdots  & a_{{1,fft\_size}}     \\
+a_{{2,1}}      & a_{{2,2}}     & \cdots  & a_{{2,fft\_size}}     \\
+\vdots         & \vdots        & \ddots  & \vdots                \\
+a_{{nffts,1}}  & a_{{nfts,2}}  & \cdots  & a_{{nfts,fft\_size}}  \\
+\end{{pmatrix}}
+$$
+
+where $a_{{i,j}}$ is a complex time-domain sample.
+
+At the point, a Blackman window, defined as
+
+$$w(n) = 0.42 - 0.5 \cos{{(2 \pi n / M)}} + 0.08 \cos{{(4 \pi n / M)}}$$
+
+where $M = {fft_size}$ is the number of points in the window, is applied to
+each row of the matrix.
+
+## Frequency-domain processing
+
+After windowing, the data matrix is converted into the frequency domain using
+an FFT'd, doing the equivalent of the DFT defined as
+
+$$A_k = \sum_{{m=0}}^{{n-1}}
+a_m \exp\left\{{-2\pi i{{mk \over n}}\right\}} \qquad k = 0,\ldots,n-1$$
+
+The data matrix is then converted to power by taking the square of the
+magnitude of each complex sample individually. The resulting matrix is
+real-valued, 32-bit floats representing dBm.
+
+## Applying detector
+
+Lastly, the M4S (min, max, mean, median, and sample) detector is applied to the
+data matrix. The input to the detector is a matrix of size ${nffts} \times
+{fft_size}$, and the output matrix is size $5 \times {fft_size}$, with the
+first row representing the min of each _column_, the second row representing
+the _max_ of each column, and so "sample" detector simple chooses one of the
+{nffts} FFTs at random.
+
+"""
 
 from __future__ import absolute_import
 
@@ -60,16 +119,19 @@ def m4s_detector(array):
 class SingleFrequencyFftAcquisition(Action):
     """Perform m4s detection over requested number of single-frequency FFTs.
 
+    :param name: the name of the action
     :param frequency: center frequency in Hz
+    :param gain: requested gain in dB
     :param sample_rate: requested sample_rate in Hz
     :param fft_size: number of points in FFT (some 2^n)
     :param nffts: number of consecutive FFTs to pass to detector
 
     """
 
-    def __init__(self, frequency, gain, sample_rate, fft_size, nffts):
+    def __init__(self, name, frequency, gain, sample_rate, fft_size, nffts):
         super(SingleFrequencyFftAcquisition, self).__init__()
 
+        self.name = name
         self.frequency = frequency
         self.gain = gain
         self.sample_rate = sample_rate
@@ -233,15 +295,13 @@ class SingleFrequencyFftAcquisition(Action):
 
     @property
     def description(self):
-        return """Apply m4s detector over {} {}-point FFTs at {:.2f} MHz.
+        defs = {
+            'name': 'acquire700c',
+            'frequency': self.frequency / 1e6,
+            'sample_rate': self.sample_rate / 1e6,
+            'fft_size': self.fft_size,
+            'nffts': self.nffts,
+            'gain': self.gain
+        }
 
-        The radio will use a sample rate of {:.2f} MHz.
-
-        The m4s detector will take the min, max, mean, median, and a random
-        sample over the requested FFTs.
-
-        The FFTs are taken gap-free in time and a Blackman window is applied.
-        The resulting data is real-valued with units of dBm.
-
-        """.format(self.nffts, self.fft_size, self.frequency / 1e6,
-                   self.sample_rate / 1e6)
+        return __doc__.format(**defs)
