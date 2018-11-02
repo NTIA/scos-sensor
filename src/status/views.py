@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from scheduler import scheduler
 from scheduler.serializers import TaskSerializer
+from sensor import utils
 from .models import Location
 from .serializers import LocationSerializer
 
@@ -31,5 +32,6 @@ def status(request, version, format=None):
     return Response({
         'scheduler': scheduler.thread.status,
         'location': get_location(),
+        'system_time': utils.get_datetime_str_now(),
         'task_queue': task_serializer.data
     })

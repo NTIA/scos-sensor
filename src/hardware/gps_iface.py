@@ -1,6 +1,7 @@
 """Provides an interface to the on-board GPS."""
 
 import logging
+import subprocess
 from datetime import datetime
 from time import time, sleep
 
@@ -41,7 +42,7 @@ def get_lat_long(timeout_s=1):
         logger.error("Failed to set GPSDO time source")
         return None
 
-    # Poll get_tiem_last_pss() until change is seen
+    # Poll get_time_last_pss() until change is seen
     last_t = int(usrp.get_time_last_pps().get_real_secs())
     now_t = int(usrp.get_time_last_pps().get_real_secs())
     while (last_t != now_t):
@@ -53,7 +54,9 @@ def get_lat_long(timeout_s=1):
     gps_t = uhd.time_spec_t(usrp.get_mboard_sensor('gps_time').to_int() + 1)
     usrp.set_time_next_pps(gps_t)
     dt = datetime.fromtimestamp(gps_t.get_real_secs())
-    logger.info("Set USRP to GPS current time {}".format(dt.ctime()))
+    date_cmd = ['date', '-s', '{:}'.format(dt.strftime('%Y/%m/%d %H:%M:%S'))]
+    subprocess.call(date_cmd, shell=True)
+    logger.info("Set USRP and system time to GPS time {}".format(dt.ctime()))
 
     if 'gpsdo' not in usrp.get_clock_sources(0):
         logger.warn("No GPSDO clock source detected")

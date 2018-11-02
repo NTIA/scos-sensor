@@ -25,7 +25,7 @@ class SyncGps(Action):
 
         location = self.gps.get_lat_long()
         if location is None:
-            raise RuntimeError("Unable to syncronize to GPS")
+            raise RuntimeError("Unable to synchronize to GPS")
 
         latitude, longitude = location
 
