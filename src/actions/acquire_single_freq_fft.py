@@ -1,11 +1,29 @@
+# What follows is a parameterizable description of the algorithm used by this
+# action. The first line is the summary and should be written in plain text.
+# Everything following that is the extended description, which can be written
+# in Markdown and MathJax. Each name in curly brackets '{}' will be replaced
+# with the value specified in the `description` method which can be found at
+# the very bottom of this file. Since this parameterization step affects
+# everything in curly brackets, math notation such as {m \over n} must be
+# escaped to {{m \over n}}.
+#
+# To print out this docstring after parameterization, see
+# REPO_ROOT/scripts/print_action_docstring.py. You can then paste that into the
+# SCOS Markdown Editor (link below) to see the final rendering.
+#
+# Resources:
+# - MathJax reference: https://math.meta.stackexchange.com/q/5020
+# - Markdown reference: https://commonmark.org/help/
+# - SCOS Markdown Editor: https://ntia.github.io/scos-md-editor/
+#
 r"""Apply m4s detector over {nffts} {fft_size}-pt FFTs at {frequency:.2f} MHz.
 
 # {name}
 
 ## Radio setup and sample acquisition
 
-This action first tunes the radio to {frequency:.2f} MHz and requests and
-sample rate of {sample_rate:.2f} Msps and {gain} dB of gain.
+This action first tunes the radio to {frequency:.2f} MHz and requests a sample
+rate of {sample_rate:.2f} Msps and {gain} dB of gain.
 
 It then begins acquiring, and discards an appropriate number of samples while
 the radio's IQ balance algorithm runs. Then, ${nffts} \times {fft_size}$
@@ -20,10 +38,10 @@ time-domain signals. Then, the data is reshaped into a ${nffts} \times
 
 $$
 \begin{{pmatrix}}
-a_{{1,1}}      & a_{{1,2}}     & \cdots  & a_{{1,fft\_size}}     \\
-a_{{2,1}}      & a_{{2,2}}     & \cdots  & a_{{2,fft\_size}}     \\
-\vdots         & \vdots        & \ddots  & \vdots                \\
-a_{{nffts,1}}  & a_{{nfts,2}}  & \cdots  & a_{{nfts,fft\_size}}  \\
+a_{{1,1}}      & a_{{1,2}}     & \cdots  & a_{{1,fft\_size}}     \\\\
+a_{{2,1}}      & a_{{2,2}}     & \cdots  & a_{{2,fft\_size}}     \\\\
+\vdots         & \vdots        & \ddots  & \vdots                \\\\
+a_{{nffts,1}}  & a_{{nfts,2}}  & \cdots  & a_{{nfts,fft\_size}}  \\\\
 \end{{pmatrix}}
 $$
 
@@ -42,7 +60,7 @@ After windowing, the data matrix is converted into the frequency domain using
 an FFT'd, doing the equivalent of the DFT defined as
 
 $$A_k = \sum_{{m=0}}^{{n-1}}
-a_m \exp\left\{{-2\pi i{{mk \over n}}\right\}} \qquad k = 0,\ldots,n-1$$
+a_m \exp\left\\{{-2\pi i{{mk \over n}}\right\\}} \qquad k = 0,\ldots,n-1$$
 
 The data matrix is then converted to power by taking the square of the
 magnitude of each complex sample individually. The resulting matrix is
@@ -304,4 +322,5 @@ class SingleFrequencyFftAcquisition(Action):
             'gain': self.gain
         }
 
+        # __doc__ refers to the module docstring at the top of the file
         return __doc__.format(**defs)
