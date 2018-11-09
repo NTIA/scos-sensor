@@ -110,7 +110,7 @@ class M4sDetector(Enum):
     sample = 5
 
 
-# FIXME: this needs to be defined globally somewhere
+# The sigmf-ns-scos version targeted by this action
 SCOS_TRANSFER_SPEC_VER = '0.1'
 
 
@@ -159,6 +159,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.enbw = None
 
     def __call__(self, schedule_entry_name, task_id):
+        """This is the entrypoint function called by the scheduler."""
         from schedule.models import ScheduleEntry
 
         # raises ScheduleEntry.DoesNotExist if no matching schedule entry
@@ -223,7 +224,7 @@ class SingleFrequencyFftAcquisition(Action):
         logger.debug("Building SigMF metadata file")
 
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_field("core:datatype", "rf32_le")
+        sigmf_md.set_global_info(GLOBAL_INFO)
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
@@ -314,7 +315,7 @@ class SingleFrequencyFftAcquisition(Action):
     @property
     def description(self):
         defs = {
-            'name': 'acquire700c',
+            'name': self.name,
             'frequency': self.frequency / 1e6,
             'sample_rate': self.sample_rate / 1e6,
             'fft_size': self.fft_size,
