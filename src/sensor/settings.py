@@ -64,7 +64,7 @@ if not IN_DOCKER or RUNNING_TESTS:
 else:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECRET_KEY = environ['SECRET_KEY']
-    DEBUG = bool(environ['DEBUG'] == "true")
+    DEBUG = environ['DEBUG'] == "true"
     ALLOWED_HOSTS = environ['DOMAINS'].split() + environ['IPS'].split()
     POSTGRES_PASSWORD = environ['POSTGRES_PASSWORD']
 

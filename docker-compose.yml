@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: Dockerfile-api
     environment:
-      - DEBUG
+      - DEBUG=true
       - DOMAINS
       - GUNICORN_LOG_LEVEL
       - IPS
