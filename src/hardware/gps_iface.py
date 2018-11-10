@@ -55,7 +55,7 @@ def get_lat_long(timeout_s=1):
     usrp.set_time_next_pps(gps_t)
     dt = datetime.fromtimestamp(gps_t.get_real_secs())
     date_cmd = ['date', '-s', '{:}'.format(dt.strftime('%Y/%m/%d %H:%M:%S'))]
-    subprocess.call(date_cmd, shell=True)
+    subprocess.check_output(date_cmd, shell=True)
     logger.info("Set USRP and system time to GPS time {}".format(dt.ctime()))
 
     if 'gpsdo' not in usrp.get_clock_sources(0):

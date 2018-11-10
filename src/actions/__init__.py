@@ -1,4 +1,5 @@
 from . import acquire_single_freq_fft
+from . import acquire_stepped_freq_tdomain_iq
 from . import logger
 from . import monitor_usrp
 from . import sync_gps
@@ -25,7 +26,7 @@ single_freq_ffts = [
         "fft_size": 1024,
         "nffts": 300
     },
-    # Add more single-frequency FFT actions here
+    # Add more single-frequency FFT acquisitions here
     # {
     #     "name": "acquire_aws1_dl",
     #     "frequency": 2132.5e6,
@@ -35,10 +36,25 @@ single_freq_ffts = [
     #     "nffts": 300
     # },
 ]
-
 for acq in single_freq_ffts:
     registered_actions[acq['name']] = \
         acquire_single_freq_fft.SingleFrequencyFftAcquisition(**acq)
+
+
+stepped_freq_tdomain_iq = [
+    {
+        "name": "acquire_700_band_iq",
+        "fcs": [707e6, 722e6, 737e6, 757e6, 772e6, 791e6],
+        "gain": 40,
+        "sample_rate": 22e6,
+        "duration_ms": 30,
+    },
+    # Add more stepped frequency time domain IQ acquisitions here
+]
+for acq in stepped_freq_tdomain_iq:
+    registered_actions[acq['name']] = \
+        acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIq(**acq)
+
 
 by_name = registered_actions
 
