@@ -30,7 +30,7 @@ if [[ ! "$APP" || "$APP" == "-h" || "$APP" == "--help" ]]; then
 fi
 
 
-OUTPUT_FILE=${REPO_ROOT}/src/status/fixtures/$(date -I).json
+OUTPUT_FILE=${REPO_ROOT}/src/${APP}/fixtures/$(date -I).json
 
 DB_RUNNING=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps db |grep Up)
 API_RUNNING=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps api |grep Up)
