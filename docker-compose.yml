@@ -83,7 +83,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-autoheal
-    image: smsntia/autoheal
+    image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
