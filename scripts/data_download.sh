@@ -2,7 +2,7 @@
 
 # A quick script to download data directly from a scos-sensor
 
-source ./scos-sensor-data-download.cfg
+source ./data_download.cfg
 
 doublecheck="n"
 
@@ -24,14 +24,14 @@ read -e -i "$doublecheck" -p "Check the above settings. Do you wish to proceed (
 
 if [ $doublecheck == "y" ]; then
     for i in $(seq $firstfile $lastfile); do
-        echo "Downloading $schedule$i.sigmf\n"
-        curl -o $schedule$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/acquisitions/$schedule/$i/archive
+        printf "Downloading $schedule$i.sigmf \n"
+        curl -o $schedule_$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/acquisitions/$schedule/$i/archive
     done
 fi
 
 # Save settings as defaults for next time
-echo "ip=$ip" > ./scos-sensor-data-download.cfg
-echo "token=$token" >> ./scos-sensor-data-download.cfg
-echo "schedule=$schedule" >> ./scos-sensor-data-download.cfg
-echo "firstfile=$firstfile" >> ./scos-sensor-data-download.cfg
-echo "lastfile=$lastfile" >> ./scos-sensor-data-download.cfg
+echo "ip=$ip" > ./data_download.cfg
+echo "token=$token" >> ./data_download.cfg
+echo "schedule=$schedule" >> ./data_download.cfg
+echo "firstfile=$firstfile" >> ./data_download.cfg
+echo "lastfile=$lastfile" >> ./data_download.cfg
