@@ -24,7 +24,7 @@ read -e -i "$doublecheck" -p "Check the above settings. Do you wish to proceed (
 
 if [ $doublecheck == "y" ]; then
     for i in $(seq $firstfile $lastfile); do
-        printf "Downloading $schedule$i.sigmf \n"
+        printf "Downloading $schedule_$i.sigmf \n"
         curl -o $schedule_$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/acquisitions/$schedule/$i/archive
     done
 fi
