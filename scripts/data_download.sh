@@ -14,7 +14,7 @@ read -e -i "$firstfile" -p "Enter the first file number you want to copy: " firs
 read -e -i "$lastfile" -p "Enter the last number file you want to copy: " lastfile # See # files from the "acquisitions" endpoint on the browasble api
 read -e -i "$filepath" -p "Where should these files be saved?: " filepath
 
-printf "\n ### CONFIG SUMMARY ###"
+printf "\n### CONFIG SUMMARY ###\n"
 printf "Sensor IP: $ip\n"
 printf "Auth token: $token\n"
 printf "Schedule name: $schedule\n"
@@ -30,7 +30,7 @@ if [ $doublecheck == "y" ]; then
         printf "Downloading ${schedule}_${i}.sigmf \n"
         curl -o $filepath/$schedule\_$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/acquisitions/$schedule/$i/archive
     done
-    printf "### COPY COMPLETED ###\n"
+    printf "\n### COPY COMPLETED ###\n"
 fi
 
 # Save settings as defaults for next time
