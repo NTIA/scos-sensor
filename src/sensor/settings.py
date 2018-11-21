@@ -22,7 +22,12 @@ REPO_ROOT = path.dirname(BASE_DIR)
 
 DOCKER_TAG = environ.get('DOCKER_TAG')
 GIT_BRANCH = environ.get('GIT_BRANCH')
-VERSION_STRING = GIT_BRANCH if DOCKER_TAG == 'latest' else DOCKER_TAG
+if not DOCKER_TAG or DOCKER_TAG == 'latest':
+    VERSION_STRING = GIT_BRANCH
+else:
+    VERSION_STRING = DOCKER_TAG
+    if VERSION_STRING.startswith('v'):
+        VERSION_STRING = VERSION_STRING[1:]
 
 STATIC_ROOT = path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
