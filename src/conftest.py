@@ -40,7 +40,7 @@ def testclock():
 
 
 @pytest.fixture
-def test_scheduler(rf, testclock):
+def test_scheduler(transactional_db, rf, testclock):
     """Instantiate test scheduler with fake request context and testclock."""
     s = scheduler.scheduler.Scheduler()
     s.request = rf.post('mock://cburl/schedule')

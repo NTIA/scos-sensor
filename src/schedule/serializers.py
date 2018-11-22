@@ -174,5 +174,4 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         if 'absolute_stop' in data:
             data['stop'] = data.pop('absolute_stop')
 
-        # py2.7 compat -> super().to_internal...
-        return super(ScheduleEntrySerializer, self).to_internal_value(data)
+        return super().to_internal_value(data)

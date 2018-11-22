@@ -51,7 +51,9 @@ def get_lat_long(timeout_s=1):
 
     # Then sleep 100ms and set next pps
     sleep(0.1)
-    gps_t = uhd.time_spec_t(usrp.get_mboard_sensor('gps_time').to_int() + 1)
+    # To use gr-uhd instead of UHD python driver, this line needs to change
+    # gps_t = uhd.time_spec_t(usrp.get_mboard_sensor('gps_time').to_int() + 1)
+    gps_t = uhd.types.TimeSpec(usrp.get_mboard_sensor('gps_time').to_int() + 1)
     usrp.set_time_next_pps(gps_t)
     dt = datetime.fromtimestamp(gps_t.get_real_secs())
     date_cmd = ['date', '-s', '{:}'.format(dt.strftime('%Y/%m/%d %H:%M:%S'))]

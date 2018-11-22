@@ -18,7 +18,7 @@ from os import path
 import numpy as np
 
 from hardware import scale_factors
-from hardware.mocks.usrp_block import MockUsrpBlock
+from hardware.mocks.usrp_block import MockUsrp
 from sensor import settings
 from sensor.settings import REPO_ROOT
 
@@ -40,7 +40,7 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
     if settings.RUNNING_DEMO or settings.RUNNING_TESTS:
         logger.warning("Using mock USRP.")
 
-        usrp = MockUsrpBlock()
+        usrp = MockUsrp()
         is_available = True
         RESOURCES_DIR = path.join(REPO_ROOT, './src/hardware/tests/resources')
         sf_file = path.join(RESOURCES_DIR, 'test_scale_factors.json')
@@ -49,34 +49,22 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
             return True
 
         try:
-            from gnuradio import uhd
+            import uhd
         except ImportError:
-            logger.warning("gnuradio.uhd not available - disabling radio")
+            logger.warning("uhd not available - disabling radio")
             return False
 
-        search_criteria = uhd.device_addr_t()
-        search_criteria['type'] = 'b200'  # ensure this isnt networked usrp
-        available_devices = list(uhd.find_devices(search_criteria))
-        ndevices_found = len(available_devices)
+        usrp_args = 'type=b200'  # find any b-series device
 
-        if ndevices_found != 1:
-            err = "Found {} devices that matches USRP identification\n"
-            err += "information in sysinfo:\n"
-            err += search_criteria.to_pp_string()
-            err += "\nPlease add/correct identifying information."
-            err = err.format(ndevices_found)
-
-            for device in available_devices:
-                err += "    {}\n".format(device.to_pp_string())
-
+        try:
+            usrp = uhd.usrp.MultiUSRP(usrp_args)
+        except RuntimeError:
+            err = "No device found matching search parameters {!r}\n"
+            err = err.format(usrp_args)
             raise RuntimeError(err)
 
-        device = available_devices[0]
         logger.debug("Using the following USRP:")
-        logger.debug(device.to_pp_string())
-
-        stream_args = uhd.stream_args('fc32')
-        usrp = uhd.usrp_source(device_addr=device, stream_args=stream_args)
+        logger.debug(usrp.get_pp_string())
 
     try:
         radio_iface = RadioInterface(usrp=usrp, sf_file=sf_file)
@@ -104,50 +92,54 @@ class RadioInterface(object):
 
     @property
     def sample_rate(self):  # -> float:
-        return self.usrp.get_samp_rate()
+        return self.usrp.get_rx_rate()
 
     @sample_rate.setter
     def sample_rate(self, rate):
-        self.usrp.set_samp_rate(rate)
+        self.usrp.set_rx_rate(rate)
         fs_MHz = self.sample_rate / 1e6
         logger.debug("set USRP sample rate: {:.2f} MS/s".format(fs_MHz))
 
     @property
     def clock_rate(self):  # -> float:
-        return self.usrp.get_clock_rate()
+        return self.usrp.get_master_clock_rate()
 
     @clock_rate.setter
     def clock_rate(self, rate):
-        self.usrp.set_clock_rate(rate)
+        self.usrp.set_master_clock_rate(rate)
         clk_MHz = self.clock_rate / 1e6
         logger.debug("set USRP clock rate: {:.2f} MHz".format(clk_MHz))
 
     @property
     def frequency(self):  # -> float:
-        return self.usrp.get_center_freq()
+        return self.usrp.get_rx_freq()
 
     @frequency.setter
     def frequency(self, freq):
         self.tune_frequency(freq)
+        self.recompute_scale_factor()
 
-    def tune_frequency(self, freq, dsp_freq=0.0):
-        # If mocking the usrp, work around the uhd
-        if isinstance(self.usrp, MockUsrpBlock):
-            tune_result = self.usrp.set_center_freq(freq, dsp_freq)
+    def tune_frequency(self, rf_freq, dsp_freq=0):
+        if isinstance(self.usrp, MockUsrp):
+            tune_result = self.usrp.set_rx_freq(rf_freq, dsp_freq)
             logger.debug(tune_result)
         else:
-            tune_request = uhd.tune_request(freq, dsp_freq)
-            tune_result = self.usrp.set_center_freq(tune_request)
-            logger.debug(tune_result.to_pp_string())
+            tune_request = uhd.types.TuneResult(rf_freq, dsp_freq)
+            tune_result = self.usrp.set_rx_freq(tune_request)
+            msg = "rf_freq: {}, dsp_freq: {}"
+            logger.debug(msg.format(tune_result.rf_freq, tune_result.dsp_freq))
 
-        self.lo_freq = tune_result.actual_rf_freq
-        self.dsp_freq = tune_result.actual_dsp_freq
-
-        self.recompute_scale_factor()
+        # FIXME: uhd.types.TuneResult doesn't seem to be implemented
+        #        as of uhd 3.13.1.0-rc1
+        #        Fake it til they make it
+        # self.lo_freq = tune_result.actual_rf_freq
+        # self.dsp_freq = tune_result.actual_dsp_freq
+        self.lo_freq = rf_freq
+        self.dsp_freq = dsp_freq
 
     @property
     def gain(self):  # -> float:
-        return self.usrp.get_gain()
+        return self.usrp.get_rx_gain()
 
     @gain.setter
     def gain(self, gain):
@@ -157,8 +149,9 @@ class RadioInterface(object):
             logger.error(err)
             return
 
-        self.usrp.set_gain(gain)
-        logger.debug("set USRP gain: {:.1f} dB".format(self.usrp.get_gain()))
+        self.usrp.set_rx_gain(gain)
+        msg = "set USRP gain: {:.1f} dB"
+        logger.debug(msg.format(self.usrp.get_rx_gain()))
         self.recompute_scale_factor()
 
     def recompute_scale_factor(self):
@@ -167,13 +160,19 @@ class RadioInterface(object):
             return
 
         self.scale_factor = self.scale_factors.get_scale_factor(
-            lo_frequency=self.lo_freq, gain=self.gain)
+            lo_frequency=self.frequency, gain=self.gain)
 
     def acquire_samples(self, n, nskip=200000, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
         o_retries = retries
         while True:
-            samples = self.usrp.finite_acquisition(n + nskip)
+            samples = self.usrp.recv_num_samps(
+                n + nskip,          # number of samples
+                self.frequency,     # center frequency in Hz
+                self.sample_rate,   # sample rate in samples per second
+                [0],                # channel list
+                self.gain           # gain in dB
+            )
             data = np.array(samples[nskip:])
             data = data * self.scale_factor
             if not len(data) == n:
