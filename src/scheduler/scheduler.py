@@ -126,8 +126,7 @@ class Scheduler(threading.Thread):
             detail = task.action_fn(entry_name, task_id)
             self.delayfn(0)  # let other threads run
             result = 'success'
-            # py2.7 compat: check for 'str' in py3
-            if not isinstance(detail, basestring):  # noqa
+            if not isinstance(detail, str):
                 detail = ""
         except Exception as err:
             detail = str(err)
@@ -230,7 +229,7 @@ class Scheduler(threading.Thread):
 
     def _get_min_interval(self, schedule_snapshot):
         intervals = [e.interval for e in schedule_snapshot if e.interval]
-        return min(intervals or (1, ))  # py2.7 compat -> min(ivals, default=1)
+        return min(intervals, default=1)
 
     def _cancel_if_completed(self, entry):
         if not entry.has_remaining_times():

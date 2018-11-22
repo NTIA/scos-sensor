@@ -12,6 +12,7 @@ class TaskResult(models.Model):
     RESULT_CHOICES = ((SUCCESS, 'success'), (FAILURE, 'failure'))
     schedule_entry = models.ForeignKey(
         ScheduleEntry,
+        on_delete=models.CASCADE,
         related_name='results',
         help_text="The schedule entry relative to the result")
     task_id = models.IntegerField(
@@ -33,7 +34,7 @@ class TaskResult(models.Model):
         unique_together = (('schedule_entry', 'task_id'), )
 
     def __init__(self, *args, **kwargs):
-        super(TaskResult, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Allow Swapping max_results for testing
         self.max_results = MAX_TASK_RESULTS

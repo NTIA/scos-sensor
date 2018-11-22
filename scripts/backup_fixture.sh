@@ -3,20 +3,20 @@
 REPO_ROOT=${REPO_ROOT:=$(git rev-parse --show-toplevel)}
 PROGRAM_NAME=${0##*/}
 APP="$1"
+OUTPUT_FILE="$2"
 SUCCESS=0
 
 
 echo_usage() {
     cat << EOF
-Backup location to a fixture file.
-Backup is saved in ./src/{app}/fixtures/YYYY-MM-DD.json.
+Backup app state to a to a JSON "fixture" file.
 
-Usage: $PROGRAM_NAME app
+Usage: $PROGRAM_NAME app output_file
 
 Example:
-    $PROGRAM_NAME capabilities
+    $PROGRAM_NAME capabilities backup.json
     [...]
-    Wrote location backup to ./src/capabilities/fixtures/2018-02-22.json.
+    Wrote capabilities backup to ./backup.json.
 
 EOF
 
@@ -24,13 +24,11 @@ EOF
 }
 
 
-if [[ ! "$APP" || "$APP" == "-h" || "$APP" == "--help" ]]; then
+if [[ ! "$APP" || ! "$OUTPUT_FILE" || "$APP" == "-h" || "$APP" == "--help" ]]; then
     echo_usage
     exit 0
 fi
 
-
-OUTPUT_FILE=${REPO_ROOT}/src/${APP}/fixtures/$(date -I).json
 
 DB_RUNNING=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps db |grep Up)
 API_RUNNING=$(docker-compose -f ${REPO_ROOT}/docker-compose.yml ps api |grep Up)
@@ -62,7 +60,7 @@ if [[ ! "$DB_RUNNING" ]]; then
 fi
 
 if [[ $SUCCESS ]]; then
-    echo "Wrote location backup to $OUTPUT_FILE."
+    echo "Wrote $APP backup to $OUTPUT_FILE."
 else
     echo "Backup failed" >&2
 fi

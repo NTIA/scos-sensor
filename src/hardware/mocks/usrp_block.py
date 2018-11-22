@@ -1,4 +1,4 @@
-"""Mock the gnuradio gr-uhd usrp module."""
+"""Mock the UHD USRP module."""
 
 from collections import namedtuple
 
@@ -8,7 +8,7 @@ tune_result_params = ['actual_dsp_freq', 'actual_rf_freq']
 MockTuneResult = namedtuple('MockTuneResult', tune_result_params)
 
 
-class MockUsrpBlock(object):
+class MockUsrp(object):
     def __init__(self):
         self.auto_dc_offset = False
         self.f_lo = 700e6
@@ -23,7 +23,7 @@ class MockUsrpBlock(object):
     def set_auto_dc_offset(self, val):
         self.auto_dc_offset = val
 
-    def finite_acquisition(self, n):
+    def recv_num_samps(self, n, fc, fs, channels, gain):
         if self.current_fail_results < self.total_fail_results:
             self.current_fail_results += 1
             return []
@@ -36,28 +36,28 @@ class MockUsrpBlock(object):
         self.total_fail_results = 0
         self.current_fail_results = 0
 
-    def get_center_freq(self):
+    def get_rx_freq(self):
         return self.f_lo + self.f_dsp
 
-    def set_center_freq(self, f_lo, f_dsp):
+    def set_rx_freq(self, f_lo, f_dsp):
         self.f_lo = f_lo
         self.f_dsp = f_dsp
         return MockTuneResult(actual_dsp_freq=f_dsp, actual_rf_freq=f_lo)
 
-    def set_samp_rate(self, rate):
+    def set_rx_rate(self, rate):
         self.samp_rate = rate
 
-    def get_samp_rate(self):
+    def get_rx_rate(self):
         return self.samp_rate
 
-    def get_clock_rate(self):
+    def get_master_clock_rate(self):
         return self.clock_rate
 
-    def set_clock_rate(self, rate):
+    def set_master_clock_rate(self, rate):
         self.clock_rate = rate
 
-    def set_gain(self, g):
+    def set_rx_gain(self, g):
         self.gain = g
 
-    def get_gain(self):
+    def get_rx_gain(self):
         return self.gain

@@ -126,7 +126,7 @@ def test_run_completes(test_scheduler):
     s.start()
     time.sleep(0.1)  # hit minimum_duration
     advance_testclock(s.timefn, 1)
-    time.sleep(0.1)
+    time.sleep(0.2)
     assert not s.running
     s.stop()
     advance_testclock(s.timefn, 1)
