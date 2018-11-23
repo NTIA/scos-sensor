@@ -87,9 +87,6 @@ class RadioInterface(object):
             logger.exception(err)
             self.scale_factors = None
 
-        # Set USRP defaults
-        self.usrp.set_auto_dc_offset(True)
-
     @property
     def sample_rate(self):  # -> float:
         return self.usrp.get_rx_rate()
