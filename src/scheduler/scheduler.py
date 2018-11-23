@@ -84,7 +84,7 @@ class Scheduler(threading.Thread):
                     logger.info("scheduler interrupted")
                     break
         except Exception as err:
-            logger.warn("scheduler dead")
+            logger.warning("scheduler dead")
             logger.exception(err)
             touch(SCHEDULER_HEALTHCHECK_FILE)
 

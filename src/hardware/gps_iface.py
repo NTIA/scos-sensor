@@ -27,13 +27,13 @@ def get_lat_long(timeout_s=1):
         sleep(0.1)
 
     if not gps_locked:
-        logger.warn("Timed out waiting for GPS to lock")
+        logger.warning("Timed out waiting for GPS to lock")
         return None
 
     logger.debug("GPS locked.")
 
     if 'gpsdo' not in usrp.get_time_sources(0):
-        logger.warn("No GPSDO time source detected")
+        logger.warning("No GPSDO time source detected")
         return None
 
     usrp.set_time_source('gpsdo')
@@ -61,7 +61,7 @@ def get_lat_long(timeout_s=1):
     logger.info("Set USRP and system time to GPS time {}".format(dt.ctime()))
 
     if 'gpsdo' not in usrp.get_clock_sources(0):
-        logger.warn("No GPSDO clock source detected")
+        logger.warning("No GPSDO clock source detected")
         return None
 
     usrp.set_clock_source('gpsdo')
@@ -76,7 +76,8 @@ def get_lat_long(timeout_s=1):
         ref_locked = usrp.get_mboard_sensor('ref_locked').to_bool()
 
     if not ref_locked:
-        logger.warn("Timed out waiting for clock to lock to GPSDO reference")
+        msg = "Timed out waiting for clock to lock to GPSDO reference"
+        logger.warning(msg)
         return None
 
     logger.debug("Clock locked to GPSDO reference")
