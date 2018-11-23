@@ -104,7 +104,7 @@ def test_remove_entry_by_cancel(test_scheduler):
     assert e2 in s.schedule
 
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_start_stop(test_scheduler):
     """Calling stop on started scheduler thread should cause thread exit."""
     create_entry('t', 1, 1, 100, 5, 'logger')
@@ -118,7 +118,7 @@ def test_start_stop(test_scheduler):
     assert not s.running
 
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_run_completes(test_scheduler):
     """The scheduler should return to idle state after schedule completes."""
     create_entry('t', 1, None, None, None, 'logger')
@@ -126,7 +126,6 @@ def test_run_completes(test_scheduler):
     s.start()
     time.sleep(0.1)  # hit minimum_duration
     advance_testclock(s.timefn, 1)
-    time.sleep(0.2)
     assert not s.running
     s.stop()
     advance_testclock(s.timefn, 1)
