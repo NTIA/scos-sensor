@@ -170,11 +170,18 @@ class RadioInterface(object):
                 [0],                # channel list
                 self.gain           # gain in dB
             )
-            data = np.array(samples[nskip:])
+            # usrp.recv_num_samps returns a numpy array of shape
+            # (n_channels, n_samples) and dtype complex64
+            assert samples.dtype == np.complex64
+            assert len(samples.shape) == 2 and samples.shape[0] == 1
+            data = samples[0]       # isolate data for channel 0
+            data_len = len(data)
+            data = data[nskip:]
             data = data * self.scale_factor
             if not len(data) == n:
                 if retries > 0:
-                    logger.warning("Acquisition errored.")
+                    msg = "USRP error: requested {} samples, but got {}."
+                    logger.warning(msg.format(n + nskip, data_len))
                     logger.warning("Retrying {} more times.".format(retries))
                     retries = retries - 1
                 else:
@@ -182,4 +189,5 @@ class RadioInterface(object):
                     err += "{} times in a row.".format(o_retries)
                     raise RuntimeError(err)
             else:
+                logger.debug("Successfully acquired {} samples.".format(n))
                 return data

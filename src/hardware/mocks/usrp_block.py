@@ -26,11 +26,11 @@ class MockUsrp(object):
     def recv_num_samps(self, n, fc, fs, channels, gain):
         if self.current_fail_results < self.total_fail_results:
             self.current_fail_results += 1
-            return []
+            return np.ones((1, 0), dtype=np.complex64)
 
         self.current_fail_results = 0
         self.total_fail_results += 1
-        return np.ones(n).tolist()
+        return np.ones((1, n), dtype=np.complex64)
 
     def reset_bad_acquisitions(self):
         self.total_fail_results = 0
