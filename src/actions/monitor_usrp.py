@@ -54,7 +54,7 @@ class UsrpMonitor(Action):
             except OSError:
                 pass
         else:
-            logger.warn("USRP unhealthy")
+            logger.warning("USRP unhealthy")
             touch(SDR_HEALTHCHECK_FILE)
             raise RuntimeError(detail)
 
