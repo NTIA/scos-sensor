@@ -1,3 +1,5 @@
+from copy import copy
+
 from rest_framework import serializers
 
 from .models import Antenna, Preselector, Receiver, RFPath, SensorDefinition
@@ -5,7 +7,8 @@ from .models import Antenna, Preselector, Receiver, RFPath, SensorDefinition
 
 def filter_null_fields(self, obj):
     rep = super(self.__class__, self).to_representation(obj)
-    for k, v in rep.items():
+    rep_copy = copy(rep)
+    for k, v in rep_copy.items():
         if v is None:
             del rep[k]
 
@@ -14,8 +17,9 @@ def filter_null_fields(self, obj):
 
 def filter_null_fields_and_empty_ararys(self, obj):
     rep = filter_null_fields(self, obj)
+    rep_copy = copy(rep)
     empty_list = []
-    for k, v in rep.items():
+    for k, v in rep_copy.items():
         if v == empty_list:
             del rep[k]
 
