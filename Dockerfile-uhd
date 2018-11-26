@@ -9,8 +9,7 @@ RUN apt-get update -q && \
                    wget libboost-all-dev libusb-1.0-0-dev python3-setuptools \
                    python3-pip python3-setuptools python3-pip python3-numpy \
                    python3-mako python3-requests \
-                   cmake build-essential ca-certificates && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+                   cmake build-essential ca-certificates
 
 RUN wget https://github.com/EttusResearch/uhd/archive/v${UHD_TAG}.tar.gz \
     -O uhd.tar.gz && tar -xvzf uhd.tar.gz
