@@ -36,8 +36,8 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
     global uhd
     global is_available
     global radio
-
-    if settings.RUNNING_DEMO or settings.RUNNING_TESTS:
+    
+    if settings.RUNNING_DEMO or settings.RUNNING_TESTS or settings.MOCK:
         logger.warning("Using mock USRP.")
 
         usrp = MockUsrp()
