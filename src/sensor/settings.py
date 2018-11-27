@@ -196,12 +196,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
-    # Versioning
     'DEFAULT_VERSIONING_CLASS':
     'rest_framework.versioning.URLPathVersioning',
-    'DEFAULT_VERSION':
-    'v1',  # this should always point to latest stable api
+    'DEFAULT_VERSION': 'v1',  # this should always point to latest stable api
     'ALLOWED_VERSIONS': ('v1', ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
     'DATETIME_FORMAT':
     DATETIME_FORMAT,
     'DATETIME_INPUT_FORMATS': ('iso-8601', ),
