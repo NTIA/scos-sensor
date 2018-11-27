@@ -36,6 +36,8 @@ services:
       - DOCKER_TAG
       - GIT_BRANCH
       - IN_DOCKER=1
+      # Uncomment to use mock USRP
+      # - MOCK=1
     expose:
       - '8000'
     volumes:
