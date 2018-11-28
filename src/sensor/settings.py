@@ -42,7 +42,7 @@ __cmd = path.split(sys.argv[0])[-1]
 IN_DOCKER = bool(environ.get('IN_DOCKER'))
 RUNNING_TESTS = 'test' in __cmd
 RUNNING_DEMO = bool(environ.get('DEMO'))
-MOCK = bool(environ.get('MOCK'))
+MOCK_RADIO = bool(environ.get('MOCK_RADIO'))
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'sdr_unhealthy')
