@@ -39,8 +39,8 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
 
     if settings.RUNNING_DEMO or settings.RUNNING_TESTS or settings.MOCK_RADIO:
         logger.warning("Using mock USRP.")
-
-        usrp = MockUsrp()
+        random = settings.MOCK_RADIO_RANDOM
+        usrp = MockUsrp(randomize_values=random)
         is_available = True
         RESOURCES_DIR = path.join(REPO_ROOT, './src/hardware/tests/resources')
         sf_file = path.join(RESOURCES_DIR, 'test_scale_factors.json')

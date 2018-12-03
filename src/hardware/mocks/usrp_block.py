@@ -9,7 +9,7 @@ MockTuneResult = namedtuple('MockTuneResult', tune_result_params)
 
 
 class MockUsrp(object):
-    def __init__(self):
+    def __init__(self, randomize_values=False):
         self.auto_dc_offset = False
         self.f_lo = 700e6
         self.f_dsp = 0
@@ -19,6 +19,8 @@ class MockUsrp(object):
 
         self.total_fail_results = 0
         self.current_fail_results = 0
+
+        self.randomize_values = randomize_values
 
     def set_auto_dc_offset(self, val):
         self.auto_dc_offset = val
@@ -30,7 +32,15 @@ class MockUsrp(object):
 
         self.current_fail_results = 0
         self.total_fail_results += 1
-        return np.ones((1, n), dtype=np.complex64)
+        if self.randomize_values:
+            i = np.random.normal(0.5, 0.5, n)
+            q = np.random.normal(0.5, 0.5, n)
+            comp = np.empty((1, n), dtype=np.complex64)
+            comp[0].real = i
+            comp[0].imag = q
+            return comp
+        else:
+            return np.ones((1, n), dtype=np.complex64)
 
     def reset_bad_acquisitions(self):
         self.total_fail_results = 0
