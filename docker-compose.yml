@@ -37,6 +37,7 @@ services:
       - GIT_BRANCH
       - IN_DOCKER=1
       - MOCK_RADIO
+      - MOCK_RADIO_RANDOM
     expose:
       - '8000'
     volumes:
