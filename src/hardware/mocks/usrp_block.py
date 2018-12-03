@@ -35,10 +35,10 @@ class MockUsrp(object):
         if self.randomize_values:
             i = np.random.normal(0.5, 0.5, n)
             q = np.random.normal(0.5, 0.5, n)
-            comp = np.empty((1, n), dtype=np.complex64)
-            comp[0].real = i
-            comp[0].imag = q
-            return comp
+            rand_iq = np.empty((1, n), dtype=np.complex64)
+            rand_iq[0].real = i
+            rand_iq[0].imag = q
+            return rand_iq
         else:
             return np.ones((1, n), dtype=np.complex64)
 
