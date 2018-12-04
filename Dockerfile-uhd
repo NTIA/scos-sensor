@@ -7,7 +7,7 @@ RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive \
                    apt-get install -qy --no-install-recommends \
                    wget libboost-all-dev libusb-1.0-0-dev python3-setuptools \
-                   python3-pip python3-setuptools python3-pip python3-numpy \
+                   python3-pip python3-setuptools python3-numpy \
                    python3-mako python3-requests \
                    cmake build-essential ca-certificates
 
