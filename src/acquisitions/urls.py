@@ -15,6 +15,11 @@ urlpatterns = (
             'delete': 'destroy_all'
         }),
         name='acquisition-list'),
+    url(r'^(?P<schedule_entry_name>[\w-]+)/archive$',
+        view=AcquisitionListViewSet.as_view({
+            'get': 'archive',
+        }),
+        name='acquisition-list-archive'),
     url(r'^(?P<schedule_entry_name>[\w-]+)/(?P<task_id>\d+)/$',
         view=AcquisitionInstanceViewSet.as_view({
             'get': 'retrieve',

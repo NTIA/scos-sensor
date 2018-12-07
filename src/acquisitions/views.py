@@ -91,6 +91,16 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin, ListModelMixin,
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(detail=False)
+    def archive(self, request, version, schedule_entry_name):
+        queryset = self.get_queryset()
+        queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
+
+        if not queryset.exists():
+            raise Http404
+
+        raise Http404("Not Implmemented")
+
 
 class AcquisitionInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
                                  DestroyModelMixin, GenericViewSet):
