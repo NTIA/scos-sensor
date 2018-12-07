@@ -52,14 +52,14 @@ def test_private_schedule_entry_is_private(admin_client, user_client):
 def test_get_schedule(user_client):
     url = reverse('schedule-list', kwargs=V1)
     rjson = validate_response(user_client.get(url, **HTTPS_KWARG))
-    assert rjson == EMPTY_SCHEDULE_RESPONSE
+    assert rjson['results'] == EMPTY_SCHEDULE_RESPONSE
 
     post_schedule(user_client, TEST_SCHEDULE_ENTRY)
     rjson = validate_response(user_client.get(url, **HTTPS_KWARG))
-    assert len(rjson) == 1
+    assert rjson['count'] == 1
 
     expected_name = TEST_SCHEDULE_ENTRY['name']
-    actual_name = rjson[0]['name']
+    actual_name = rjson['results'][0]['name']
     assert expected_name == actual_name
 
 

@@ -83,13 +83,15 @@ def reverse_acquisition_archive(schedule_entry_name, task_id):
 def get_acquisitions_overview(client):
     url = reverse_acquisitions_overview()
     response = client.get(url, **HTTPS_KWARG)
-    return validate_response(response, status.HTTP_200_OK)
+    rjson = validate_response(response, status.HTTP_200_OK)
+    return rjson['results']
 
 
 def get_acquisition_list(client, schedule_entry_name):
     url = reverse_acquisition_list(schedule_entry_name)
     response = client.get(url, **HTTPS_KWARG)
-    return validate_response(response, status.HTTP_200_OK)
+    rjson = validate_response(response, status.HTTP_200_OK)
+    return rjson['results']
 
 
 def get_acquisition_detail(client, schedule_entry_name, task_id):

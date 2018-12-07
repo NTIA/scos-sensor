@@ -247,7 +247,7 @@ if RUNNING_TESTS or RUNNING_DEMO:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'demo-db.sqlite3'
+            'NAME': ':memory:'
         }
     }
 else:
