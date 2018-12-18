@@ -87,42 +87,21 @@ def get_lat_long(timeout_s=1):
         (fmt, utc, lat, ns, lng, ew, qual, nsats, hdil, alt, altu, gdalsep,
          gdalsepu, age, refid) = gpgga.split(',')
         
-        print("GPS NMEA: {}".format(gpgga))
-        
         latitude = float(lat)
-        
-        print ("GPS Original Latitude:", latitude)
-        
         if ns == 'S':
             latitude = -latitude
-        
-        print ("GPS Converted Latitude:", latitude)
 
-        latitude_degs = int(latitude // 100)
+        latitude_degs = int(latitude / 100)
         latitude_mins = latitude - (latitude_degs * 100)
         latitude_dd = latitude_degs + (latitude_mins / 60)
-        
-        print ("GPS Latitude Degs:", latitude_degs)
-        print ("GPS Latitude Mins:", latitude_mins)
-        print ("GPS Latitude DD:", latitude_dd)
 
         longitude = float(lng)
-        
-        print ("GPS Original Longitude:", longitude)
-        
         if ew == 'W':
             longitude = -longitude
-            
-        print ("GPS Converted Longitude:", longitude)
 
-        longitude_degs = int(longitude // 100)
+        longitude_degs = int(longitude / 100)
         longitude_mins = longitude - (longitude_degs * 100)
         longitude_dd = longitude_degs + (longitude_mins / 60)
-        
-        print ("GPS Longitude Degs:", longitude_degs)
-        print ("GPS Longitude Mins:", longitude_mins)
-        print ("GPS Longitude DD:", longitude_dd)
-        
     except ValueError as err:
         logger.error("Got invalid GPGGA sentence from GPS - {}".format(err))
         return None
