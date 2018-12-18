@@ -93,7 +93,7 @@ def get_lat_long(timeout_s=1):
         if ns == 'S':
             latitude = -latitude
 
-        latitude_degs = int(latitude / 100)
+        latitude_degs = int(latitude // 100)
         latitude_mins = latitude - (latitude_degs * 100)
         latitude_dd = latitude_degs + (latitude_mins / 60)
 
@@ -101,7 +101,7 @@ def get_lat_long(timeout_s=1):
         if ew == 'W':
             longitude = -longitude
 
-        longitude_degs = int(longitude / 100)
+        longitude_degs = int(longitude // 100)
         longitude_mins = longitude - (longitude_degs * 100)
         longitude_dd = longitude_degs + (longitude_mins / 60)
     except ValueError as err:
