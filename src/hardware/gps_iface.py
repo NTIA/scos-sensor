@@ -86,7 +86,7 @@ def get_lat_long(timeout_s=1):
         gpgga = usrp.get_mboard_sensor('gps_gpgga').value
         (fmt, utc, lat, ns, lng, ew, qual, nsats, hdil, alt, altu, gdalsep,
          gdalsepu, age, refid) = gpgga.split(',')
-        
+
         latitude = float(lat)
         if ns == 'S':
             latitude = -latitude
