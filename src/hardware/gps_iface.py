@@ -89,6 +89,7 @@ def get_lat_long(timeout_s=1):
         
         print("GPS NMEA: {}".format(gpgga))
         
+        
         latitude = float(lat)
         if ns == 'S':
             latitude = -latitude
