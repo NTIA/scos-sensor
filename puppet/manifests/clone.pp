@@ -14,14 +14,15 @@ inherits scos
     enable => true,
   }
   
-  if $install_version['latest'] {
+  if $install_version == 'latest' {
     vcsrepo { $install_root:
       ensure   => latest, # Will use latest commit
       provider => git,
       source   => "https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git",
       revision => master,
       notify   => Exec['cleanup'],
-      } 
+    }
+  }
   else {
     vcsrepo { $install_root:
       ensure   => latest, # Will use latest commit
@@ -29,7 +30,8 @@ inherits scos
       source   => "https://${git_username}:${git_password}@github.com/NTIA/scos-sensor.git",
       revision => $install_version,
       notify   => Exec['cleanup'],
-      }
+    }
+  }
 
 # Trigger cleanup if source changes
 
