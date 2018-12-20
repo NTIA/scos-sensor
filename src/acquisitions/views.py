@@ -13,6 +13,7 @@ from rest_framework.viewsets import GenericViewSet
 
 import sigmf.sigmffile
 
+import sensor.settings
 from schedule.models import ScheduleEntry
 from .models import Acquisition
 from .permissions import IsAdminOrOwnerOrReadOnly
@@ -125,6 +126,9 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
         entry_name = schedule_entry_name
         acq = self.get_object()
 
+        with tempfile.NamedTemporaryFile() as tf:
+            build_sigmf_archive(tf, entry_name, [acq])
+
         with tempfile.NamedTemporaryFile() as tempdatafile:
             tempdatafile.write(acq.data)
             tempdatafile.seek(0)  # move fd ptr to start of data for reading
@@ -141,3 +145,14 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
                 content_disp = 'attachment; filename="{}"'.format(filename)
                 response['Content-Disposition'] = content_disp
                 return response
+
+
+def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
+    """Build a SigMF archive containing `acquisitions` and save to fileobj.
+
+    @param fileobj: a fileobj open for writing
+    @param schedule_entry_name: the name of the parent schedule entry
+    @param acquisitions: an iterable of Acquisition objects from the database
+    @return: None
+
+    """
