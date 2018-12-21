@@ -1,7 +1,7 @@
+import logging
 import tempfile
 
-from django.core.files import File
-from django.http import Http404, HttpResponse
+from django.http import Http404, FileResponse
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import GenericViewSet
 
+import sigmf.archive
 import sigmf.sigmffile
 
 import sensor.settings
@@ -19,6 +20,9 @@ from .models import Acquisition
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers import (AcquisitionsOverviewSerializer,
                           AcquisitionSerializer)
+
+
+logger = logging.getLogger(__name__)
 
 
 class AcquisitionsOverviewViewSet(ListModelMixin, GenericViewSet):
@@ -96,11 +100,19 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin, ListModelMixin,
     def archive(self, request, version, schedule_entry_name):
         queryset = self.get_queryset()
         queryset = queryset.filter(schedule_entry__name=schedule_entry_name)
+        fqdn = sensor.settings.FQDN
+        fname = fqdn + '_' + schedule_entry_name + '.sigmf'
 
         if not queryset.exists():
             raise Http404
 
-        raise Http404("Not Implmemented")
+        # FileResponse handles closing the file
+        tmparchive = tempfile.TemporaryFile()
+        build_sigmf_archive(tmparchive, schedule_entry_name, queryset)
+        content_type = 'application/x-tar'
+        response = FileResponse(tmparchive, as_attachment=True, filename=fname,
+                                content_type=content_type)
+        return response
 
 
 class AcquisitionInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
@@ -124,27 +136,17 @@ class AcquisitionInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
     @action(detail=True)
     def archive(self, request, version, schedule_entry_name, task_id):
         entry_name = schedule_entry_name
+        fqdn = sensor.settings.FQDN
+        fname = fqdn + '_' + entry_name + '_' + str(task_id) + '.sigmf'
         acq = self.get_object()
 
-        with tempfile.NamedTemporaryFile() as tf:
-            build_sigmf_archive(tf, entry_name, [acq])
-
-        with tempfile.NamedTemporaryFile() as tempdatafile:
-            tempdatafile.write(acq.data)
-            tempdatafile.seek(0)  # move fd ptr to start of data for reading
-
-            sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.sigmf_metadata)
-            sigmf_file.set_data_file(tempdatafile.name)
-
-            with tempfile.TemporaryFile() as t:
-                # FIXME: prefix filename with sensor_id when that is available
-                filename = entry_name + '_' + str(task_id) + '.sigmf'
-                sigmf_file.archive(name=filename, fileobj=t)
-                content_type = 'application/x-tar'
-                response = HttpResponse(File(t), content_type=content_type)
-                content_disp = 'attachment; filename="{}"'.format(filename)
-                response['Content-Disposition'] = content_disp
-                return response
+        # FileResponse handles closing the file
+        tmparchive = tempfile.TemporaryFile()
+        build_sigmf_archive(tmparchive, schedule_entry_name, [acq])
+        content_type = 'application/x-tar'
+        response = FileResponse(tmparchive, as_attachment=True, filename=fname,
+                                content_type=content_type)
+        return response
 
 
 def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
@@ -156,3 +158,17 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
     @return: None
 
     """
+    logger.debug("building sigmf archive")
+
+    for acq in acquisitions:
+        with tempfile.NamedTemporaryFile() as tmpdata:
+            tmpdata.write(acq.data)
+            tmpdata.seek(0)  # move fd ptr to start of data for reading
+            name = schedule_entry_name + '_' + str(acq.task_id)
+            sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.sigmf_metadata,
+                                                   name=name)
+            sigmf_file.set_data_file(tmpdata.name)
+
+            sigmf.archive.SigMFArchive(sigmf_file, path=name, fileobj=fileobj)
+
+    logger.debug("sigmf archive built")

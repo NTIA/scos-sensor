@@ -6,6 +6,7 @@ from rest_framework import status
 
 import sigmf.sigmffile
 
+import sensor.settings
 from acquisitions.tests.utils import (reverse_acquisition_archive,
                                       simulate_acquisitions, HTTPS_KWARG)
 
@@ -14,7 +15,8 @@ def test_archive_download(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client, n=1)
     task_id = 1
     url = reverse_acquisition_archive(entry_name, task_id)
-    disposition = 'attachment; filename="test_acq_1.sigmf"'
+    disposition = 'attachment; filename="{}_test_acq_1.sigmf"'
+    disposition = disposition.format(sensor.settings.FQDN)
     response = user_client.get(url, **HTTPS_KWARG)
 
     assert response.status_code == status.HTTP_200_OK
@@ -22,8 +24,9 @@ def test_archive_download(user_client, test_scheduler):
     assert response['content-type'] == 'application/x-tar'
 
     with tempfile.NamedTemporaryFile() as tf:
-        tf.write(response.content)
-        tf.flush()
+        for content in response.streaming_content:
+            tf.write(content)
+
         sigmf_archive_contents = sigmf.sigmffile.fromarchive(tf.name)
         md = sigmf_archive_contents._metadata
         datafile = sigmf_archive_contents.data_file
