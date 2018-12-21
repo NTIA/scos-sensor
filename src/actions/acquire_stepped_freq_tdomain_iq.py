@@ -155,12 +155,7 @@ class SteppedFrequencyTimeDomainIq(Action):
         except SensorDefinition.DoesNotExist:
             pass
 
-        try:
-            fqdn = settings.ALLOWED_HOSTS[1]
-        except IndexError:
-            fqdn = 'not.set'
-
-        sigmf_md.set_global_field("scos:sensor_id", fqdn)
+        sigmf_md.set_global_field("scos:sensor_id", settings.FQDN)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
         # Acquire data and build per-capture metadata
