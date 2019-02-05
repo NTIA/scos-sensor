@@ -30,7 +30,8 @@ from rest_framework.reverse import reverse
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .settings import REST_FRAMEWORK
-from .views import SchemaView
+from .views import schema_view
+
 
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r'^api/(?P<version>v[0-9]+)/'
@@ -54,14 +55,18 @@ def api_v1_root(request, version, format=None):
 
 
 api_urlpatterns = format_suffix_patterns(
-    (url(r'^$', api_v1_root, name='api-root'),
-     url(r'^acquisitions/', include('acquisitions.urls')),
-     url(r'^capabilities/', include('capabilities.urls')),
-     url(r'^schedule/', include('schedule.urls')),
-     url(r'^status', include('status.urls')),
-     url(r'^users/', include('authentication.urls')),
-     url(r'^results/', include('results.urls')),
-     url(r'^schema/$', SchemaView.as_view(), name='api_schema')))
+    (
+        url(r'^$', api_v1_root, name='api-root'),
+        url(r'^acquisitions/', include('acquisitions.urls')),
+        url(r'^capabilities/', include('capabilities.urls')),
+        url(r'^schedule/', include('schedule.urls')),
+        url(r'^status', include('status.urls')),
+        url(r'^users/', include('authentication.urls')),
+        url(r'^results/', include('results.urls')),
+        url(r'^schema/$', schema_view.with_ui('redoc', cache_timeout=0),
+            name='api_schema')
+    )
+)
 
 # Modify admin portal before including url
 
@@ -77,6 +82,5 @@ urlpatterns = (
     url(r'^api/$',
         RedirectView.as_view(url='/api/{}/'.format(DEFAULT_API_VERSION))),
     url(API_PREFIX, include(api_urlpatterns)),
-    url(API_PREFIX, include('drf_openapi.urls')),
     url(r'^api/auth/', include('rest_framework.urls')),
 )

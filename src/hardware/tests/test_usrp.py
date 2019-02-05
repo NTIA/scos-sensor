@@ -35,8 +35,9 @@ def test_acquisition_errors():
             msg = "Acquisition failing {} sequentially with {}\n"
             msg += "retries requested SHOULD have raised an error."
             msg = msg.format(i, max_retries)
-            with pytest.raises(RuntimeError, message=msg):
+            with pytest.raises(RuntimeError):
                 rx.acquire_samples(1000, 1000, max_retries)
+                pytest.fail(msg)
 
     rx.usrp.reset_bad_acquisitions()
 

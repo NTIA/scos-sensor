@@ -52,6 +52,8 @@ MOCK_RADIO_RANDOM = bool(environ.get('MOCK_RADIO_RANDOM'))
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'sdr_unhealthy')
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, 'scheduler_dead')
 
+LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
+
 OPENAPI_FILE = path.join(REPO_ROOT, 'docs', 'openapi.json')
 
 SCALE_FACTORS_FILE = path.join(REPO_ROOT, 'scale_factors.json')
@@ -135,9 +137,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
-    'drf_openapi',
+    'drf_yasg',  # OpenAPI generator
     'raven.contrib.django.raven_compat',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
@@ -204,21 +207,18 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSION': 'v1',  # this should always point to latest stable api
     'ALLOWED_VERSIONS': ('v1', ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100,
-    'DATETIME_FORMAT':
-    DATETIME_FORMAT,
+    'PAGE_SIZE': 10,
+    'DATETIME_FORMAT': DATETIME_FORMAT,
     'DATETIME_INPUT_FORMATS': ('iso-8601', ),
-    'COERCE_DECIMAL_TO_STRING':
-    False,  # DecimalField should return floats
+    'COERCE_DECIMAL_TO_STRING': False,  # DecimalField should return floats
 }
 
-# Django Rest Swagger
-# http://marcgibbons.github.io/django-rest-swagger/
+
+# https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'token': {
-            'type':
-            'apiKey',
+            'type': 'apiKey',
             'description':
             ("Tokens are automatically generated for all users. You can "
              "view yours by going to your User Details view in the "
@@ -232,10 +232,8 @@ SWAGGER_SETTINGS = {
              "Example cURL call: `curl -kLsS -H \"Authorization: Token"
              " 529c30e6e04b3b546f2e073e879b75fdfa147c15\" "
              "https://greyhound5.sms.internal/api/v1`"),
-            'name':
-            'Token',
-            'in':
-            'header'
+            'name': 'Token',
+            'in': 'header'
         }
     },
     'APIS_SORTER': 'alpha',

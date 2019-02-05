@@ -1,4 +1,5 @@
 from django.http import Http404
+from rest_framework import filters
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
@@ -61,7 +62,11 @@ class ResultListViewSet(ListModelMixin, GenericViewSet):
     """
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     lookup_fields = ('schedule_entry__name', )
+    lookup_fields = ('schedule_entry__name', 'task_id')
+    ordering_fields = ('task_id', 'started', 'finished', 'duration', 'result')
+    search_fields = ('task_id', 'result', 'detail')
 
     def get_queryset(self):
         # .list() does not call .get_object(), which triggers permissions

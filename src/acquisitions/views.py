@@ -2,7 +2,7 @@ import logging
 import tempfile
 
 from django.http import Http404, FileResponse
-from rest_framework import status
+from rest_framework import status, filters
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
@@ -82,7 +82,10 @@ class AcquisitionListViewSet(MultipleFieldLookupMixin, ListModelMixin,
     serializer_class = AcquisitionSerializer
     permission_classes = (
         api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     lookup_fields = ('schedule_entry__name', 'task_id')
+    ordering_fields = ('task_id', 'created')
+    search_fields = ('sigmf_metadata', )
 
     @action(detail=False, methods=('delete', ))
     def destroy_all(self, request, version, schedule_entry_name):

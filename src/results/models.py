@@ -10,6 +10,7 @@ class TaskResult(models.Model):
     SUCCESS = 1
     FAILURE = 2
     RESULT_CHOICES = ((SUCCESS, 'success'), (FAILURE, 'failure'))
+
     schedule_entry = models.ForeignKey(
         ScheduleEntry,
         on_delete=models.CASCADE,
