@@ -48,6 +48,8 @@ services:
       # - ./config:/config:ro
       # - ./entrypoints:/entrypoints:ro
       # - ./scripts:/scripts:ro
+    cap_add:
+      - SYS_PTRACE
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
     command: /entrypoints/api_entrypoint.sh
