@@ -45,7 +45,7 @@ def test_user_cannot_view_private_entry_in_list(admin_client, user_client):
     url = reverse('schedule-list', kwargs=V1)
     response = user_client.get(url, **HTTPS_KWARG)
     rjson = validate_response(response, status.HTTP_200_OK)
-    assert rjson == EMPTY_SCHEDULE_RESPONSE
+    assert rjson['results'] == EMPTY_SCHEDULE_RESPONSE
 
 
 def test_user_cannot_view_private_entry_details(admin_client, user_client):

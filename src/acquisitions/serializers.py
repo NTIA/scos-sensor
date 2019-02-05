@@ -11,10 +11,13 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         help_text="The related schedule entry for the acquisition")
     acquisitions_available = serializers.SerializerMethodField(
         help_text="The number of available acquisitions")
+    archive = serializers.SerializerMethodField(
+        help_text="The url to download a SigMF archive of all acquisitions"
+    )
 
     class Meta:
         model = ScheduleEntry
-        fields = ('url', 'acquisitions_available', 'schedule_entry')
+        fields = ('url', 'acquisitions_available', 'archive', 'schedule_entry')
         extra_kwargs = {
             'url': {
                 'view_name': 'acquisition-list',
@@ -31,6 +34,12 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         request = self.context['request']
         kwargs = {'pk': obj.name}
         return reverse('schedule-detail', kwargs=kwargs, request=request)
+
+    def get_archive(self, obj):
+        request = self.context['request']
+        kwargs = {'schedule_entry_name': obj.name}
+        return reverse('acquisition-list-archive', kwargs=kwargs,
+                       request=request)
 
 
 class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
@@ -54,7 +63,7 @@ class AcquisitionSerializer(serializers.ModelSerializer):
     archive = AcquisitionHyperlinkedRelatedField(
         view_name='acquisition-archive',
         read_only=True,
-        help_text="The url of the acquisition's SigMF archive",
+        help_text="The url to download a SigMF archive of this acquisition",
         source='*'  # pass whole object
     )
     sigmf_metadata = serializers.DictField(

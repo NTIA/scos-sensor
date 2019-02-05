@@ -1,11 +1,11 @@
 -rrequirements.txt
 
-flake8==3.6.0
-jedi==0.13.1
+flake8==3.7.5
+jedi==0.13.2
 jsonschema==2.6.0
 mkdocs==1.0.4
-pytest-cov==2.6.0
-pytest-django==3.4.4
-pytest-flake8==1.0.2
-tox==3.5.3
-yapf==0.24.0
+pytest-cov==2.6.1
+pytest-django==3.4.7
+pytest-flake8==1.0.4
+tox==3.7.0
+yapf==0.25.0

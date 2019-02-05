@@ -1,4 +1,4 @@
-from rest_framework import serializers, status
+from rest_framework import serializers, status, filters
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
@@ -35,6 +35,11 @@ class ScheduleEntryViewSet(ModelViewSet):
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
         IsAdminOrOwnerOrReadOnly,
     ]
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    lookup_fields = ('schedule_entry__name', 'task_id')
+    ordering_fields = ('priority', 'start', 'next_task_time', 'created',
+                       'modified')
+    search_fields = ('name', 'action')
 
     def create(self, request, *args, **kwargs):
         """Return NO CONTENT when input is valid but validate_only is True."""
