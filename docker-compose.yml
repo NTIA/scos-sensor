@@ -29,8 +29,9 @@ services:
     environment:
       - DEBUG=true
       - DOMAINS
-      - GUNICORN_LOG_LEVEL
       - IPS
+      - FQDN
+      - GUNICORN_LOG_LEVEL
       - POSTGRES_PASSWORD
       - SECRET_KEY
       - DOCKER_TAG
