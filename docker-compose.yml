@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:alpine
+    image: postgres:11-alpine
     restart: always
     environment:
       - POSTGRES_PASSWORD
@@ -29,8 +29,9 @@ services:
     environment:
       - DEBUG=true
       - DOMAINS
-      - GUNICORN_LOG_LEVEL
       - IPS
+      - FQDN
+      - GUNICORN_LOG_LEVEL
       - POSTGRES_PASSWORD
       - SECRET_KEY
       - DOCKER_TAG
@@ -53,7 +54,7 @@ services:
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
-    image: nginx:alpine
+    image: nginx:1.14-alpine
     restart: always
     ports:
       - '80:80'
