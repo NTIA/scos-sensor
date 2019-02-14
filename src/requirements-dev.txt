@@ -8,4 +8,4 @@ pytest-cov==2.6.1
 pytest-django==3.4.7
 pytest-flake8==1.0.4
 tox==3.7.0
-yapf==0.25.0
+yapf==0.26.0
