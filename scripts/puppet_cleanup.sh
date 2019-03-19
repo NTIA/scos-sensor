@@ -20,7 +20,7 @@ rm -f .github
 rm -f .dockerhub
 
 # Empty environment file
-cat "" > /etc/environment
+echo "" > /etc/environment
 
 # Clean up Docker images / containers if present
 
