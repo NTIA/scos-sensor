@@ -59,7 +59,8 @@ inherits scos::clone
 DEBUG=false
 SECRET_KEY='${secret_key}'
 POSTGRES_PASSWORD='${postgres_password_actual}'
-DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
+DOMAINS='${hostname} ${hostname}.local localhost'
+FQDN='${fqdn}'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
 REPO_ROOT=${install_root}
@@ -78,7 +79,8 @@ SENTRY_DSN=${sentry_dsn}",
       content => "# This file is managed by Puppet - any manual edits will be lost
 DEBUG=false
 SECRET_KEY='${secret_key}'
-DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
+DOMAINS='${hostname} ${hostname}.local localhost'
+FQDN='${fqdn}'
 POSTGRES_PASSWORD='${postgres_password_actual}'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
@@ -95,7 +97,7 @@ SENTRY_DSN=${sentry_dsn}",
     command     => "/usr/bin/envsubst \'\$DOMAINS\' < ${install_root}/nginx/conf.template > ${install_root}/nginx/conf.d/scos-sensor.conf",
     environment => ["DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost"],
   }
- 
+
   file { "${install_root}/scale_factors.json":
     content => $scale_factors,
   }
