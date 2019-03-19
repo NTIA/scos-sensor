@@ -13,7 +13,7 @@ inherits scos
     ensure => running,
     enable => true,
   }
-  
+
   if $install_version == 'latest' {
     vcsrepo { $install_root:
       ensure   => latest, # Will use latest commit
@@ -37,6 +37,14 @@ inherits scos
 
   exec { 'source_change':
     onlyif  => "/usr/bin/test ! -e ${install_root}/.${install_source}",
+    command => "/bin/echo",
+    notify  => Exec['cleanup'],
+  }
+
+# Trigger cleanup if Docker image version changes
+
+  exec { 'source_change':
+    onlyif  => "${install_root}/scripts/update_docker_images.sh",
     command => "/bin/echo",
     notify  => Exec['cleanup'],
   }
