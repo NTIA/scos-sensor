@@ -43,7 +43,7 @@ inherits scos
 
 # Trigger cleanup if Docker image version changes
 
-  exec { 'source_change':
+  exec { 'source_change_d':
     onlyif  => "${install_root}/scripts/update_docker_images.sh",
     command => "/bin/echo",
     notify  => Exec['cleanup'],
