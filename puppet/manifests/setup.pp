@@ -59,7 +59,7 @@ inherits scos::clone
 DEBUG=false
 SECRET_KEY='${secret_key}'
 POSTGRES_PASSWORD='${postgres_password_actual}'
-DOMAINS='${hostname} ${hostname}.local localhost'
+DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 FQDN='${fqdn}'
 IPS='${networking[ip]} 127.0.0.1'
 GUNICORN_LOG_LEVEL=info
@@ -80,7 +80,7 @@ SENTRY_DSN=${sentry_dsn}
       content => "# This file is managed by Puppet - any manual edits will be lost
 DEBUG=false
 SECRET_KEY='${secret_key}'
-DOMAINS='${hostname} ${hostname}.local localhost'
+DOMAINS='${hostname} ${fqdn} ${hostname}.local localhost'
 FQDN='${fqdn}'
 POSTGRES_PASSWORD='${postgres_password_actual}'
 IPS='${networking[ip]} 127.0.0.1'

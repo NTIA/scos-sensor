@@ -44,7 +44,7 @@ inherits scos::setup
         'DEBUG=false',
         "SECRET_KEY=${secret_key}",
         "POSTGRES_PASSWORD=${postgres_password_actual}",
-        "DOMAINS=${hostname} ${hostname}.local localhost",
+        "DOMAINS=${hostname} ${fqdn} ${hostname}.local localhost",
         "FQDN=${fqdn}",
         "IPS=${networking[ip]} 127.0.0.1",
         'GUNICORN_LOG_LEVEL=info',
