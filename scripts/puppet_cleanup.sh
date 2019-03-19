@@ -19,13 +19,8 @@ rm -f .deployed
 rm -f .github
 rm -f .dockerhub
 
-# Only move the environment file if it exists
-
-if [ -e /etc/environment ]; then
-    rm -f /etc/environment
-fi
-
-touch /etc/environment
+# Empty environment file
+cat "" > /etc/environment
 
 # Clean up Docker images / containers if present
 
