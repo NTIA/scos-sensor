@@ -20,14 +20,13 @@ monitoring.
 Table of Contents
 -----------------
 
- - [Introduction](#introduction)
- - [Quickstart](#quickstart)
- - [Large Deployments](#large-deployments)
- - [Browsable API](#browsable-api)
- - [Architecture](#architecture)
- - [Glossary](#glossary)
- - [References](#references)
- - [License](#license)
+- [Introduction](#introduction)
+- [Quickstart](#quickstart)
+- [Browsable API](#browsable-api)
+- [Architecture](#architecture)
+- [Glossary](#glossary)
+- [References](#references)
+- [License](#license)
 
 
 Introduction
@@ -37,19 +36,19 @@ Introduction
 
 `scos-sensor` was designed by NTIA/ITS with the following goals in mind:
 
- - Easy-to-use sensor control and data retrieval via IP network
- - Low-cost, open-source development resources
- - Design flexibility to allow developers to evolve sensor technologies and
-   metrics
- - Hardware agnostic
- - Discoverable sensor capabilities
- - Task scheduling using start/stop times, interval, and/or priority
- - Standardized metadata/data format that supports cooperative sensing and open
-   data initiatives
- - Security controls that prevent unauthorized users from accessing internal
-   sensor functionality
- - Easy-to-deploy with provisioned and configured OS
- - Quality assurance of software via automated testing prior to release
+- Easy-to-use sensor control and data retrieval via IP network
+- Low-cost, open-source development resources
+- Design flexibility to allow developers to evolve sensor technologies and
+metrics
+- Hardware agnostic
+- Discoverable sensor capabilities
+- Task scheduling using start/stop times, interval, and/or priority
+- Standardized metadata/data format that supports cooperative sensing and open
+data initiatives
+- Security controls that prevent unauthorized users from accessing internal
+sensor functionality
+- Easy-to-deploy with provisioned and configured OS
+- Quality assurance of software via automated testing prior to release
 
 Sensor control is accomplished through a RESTful API. The API is designed to be
 rich enough so that multiple sensors can be automated effectively while being
@@ -127,17 +126,6 @@ $ docker-compose up -d                                    # start in background
 $ docker-compose exec api /src/manage.py createsuperuser  # create admin user
 $ docker-compose logs --follow api                        # reattach terminal
 ```
-
-
-Large Deployments
------------------
-
-Large sensor deployments present unique challenges. At NTIA/ITS, we use Foreman
-and Puppet to handle hardware provisioning and configuration management. While
-a ground-up introduction to these tools is outside the scope of this
-repository, The [Foreman and Puppet README](puppet/README.md) should be enough
-to help someone familiar with these tools get up to speed.
-
 
 Browsable API
 -------------
