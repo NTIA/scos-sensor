@@ -32,6 +32,8 @@ services:
       - IPS
       - FQDN
       - GUNICORN_LOG_LEVEL
+      - ADMIN_EMAIL
+      - ADMIN_PASSWORD
       - POSTGRES_PASSWORD
       - SECRET_KEY
       - DOCKER_TAG

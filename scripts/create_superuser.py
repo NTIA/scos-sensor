@@ -12,12 +12,9 @@ django.setup()
 from django.contrib.auth import get_user_model  # noqa
 
 try:
-    with open('/opt/scos-sensor/.admin_password', 'r') as admin_password_file:
-        password = admin_password_file.readline().rstrip()
-    with open('/opt/scos-sensor/.admin_email', 'r') as admin_email_file:
-        email = admin_email_file.readline().rstrip()
-
-except IOError:
+    password = os.environ['ADMIN_PASSWORD']
+    email = os.environ['ADMIN_EMAIL']
+except KeyError:
     print("Not on a managed sensor, so not auto-generating admin account.")
     print("You can add an admin later with `./manage.py createsuperuser`")
     sys.exit(0)
@@ -27,5 +24,4 @@ UserModel = get_user_model()
 try:
     admin_user = UserModel._default_manager.get(username='admin')
 except UserModel.DoesNotExist:
-    UserModel._default_manager.create_superuser(
-        'admin', email, password)
+    UserModel._default_manager.create_superuser('admin', email, password)
