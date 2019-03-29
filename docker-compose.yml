@@ -48,7 +48,6 @@ services:
       # Uncomment to see code changes by restarting docker container (without rebuilding)
       # - ./src:/src:ro
       # - ./gunicorn:/gunicorn:ro
-      # - ./config:/config:ro
       # - ./entrypoints:/entrypoints:ro
       # - ./scripts:/scripts:ro
     cap_add:
