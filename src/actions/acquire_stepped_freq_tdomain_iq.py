@@ -57,8 +57,7 @@ import numpy as np
 from rest_framework.reverse import reverse
 from sigmf.sigmffile import SigMFFile
 
-from capabilities.models import SensorDefinition
-from capabilities.serializers import SensorDefinitionSerializer
+from capabilities import capabilities
 from hardware import usrp_iface
 from sensor import V1, settings, utils
 
@@ -148,14 +147,9 @@ class SteppedFrequencyTimeDomainIq(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        try:
-            sensor_def_obj = SensorDefinition.objects.get()
-            sensor_def = SensorDefinitionSerializer(sensor_def_obj).data
-            sigmf_md.set_global_field("scos:sensor_definition", sensor_def)
-        except SensorDefinition.DoesNotExist:
-            pass
-
-        sigmf_md.set_global_field("scos:sensor_id", settings.FQDN)
+        sensor_def = capabilities['sensor_definition']
+        sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
+        sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
         # Acquire data and build per-capture metadata

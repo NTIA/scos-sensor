@@ -3,8 +3,6 @@ import logging
 import json
 from jsonschema import validate
 
-from sensor.settings import SCALE_FACTORS_SCHEMA_FILE
-
 logger = logging.getLogger(__name__)
 
 
@@ -122,16 +120,8 @@ class ScaleFactors(object):
 
 
 def load_from_json(fname):
-    """Validate JSON file against schema and initialize ScaleFactors."""
-
-    with open(SCALE_FACTORS_SCHEMA_FILE) as f:
-        schema = json.load(f)
-
     with open(fname) as f:
         sf = json.load(f)
-
-    # Raises jsonschema.exceptions.ValidationError if invalid
-    validate(sf, schema)
 
     # Dimensions of the factors array is not validated by the schema
     factor_rows = len(sf['factors'])

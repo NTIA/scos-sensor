@@ -56,8 +56,11 @@ LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 
 OPENAPI_FILE = path.join(REPO_ROOT, 'docs', 'openapi.json')
 
-SCALE_FACTORS_FILE = path.join(REPO_ROOT, 'scale_factors.json')
-SCALE_FACTORS_SCHEMA_FILE = path.join(REPO_ROOT, 'scale_factors_schema.json')
+CONFIG_DIR = path.join(REPO_ROOT, 'configs')
+
+# JSON configs
+SCALE_FACTORS_FILE = path.join(CONFIG_DIR, 'scale_factors.json')
+SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, 'sensor_definition.json')
 
 # Cleanup any existing healtcheck files
 try:
