@@ -25,7 +25,7 @@ services:
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     build:
       context: .
-      dockerfile: Dockerfile-api
+      dockerfile: docker/Dockerfile-api
     environment:
       - DEBUG=true
       - DOMAINS
@@ -88,7 +88,7 @@ services:
       - api
     build:
       context: .
-      dockerfile: Dockerfile-autoheal
+      dockerfile: docker/Dockerfile-autoheal
     image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
