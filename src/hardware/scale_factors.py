@@ -1,7 +1,7 @@
 import logging
 
 import json
-from jsonschema import validate
+
 
 logger = logging.getLogger(__name__)
 

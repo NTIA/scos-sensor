@@ -7,7 +7,6 @@ from rest_framework.response import Response
 
 import actions
 from capabilities import capabilities
-from sensor import settings
 
 
 logger = logging.getLogger(__name__)

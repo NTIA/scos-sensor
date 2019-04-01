@@ -12,8 +12,8 @@ def load_from_json(fname):
     try:
         with open(fname) as f:
             return json.load(f)
-    except:
-        log.exception("Unable to load JSON file {}".format(fname))
+    except Exception:
+        logger.exception("Unable to load JSON file {}".format(fname))
 
 
 capabilities['sensor_definition'] = load_from_json(SENSOR_DEFINITION_FILE)
