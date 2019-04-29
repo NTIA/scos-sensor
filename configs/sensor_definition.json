@@ -1,10 +1,10 @@
 {
-    "id": "testsensor.sms.internal",
-    "antenna": {
+    "id": "",
+    "ntia-antenna:antenna": {
         "model": "L-com HG3512UP-NF"
     },
     "receiver": {
-        "model": "Ettus USRP B210"
+        "receiver_model": "Ettus USRP B210"
     },
     "host_controller": "Intel NUC"
 }

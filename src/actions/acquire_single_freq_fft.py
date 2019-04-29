@@ -228,9 +228,10 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:description", self.description)
 
         sensor_def = capabilities['sensor_definition']
-        sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
-        sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
-        sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
+        sensor_def["id"] = settings.FQDN
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)  # global/ntia-sensor:sensor
+        # sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN) #depreciated by ntia-sensor object
+        sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)  # global/core:version
 
         capture_md = {
             "core:frequency": self.frequency,
@@ -240,26 +241,20 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
         for i, detector in enumerate(M4sDetector):
-            single_frequency_fft_md = {
-                "number_of_samples_in_fft": self.fft_size,
-                "window": "blackman",
-                "equivalent_noise_bandwidth": self.enbw,
-                "detector": detector.name + "_power",
-                "number_of_ffts": self.nffts,
-                "units": "dBm",
-                "reference": "not referenced"
-            }
-
-            annotation_md = {
-                "scos:measurement_type": {
-                    "single_frequency_fft_detection": single_frequency_fft_md,
-                }
+            frequency_domain_detection_md = {
+                "ntia-algorithm:number_of_samples_in_fft": self.fft_size,
+                "ntia-algorithm:window": "blackman",
+                "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
+                "ntia-algorithm:detector": detector.name + "_power",
+                "ntia-algorithm:number_of_ffts": self.nffts,
+                "ntia-algorithm:units": "dBm",
+                "ntia-algorithm:reference": "not referenced"
             }
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
-                metadata=annotation_md)
+                metadata=frequency_domain_detection_md)
 
         return sigmf_md
 
