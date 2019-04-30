@@ -96,7 +96,7 @@ from .base import Action
 logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
-    "core:datatype": "f32_le",  # 32-bit float, Little Endian
+    "core:datatype": "rf32_le",  # 32-bit float, Little Endian
     "core:version": "0.0.1"
 }
 
