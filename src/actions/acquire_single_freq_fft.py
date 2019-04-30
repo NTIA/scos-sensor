@@ -236,7 +236,7 @@ class SingleFrequencyFftAcquisition(Action):
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": "FrequencyDomain"
+            "type": ["FrequencyDomain"]
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
