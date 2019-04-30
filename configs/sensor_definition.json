@@ -1,10 +1,10 @@
 {
     "id": "",
-    "ntia-antenna:antenna": {
+    "ntia-core:antenna": {
         "model": "L-com HG3512UP-NF"
     },
     "receiver": {
-        "receiver_model": "Ettus USRP B210"
+        "model": "Ettus USRP B210"
     },
     "host_controller": "Intel NUC"
 }
