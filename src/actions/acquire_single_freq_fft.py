@@ -245,7 +245,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         capture_md = {
             "core:frequency": self.frequency,
-            "core:time": utils.get_datetime_str_now()
+            "core:datetime": utils.get_datetime_str_now()
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
