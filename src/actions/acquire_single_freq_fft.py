@@ -168,7 +168,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.configure_usrp()
         data = self.acquire_data(parent_entry, task_id)
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md()
+        sigmf_md = self.build_sigmf_md(parent_entry, task_id)
         self.archive(m4s_data, sigmf_md, parent_entry, task_id)
 
         kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
@@ -219,19 +219,29 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self):
+    def build_sigmf_md(self, parent_entry, task_id):
         logger.debug("Building SigMF metadata file")
 
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
-        sigmf_md.set_global_field("core:description", self.description)
+        # sigmf_md.set_global_field("core:description", self.description) #depreciated by action object
 
         sensor_def = capabilities['sensor_definition']
         sensor_def["id"] = settings.FQDN
         sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)  # global/ntia-sensor:sensor
         # sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN) #depreciated by ntia-sensor object
         sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)  # global/core:version
+
+        action_def = {
+            "name": self.name,
+            "description": self.description,
+            "type": "FrequencyDomain"
+        }
+
+        sigmf_md.set_global_field("ntia-scos:action", action_def)
+        sigmf_md.set_global_field("ntia-scos:schedule", parent_entry)
+        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         capture_md = {
             "core:frequency": self.frequency,
@@ -242,6 +252,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
+                "ntia-core:annotation_type": "FrequencyDomainDetection",
                 "ntia-algorithm:number_of_samples_in_fft": self.fft_size,
                 "ntia-algorithm:window": "blackman",
                 "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
