@@ -240,7 +240,7 @@ class SingleFrequencyFftAcquisition(Action):
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        sigmf_md.set_global_field("ntia-scos:schedule", parent_entry)
+        # sigmf_md.set_global_field("ntia-scos:schedule", parent_entry)
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         capture_md = {
