@@ -34,7 +34,7 @@ single_frequency_fft:
 
 The next step is to see what parameters that class takes and specify the values. Open up [actions/acquire_single_freq_fft.py](../../src/actions/acquire_single_freq_fft.py) and look at the documentation for the class to see what parameters are available and what units to use, etc.
 
-```
+```python
 class SingleFrequencyFftAcquisition(Action):
     """Perform m4s detection over requested number of single-frequency FFTs.
 
@@ -49,7 +49,7 @@ class SingleFrequencyFftAcquisition(Action):
     ...
 ```
 
-Lastly, simply modify the YAML file to define any requred parameters.
+Lastly, simply modify the YAML file to define any required parameters.
 
 ```yaml
 # File: acquire_700c_dl.yml
