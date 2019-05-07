@@ -3,10 +3,10 @@ Pygments==2.3.1
 Markdown==3.1
 -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF
 coreapi==2.3.3
-docker-compose==1.24.0
 django-extensions==2.1.6
 django-filter==2.1.0
 djangorestframework==3.9.2
+docker-compose==1.24.0
 drf-yasg==1.15.0
 gunicorn==19.9.0
 jsonfield==2.0.2
@@ -15,5 +15,6 @@ psycopg2-binary==2.8.2
 raven==6.10.0
 requests-futures==0.9.9
 requests-mock==1.5.2
+ruamel.yaml==0.15.81
 six==1.12.0
 typing==3.6.6

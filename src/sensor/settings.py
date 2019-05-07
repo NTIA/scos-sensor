@@ -61,6 +61,7 @@ CONFIG_DIR = path.join(REPO_ROOT, 'configs')
 # JSON configs
 SCALE_FACTORS_FILE = path.join(CONFIG_DIR, 'scale_factors.json')
 SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, 'sensor_definition.json')
+ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, 'actions')
 
 # Cleanup any existing healtcheck files
 try:
