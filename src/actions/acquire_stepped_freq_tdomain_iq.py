@@ -80,7 +80,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
     """
 
     def __init__(self, name, fcs, gains, sample_rates, durations_ms):
-        super(SteppedFrequencyTimeDomainIq, self).__init__()
+        super(SteppedFrequencyTimeDomainIqAcquisition, self).__init__()
 
         nfcs = len(fcs)
 
@@ -93,7 +93,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
                 err = "Wrong number of {}s, expected {}"
                 raise TypeError(err.format(param_name, nfcs))
 
-            tuning_parameters[fc] = dict(zip(params, vals))
+            tuning_parameters[fc] = dict(zip(parameter_names, params))
 
         self.name = name
         self.nfcs = nfcs
@@ -154,11 +154,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         dt = utils.get_datetime_str_now()
         acq = self.usrp.radio.acquire_samples(nsamps).astype(np.complex64)
         data = np.append(data, acq)
-        start_idx = idx * nsamps
         capture_md = {"core:frequency": fc, "core:datetime": dt}
-        sigmf_md.add_capture(start_index=start_idx, metadata=capture_md)
+        sigmf_md.add_capture(start_index=0, metadata=capture_md)
         annotation_md = {"applied_scale_factor": self.usrp.radio.scale_factor}
-        sigmf_md.add_annotation(start_index=start_idx, length=nsamps,
+        sigmf_md.add_annotation(start_index=0, length=nsamps,
                                 metadata=annotation_md)
 
         return data, sigmf_md
@@ -227,7 +226,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             'name': self.name,
             'nfcs': self.nfcs,
             'f_low_edge': f_low_edge,
-            'f_high_edge': f_higH_edge,
+            'f_high_edge': f_high_edge,
             'acquisition_plan': acquisition_plan,
             'min_duration_ms': min_duration_ms,
             'total_samples': total_samples,
