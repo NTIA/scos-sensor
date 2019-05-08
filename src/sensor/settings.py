@@ -21,7 +21,6 @@ BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 REPO_ROOT = path.dirname(BASE_DIR)
 
 FQDN = environ.get('FQDN', 'fqdn.unset')
-print("Booting sensor {}".format(FQDN))
 
 DOCKER_TAG = environ.get('DOCKER_TAG')
 GIT_BRANCH = environ.get('GIT_BRANCH')

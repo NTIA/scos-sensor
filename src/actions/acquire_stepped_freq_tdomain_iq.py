@@ -202,7 +202,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         total_samples = 0
         for fc in self.fcs:
-            tuning_params = self.tuning_parameters[fc]
+            tuning_params = self.tuning_parameters[fc].copy()
             tuning_params['fc_MHz'] = fc / 1e6
             srate = tuning_params['sample_rate']
             tuning_params['sample_rate_Msps'] = srate / 1e6
