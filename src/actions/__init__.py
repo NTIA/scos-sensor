@@ -28,7 +28,7 @@ by_name = registered_actions
 
 
 # Map a class name to an action class
-# The JSON loader can key an object with parameters on these class names
+# The YAML loader can key an object with parameters on these class names
 action_classes = {
     "logger": logger_action.Logger,
     "usrp_monitor": monitor_usrp.UsrpMonitor,
@@ -61,20 +61,26 @@ def get_summary(action_fn):
     return summary
 
 
-def load_from_yaml():
+def load_from_yaml(yaml_dir=settings.ACTION_DEFINITIONS_DIR):
     """Load any YAML files in settings.ACTION_DEFINITIONS_DIR."""
     yaml = YAML(typ='safe')
-
-    # FIXME: error handling
-    p = Path(settings.ACTION_DEFINITIONS_DIR)
-    for yaml_file in p.glob('*.yml'):
+    yaml_path = Path(yaml_dir)
+    for yaml_file in yaml_path.glob('*.yml'):
         defn = yaml.load(yaml_file)
         for class_name, parameters in defn.items():
             try:
                 action = action_classes[class_name](**parameters)
                 registered_actions[action.name] = action
-            except Exception as exc:
+            except KeyError as exc:
+                err = "Nonexistent action class name {!r} referenced in {!r}"
+                logger.error(err.format(class_name, yaml_file.name))
                 logger.exception(exc)
+                raise exc
+            except TypeError as exc:
+                err = "Invalid parameter list {!r} referenced in {!r}"
+                logger.error(err.format(parameters, yaml_file.name))
+                logger.exception(exc)
+                raise exc
 
 
 MAX_LENGTH = 50
