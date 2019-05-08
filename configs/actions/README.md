@@ -55,12 +55,12 @@ Lastly, simply modify the YAML file to define any required parameters.
 # File: acquire_700c_dl.yml
 
 single_frequency_fft:
-    name: acquire_700c_dl
-    frequency: 751e6
-    gain: 40
-    sample_rate: 15.36e6
-    fft_size: 1024
-    nffts: 300
+  name: acquire_700c_dl
+  frequency: 751e6
+  gain: 40
+  sample_rate: 15.36e6
+  fft_size: 1024
+  nffts: 300
 ```
 
 You're done. You can define multiple actions in a single file.
