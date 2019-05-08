@@ -1,9 +1,9 @@
 """Queue and run tasks."""
 
 import logging
-import os
 import threading
 from contextlib import contextmanager
+from pathlib import Path
 
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
@@ -12,8 +12,7 @@ from results.consts import MAX_DETAIL_LEN
 from results.models import TaskResult
 from results.serializers import TaskResultSerializer
 from schedule.models import ScheduleEntry
-from sensor.settings import SCHEDULER_HEALTHCHECK_FILE
-from sensor.utils import touch
+from sensor import settings
 from . import utils
 from .tasks import TaskQueue
 
@@ -71,8 +70,8 @@ class Scheduler(threading.Thread):
         """
         if blocking:
             try:
-                os.remove(SCHEDULER_HEALTHCHECK_FILE)
-            except OSError:
+                Path(settings.SCHEDULER_HEALTHCHECK_FILE).unlink()
+            except FileNotFoundError:
                 pass
 
         try:
@@ -86,7 +85,8 @@ class Scheduler(threading.Thread):
         except Exception as err:
             logger.warning("scheduler dead")
             logger.exception(err)
-            touch(SCHEDULER_HEALTHCHECK_FILE)
+            if settings.IN_DOCKER:
+                Path(settings.SCHEDULER_HEALTHCHECK_FILE).touch()
 
     def _consume_schedule(self, blocking):
         while self.schedule_has_entries:

@@ -1,11 +1,9 @@
 import tempfile
 
 import pytest
-from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 
 import actions
-from sensor import settings
 
 
 # Indentation makes this invalid
@@ -36,7 +34,6 @@ single_frequency_fft:
 """
 
 
-
 def test_load_from_yaml_existing():
     """Any existing action definitions should be valid yaml."""
     actions.load_from_yaml()
@@ -44,7 +41,6 @@ def test_load_from_yaml_existing():
 
 def test_load_from_yaml_parse_error():
     """An invalid yaml file should cause a parse error."""
-    yaml = YAML(typ='safe')
     # load_from_yaml loads all `.yml` files in the passed directory, so do a
     # bit of setup to create an invalid yaml tempfile in a temporary directory
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -58,7 +54,6 @@ def test_load_from_yaml_parse_error():
 
 def test_load_from_yaml_invalid_class_name():
     """A nonexistent action class name should raise an error."""
-    yaml = YAML(typ='safe')
     # load_from_yaml loads all `.yml` files in the passed directory, so do a
     # bit of setup to create an invalid yaml tempfile in a temporary directory
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -72,7 +67,6 @@ def test_load_from_yaml_invalid_class_name():
 
 def test_load_from_yaml_invalid_parameters():
     """A nonexistent action class name should raise an error."""
-    yaml = YAML(typ='safe')
     # load_from_yaml loads all `.yml` files in the passed directory, so do a
     # bit of setup to create an invalid yaml tempfile in a temporary directory
     with tempfile.TemporaryDirectory() as tmpdir:

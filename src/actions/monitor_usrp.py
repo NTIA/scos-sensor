@@ -2,12 +2,11 @@
 
 from __future__ import absolute_import
 
-import os
 import logging
+from pathlib import Path
 
 from hardware import usrp_iface
-from sensor.settings import SDR_HEALTHCHECK_FILE
-from sensor.utils import touch
+from sensor import settings
 from .base import Action
 
 logger = logging.getLogger(__name__)
@@ -49,13 +48,14 @@ class UsrpMonitor(Action):
 
         if healthy:
             try:
-                os.remove(SDR_HEALTHCHECK_FILE)
+                Path(settings.SDR_HEALTHCHECK_FILE).unlink()
                 logger.info("USRP healthy")
-            except OSError:
+            except FileNotFoundError:
                 pass
         else:
             logger.warning("USRP unhealthy")
-            touch(SDR_HEALTHCHECK_FILE)
+            if settings.IN_DOCKER:
+                Path(settings.SDR_HEALTHCHECK_FILE).touch()
             raise RuntimeError(detail)
 
     def test_required_components(self):

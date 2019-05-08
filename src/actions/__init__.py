@@ -33,10 +33,10 @@ action_classes = {
     "logger": logger_action.Logger,
     "usrp_monitor": monitor_usrp.UsrpMonitor,
     "sync_gps": sync_gps.SyncGps,
-    "single_frequency_fft": \
-        acquire_single_freq_fft.SingleFrequencyFftAcquisition,
-    "stepped_frequency_time_domain_iq": \
-        acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIqAcquisition
+    "single_frequency_fft":
+    acquire_single_freq_fft.SingleFrequencyFftAcquisition,
+    "stepped_frequency_time_domain_iq":
+    acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIqAcquisition
 }
 
 
@@ -62,7 +62,7 @@ def get_summary(action_fn):
 
 
 def load_from_yaml(yaml_dir=settings.ACTION_DEFINITIONS_DIR):
-    """Load any YAML files in settings.ACTION_DEFINITIONS_DIR."""
+    """Load any YAML files in yaml_dir."""
     yaml = YAML(typ='safe')
     yaml_path = Path(yaml_dir)
     for yaml_file in yaml_path.glob('*.yml'):
