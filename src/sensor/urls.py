@@ -21,21 +21,21 @@ from __future__ import absolute_import
 
 from functools import partial
 
-from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .settings import REST_FRAMEWORK
+from . import settings
 from .views import schema_view
 
 
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r'^api/(?P<version>v[0-9]+)/'
-DEFAULT_API_VERSION = REST_FRAMEWORK['DEFAULT_VERSION']
+DEFAULT_API_VERSION = settings.REST_FRAMEWORK['DEFAULT_VERSION']
 
 
 @api_view(('GET', ))
@@ -56,15 +56,15 @@ def api_v1_root(request, version, format=None):
 
 api_urlpatterns = format_suffix_patterns(
     (
-        url(r'^$', api_v1_root, name='api-root'),
-        url(r'^acquisitions/', include('acquisitions.urls')),
-        url(r'^capabilities/', include('capabilities.urls')),
-        url(r'^schedule/', include('schedule.urls')),
-        url(r'^status', include('status.urls')),
-        url(r'^users/', include('authentication.urls')),
-        url(r'^results/', include('results.urls')),
-        url(r'^schema/$', schema_view.with_ui('redoc', cache_timeout=0),
-            name='api_schema')
+        path('', api_v1_root, name='api-root'),
+        path('acquisitions/', include('acquisitions.urls')),
+        path('capabilities/', include('capabilities.urls')),
+        path('schedule/', include('schedule.urls')),
+        path('status', include('status.urls')),
+        path('users/', include('authentication.urls')),
+        path('results/', include('results.urls')),
+        path('schema/', schema_view.with_ui('redoc', cache_timeout=0),
+             name='api_schema')
     )
 )
 
@@ -77,10 +77,16 @@ admin.site.site_header = 'SCOS Sensor Configuration Portal'
 admin.site.index_title = 'SCOS Sensor Configuration Portal'
 
 urlpatterns = (
-    url(r'^$', RedirectView.as_view(url='/api/')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/$',
-        RedirectView.as_view(url='/api/{}/'.format(DEFAULT_API_VERSION))),
-    url(API_PREFIX, include(api_urlpatterns)),
-    url(r'^api/auth/', include('rest_framework.urls')),
+    path('', RedirectView.as_view(url='/api/')),
+    path('admin/', admin.site.urls),
+    path('api/',
+         RedirectView.as_view(url='/api/{}/'.format(DEFAULT_API_VERSION))),
+    re_path(API_PREFIX, include(api_urlpatterns)),
+    path('api/auth/', include('rest_framework.urls'))
 )
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + list(urlpatterns)
