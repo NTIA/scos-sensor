@@ -71,6 +71,9 @@ except OSError:
 # As defined in SigMF
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
+# https://docs.djangoproject.com/en/2.2/ref/settings/#internal-ips
+INTERNAL_IPS = ['127.0.0.1', '172.22.0.3']
+
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = '!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8'
@@ -145,6 +148,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',  # OpenAPI generator
     'raven.contrib.django.raven_compat',
+    'debug_toolbar',
     # project-local apps
     'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
@@ -158,6 +162,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
