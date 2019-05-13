@@ -22,6 +22,7 @@ Table of Contents
 
 - [Introduction](#introduction)
 - [Quickstart](#quickstart)
+- [Adding Actions](#adding-actions)
 - [Browsable API](#browsable-api)
 - [Architecture](#architecture)
 - [Glossary](#glossary)
