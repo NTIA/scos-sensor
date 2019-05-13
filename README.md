@@ -22,8 +22,8 @@ Table of Contents
 
 - [Introduction](#introduction)
 - [Quickstart](#quickstart)
-- [Adding Actions](#adding-actions)
 - [Browsable API](#browsable-api)
+- [Adding Actions](#adding-actions)
 - [Architecture](#architecture)
 - [Glossary](#glossary)
 - [References](#references)
@@ -128,18 +128,6 @@ $ docker-compose exec api /src/manage.py createsuperuser  # create admin user
 $ docker-compose logs --follow api                        # reattach terminal
 ```
 
-Adding Actions
---------------
-
-To expose a new action to the API, check out the available [action
-classes](src/actions). An _action class_ is a parameterized implementation of
-an action. If an existing class covers your needs, you can simply add a text
-[config file](configs/actions/README.md) and restart the sensor.
-
-If no existing action class meets your needs, see [Writing Custom
-Actions](DEVELOPING.md#writing-custom-actions).
-
-
 Browsable API
 -------------
 
@@ -160,6 +148,18 @@ Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 *Actions* that have been scheduled show up in the *schedule entry* list:
 
 ![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
+
+
+Adding Actions
+--------------
+
+To expose a new action to the API, check out the available [action
+classes](src/actions). An _action class_ is a parameterized implementation of
+an action. If an existing class covers your needs, you can simply add a text
+[config file](configs/actions/README.md) and restart the sensor.
+
+If no existing action class meets your needs, see [Writing Custom
+Actions](DEVELOPING.md#writing-custom-actions).
 
 
 Architecture
