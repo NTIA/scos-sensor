@@ -71,8 +71,13 @@ except OSError:
 # As defined in SigMF
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
-# https://docs.djangoproject.com/en/2.2/ref/settings/#internal-ips
-INTERNAL_IPS = ['127.0.0.1', '172.22.0.3']
+# https://docs.djangoproject.com/en/2.2/ref/settings/#internal-ips If
+# IN_DOCKER, the IP address that needs to go here to enable the debugging
+# toolbar can change each time the bridge network is brought down. It's
+# possible to extract the correct address from an incoming request, so if
+# IN_DOCKER and DEBUG=true, then the `api_v1_root` view will insert the correct
+# IP when the first request comes in.
+INTERNAL_IPS = ['127.0.0.1']
 
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:

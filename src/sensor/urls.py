@@ -19,40 +19,18 @@ Including another URLconf
 
 from __future__ import absolute_import
 
-from functools import partial
-
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import settings
-from .views import schema_view
+from .views import schema_view, api_v1_root
 
 
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r'^api/(?P<version>v[0-9]+)/'
 DEFAULT_API_VERSION = settings.REST_FRAMEWORK['DEFAULT_VERSION']
-
-
-@api_view(('GET', ))
-def api_v1_root(request, version, format=None):
-    """SCOS sensor API root."""
-    reverse_ = partial(reverse, request=request, format=format)
-    list_endpoints = {
-        'schedule': reverse_('schedule-list'),
-        'acquisitions': reverse_('acquisitions-overview'),
-        'status': reverse_('status'),
-        'users': reverse_('user-list'),
-        'capabilities': reverse_('capabilities'),
-        'results': reverse_('results-overview')
-    }
-
-    return Response(list_endpoints)
-
 
 api_urlpatterns = format_suffix_patterns(
     (
