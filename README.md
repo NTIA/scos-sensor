@@ -127,6 +127,18 @@ $ docker-compose exec api /src/manage.py createsuperuser  # create admin user
 $ docker-compose logs --follow api                        # reattach terminal
 ```
 
+Adding Actions
+--------------
+
+To expose a new action to the API, check out the available [action
+classes](src/actions). An _action class_ is a parameterized implementation of
+an action. If an existing class covers your needs, you can simply add a text
+[config file](configs/actions/README.md) and restart the sensor.
+
+If no existing action class meets your needs, see [Writing Custom
+Actions](DEVELOPING.md#writing-custom-actions).
+
+
 Browsable API
 -------------
 
