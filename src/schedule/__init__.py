@@ -58,7 +58,6 @@ def load_from_yaml(yaml_dir=settings.SCHEDULE_ENTRIES_DIR):
             if owner.is_staff:
                 choices += actions.ADMIN_CHOICES
 
-
             deserializer = ScheduleEntrySerializer(data=parameters)
             try:
                 deserializer.is_valid(raise_exception=True)
