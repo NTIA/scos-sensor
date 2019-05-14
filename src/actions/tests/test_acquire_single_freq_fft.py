@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from actions import by_name
 from acquisitions.models import Acquisition
 from django.conf import settings

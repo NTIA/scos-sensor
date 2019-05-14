@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 import numpy as np
@@ -50,12 +49,6 @@ class FindNearestDict(dict):
     def update(self, newdict):
         self._check_keys(newdict.keys())
         dict.update(self, newdict)
-
-
-def touch(fname, times=None):
-    """Emulates unix `touch` utility."""
-    with open(fname, 'a'):
-        os.utime(fname, times)
 
 
 def get_datetime_from_timestamp(ts):

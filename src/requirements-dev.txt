@@ -4,8 +4,8 @@ flake8==3.7.7
 jedi==0.13.3
 jsonschema==3.0.1
 mkdocs==1.0.4
-pytest-cov==2.6.1
+pytest-cov==2.7.1
 pytest-django==3.4.8
 pytest-flake8==1.0.4
-tox==3.9.0
+tox==3.10.0
 yapf==0.27.0

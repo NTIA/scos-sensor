@@ -1,5 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import capabilities_view
 
-urlpatterns = (url(r'^$', capabilities_view, name='capabilities'), )
+urlpatterns = (
+    path('', capabilities_view, name='capabilities'),
+)

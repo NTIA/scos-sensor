@@ -1,62 +1,43 @@
+import logging
+from pathlib import Path
+
+from ruamel.yaml import YAML
+
+from sensor import settings
+
 from . import acquire_single_freq_fft
 from . import acquire_stepped_freq_tdomain_iq
-from . import logger
+from . import logger as logger_action
 from . import monitor_usrp
 from . import sync_gps
 
 
+logger = logging.getLogger(__name__)
+
+
 # Actions initialized here are made available through the API
 registered_actions = {
-    "logger":
-    logger.Logger(),
+    "logger": logger_action.Logger(),
     "admin_logger":
-    logger.Logger(loglvl=logger.LOGLVL_ERROR, admin_only=True),
-    "monitor_usrp":
-    monitor_usrp.UsrpMonitor(admin_only=True),
-    "sync_gps":
-    sync_gps.SyncGps(admin_only=True)
+    logger_action.Logger(loglvl=logger_action.LOGLVL_ERROR, admin_only=True),
+    "monitor_usrp": monitor_usrp.UsrpMonitor(admin_only=True),
+    "sync_gps": sync_gps.SyncGps(admin_only=True)
 }
 
-single_freq_ffts = [
-    {
-        "name": "acquire_700c_dl",
-        "frequency": 751e6,
-        "sample_rate": 15.36e6,
-        "gain": 40,
-        "fft_size": 1024,
-        "nffts": 300
-    },
-    # Add more single-frequency FFT acquisitions here
-    # {
-    #     "name": "acquire_aws1_dl",
-    #     "frequency": 2132.5e6,
-    #     "sample_rate": 15.36e6,
-    #     "gain": 40,
-    #     "fft_size": 1024,
-    #     "nffts": 300
-    # },
-]
-for acq in single_freq_ffts:
-    registered_actions[acq['name']] = \
-        acquire_single_freq_fft.SingleFrequencyFftAcquisition(**acq)
-
-
-stepped_freq_tdomain_iq = [
-    {
-        "name": "acquire_700_band_iq",
-        "fcs": [707e6, 722e6, 737e6, 757e6, 772e6, 791e6],
-        "gain": 40,
-        "sample_rate": 22e6,
-        "duration_ms": 30,
-    },
-    # Add more stepped frequency time domain IQ acquisitions here
-]
-for acq in stepped_freq_tdomain_iq:
-    registered_actions[acq['name']] = \
-        acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIq(**acq)
-
-
 by_name = registered_actions
+
+
+# Map a class name to an action class
+# The YAML loader can key an object with parameters on these class names
+action_classes = {
+    "logger": logger_action.Logger,
+    "usrp_monitor": monitor_usrp.UsrpMonitor,
+    "sync_gps": sync_gps.SyncGps,
+    "single_frequency_fft":
+    acquire_single_freq_fft.SingleFrequencyFftAcquisition,
+    "stepped_frequency_time_domain_iq":
+    acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIqAcquisition
+}
 
 
 def get_action_with_summary(action):
@@ -80,6 +61,28 @@ def get_summary(action_fn):
     return summary
 
 
+def load_from_yaml(yaml_dir=settings.ACTION_DEFINITIONS_DIR):
+    """Load any YAML files in yaml_dir."""
+    yaml = YAML(typ='safe')
+    yaml_path = Path(yaml_dir)
+    for yaml_file in yaml_path.glob('*.yml'):
+        defn = yaml.load(yaml_file)
+        for class_name, parameters in defn.items():
+            try:
+                action = action_classes[class_name](**parameters)
+                registered_actions[action.name] = action
+            except KeyError as exc:
+                err = "Nonexistent action class name {!r} referenced in {!r}"
+                logger.error(err.format(class_name, yaml_file.name))
+                logger.exception(exc)
+                raise exc
+            except TypeError as exc:
+                err = "Invalid parameter list {!r} referenced in {!r}"
+                logger.error(err.format(parameters, yaml_file.name))
+                logger.exception(exc)
+                raise exc
+
+
 MAX_LENGTH = 50
 VALID_ACTIONS = []
 CHOICES = []
@@ -90,6 +93,8 @@ def init():
     """Allows re-initing VALID_ACTIONS if `registered_actions` is modified."""
     global VALID_ACTIONS
     global CHOICES
+
+    load_from_yaml()
 
     VALID_ACTIONS = sorted(registered_actions.keys())
     for action in VALID_ACTIONS:

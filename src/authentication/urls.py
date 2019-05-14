@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import UserListView, UserInstanceView
 
 urlpatterns = (
-    url(r'^$', UserListView.as_view(), name='user-list'),
-    url(r'^me/$', UserInstanceView.as_view(), name='user-detail'),
-    url(r'^(?P<pk>\d+)$', UserInstanceView.as_view(), name='user-detail'),
+    path('', UserListView.as_view(), name='user-list'),
+    path('me/', UserInstanceView.as_view(), name='user-detail'),
+    path('<int:pk>/', UserInstanceView.as_view(), name='user-detail'),
 )
