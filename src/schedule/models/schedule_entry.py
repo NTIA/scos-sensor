@@ -127,7 +127,7 @@ class ScheduleEntry(models.Model):
         help_text="The name of the user who owns the entry")
     request = models.ForeignKey(
         'schedule.Request',
-        null=True,  # null allowable for unit testing only
+        null=True,   # may be null for unit testing or for yaml-defined entries
         editable=False,
         on_delete=models.CASCADE,
         help_text="The request that created the entry")

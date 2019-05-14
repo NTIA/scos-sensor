@@ -1,0 +1,5 @@
+monitor_usrp:
+  action: monitor_usrp
+  owner: admin
+  is_private: true
+  interval: 60

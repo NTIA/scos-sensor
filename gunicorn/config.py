@@ -28,6 +28,9 @@ def post_worker_init(worker):
     import django
     django.setup()
 
+    import schedule
+    schedule.init()
+
     from scheduler import scheduler
     scheduler.thread.start()
 

@@ -32,7 +32,8 @@ def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):
         'wsgi.url_scheme': 'https'
     }
 
-    r = client.post(reverse('schedule-list', kwargs=V1), **kwargs)
+    url = reverse('schedule-list', kwargs=V1)
+    r = client.post(url, **kwargs)
 
     err = "Got status {}, expected {}".format(r.status_code, expected_status)
     assert r.status_code == expected_status, err
