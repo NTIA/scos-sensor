@@ -12,5 +12,13 @@ class User(AbstractUser):
 
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """When a new user is created, generate a token for the account."""
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def set_unusable_password(sender, instance=None, created=False, **kwargs):
+    """When a non-admin user is created, explicitly set unusable password."""
+    if created and not instance.is_staff:
+        instance.set_unusable_password()
