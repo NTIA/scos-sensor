@@ -10,6 +10,11 @@ from sensor.utils import (get_datetime_from_timestamp,
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 
+action_help = "[Required] The name of the action to be scheduled"
+priority_help = "Lower number is higher priority (default={})".format(
+    DEFAULT_PRIORITY)
+
+
 def datetimes_to_timestamps(validated_data):
     """Covert datetimes to timestamp integers in validated_data."""
     for k, v in validated_data.items():
@@ -82,8 +87,8 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         allow_null=True,
         min_value=0,
         max_value=19,
-        help_text="Lower number is higher priority (default={})".format(
-            DEFAULT_PRIORITY))
+        help_text=priority_help)
+
     # validate_only is a serializer-only field
     validate_only = serializers.BooleanField(
         required=False,
@@ -107,7 +112,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 'help_text': "The name of the user who owns the entry"
             }
         }
-        read_only_fields = ('is_active', 'next_task_time')
+        read_only_fields = ('next_task_time', 'is_private')
         write_only_fields = ('relative_stop', 'validate_only')
 
     def save(self, *args, **kwargs):
@@ -160,13 +165,15 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         request = self.context['request']
         kws = {'schedule_entry_name': obj.name}
         kws.update(V1)
-        return reverse('acquisition-list', kwargs=kws, request=request)
+        url = reverse('acquisition-list', kwargs=kws, request=request)
+        return url
 
     def get_results(self, obj):
         request = self.context['request']
         kws = {'schedule_entry_name': obj.name}
         kws.update(V1)
-        return reverse('result-list', kwargs=kws, request=request)
+        url = reverse('result-list', kwargs=kws, request=request)
+        return url
 
     def to_internal_value(self, data):
         """Clean up input before starting validation."""
@@ -175,3 +182,19 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             data['stop'] = data.pop('absolute_stop')
 
         return super().to_internal_value(data)
+
+
+class AdminScheduleEntrySerializer(ScheduleEntrySerializer):
+    """ScheduleEntrySerializer class for superusers."""
+    action = serializers.ChoiceField(
+        choices=actions.CHOICES + actions.ADMIN_CHOICES,
+        help_text=action_help)
+    priority = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=-20,
+        max_value=19,
+        help_text=priority_help)
+
+    class Meta(ScheduleEntrySerializer.Meta):
+        read_only_fields = ('next_task_time', )
