@@ -5,9 +5,10 @@ from rest_framework.response import Response
 
 from scheduler import scheduler
 from scheduler.serializers import TaskSerializer
-from sensor import utils
+from sensor import settings, utils
 from .models import Location
 from .serializers import LocationSerializer
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ def get_location():
 def status(request, version, format=None):
     """The status overview of the sensor."""
     context = {'request': request}
-    taskq = scheduler.thread.task_queue.to_list()
+    taskq = scheduler.thread.task_queue.to_list()[:settings.MAX_TASK_QUEUE]
     task_serializer = TaskSerializer(taskq, many=True, context=context)
 
     return Response({
