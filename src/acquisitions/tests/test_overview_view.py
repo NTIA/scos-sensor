@@ -23,7 +23,7 @@ def test_get_overview(user_client, test_scheduler):
     entry1_name = simulate_acquisitions(user_client)
     overview, = get_acquisitions_overview(user_client)
 
-    assert overview['url'] == reverse_acquisition_list(entry1_name)
+    assert overview['results'] == reverse_acquisition_list(entry1_name)
     assert overview['acquisitions_available'] == 1
 
     entry2_name = simulate_acquisitions(user_client, n=3)
@@ -34,7 +34,7 @@ def test_get_overview(user_client, test_scheduler):
     (overview1, overview2) = overview_list
 
     assert overview1 == overview
-    assert overview2['url'] == reverse_acquisition_list(entry2_name)
+    assert overview2['results'] == reverse_acquisition_list(entry2_name)
     assert overview2['acquisitions_available'] == 3
 
 
@@ -46,7 +46,7 @@ def test_overview_for_private_entry_is_private(admin_client, user_client,
 
     overview, = get_acquisitions_overview(admin_client)
     assert overview['acquisitions_available'] == 1
-    assert overview['url']  # is non-empty string
+    assert overview['results']  # is non-empty string
     assert overview['schedule_entry']  # is non-empty string
 
 

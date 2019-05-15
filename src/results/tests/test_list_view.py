@@ -22,7 +22,7 @@ def test_single_result_response(user_client):
     result, = get_result_list(user_client, entry_name)
     task_id = 1
     expected_url = reverse_result_detail(entry_name, task_id)
-    assert result['url'] == expected_url
+    assert result['self'] == expected_url
     assert result['task_id'] == task_id
 
 
@@ -34,7 +34,7 @@ def test_multiple_result_response(user_client, test_scheduler):
 
     for i, acq in enumerate(results, start=1):
         expected_url = reverse_result_detail(entry_name, i)
-        assert acq['url'] == expected_url
+        assert acq['self'] == expected_url
         assert acq['task_id'] == i
 
 

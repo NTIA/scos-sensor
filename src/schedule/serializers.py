@@ -92,13 +92,13 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ScheduleEntry
-        fields = ('url', 'name', 'action', 'priority', 'start', 'stop',
+        fields = ('self', 'name', 'action', 'priority', 'start', 'stop',
                   'relative_stop', 'interval', 'is_active', 'is_private',
                   'callback_url', 'next_task_time', 'next_task_id', 'created',
                   'modified', 'owner', 'acquisitions', 'results',
                   'validate_only')
         extra_kwargs = {
-            'url': {
+            'self': {
                 'view_name': 'schedule-detail',
                 'help_text': "The url of the entry"
             },

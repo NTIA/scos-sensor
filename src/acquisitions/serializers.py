@@ -7,6 +7,8 @@ from .models import Acquisition
 
 
 class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
+    results = serializers.SerializerMethodField(
+        help_text="The link to the acquisitions")
     schedule_entry = serializers.SerializerMethodField(
         help_text="The related schedule entry for the acquisition")
     acquisitions_available = serializers.SerializerMethodField(
@@ -17,15 +19,16 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ScheduleEntry
-        fields = ('url', 'acquisitions_available', 'archive', 'schedule_entry')
-        extra_kwargs = {
-            'url': {
-                'view_name': 'acquisition-list',
-                'lookup_field': 'name',
-                'lookup_url_kwarg': 'schedule_entry_name',
-                'help_text': 'The url of the list of acquisitions'
-            }
-        }
+        fields = ('results', 'acquisitions_available', 'archive',
+                  'schedule_entry')
+
+    def get_results(self, obj):
+        request = self.context['request']
+        route = 'acquisition-list'
+        kws = {'schedule_entry_name': obj.name}
+        kws.update(V1)
+        url = reverse(route, kwargs=kws, request=request)
+        return url
 
     def get_acquisitions_available(self, obj):
         return obj.acquisitions.count()
@@ -33,13 +36,15 @@ class AcquisitionsOverviewSerializer(serializers.HyperlinkedModelSerializer):
     def get_schedule_entry(self, obj):
         request = self.context['request']
         kwargs = {'pk': obj.name}
-        return reverse('schedule-detail', kwargs=kwargs, request=request)
+        url = reverse('schedule-detail', kwargs=kwargs, request=request)
+        return url
 
     def get_archive(self, obj):
         request = self.context['request']
         kwargs = {'schedule_entry_name': obj.name}
-        return reverse('acquisition-list-archive', kwargs=kwargs,
-                       request=request)
+        url = reverse('acquisition-list-archive', kwargs=kwargs,
+                      request=request)
+        return url
 
 
 class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
@@ -50,11 +55,13 @@ class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
             'task_id': obj.task_id
         }
         kws.update(V1)
-        return reverse(view_name, kwargs=kws, request=request, format=format)
+        url = reverse(view_name, kwargs=kws, request=request, format=format)
+        return url
 
 
 class AcquisitionSerializer(serializers.ModelSerializer):
-    url = AcquisitionHyperlinkedRelatedField(
+    # `self` here refers to the self url field - this seems to work
+    self = AcquisitionHyperlinkedRelatedField(
         view_name='acquisition-detail',
         read_only=True,
         help_text="The url of the acquisition",
@@ -71,7 +78,7 @@ class AcquisitionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Acquisition
-        fields = ('url', 'task_id', 'created', 'archive', 'sigmf_metadata')
+        fields = ('self', 'task_id', 'created', 'archive', 'sigmf_metadata')
         extra_kwargs = {
             'schedule_entry': {
                 'view_name': 'schedule-detail',

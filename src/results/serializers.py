@@ -7,6 +7,8 @@ from .models import TaskResult
 
 
 class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
+    results = serializers.SerializerMethodField(
+        help_text="The link to the task results")
     schedule_entry = serializers.SerializerMethodField(
         help_text="The related schedule entry for the result")
     results_available = serializers.SerializerMethodField(
@@ -14,15 +16,15 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ScheduleEntry
-        fields = ('url', 'results_available', 'schedule_entry')
-        extra_kwargs = {
-            'url': {
-                'view_name': 'result-list',
-                'lookup_field': 'name',
-                'lookup_url_kwarg': 'schedule_entry_name',
-                'help_text': 'The url of the list of results'
-            }
-        }
+        fields = ('results', 'results_available', 'schedule_entry')
+
+    def get_results(self, obj):
+        request = self.context['request']
+        route = 'result-list'
+        kws = {'schedule_entry_name': obj.name}
+        kws.update(V1)
+        url = reverse(route, kwargs=kws, request=request)
+        return url
 
     def get_results_available(self, obj):
         return obj.results.count()
@@ -33,7 +35,6 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         kws = {'pk': obj.name}
         kws.update(V1)
         url = reverse(route, kwargs=kws, request=request)
-
         return url
 
 
@@ -46,11 +47,12 @@ class TaskResultHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
             'task_id': obj.task_id
         }
         kws.update(V1)
-        return reverse(view_name, kwargs=kws, request=request, format=format)
+        url = reverse(view_name, kwargs=kws, request=request, format=format)
+        return url
 
 
 class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
-    url = TaskResultHyperlinkedRelatedField(
+    self = TaskResultHyperlinkedRelatedField(
         view_name='result-detail',
         read_only=True,
         help_text="The url of the result",
@@ -62,7 +64,7 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaskResult
         fields = (
-            'url',
+            'self',
             'task_id',
             'started',
             'finished',
@@ -78,5 +80,4 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
         kws = {'pk': obj.schedule_entry.name}
         kws.update(V1)
         url = reverse(route, kwargs=kws, request=request)
-
         return url

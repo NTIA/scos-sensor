@@ -331,7 +331,7 @@ def test_failure_posted_to_callback_url(test_scheduler):
     assert cb_flag.is_set()
     assert request_json['result'] == 'failure'
     assert request_json['task_id'] == 1
-    assert request_json['url']
+    assert request_json['self']
     assert request_json['detail'] == BAD_ACTION_STR
     assert request_json['started']
     assert request_json['finished']
@@ -366,7 +366,7 @@ def test_success_posted_to_callback_url(test_scheduler):
     assert action_flag.is_set()
     assert request_json['result'] == 'success'
     assert request_json['task_id'] == 1
-    assert request_json['url']
+    assert request_json['self']
     assert request_json['started']
     assert request_json['finished']
     assert request_json['duration']

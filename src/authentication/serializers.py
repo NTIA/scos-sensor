@@ -12,10 +12,10 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'is_active', 'date_joined', 'last_login',
+        fields = ('self', 'username', 'is_active', 'date_joined', 'last_login',
                   'schedule_entries')
         extra_kwargs = {
-            'url': {
+            'self': {
                 'view_name': 'user-detail'
             },
             'is_active': {
@@ -55,8 +55,7 @@ class UserDetailsSerializer(UserProfileSerializer):
 
     class Meta(UserProfileSerializer.Meta):
         fields = UserProfileSerializer.Meta.fields + (
-            'email', 'server_url', 'auth_token', 'has_usable_password',
-            'is_admin')
+            'email', 'auth_token', 'has_usable_password', 'is_admin')
         read_only_fields = UserProfileSerializer.Meta.read_only_fields + (
             'auth_token', )
 

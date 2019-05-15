@@ -28,7 +28,7 @@ def test_single_acquisition_response(user_client, test_scheduler):
     task_id = 1
     expected_url = reverse_acquisition_detail(entry_name, task_id)
 
-    assert acquisition['url'] == expected_url
+    assert acquisition['self'] == expected_url
     assert acquisition['task_id'] == task_id
 
 
@@ -40,7 +40,7 @@ def test_multiple_acquisition_response(user_client, test_scheduler):
 
     for i, acq in enumerate(acquisitions, start=1):
         expected_url = reverse_acquisition_detail(entry_name, i)
-        assert acq['url'] == expected_url
+        assert acq['self'] == expected_url
         assert acq['task_id'] == i
 
 

@@ -224,6 +224,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': DATETIME_FORMAT,
     'DATETIME_INPUT_FORMATS': ('iso-8601', ),
     'COERCE_DECIMAL_TO_STRING': False,  # DecimalField should return floats
+    'URL_FIELD_NAME': 'self'  # RFC 42867
 }
 
 

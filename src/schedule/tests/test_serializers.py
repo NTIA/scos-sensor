@@ -226,7 +226,7 @@ def test_serialized_fields(user_client):
     assert rjson['is_active'] in {True, False}
     assert rjson['is_private'] in {True, False}
     # links
-    assert rjson['url']
+    assert rjson['self']
     assert rjson['owner']
     assert rjson['results']
     assert rjson['acquisitions']
