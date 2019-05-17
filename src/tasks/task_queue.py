@@ -6,7 +6,7 @@ See https://hg.python.org/cpython/file/3.5/Lib/sched.py.
 
 import heapq
 
-from . import Task
+from .models import Task
 
 
 class TaskQueue(list):

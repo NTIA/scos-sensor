@@ -39,7 +39,7 @@ api_urlpatterns = format_suffix_patterns(
         path('schedule/', include('schedule.urls')),
         path('status', include('status.urls')),
         path('users/', include('authentication.urls')),
-        path('results/', include('results.urls')),
+        path('tasks/', include('tasks.urls')),
         path('schema/', schema_view.with_ui('redoc', cache_timeout=0),
              name='api_schema')
     )

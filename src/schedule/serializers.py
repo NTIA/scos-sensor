@@ -48,7 +48,7 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     """Covert ScheduleEntry to and from JSON."""
-    results = serializers.SerializerMethodField(
+    task_results = serializers.SerializerMethodField(
         help_text="The list of results related to the entry")
     start = DateTimeFromTimestampField(
         required=False,
@@ -98,7 +98,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         fields = ('self', 'name', 'action', 'priority', 'start', 'stop',
                   'relative_stop', 'interval', 'is_active', 'is_private',
                   'callback_url', 'next_task_time', 'next_task_id', 'created',
-                  'modified', 'owner', 'results', 'validate_only')
+                  'modified', 'owner', 'task_results', 'validate_only')
         extra_kwargs = {
             'self': {
                 'view_name': 'schedule-detail',
@@ -158,11 +158,11 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         return data
 
-    def get_results(self, obj):
+    def get_task_results(self, obj):
         request = self.context['request']
         kws = {'schedule_entry_name': obj.name}
         kws.update(V1)
-        url = reverse('result-list', kwargs=kws, request=request)
+        url = reverse('task-result-list', kwargs=kws, request=request)
         return url
 
     def to_internal_value(self, data):

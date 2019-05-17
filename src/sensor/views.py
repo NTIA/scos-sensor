@@ -19,7 +19,7 @@ def api_v1_root(request, version, format=None):
         'capabilities': reverse_('capabilities'),
         'schedule': reverse_('schedule-list'),
         'status': reverse_('status'),
-        'results': reverse_('results-overview'),
+        'tasks': reverse_('task-root'),
         'users': reverse_('user-list')
     }
 

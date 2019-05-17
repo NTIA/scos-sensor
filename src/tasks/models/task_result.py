@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from schedule.models import ScheduleEntry
 from sensor.settings import MAX_TASK_RESULTS
-from results.consts import MAX_DETAIL_LEN
+from tasks.consts import MAX_DETAIL_LEN
 
 
 UTC = timezone.timezone.utc
@@ -25,7 +25,7 @@ class TaskResult(models.Model):
     schedule_entry = models.ForeignKey(
         ScheduleEntry,
         on_delete=models.PROTECT,
-        related_name='results',
+        related_name='task_results',
         help_text="The schedule entry relative to the result")
     task_id = models.IntegerField(
         help_text="The id of the task relative to the result")

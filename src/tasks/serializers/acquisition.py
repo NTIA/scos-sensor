@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from results.models import Acquisition
+from tasks.models import Acquisition
 from sensor import V1
 
 
@@ -19,7 +19,7 @@ class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
 
 class AcquisitionSerializer(serializers.ModelSerializer):
     archive = AcquisitionHyperlinkedRelatedField(
-        view_name='result-archive',
+        view_name='task-result-archive',
         read_only=True,
         help_text="The url to download a SigMF archive of this acquisition",
         source='*'  # pass whole object

@@ -102,7 +102,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
     def __call__(self, schedule_entry_name, task_id):
         """This is the entrypoint function called by the scheduler."""
-        from results.models import TaskResult
+        from tasks.models import TaskResult
 
         # Raises TaskResult.DoesNotExist if no matching task result
         task_result = TaskResult.objects.get(
@@ -172,7 +172,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         self.sdr.radio.sample_rate = sample_rate
 
     def archive(self, task_result, m4s_data, sigmf_md):
-        from results.models import Acquisition
+        from tasks.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 

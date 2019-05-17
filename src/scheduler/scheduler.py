@@ -8,13 +8,14 @@ from pathlib import Path
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
 
-from results.consts import MAX_DETAIL_LEN
-from results.models import TaskResult
-from results.serializers import TaskResultSerializer
+from tasks.consts import MAX_DETAIL_LEN
+from tasks.models import TaskResult
+from tasks.serializers import TaskResultSerializer
+from tasks.task_queue import TaskQueue
 from schedule.models import ScheduleEntry
 from sensor import settings
+
 from . import utils
-from .tasks import TaskQueue
 
 logger = logging.getLogger(__name__)
 requests_futures_session = FuturesSession()

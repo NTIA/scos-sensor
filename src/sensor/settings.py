@@ -158,7 +158,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'capabilities.apps.CapabilitiesConfig',
     'hardware.apps.HardwareConfig',
-    'results.apps.ResultsConfig',
+    'tasks.apps.TasksConfig',
     'schedule.apps.ScheduleConfig',
     'scheduler.apps.SchedulerConfig',
     'status.apps.StatusConfig',
@@ -281,8 +281,8 @@ if not IN_DOCKER:
 
 # Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
 MAX_TASK_RESULTS = 100
-# Display at most MAX_TASK_QUEUE upcoming tasks in the status endpoint
-MAX_TASK_QUEUE = 100
+# Display at most MAX_TASK_QUEUE upcoming tasks in /tasks/upcoming
+MAX_TASK_QUEUE = 50
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
