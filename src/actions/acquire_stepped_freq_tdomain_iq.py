@@ -47,12 +47,11 @@ from itertools import zip_longest
 
 import numpy as np
 
-from rest_framework.reverse import reverse
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
-from hardware import usrp_iface
-from sensor import V1, settings, utils
+from hardware import sdr
+from sensor import settings, utils
 
 from .base import Action
 
@@ -99,41 +98,35 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         self.nfcs = nfcs
         self.fcs = fcs
         self.tuning_parameters = tuning_parameters
-        self.usrp = usrp_iface  # make instance variable to allow mocking
+        self.sdr = sdr  # make instance variable to allow mocking
 
     def __call__(self, schedule_entry_name, task_id):
         """This is the entrypoint function called by the scheduler."""
-        from schedule.models import ScheduleEntry
+        from results.models import TaskResult
 
-        # raises ScheduleEntry.DoesNotExist if no matching schedule entry
-        parent_entry = ScheduleEntry.objects.get(name=schedule_entry_name)
+        # Raises TaskResult.DoesNotExist if no matching task result
+        task_result = TaskResult.objects.get(
+            schedule_entry__name=schedule_entry_name, task_id=task_id)
 
         self.test_required_components()
 
         for recording_id, fc in enumerate(self.fcs, start=1):
-            data, sigmf_md = self.acquire_data(fc, parent_entry, task_id)
-            self.archive(data, sigmf_md, parent_entry, task_id, recording_id)
-
-        kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
-        kws.update(V1)
-        detail = reverse(
-            'acquisition-detail', kwargs=kws, request=parent_entry.request)
-
-        return detail
+            data, sigmf_md = self.acquire_data(fc)
+            self.archive(task_result, data, sigmf_md, recording_id)
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        self.usrp.connect()
-        if not self.usrp.is_available:
-            msg = "acquisition failed: USRP required but not available"
+        self.sdr.connect()
+        if not self.sdr.is_available:
+            msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
-    def acquire_data(self, fc, parent_entry, task_id):
+    def acquire_data(self, fc):
         tuning_parameters = self.tuning_parameters[fc]
-        self.configure_usrp(fc, **tuning_parameters)
+        self.configure_sdr(fc, **tuning_parameters)
 
         # Use the radio's actual reported sample rate instead of requested rate
-        sample_rate = self.usrp.radio.sample_rate
+        sample_rate = self.sdr.radio.sample_rate
 
         # Build global metadata
         sigmf_md = SigMFFile()
@@ -152,42 +145,40 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         nsamps = int(sample_rate * tuning_parameters['duration_ms'] * 1e-3)
 
         dt = utils.get_datetime_str_now()
-        acq = self.usrp.radio.acquire_samples(nsamps).astype(np.complex64)
+        acq = self.sdr.radio.acquire_samples(nsamps).astype(np.complex64)
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
-        annotation_md = {"applied_scale_factor": self.usrp.radio.scale_factor}
+        annotation_md = {"applied_scale_factor": self.sdr.radio.scale_factor}
         sigmf_md.add_annotation(start_index=0, length=nsamps,
                                 metadata=annotation_md)
 
         return data, sigmf_md
 
-    def configure_usrp(self, fc, gain, sample_rate, duration_ms):
-        self.set_usrp_clock_rate(sample_rate)
-        self.set_usrp_sample_rate(sample_rate)
-        self.usrp.radio.tune_frequency(fc)
-        self.usrp.radio.gain = gain
+    def configure_sdr(self, fc, gain, sample_rate, duration_ms):
+        self.set_sdr_clock_rate(sample_rate)
+        self.set_sdr_sample_rate(sample_rate)
+        self.sdr.radio.tune_frequency(fc)
+        self.sdr.radio.gain = gain
 
-    def set_usrp_clock_rate(self, sample_rate):
+    def set_sdr_clock_rate(self, sample_rate):
         clock_rate = sample_rate
         while clock_rate < 10e6:
             clock_rate *= 4
 
-        self.usrp.radio.clock_rate = clock_rate
+        self.sdr.radio.clock_rate = clock_rate
 
-    def set_usrp_sample_rate(self, sample_rate):
-        self.usrp.radio.sample_rate = sample_rate
+    def set_sdr_sample_rate(self, sample_rate):
+        self.sdr.radio.sample_rate = sample_rate
 
-    def archive(self, m4s_data, sigmf_md, parent_entry, task_id, recording_id):
-        from acquisitions.models import Acquisition
+    def archive(self, task_result, m4s_data, sigmf_md):
+        from results.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 
         Acquisition(
-            schedule_entry=parent_entry,
-            task_id=task_id,
-            recording_id=recording_id,
-            sigmf_metadata=sigmf_md._metadata,
+            task_result=task_result,
+            metadata=sigmf_md._metadata,
             data=m4s_data).save()
 
     @property

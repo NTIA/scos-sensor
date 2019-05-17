@@ -155,7 +155,6 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'debug_toolbar',
     # project-local apps
-    'acquisitions.apps.AcquisitionsConfig',
     'authentication.apps.AuthenticationConfig',
     'capabilities.apps.CapabilitiesConfig',
     'hardware.apps.HardwareConfig',
@@ -341,10 +340,6 @@ LOGGING = {
     },
     'loggers': {
         'actions': {
-            'handlers': ['console'],
-            'level': LOGLEVEL
-        },
-        'acquisitions': {
             'handlers': ['console'],
             'level': LOGLEVEL
         },

@@ -38,6 +38,11 @@ class Scheduler(threading.Thread):
         self.running = False
         self.interrupt_flag = threading.Event()
 
+        # Cache the currently running task state
+        self.entry = None        # ScheduleEntry that created the current task
+        self.task = None         # Task object describing current task
+        self.task_result = None  # TaskResult object for current task
+
     @property
     def schedule(self):
         """An updated view of the current schedule"""
@@ -113,50 +118,53 @@ class Scheduler(threading.Thread):
 
     def _consume_task_queue(self, pending_task_queue):
         for task in pending_task_queue.to_list():
-            result, started, finished, detail = self._call_task_action(task)
-            self._save_task_result(task, started, finished, result, detail)
+            entry_name = task.schedule_entry_name
+            self.task = task
+            self.entry = ScheduleEntry.objects.get(name=entry_name)
+            self._initialize_task_result()
+            started = timezone.now()
+            status, detail = self._call_task_action()
+            finished = timezone.now()
+            self._finalize_task_result(started, finished, status, detail)
 
-    def _call_task_action(self, task):
-        entry_name = task.schedule_entry_name
-        task_id = task.task_id
-        started = timezone.now()
+    def _initialize_task_result(self):
+        """Initalize an 'in-progress' result so it exists when action runs."""
+        tid = self.task.task_id
+        self.task_result = TaskResult(schedule_entry=self.entry, task_id=tid)
+        self.task_result.save()
+
+    def _call_task_action(self):
+        entry_name = self.task.schedule_entry_name
+        task_id = self.task.task_id
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
-            detail = task.action_fn(entry_name, task_id)
+            detail = self.task.action_fn(entry_name, task_id)
             self.delayfn(0)  # let other threads run
-            result = 'success'
+            status = 'success'
             if not isinstance(detail, str):
                 detail = ""
         except Exception as err:
             detail = str(err)
             logger.exception("action failed: {}".format(detail))
-            result = 'failure'
+            status = 'failure'
 
-        finished = timezone.now()
+        return status, detail[:MAX_DETAIL_LEN]
 
-        return result, started, finished, detail[:MAX_DETAIL_LEN]
-
-    def _save_task_result(self, task, started, finished, result, detail):
-        entry_name = task.schedule_entry_name
-        entry = ScheduleEntry.objects.get(name=entry_name)
-        task_id = task.task_id
-
-        tr = TaskResult(
-            schedule_entry=entry,
-            task_id=task_id,
-            started=started,
-            finished=finished,
-            duration=(finished - started),
-            result=result,
-            detail=detail)
+    def _finalize_task_result(self, started, finished, status, detail):
+        tr = self.task_result
+        tr.started = started
+        tr.finished = finished
+        tr.duration = finished - started
+        tr.status = status
+        tr.detail = detail
         tr.save()
 
-        if entry.callback_url:
-            context = {'request': entry.request}
+        if self.entry.callback_url:
+            context = {'request': self.entry.request}
             result_json = TaskResultSerializer(tr, context=context).data
             requests_futures_session.post(
-                entry.callback_url,
+                self.entry.callback_url,
                 json=result_json,
                 background_callback=self._callback_response_handler,
             )

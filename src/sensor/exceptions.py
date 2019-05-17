@@ -47,14 +47,14 @@ def handle_protected_error(exc, context):
         task_id = protected_object.task_id
         url_kwargs = {'schedule_entry_name': entry_name, 'task_id': task_id}
         url_kwargs.update(V1)
-        view_name = 'acquisition-detail'
+        view_name = 'result-detail'
         url = reverse(view_name, kwargs=url_kwargs, request=request)
         protected_object_urls.append(url)
 
     response = Response({
         'detail':
-        ("Cannot delete schedule entry {!r} because acquisitions on disk "
-         "reference it. Delete the protected acquisitions first."
+        ("Cannot delete schedule entry {!r} because results on disk "
+         "reference it. Delete the protected results first."
          ).format(entry_name),
         'protected_objects':
         protected_object_urls

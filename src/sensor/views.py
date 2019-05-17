@@ -16,12 +16,11 @@ def api_v1_root(request, version, format=None):
     """SCOS sensor API root."""
     reverse_ = partial(reverse, request=request, format=format)
     list_endpoints = {
-        'schedule': reverse_('schedule-list'),
-        'acquisitions': reverse_('acquisitions-overview'),
-        'status': reverse_('status'),
-        'users': reverse_('user-list'),
         'capabilities': reverse_('capabilities'),
-        'results': reverse_('results-overview')
+        'schedule': reverse_('schedule-list'),
+        'status': reverse_('status'),
+        'results': reverse_('results-overview'),
+        'users': reverse_('user-list')
     }
 
     # See note in settings:INTERNAL_IPS about why we do this here

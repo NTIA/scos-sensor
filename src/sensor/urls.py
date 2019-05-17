@@ -35,7 +35,6 @@ DEFAULT_API_VERSION = settings.REST_FRAMEWORK['DEFAULT_VERSION']
 api_urlpatterns = format_suffix_patterns(
     (
         path('', api_v1_root, name='api-root'),
-        path('acquisitions/', include('acquisitions.urls')),
         path('capabilities/', include('capabilities.urls')),
         path('schedule/', include('schedule.urls')),
         path('status', include('status.urls')),

@@ -1,28 +1,46 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
 from schedule.models import ScheduleEntry
 from sensor.settings import MAX_TASK_RESULTS
-from .consts import MAX_DETAIL_LEN
+from results.consts import MAX_DETAIL_LEN
+
+
+UTC = timezone.timezone.utc
 
 
 class TaskResult(models.Model):
     """Map between schedule entries and their task results."""
     SUCCESS = 1
     FAILURE = 2
-    RESULT_CHOICES = ((SUCCESS, 'success'), (FAILURE, 'failure'))
+    IN_PROGRESS = 3
+    RESULT_CHOICES = (
+        (SUCCESS, 'success'),
+        (FAILURE, 'failure'),
+        (IN_PROGRESS, 'in-progress')
+    )
 
     schedule_entry = models.ForeignKey(
         ScheduleEntry,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='results',
         help_text="The schedule entry relative to the result")
     task_id = models.IntegerField(
         help_text="The id of the task relative to the result")
-    started = models.DateTimeField(help_text="The time the task started")
-    finished = models.DateTimeField(help_text="The time the task finished")
-    duration = models.DurationField(help_text="Task duration in seconds")
-    result = models.CharField(
-        max_length=7,
+    started = models.DateTimeField(
+        default=datetime.datetime(2019, 5, 16, 23, tzinfo=UTC),
+        help_text="The time the task started")
+    finished = models.DateTimeField(
+        default=datetime.datetime(2019, 5, 16, 23, tzinfo=UTC),
+        help_text="The time the task finished")
+    duration = models.DurationField(
+        default=timezone.ZERO,
+        help_text="Task duration in seconds")
+    status = models.CharField(
+        default='in-progress',
+        max_length=11,
         help_text='"success" or "failure"',
         choices=RESULT_CHOICES)
     detail = models.CharField(

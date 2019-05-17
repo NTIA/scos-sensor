@@ -2,16 +2,16 @@ from rest_framework import permissions
 
 
 class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
-    """Only allow an admin or a acquisition's owner to edit it."""
+    """Only allow an admin or a result's owner to edit it."""
 
     def has_permission(self, request, view):
         user = request.user
-        acquisition = view.queryset.first()
+        result = view.queryset.first()
 
-        if acquisition is None:
+        if result is None:
             return True
 
-        if acquisition.schedule_entry.is_private and not user.is_staff:
+        if result.schedule_entry.is_private and not user.is_staff:
             return False
 
         if request.method in permissions.SAFE_METHODS:
@@ -19,7 +19,7 @@ class IsAdminOrOwnerOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the owner or an admin
         # or if the aquisition doesn't exists (leading to 404).
-        if acquisition.schedule_entry.owner == user:
+        if result.schedule_entry.owner == user:
             return True
 
         return user.is_staff
