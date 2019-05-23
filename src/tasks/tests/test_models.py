@@ -1,7 +1,7 @@
 import pytest
 
-from results.models import TaskResult
-from results.tests.utils import TEST_MAX_TASK_RESULTS, create_task_results
+from tasks.models import TaskResult
+from tasks.tests.utils import TEST_MAX_TASK_RESULTS, create_task_results
 
 
 @pytest.mark.django_db

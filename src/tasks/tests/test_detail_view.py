@@ -1,8 +1,8 @@
 from rest_framework import status
 
-from acquisitions.tests.utils import simulate_acquisitions
-from results.tests.utils import create_task_results, reverse_result_detail
 from sensor.tests.utils import validate_response, HTTPS_KWARG
+from tasks.tests.utils import (
+    create_task_results, reverse_result_detail, simulate_acquisitions)
 
 
 def test_can_view_own_result_details(user_client):

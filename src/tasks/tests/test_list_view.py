@@ -1,14 +1,14 @@
 import pytest
 from rest_framework import status
 
-from acquisitions.tests.utils import simulate_acquisitions
-from results.tests.utils import (
+from sensor.tests.utils import validate_response, HTTPS_KWARG
+from tasks.tests.utils import (
     create_task_results,
     get_result_list,
     reverse_result_detail,
     reverse_result_list,
+    simulate_acquisitions
 )
-from sensor.tests.utils import validate_response, HTTPS_KWARG
 
 
 def test_non_existent_entry(user_client):

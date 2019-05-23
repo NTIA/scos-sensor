@@ -1,12 +1,14 @@
-from actions import by_name
-from acquisitions.models import Acquisition
-from django.conf import settings
-# from jsonschema import validate as schema_validate
-from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
-from sigmf.validate import validate as sigmf_validate
-
 import json
 from os import path
+
+from django.conf import settings
+# from jsonschema import validate as schema_validate
+from sigmf.validate import validate as sigmf_validate
+
+import actions
+from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
+from tasks.models import Acquisition
+
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"
@@ -23,7 +25,7 @@ def test_detector(user_client, rf):
     task_id = rjson['next_task_id']
 
     # use mock_acquire set up in conftest.py
-    by_name['mock_acquire'](entry_name, task_id)
+    actions.by_name['mock_acquire'](entry_name, task_id)
     acquistion = Acquisition.objects.get(task_id=task_id)
     sigmf_metadata = acquistion.sigmf_metadata
     assert sigmf_validate(sigmf_metadata)

@@ -1,12 +1,12 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from acquisitions.tests.utils import simulate_acquisitions
 from schedule.tests.utils import (EMPTY_SCHEDULE_RESPONSE, TEST_SCHEDULE_ENTRY,
                                   TEST_PRIVATE_SCHEDULE_ENTRY, post_schedule,
                                   reverse_detail_url)
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
+from tasks.tests.utils import simulate_acquisitions
 
 
 def test_entry_posted_to_schedule_is_immediately_available(user_client):

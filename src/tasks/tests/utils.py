@@ -5,16 +5,55 @@ from django.utils import timezone
 from rest_framework.reverse import reverse
 from rest_framework import status
 
-from results.models import TaskResult
 from schedule.models import ScheduleEntry
 from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
+from scheduler.tests.utils import simulate_scheduler_run
 from sensor import V1
 from sensor.tests.utils import validate_response, HTTPS_KWARG
+from tasks.models import TaskResult
 
 TEST_MAX_TASK_RESULTS = 100  # Reduce from default of settings.MAX_TASK_RESULTS
 ONE_MICROSECOND = datetime.timedelta(0, 0, 1)
 
 EMPTY_RESULTS_RESPONSE = []
+
+EMPTY_ACQUISITIONS_RESPONSE = []
+
+SINGLE_ACQUISITION = {
+    'name': 'test_acq',
+    'start': None,
+    'stop': None,
+    'interval': None,
+    'action': 'mock_acquire'
+}
+
+MULTIPLE_ACQUISITIONS = {
+    'name': 'test_multiple_acq',
+    'start': None,
+    'relative_stop': 5,
+    'interval': 1,
+    'action': 'mock_acquire'
+}
+
+
+def simulate_acquisitions(client, n=1, is_private=False, name=None):
+    assert 0 < n <= 10
+
+    if n == 1:
+        schedule_entry = SINGLE_ACQUISITION.copy()
+    else:
+        schedule_entry = MULTIPLE_ACQUISITIONS.copy()
+        schedule_entry['relative_stop'] = n + 1
+
+    schedule_entry['is_private'] = is_private
+
+    if name is not None:
+        schedule_entry['name'] = name
+
+    entry = post_schedule(client, schedule_entry)
+    simulate_scheduler_run(n)
+
+    return entry['name']
 
 
 def create_task_results(n, user_client, entry_name=None):
