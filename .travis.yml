@@ -26,6 +26,6 @@ before_script:
   - pip install -r ./src/requirements-dev.txt
 
 script:
+  - black --check ./src
   - tox -c ./src/tox.ini -e coverage
-  - tox -c ./src/tox.ini -e lint
   - docker ps | grep api | grep -q healthy
