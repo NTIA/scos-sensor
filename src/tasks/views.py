@@ -6,8 +6,7 @@ from django.http import Http404, FileResponse
 from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.mixins import (
-    ListModelMixin, RetrieveModelMixin, DestroyModelMixin)
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -24,8 +23,7 @@ from sensor import settings
 from .models.task_result import TaskResult
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers.task import TaskSerializer
-from .serializers.task_result import (
-    TaskResultsOverviewSerializer, TaskResultSerializer)
+from .serializers.task_result import TaskResultsOverviewSerializer, TaskResultSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -36,8 +34,8 @@ def task_root(request, version, format=None):
     """Provides links to upcoming and completed tasks"""
     reverse_ = partial(reverse, request=request, format=format)
     task_endpoints = {
-        'upcoming': reverse_('upcoming-tasks'),
-        'completed': reverse_('task-results-overview')
+        "upcoming": reverse_("upcoming-tasks"),
+        "completed": reverse_("task-results-overview"),
     }
 
     return Response(task_endpoints)
@@ -46,8 +44,8 @@ def task_root(request, version, format=None):
 @api_view()
 def upcoming_tasks(request, version, format=None):
     """Returns a snapshot of upcoming tasks."""
-    context = {'request': request}
-    taskq = scheduler.thread.task_queue.to_list()[:settings.MAX_TASK_QUEUE]
+    context = {"request": request}
+    taskq = scheduler.thread.task_queue.to_list()[: settings.MAX_TASK_QUEUE]
     taskq_serializer = TaskSerializer(taskq, many=True, context=context)
 
     return Response(taskq_serializer.data)
@@ -59,7 +57,8 @@ class TaskResultsOverviewViewSet(ListModelMixin, GenericViewSet):
     Returns an overview of how many results are available per schedule
     entry.
     """
-    lookup_field = 'schedule_entry_name'
+
+    lookup_field = "schedule_entry_name"
     queryset = ScheduleEntry.objects.all()
     serializer_class = TaskResultsOverviewSerializer
 
@@ -81,9 +80,9 @@ class MultipleFieldLookupMixin(object):
         base_queryset = super(MultipleFieldLookupMixin, self).get_queryset()
         base_queryset = self.filter_queryset(base_queryset)
 
-        filter = {'schedule_entry__name': self.kwargs['schedule_entry_name']}
+        filter = {"schedule_entry__name": self.kwargs["schedule_entry_name"]}
         if not self.request.user.is_staff:
-            filter.update({'schedule_entry__is_private': False})
+            filter.update({"schedule_entry__is_private": False})
 
         queryset = base_queryset.filter(**filter)
 
@@ -94,7 +93,7 @@ class MultipleFieldLookupMixin(object):
 
     def get_object(self):
         queryset = self.get_queryset()
-        filter = {'task_id': self.kwargs['task_id']}
+        filter = {"task_id": self.kwargs["task_id"]}
 
         return get_object_or_404(queryset, **filter)
 
@@ -111,14 +110,16 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
     Downloads the acquisition's SigMF archive.
 
     """
+
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
-    permission_classes = (
-        api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
+        IsAdminOrOwnerOrReadOnly
+    ]
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    lookup_fields = ('schedule_entry__name', 'task_id')
-    ordering_fields = ('task_id', 'started', 'finished', 'duration', 'status')
-    search_fields = ('task_id', 'status', 'detail')
+    lookup_fields = ("schedule_entry__name", "task_id")
+    ordering_fields = ("task_id", "started", "finished", "duration", "status")
+    search_fields = ("task_id", "status", "detail")
 
     def get_queryset(self):
         # .list() does not call .get_object(), which triggers permissions
@@ -126,9 +127,9 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
         # request user.
         base_queryset = self.filter_queryset(self.queryset)
 
-        filter = {'schedule_entry__name': self.kwargs['schedule_entry_name']}
+        filter = {"schedule_entry__name": self.kwargs["schedule_entry_name"]}
         if not self.request.user.is_staff:
-            filter.update({'schedule_entry__is_private': False})
+            filter.update({"schedule_entry__is_private": False})
 
         queryset = base_queryset.filter(**filter)
 
@@ -137,7 +138,7 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
 
         return queryset.all()
 
-    @action(detail=False, methods=('delete', ))
+    @action(detail=False, methods=("delete",))
     def destroy_all(self, request, version, schedule_entry_name):
         queryset = self.get_queryset()
 
@@ -156,20 +157,22 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
             raise Http404
 
         fqdn = settings.FQDN
-        fname = fqdn + '_' + schedule_entry_name + '.sigmf'
+        fname = fqdn + "_" + schedule_entry_name + ".sigmf"
 
         # FileResponse handles closing the file
         tmparchive = tempfile.TemporaryFile()
         build_sigmf_archive(tmparchive, schedule_entry_name, queryset)
-        content_type = 'application/x-tar'
-        response = FileResponse(tmparchive, as_attachment=True, filename=fname,
-                                content_type=content_type)
+        content_type = "application/x-tar"
+        response = FileResponse(
+            tmparchive, as_attachment=True, filename=fname, content_type=content_type
+        )
 
         return response
 
 
-class TaskResultInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
-                                DestroyModelMixin, GenericViewSet):
+class TaskResultInstanceViewSet(
+    MultipleFieldLookupMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet
+):
     """
     retrieve:
     Returns a specific result.
@@ -181,25 +184,28 @@ class TaskResultInstanceViewSet(MultipleFieldLookupMixin, RetrieveModelMixin,
     Downloads the acquisition's SigMF archive.
 
     """
+
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
-    permission_classes = (
-        api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminOrOwnerOrReadOnly])
-    lookup_fields = ('schedule_entry__name', 'task_id')
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
+        IsAdminOrOwnerOrReadOnly
+    ]
+    lookup_fields = ("schedule_entry__name", "task_id")
 
     @action(detail=True)
     def archive(self, request, version, schedule_entry_name, task_id):
         entry_name = schedule_entry_name
         fqdn = settings.FQDN
-        fname = fqdn + '_' + entry_name + '_' + str(task_id) + '.sigmf'
+        fname = fqdn + "_" + entry_name + "_" + str(task_id) + ".sigmf"
         acq = self.get_object()
 
         # FileResponse handles closing the file
         tmparchive = tempfile.TemporaryFile()
         build_sigmf_archive(tmparchive, schedule_entry_name, [acq])
-        content_type = 'application/x-tar'
-        response = FileResponse(tmparchive, as_attachment=True, filename=fname,
-                                content_type=content_type)
+        content_type = "application/x-tar"
+        response = FileResponse(
+            tmparchive, as_attachment=True, filename=fname, content_type=content_type
+        )
         return response
 
 
@@ -218,9 +224,10 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
         with tempfile.NamedTemporaryFile() as tmpdata:
             tmpdata.write(acq.data)
             tmpdata.seek(0)  # move fd ptr to start of data for reading
-            name = schedule_entry_name + '_' + str(acq.task_id)
-            sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.sigmf_metadata,
-                                                   name=name)
+            name = schedule_entry_name + "_" + str(acq.task_id)
+            sigmf_file = sigmf.sigmffile.SigMFFile(
+                metadata=acq.sigmf_metadata, name=name
+            )
             sigmf_file.set_data_file(tmpdata.name)
 
             sigmf.archive.SigMFArchive(sigmf_file, path=name, fileobj=fileobj)

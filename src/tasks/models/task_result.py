@@ -13,44 +13,47 @@ UTC = timezone.timezone.utc
 
 class TaskResult(models.Model):
     """Map between schedule entries and their task results."""
+
     SUCCESS = 1
     FAILURE = 2
     IN_PROGRESS = 3
     RESULT_CHOICES = (
-        (SUCCESS, 'success'),
-        (FAILURE, 'failure'),
-        (IN_PROGRESS, 'in-progress')
+        (SUCCESS, "success"),
+        (FAILURE, "failure"),
+        (IN_PROGRESS, "in-progress"),
     )
 
     schedule_entry = models.ForeignKey(
         ScheduleEntry,
         on_delete=models.PROTECT,
-        related_name='task_results',
-        help_text="The schedule entry relative to the result")
-    task_id = models.IntegerField(
-        help_text="The id of the task relative to the result")
+        related_name="task_results",
+        help_text="The schedule entry relative to the result",
+    )
+    task_id = models.IntegerField(help_text="The id of the task relative to the result")
     started = models.DateTimeField(
         default=datetime.datetime(2019, 5, 16, 23, tzinfo=UTC),
-        help_text="The time the task started")
+        help_text="The time the task started",
+    )
     finished = models.DateTimeField(
         default=datetime.datetime(2019, 5, 16, 23, tzinfo=UTC),
-        help_text="The time the task finished")
+        help_text="The time the task finished",
+    )
     duration = models.DurationField(
-        default=timezone.ZERO,
-        help_text="Task duration in seconds")
+        default=timezone.ZERO, help_text="Task duration in seconds"
+    )
     status = models.CharField(
-        default='in-progress',
+        default="in-progress",
         max_length=11,
         help_text='"success" or "failure"',
-        choices=RESULT_CHOICES)
+        choices=RESULT_CHOICES,
+    )
     detail = models.CharField(
-        max_length=MAX_DETAIL_LEN,
-        blank=True,
-        help_text="Arbitrary detail string")
+        max_length=MAX_DETAIL_LEN, blank=True, help_text="Arbitrary detail string"
+    )
 
     class Meta:
-        ordering = ('task_id', )
-        unique_together = (('schedule_entry', 'task_id'), )
+        ordering = ("task_id",)
+        unique_together = (("schedule_entry", "task_id"),)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,7 +64,7 @@ class TaskResult(models.Model):
     def save(self):
         """Limit number of results to MAX_TASK_RESULTS by removing oldest."""
         all_results = TaskResult.objects.all()
-        filter = {'schedule_entry__name': self.schedule_entry.name}
+        filter = {"schedule_entry__name": self.schedule_entry.name}
         same_entry_results = all_results.filter(**filter)
         if same_entry_results.count() >= self.max_results:
             same_entry_results[0].delete()

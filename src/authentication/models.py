@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 class User(AbstractUser):
     """A user of the sensor."""
+
     email = models.EmailField(null=True)
 
 

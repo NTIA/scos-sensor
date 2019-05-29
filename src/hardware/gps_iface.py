@@ -22,8 +22,8 @@ def get_lat_long(timeout_s=1):
     logger.debug("Waiting for GPS lock... ")
     start = time()
     gps_locked = False
-    while (time() - start < timeout_s and not gps_locked):
-        gps_locked = usrp.get_mboard_sensor('gps_locked').to_bool()
+    while time() - start < timeout_s and not gps_locked:
+        gps_locked = usrp.get_mboard_sensor("gps_locked").to_bool()
         sleep(0.1)
 
     if not gps_locked:
@@ -32,20 +32,20 @@ def get_lat_long(timeout_s=1):
 
     logger.debug("GPS locked.")
 
-    if 'gpsdo' not in usrp.get_time_sources(0):
+    if "gpsdo" not in usrp.get_time_sources(0):
         logger.warning("No GPSDO time source detected")
         return None
 
-    usrp.set_time_source('gpsdo')
+    usrp.set_time_source("gpsdo")
 
-    if usrp.get_time_source(0) != 'gpsdo':
+    if usrp.get_time_source(0) != "gpsdo":
         logger.error("Failed to set GPSDO time source")
         return None
 
     # Poll get_time_last_pss() until change is seen
     last_t = int(usrp.get_time_last_pps().get_real_secs())
     now_t = int(usrp.get_time_last_pps().get_real_secs())
-    while (last_t != now_t):
+    while last_t != now_t:
         sleep(0.05)
         now_t = int(usrp.get_time_last_pps().get_real_secs())
 
@@ -53,27 +53,27 @@ def get_lat_long(timeout_s=1):
     sleep(0.1)
     # To use gr-uhd instead of UHD python driver, this line needs to change
     # gps_t = uhd.time_spec_t(usrp.get_mboard_sensor('gps_time').to_int() + 1)
-    gps_t = uhd.types.TimeSpec(usrp.get_mboard_sensor('gps_time').to_int() + 1)
+    gps_t = uhd.types.TimeSpec(usrp.get_mboard_sensor("gps_time").to_int() + 1)
     usrp.set_time_next_pps(gps_t)
     dt = datetime.fromtimestamp(gps_t.get_real_secs())
-    date_cmd = ['date', '-s', '{:}'.format(dt.strftime('%Y/%m/%d %H:%M:%S'))]
+    date_cmd = ["date", "-s", "{:}".format(dt.strftime("%Y/%m/%d %H:%M:%S"))]
     subprocess.check_output(date_cmd, shell=True)
     logger.info("Set USRP and system time to GPS time {}".format(dt.ctime()))
 
-    if 'gpsdo' not in usrp.get_clock_sources(0):
+    if "gpsdo" not in usrp.get_clock_sources(0):
         logger.warning("No GPSDO clock source detected")
         return None
 
-    usrp.set_clock_source('gpsdo')
+    usrp.set_clock_source("gpsdo")
 
-    if usrp.get_clock_source(0) != 'gpsdo':
+    if usrp.get_clock_source(0) != "gpsdo":
         logger.error("Failed to set GPSDO clock source")
         return None
 
     start = time()
     ref_locked = False
-    while (time() - start < timeout_s and not ref_locked):
-        ref_locked = usrp.get_mboard_sensor('ref_locked').to_bool()
+    while time() - start < timeout_s and not ref_locked:
+        ref_locked = usrp.get_mboard_sensor("ref_locked").to_bool()
 
     if not ref_locked:
         msg = "Timed out waiting for clock to lock to GPSDO reference"
@@ -83,12 +83,27 @@ def get_lat_long(timeout_s=1):
     logger.debug("Clock locked to GPSDO reference")
 
     try:
-        gpgga = usrp.get_mboard_sensor('gps_gpgga').value
-        (fmt, utc, lat, ns, lng, ew, qual, nsats, hdil, alt, altu, gdalsep,
-         gdalsepu, age, refid) = gpgga.split(',')
+        gpgga = usrp.get_mboard_sensor("gps_gpgga").value
+        (
+            fmt,
+            utc,
+            lat,
+            ns,
+            lng,
+            ew,
+            qual,
+            nsats,
+            hdil,
+            alt,
+            altu,
+            gdalsep,
+            gdalsepu,
+            age,
+            refid,
+        ) = gpgga.split(",")
 
         latitude = float(lat)
-        if ns == 'S':
+        if ns == "S":
             latitude = -latitude
 
         latitude_degs = int(latitude / 100)
@@ -96,7 +111,7 @@ def get_lat_long(timeout_s=1):
         latitude_dd = latitude_degs + (latitude_mins / 60)
 
         longitude = float(lng)
-        if ew == 'W':
+        if ew == "W":
             longitude = -longitude
 
         longitude_degs = int(longitude / 100)

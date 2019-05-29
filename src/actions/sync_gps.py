@@ -39,4 +39,5 @@ class SyncGps(Action):
                 gps=True,
                 description=GPS_LOCATION_DESCRIPTION,
                 latitude=latitude,
-                longitude=longitude)
+                longitude=longitude,
+            )

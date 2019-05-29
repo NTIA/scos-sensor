@@ -2,8 +2,12 @@ from rest_framework import status
 
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 from tasks.tests.utils import (
-    EMPTY_RESULTS_RESPONSE, create_task_results, reverse_results_overview,
-    get_results_overview, simulate_acquisitions)
+    EMPTY_RESULTS_RESPONSE,
+    create_task_results,
+    reverse_results_overview,
+    get_results_overview,
+    simulate_acquisitions,
+)
 
 
 def test_user_empty_overview_response(user_client):
@@ -19,29 +23,30 @@ def test_admin_empty_overview_response(admin_client):
 def test_user_get_overview(user_client):
     create_task_results(2, user_client)
     overview, = get_results_overview(user_client)
-    assert overview['results_available'] == 2
-    assert overview['results']  # is non-empty string
-    assert overview['schedule_entry']  # is non-empty string
+    assert overview["results_available"] == 2
+    assert overview["results"]  # is non-empty string
+    assert overview["schedule_entry"]  # is non-empty string
 
 
 def test_admin_get_overview(admin_client):
     create_task_results(2, admin_client)
     overview, = get_results_overview(admin_client)
-    assert overview['results_available'] == 2
-    assert overview['results']  # is non-empty string
-    assert overview['schedule_entry']  # is non-empty string
+    assert overview["results_available"] == 2
+    assert overview["results"]  # is non-empty string
+    assert overview["schedule_entry"]  # is non-empty string
 
 
-def test_overview_for_private_entry_is_private(admin_client, user_client,
-                                               test_scheduler):
+def test_overview_for_private_entry_is_private(
+    admin_client, user_client, test_scheduler
+):
     simulate_acquisitions(admin_client, is_private=True)
     overview = get_results_overview(user_client)
     assert overview == []
 
     overview, = get_results_overview(admin_client)
-    assert overview['results_available'] == 1
-    assert overview['results']  # is non-empty string
-    assert overview['schedule_entry']  # is non-empty string
+    assert overview["results_available"] == 1
+    assert overview["results"]  # is non-empty string
+    assert overview["schedule_entry"]  # is non-empty string
 
 
 def test_user_delete_overview_not_allowed(user_client):

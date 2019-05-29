@@ -42,8 +42,8 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
         random = settings.MOCK_RADIO_RANDOM
         usrp = MockUsrp(randomize_values=random)
         is_available = True
-        RESOURCES_DIR = path.join(REPO_ROOT, './src/hardware/tests/resources')
-        sf_file = path.join(RESOURCES_DIR, 'test_scale_factors.json')
+        RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
+        sf_file = path.join(RESOURCES_DIR, "test_scale_factors.json")
     else:
         if is_available and radio is not None:
             return True
@@ -54,7 +54,7 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
             logger.warning("uhd not available - disabling radio")
             return False
 
-        usrp_args = 'type=b200'  # find any b-series device
+        usrp_args = "type=b200"  # find any b-series device
 
         try:
             usrp = uhd.usrp.MultiUSRP(usrp_args)
@@ -158,24 +158,25 @@ class RadioInterface(object):
             return
 
         self.scale_factor = self.scale_factors.get_scale_factor(
-            lo_frequency=self.frequency, gain=self.gain)
+            lo_frequency=self.frequency, gain=self.gain
+        )
 
     def acquire_samples(self, n, nskip=200000, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
         o_retries = retries
         while True:
             samples = self.usrp.recv_num_samps(
-                n + nskip,          # number of samples
-                self.frequency,     # center frequency in Hz
-                self.sample_rate,   # sample rate in samples per second
-                [0],                # channel list
-                self.gain           # gain in dB
+                n + nskip,  # number of samples
+                self.frequency,  # center frequency in Hz
+                self.sample_rate,  # sample rate in samples per second
+                [0],  # channel list
+                self.gain,  # gain in dB
             )
             # usrp.recv_num_samps returns a numpy array of shape
             # (n_channels, n_samples) and dtype complex64
             assert samples.dtype == np.complex64
             assert len(samples.shape) == 2 and samples.shape[0] == 1
-            data = samples[0]       # isolate data for channel 0
+            data = samples[0]  # isolate data for channel 0
             data_len = len(data)
             data = data[nskip:]
             data = data * self.scale_factor

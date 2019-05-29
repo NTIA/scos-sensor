@@ -10,6 +10,7 @@ from rest_framework.versioning import URLPathVersioning
 
 class Request(models.Model):
     """Save enough of a request to be passed to reverse()."""
+
     scheme = models.CharField(max_length=16, blank=True, null=True)
     version = models.CharField(max_length=16, blank=True, null=True)
     host = models.CharField(max_length=255, blank=True, null=True)

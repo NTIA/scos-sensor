@@ -17,9 +17,9 @@ def test_api_docs_up_to_date(admin_client):
         print("{} doesn't exist, not in src tree.".format(docs_dir))
         return True
 
-    schema_url = reverse('api_schema', kwargs=V1) + '?format=openapi'
+    schema_url = reverse("api_schema", kwargs=V1) + "?format=openapi"
     response = admin_client.get(schema_url)
 
-    with open(settings.OPENAPI_FILE, 'w+') as openapi_file:
+    with open(settings.OPENAPI_FILE, "w+") as openapi_file:
         openapi_json = json.loads(response.content)
         json.dump(openapi_json, openapi_file, indent=4)

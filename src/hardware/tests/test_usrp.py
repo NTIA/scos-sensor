@@ -77,4 +77,4 @@ def test_scaled_data_acquisition():
     msg = "Scale factor not correctly applied to acquisition.\n"
     msg += "Algorithm: {}\n".format(datum / 1e6)
     msg += "Expected: {}\n".format(true_val / 1e6)
-    assert (datum == true_val), msg
+    assert datum == true_val, msg

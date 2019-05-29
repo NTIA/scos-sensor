@@ -25,8 +25,10 @@ def get_location():
 @api_view()
 def status(request, version, format=None):
     """The status overview of the sensor."""
-    return Response({
-        'scheduler': scheduler.thread.status,
-        'location': get_location(),
-        'system_time': utils.get_datetime_str_now()
-    })
+    return Response(
+        {
+            "scheduler": scheduler.thread.status,
+            "location": get_location(),
+            "system_time": utils.get_datetime_str_now(),
+        }
+    )

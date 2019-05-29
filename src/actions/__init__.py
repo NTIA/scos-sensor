@@ -18,10 +18,11 @@ logger = logging.getLogger(__name__)
 # Actions initialized here are made available through the API
 registered_actions = {
     "logger": logger_action.Logger(),
-    "admin_logger":
-    logger_action.Logger(loglvl=logger_action.LOGLVL_ERROR, admin_only=True),
+    "admin_logger": logger_action.Logger(
+        loglvl=logger_action.LOGLVL_ERROR, admin_only=True
+    ),
     "monitor_usrp": monitor_usrp.UsrpMonitor(admin_only=True),
-    "sync_gps": sync_gps.SyncGps(admin_only=True)
+    "sync_gps": sync_gps.SyncGps(admin_only=True),
 }
 
 by_name = registered_actions
@@ -33,10 +34,8 @@ action_classes = {
     "logger": logger_action.Logger,
     "usrp_monitor": monitor_usrp.UsrpMonitor,
     "sync_gps": sync_gps.SyncGps,
-    "single_frequency_fft":
-    acquire_single_freq_fft.SingleFrequencyFftAcquisition,
-    "stepped_frequency_time_domain_iq":
-    acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIqAcquisition
+    "single_frequency_fft": acquire_single_freq_fft.SingleFrequencyFftAcquisition,
+    "stepped_frequency_time_domain_iq": acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIqAcquisition,
 }
 
 
@@ -63,9 +62,9 @@ def get_summary(action_fn):
 
 def load_from_yaml(yaml_dir=settings.ACTION_DEFINITIONS_DIR):
     """Load any YAML files in yaml_dir."""
-    yaml = YAML(typ='safe')
+    yaml = YAML(typ="safe")
     yaml_path = Path(yaml_dir)
-    for yaml_file in yaml_path.glob('*.yml'):
+    for yaml_file in yaml_path.glob("*.yml"):
         defn = yaml.load(yaml_file)
         for class_name, parameters in defn.items():
             try:

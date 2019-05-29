@@ -1,6 +1,6 @@
 from rest_framework import status
 
-HTTPS_KWARG = {'wsgi.url_scheme': 'https'}
+HTTPS_KWARG = {"wsgi.url_scheme": "https"}
 
 
 def validate_response(response, expected_code=None):
@@ -11,6 +11,6 @@ def validate_response(response, expected_code=None):
     else:
         assert actual_code == expected_code, response.data
 
-    if actual_code not in (status.HTTP_204_NO_CONTENT, ):
+    if actual_code not in (status.HTTP_204_NO_CONTENT,):
         rjson = response.json()
         return rjson

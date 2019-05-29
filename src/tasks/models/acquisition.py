@@ -15,25 +15,27 @@ class Acquisition(models.Model):
     entry, task id, and recording id.
 
     """
+
     task_result = models.ForeignKey(
         TaskResult,
         on_delete=models.CASCADE,
-        related_name='data',
-        help_text="The task_result relative to the acquisition")
+        related_name="data",
+        help_text="The task_result relative to the acquisition",
+    )
     recording_id = models.IntegerField(
-        default=0,
-        help_text="The id of the recording relative to the task")
+        default=0, help_text="The id of the recording relative to the task"
+    )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
     data = models.BinaryField(help_text="", null=True)
 
     class Meta:
-        db_table = 'acquisitions'
-        ordering = ('task_result', 'recording_id')
-        unique_together = (('task_result', 'recording_id'), )
+        db_table = "acquisitions"
+        ordering = ("task_result", "recording_id")
+        unique_together = (("task_result", "recording_id"),)
 
     def __str__(self):
-        return '{}/{}:{}'.format(
+        return "{}/{}:{}".format(
             self.task_result.schedule_entry.name,
             self.task_result.task_id,
-            self.recording_id
+            self.recording_id,
         )

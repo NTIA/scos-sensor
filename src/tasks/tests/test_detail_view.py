@@ -2,7 +2,10 @@ from rest_framework import status
 
 from sensor.tests.utils import validate_response, HTTPS_KWARG
 from tasks.tests.utils import (
-    create_task_results, reverse_result_detail, simulate_acquisitions)
+    create_task_results,
+    reverse_result_detail,
+    simulate_acquisitions,
+)
 
 
 def test_can_view_own_result_details(user_client):
@@ -21,8 +24,7 @@ def test_can_view_others_result_details(user_client, alt_user_client):
     validate_response(response, status.HTTP_200_OK)
 
 
-def test_cannot_view_private_result_details(user_client, admin_client,
-                                            test_scheduler):
+def test_cannot_view_private_result_details(user_client, admin_client, test_scheduler):
     """A user should not be able to view the result of a private task."""
     entry_name = simulate_acquisitions(admin_client, is_private=True)
     url = reverse_result_detail(entry_name, 1)

@@ -35,13 +35,13 @@ class Scheduler(threading.Thread):
         # scheduler looks ahead `interval_multiplier` times the shortest
         # interval in the schedule in order to keep memory-usage low
         self.interval_multiplier = 10
-        self.name = 'Scheduler'
+        self.name = "Scheduler"
         self.running = False
         self.interrupt_flag = threading.Event()
 
         # Cache the currently running task state
-        self.entry = None        # ScheduleEntry that created the current task
-        self.task = None         # Task object describing current task
+        self.entry = None  # ScheduleEntry that created the current task
+        self.task = None  # Task object describing current task
         self.task_result = None  # TaskResult object for current task
 
     @property
@@ -58,7 +58,7 @@ class Scheduler(threading.Thread):
     def cancel(entry):
         """Remove an entry from the scheduler without deleting it."""
         entry.is_active = False
-        entry.save(update_fields=('is_active', ))
+        entry.save(update_fields=("is_active",))
 
     def stop(self):
         """Complete the current task, then return control."""
@@ -142,13 +142,13 @@ class Scheduler(threading.Thread):
             logger.debug("running task {}/{}".format(entry_name, task_id))
             detail = self.task.action_fn(entry_name, task_id)
             self.delayfn(0)  # let other threads run
-            status = 'success'
+            status = "success"
             if not isinstance(detail, str):
                 detail = ""
         except Exception as err:
             detail = str(err)
             logger.exception("action failed: {}".format(detail))
-            status = 'failure'
+            status = "failure"
 
         return status, detail[:MAX_DETAIL_LEN]
 
@@ -162,7 +162,7 @@ class Scheduler(threading.Thread):
         tr.save()
 
         if self.entry.callback_url:
-            context = {'request': self.entry.request}
+            context = {"request": self.entry.request}
             result_json = TaskResultSerializer(tr, context=context).data
             requests_futures_session.post(
                 self.entry.callback_url,
@@ -187,7 +187,7 @@ class Scheduler(threading.Thread):
                 continue
 
             task_id = entry.get_next_task_id()
-            entry.save(update_fields=('next_task_id', ))
+            entry.save(update_fields=("next_task_id",))
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
@@ -196,7 +196,7 @@ class Scheduler(threading.Thread):
 
     def _take_pending_task_time(self, entry):
         task_times = entry.take_pending()
-        entry.save(update_fields=('next_task_time', 'is_active'))
+        entry.save(update_fields=("next_task_time", "is_active"))
         if not task_times:
             return None
 
@@ -249,12 +249,12 @@ class Scheduler(threading.Thread):
     @property
     def status(self):
         if self.is_alive():
-            return 'running' if self.running else 'idle'
-        return 'dead'
+            return "running" if self.running else "idle"
+        return "dead"
 
     def __repr__(self):
-        s = 'running' if self.running else 'stopped'
-        return '<{} status={}>'.format(self.__class__.__name__, s)
+        s = "running" if self.running else "stopped"
+        return "<{} status={}>".format(self.__class__.__name__, s)
 
 
 @contextmanager

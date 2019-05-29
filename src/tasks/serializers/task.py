@@ -11,11 +11,11 @@ class TaskSerializer(serializers.Serializer):
     action = serializers.CharField(max_length=actions.MAX_LENGTH)
     priority = serializers.IntegerField()
     time = DateTimeFromTimestampField(
-        read_only=True,
-        help_text="UTC time (ISO 8601) the this task is scheduled for")
+        read_only=True, help_text="UTC time (ISO 8601) the this task is scheduled for"
+    )
 
     def get_schedule_entry(self, obj):
-        request = self.context['request']
-        kws = {'pk': obj.schedule_entry_name}
+        request = self.context["request"]
+        kws = {"pk": obj.schedule_entry_name}
         kws.update(V1)
-        return reverse('schedule-detail', kwargs=kws, request=request)
+        return reverse("schedule-detail", kwargs=kws, request=request)

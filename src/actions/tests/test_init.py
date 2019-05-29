@@ -43,7 +43,7 @@ def _test_load_from_yaml_check_error(yaml_to_write, expected_error):
     # load_from_yaml loads all `.yml` files in the passed directory, so do a
     # bit of setup to create an invalid yaml tempfile in a temporary directory
     with tempfile.TemporaryDirectory() as tmpdir:
-        with tempfile.NamedTemporaryFile(suffix='.yml', dir=tmpdir) as tmpfile:
+        with tempfile.NamedTemporaryFile(suffix=".yml", dir=tmpdir) as tmpfile:
             tmpfile.write(yaml_to_write)
             tmpfile.seek(0)
             # Now try to load the invalid yaml file, expecting an error

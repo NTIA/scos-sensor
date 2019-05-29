@@ -30,15 +30,15 @@ class ScheduleEntryViewSet(ModelViewSet):
     Deletes the specified schedule entry.
 
     """
+
     queryset = ScheduleEntry.objects.all()
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly,
+        IsAdminOrOwnerOrReadOnly
     ]
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    lookup_fields = ('schedule_entry__name', 'task_id')
-    ordering_fields = ('priority', 'start', 'next_task_time', 'created',
-                       'modified')
-    search_fields = ('name', 'action')
+    lookup_fields = ("schedule_entry__name", "task_id")
+    ordering_fields = ("priority", "start", "next_task_time", "created", "modified")
+    search_fields = ("name", "action")
 
     def create(self, request, *args, **kwargs):
         """Return NO CONTENT when input is valid but validate_only is True."""
@@ -47,7 +47,7 @@ class ScheduleEntryViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if serializer.validated_data.get('validate_only'):
+        if serializer.validated_data.get("validate_only"):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         self.perform_create(serializer)
@@ -73,7 +73,7 @@ class ScheduleEntryViewSet(ModelViewSet):
     def get_serializer_class(self):
         """Modify the base serializer based on user and request."""
 
-        updating = self.action in {'update', 'partial_update'}
+        updating = self.action in {"update", "partial_update"}
 
         if self.request.user.is_staff:
             SerializerBaseClass = AdminScheduleEntrySerializer
@@ -83,9 +83,9 @@ class ScheduleEntryViewSet(ModelViewSet):
         ro_fields = SerializerBaseClass.Meta.read_only_fields
 
         if updating:
-            ro_fields += ('name', 'action')
+            ro_fields += ("name", "action")
         else:
-            ro_fields += ('is_active', )
+            ro_fields += ("is_active",)
 
         class SerializerClass(SerializerBaseClass):
             class Meta(SerializerBaseClass.Meta):

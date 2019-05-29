@@ -18,14 +18,13 @@ def get_actions(include_admin_actions=False):
         if actions.by_name[action].admin_only and not include_admin_actions:
             continue
 
-        serialized_actions.append({
-            'name':
-            action,
-            'summary':
-            actions.get_summary(actions.by_name[action]),
-            'description':
-            actions.by_name[action].description
-        })
+        serialized_actions.append(
+            {
+                "name": action,
+                "summary": actions.get_summary(actions.by_name[action]),
+                "description": actions.by_name[action].description,
+            }
+        )
 
     return serialized_actions
 
@@ -34,5 +33,5 @@ def get_actions(include_admin_actions=False):
 def capabilities_view(request, version, format=None):
     """The capabilites of the sensor."""
     filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
-    capabilities['actions'] = filtered_actions
+    capabilities["actions"] = filtered_actions
     return Response(capabilities)

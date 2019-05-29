@@ -8,20 +8,21 @@ from authentication.models import User
 
 def pytest_addoption(parser):
     parser.addoption(
-        '--update-api-docs',
-        action='store_true',
+        "--update-api-docs",
+        action="store_true",
         default=False,
-        help="Ensure API docs match code")
+        help="Ensure API docs match code",
+    )
 
 
 def pytest_collection_modifyitems(config, items):
     """Skips `test_api_docs_up_to_date` if CLI option not passed."""
-    if config.getoption('--update-api-docs'):
+    if config.getoption("--update-api-docs"):
         # --update-api-docs given on cli: do not skip api doc generation
         return
     skip_api_gen = pytest.mark.skip(reason="didn't pass --update-api-docs")
     for item in items:
-        if 'update_api_docs' in item.keywords:
+        if "update_api_docs" in item.keywords:
             item.add_marker(skip_api_gen)
 
 
@@ -43,15 +44,15 @@ def testclock():
 def test_scheduler(rf, testclock):
     """Instantiate test scheduler with fake request context and testclock."""
     s = scheduler.scheduler.Scheduler()
-    s.request = rf.post('mock://cburl/schedule')
+    s.request = rf.post("mock://cburl/schedule")
     return s
 
 
 @pytest.fixture
 def user(db):
     """A normal user."""
-    username = 'test'
-    password = 'password'
+    username = "test"
+    password = "password"
 
     user, created = User.objects.get_or_create(username=username)
 
@@ -76,8 +77,8 @@ def user_client(db, user):
 @pytest.fixture
 def alt_user(db):
     """A normal user."""
-    username = 'alt_test'
-    password = 'password'
+    username = "alt_test"
+    password = "password"
 
     user, created = User.objects.get_or_create(username=username)
 
@@ -111,15 +112,16 @@ def alt_admin_user(db, django_user_model, django_username_field):
     username_field = django_username_field
 
     try:
-        user = UserModel._default_manager.get(**{username_field: 'alt_admin'})
+        user = UserModel._default_manager.get(**{username_field: "alt_admin"})
     except UserModel.DoesNotExist:
         extra_fields = {}
 
-        if username_field != 'username':
-            extra_fields[username_field] = 'alt_admin'
+        if username_field != "username":
+            extra_fields[username_field] = "alt_admin"
 
         user = UserModel._default_manager.create_superuser(
-            'alt_admin', 'alt_admin@example.com', 'password', **extra_fields)
+            "alt_admin", "alt_admin@example.com", "password", **extra_fields
+        )
 
     return user
 
@@ -130,18 +132,19 @@ def alt_admin_client(db, alt_admin_user):
     from django.test.client import Client
 
     client = Client()
-    client.login(username=alt_admin_user.username, password='password')
+    client.login(username=alt_admin_user.username, password="password")
 
     return client
 
 
 # Add mock acquisitions for tests
 mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
-    name='mock_acquire',
+    name="mock_acquire",
     frequency=1e9,  # 1 GHz
     gain=40,
     sample_rate=1e6,  # 1 MSa/s
     fft_size=16,
-    nffts=11)
-actions.by_name['mock_acquire'] = mock_acquire
+    nffts=11,
+)
+actions.by_name["mock_acquire"] = mock_acquire
 actions.init()

@@ -96,7 +96,7 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "f32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.1"
+    "core:version": "0.0.1",
 }
 
 
@@ -109,7 +109,7 @@ class M4sDetector(Enum):
 
 
 # The sigmf-ns-scos version targeted by this action
-SCOS_TRANSFER_SPEC_VER = '0.2'
+SCOS_TRANSFER_SPEC_VER = "0.2"
 
 
 def m4s_detector(array):
@@ -161,7 +161,8 @@ class SingleFrequencyFftAcquisition(Action):
 
         # Raises TaskResult.DoesNotExist if no matching task result
         task_result = TaskResult.objects.get(
-            schedule_entry__name=schedule_entry_name, task_id=task_id)
+            schedule_entry__name=schedule_entry_name, task_id=task_id
+        )
 
         self.test_required_components()
         self.configure_sdr()
@@ -219,14 +220,14 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        sensor_def = capabilities['sensor_definition']
+        sensor_def = capabilities["sensor_definition"]
         sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
         sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
         capture_md = {
             "core:frequency": self.frequency,
-            "core:time": utils.get_datetime_str_now()
+            "core:time": utils.get_datetime_str_now(),
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
@@ -239,19 +240,20 @@ class SingleFrequencyFftAcquisition(Action):
                 "detector": detector.name + "_power",
                 "number_of_ffts": self.nffts,
                 "units": "dBm",
-                "reference": "not referenced"
+                "reference": "not referenced",
             }
 
             annotation_md = {
                 "scos:measurement_type": {
-                    "single_frequency_fft_detection": single_frequency_fft_md,
+                    "single_frequency_fft_detection": single_frequency_fft_md
                 }
             }
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
-                metadata=annotation_md)
+                metadata=annotation_md,
+            )
 
         return sigmf_md
 
@@ -260,10 +262,10 @@ class SingleFrequencyFftAcquisition(Action):
         logger.debug("Applying detector")
 
         window = np.blackman(self.fft_size)
-        window_power = sum(window**2)
+        window_power = sum(window ** 2)
         impedance = 50.0  # ohms
 
-        self.enbw = self.fft_size * window_power / sum(window)**2
+        self.enbw = self.fft_size * window_power / sum(window) ** 2
 
         Vsq2W_dB = -10.0 * np.log10(self.fft_size * window_power * impedance)
 
@@ -288,19 +290,18 @@ class SingleFrequencyFftAcquisition(Action):
         logger.debug("Storing acquisition in database")
 
         Acquisition(
-            task_result=task_result,
-            metadata=sigmf_md._metadata,
-            data=m4s_data).save()
+            task_result=task_result, metadata=sigmf_md._metadata, data=m4s_data
+        ).save()
 
     @property
     def description(self):
         defs = {
-            'name': self.name,
-            'frequency': self.frequency / 1e6,
-            'sample_rate': self.sample_rate / 1e6,
-            'fft_size': self.fft_size,
-            'nffts': self.nffts,
-            'gain': self.gain
+            "name": self.name,
+            "frequency": self.frequency / 1e6,
+            "sample_rate": self.sample_rate / 1e6,
+            "fft_size": self.fft_size,
+            "nffts": self.nffts,
+            "gain": self.gain,
         }
 
         # __doc__ refers to the module docstring at the top of the file
