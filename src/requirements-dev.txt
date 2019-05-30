@@ -1,6 +1,8 @@
 -rrequirements.txt
 
 black==18.9b0
+flake8==3.6.0
+flake8-bugbear==19.3.0
 jedi==0.13.3
 jsonschema==3.0.1
 mkdocs==1.0.4

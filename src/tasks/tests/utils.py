@@ -77,7 +77,7 @@ def create_task_results(n, user_client, entry_name=None):
             started=started,
             finished=started + ONE_MICROSECOND,
             duration=ONE_MICROSECOND,
-            result="success",
+            status="success",
             detail="",
         )
         tr.max_results = TEST_MAX_TASK_RESULTS
@@ -88,13 +88,13 @@ def create_task_results(n, user_client, entry_name=None):
 
 def reverse_results_overview():
     rf = RequestFactory()
-    request = rf.get("/results/", **HTTPS_KWARG)
+    request = rf.get("/tasks/completed/", **HTTPS_KWARG)
     return reverse("results-overview", kwargs=V1, request=request)
 
 
 def reverse_result_list(schedule_entry_name):
     rf = RequestFactory()
-    request = rf.get("/results/" + schedule_entry_name, **HTTPS_KWARG)
+    request = rf.get("/tasks/completed/" + schedule_entry_name, **HTTPS_KWARG)
     kws = {"schedule_entry_name": schedule_entry_name}
     kws.update(V1)
     return reverse("result-list", kwargs=kws, request=request)
@@ -102,11 +102,11 @@ def reverse_result_list(schedule_entry_name):
 
 def reverse_result_detail(schedule_entry_name, task_id):
     rf = RequestFactory()
-    url = "/results/" + schedule_entry_name + "/" + str(task_id)
+    url = "/tasks/completed/" + schedule_entry_name + "/" + str(task_id)
     request = rf.get(url, **HTTPS_KWARG)
     kws = {"schedule_entry_name": schedule_entry_name, "task_id": task_id}
     kws.update(V1)
-    return reverse("result-detail", kwargs=kws, request=request)
+    return reverse("task-result-detail", kwargs=kws, request=request)
 
 
 def get_results_overview(client):

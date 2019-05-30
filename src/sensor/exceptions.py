@@ -38,13 +38,13 @@ def handle_protected_error(exc, context):
         entry_name = context["kwargs"]["pk"]
 
     request = context["request"]
+    view_name = "task-result-detail"
 
     protected_object_urls = []
     for protected_object in exc.protected_objects:
         task_id = protected_object.task_id
         url_kwargs = {"schedule_entry_name": entry_name, "task_id": task_id}
         url_kwargs.update(V1)
-        view_name = "result-detail"
         url = reverse(view_name, kwargs=url_kwargs, request=request)
         protected_object_urls.append(url)
 

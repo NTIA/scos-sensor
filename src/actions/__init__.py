@@ -5,11 +5,11 @@ from ruamel.yaml import YAML
 
 from sensor import settings
 
-from . import acquire_single_freq_fft
-from . import acquire_stepped_freq_tdomain_iq
 from . import logger as logger_action
-from . import monitor_usrp
-from . import sync_gps
+from .acquire_single_freq_fft import SingleFrequencyFftAcquisition
+from .acquire_stepped_freq_tdomain_iq import SteppedFrequencyTimeDomainIqAcquisition
+from .monitor_usrp import UsrpMonitor
+from .sync_gps import SyncGps
 
 
 logger = logging.getLogger(__name__)
@@ -21,8 +21,8 @@ registered_actions = {
     "admin_logger": logger_action.Logger(
         loglvl=logger_action.LOGLVL_ERROR, admin_only=True
     ),
-    "monitor_usrp": monitor_usrp.UsrpMonitor(admin_only=True),
-    "sync_gps": sync_gps.SyncGps(admin_only=True),
+    "monitor_usrp": UsrpMonitor(admin_only=True),
+    "sync_gps": SyncGps(admin_only=True),
 }
 
 by_name = registered_actions
@@ -32,10 +32,10 @@ by_name = registered_actions
 # The YAML loader can key an object with parameters on these class names
 action_classes = {
     "logger": logger_action.Logger,
-    "usrp_monitor": monitor_usrp.UsrpMonitor,
-    "sync_gps": sync_gps.SyncGps,
-    "single_frequency_fft": acquire_single_freq_fft.SingleFrequencyFftAcquisition,
-    "stepped_frequency_time_domain_iq": acquire_stepped_freq_tdomain_iq.SteppedFrequencyTimeDomainIqAcquisition,
+    "usrp_monitor": UsrpMonitor,
+    "sync_gps": SyncGps,
+    "single_frequency_fft": SingleFrequencyFftAcquisition,
+    "stepped_frequency_time_domain_iq": SteppedFrequencyTimeDomainIqAcquisition,
 }
 
 

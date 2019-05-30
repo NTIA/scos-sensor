@@ -27,7 +27,8 @@ def test_can_view_others_result_details(user_client, alt_user_client):
 def test_cannot_view_private_result_details(user_client, admin_client, test_scheduler):
     """A user should not be able to view the result of a private task."""
     entry_name = simulate_acquisitions(admin_client, is_private=True)
-    url = reverse_result_detail(entry_name, 1)
+    task_id = 1
+    url = reverse_result_detail(entry_name, task_id)
     response = user_client.get(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_404_NOT_FOUND)
 
@@ -37,5 +38,4 @@ def test_cannot_delete_result_details(user_client):
     entry_name = create_task_results(1, user_client)
     url = reverse_result_detail(entry_name, 1)
     response = user_client.delete(url, **HTTPS_KWARG)
-
     validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)

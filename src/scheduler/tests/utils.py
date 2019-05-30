@@ -97,6 +97,7 @@ def create_action():
     cb.__name__ = "testcb" + str(create_action.counter)
     actions.by_name[cb.__name__] = cb
     create_action.counter += 1
+
     return cb, flag
 
 

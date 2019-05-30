@@ -69,7 +69,7 @@ class TaskResult(models.Model):
         if same_entry_results.count() >= self.max_results:
             same_entry_results[0].delete()
 
-        super(TaskResult, self).save()
+        super().save()
 
     def __str__(self):
         s = "{}/{}"
