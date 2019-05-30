@@ -12,10 +12,10 @@ def test_task_result_serializer(user_client):
     context = {"request": None}
     r = TaskResultSerializer(tr, context=context)
     assert r.data["task_id"] == 1
-    assert r.data["self"] == "/api/v1/results/test/1/"
+    assert r.data["self"] == "/api/v1/tasks/completed/test/1/"
     assert r.data["schedule_entry"] == "/api/v1/schedule/test/"
     assert r.data["detail"] == ""
-    assert r.data["result"] == "success"
+    assert r.data["status"] == "success"
     assert r.data["duration"] == "00:00:00.000001"
 
 

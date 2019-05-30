@@ -89,7 +89,7 @@ def create_task_results(n, user_client, entry_name=None):
 def reverse_results_overview():
     rf = RequestFactory()
     request = rf.get("/tasks/completed/", **HTTPS_KWARG)
-    return reverse("results-overview", kwargs=V1, request=request)
+    return reverse("task-results-overview", kwargs=V1, request=request)
 
 
 def reverse_result_list(schedule_entry_name):
@@ -97,7 +97,7 @@ def reverse_result_list(schedule_entry_name):
     request = rf.get("/tasks/completed/" + schedule_entry_name, **HTTPS_KWARG)
     kws = {"schedule_entry_name": schedule_entry_name}
     kws.update(V1)
-    return reverse("result-list", kwargs=kws, request=request)
+    return reverse("task-result-list", kwargs=kws, request=request)
 
 
 def reverse_result_detail(schedule_entry_name, task_id):

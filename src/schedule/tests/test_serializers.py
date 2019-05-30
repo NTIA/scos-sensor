@@ -272,8 +272,7 @@ def test_serialized_fields(user_client):
     # links
     assert rjson["self"]
     assert rjson["owner"]
-    assert rjson["results"]
-    assert rjson["acquisitions"]
+    assert rjson["task_results"]
 
 
 def test_non_serialized_fields(user_client):
