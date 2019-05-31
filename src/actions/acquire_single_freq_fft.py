@@ -225,13 +225,12 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
-        # sigmf_md.set_global_field("core:description", self.description) #depreciated by action object
 
         sensor_def = capabilities['sensor_definition']
         sensor_def["id"] = settings.FQDN
-        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)  # global/ntia-sensor:sensor
-        # sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN) #depreciated by ntia-sensor object
-        sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)  # global/core:version
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+        # sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
+        sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)
 
         action_def = {
             "name": self.name,
@@ -240,7 +239,6 @@ class SingleFrequencyFftAcquisition(Action):
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        # sigmf_md.set_global_field("ntia-scos:schedule", parent_entry)
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         capture_md = {
