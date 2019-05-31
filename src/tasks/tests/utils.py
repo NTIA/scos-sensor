@@ -5,7 +5,6 @@ from django.test import RequestFactory
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.reverse import reverse
-
 from schedule.models import ScheduleEntry
 from schedule.tests.utils import TEST_SCHEDULE_ENTRY, post_schedule
 from scheduler.tests.utils import simulate_scheduler_run
@@ -130,7 +129,7 @@ def get_result_detail(client, schedule_entry_name, task_id):
     return validate_response(response, status.HTTP_200_OK)
 
 
-def update_acquisition_detail(client, schedule_entry_name, task_id, new_acquisition):
+def update_result_detail(client, schedule_entry_name, task_id, new_acquisition):
     url = reverse_result_detail(schedule_entry_name, task_id)
 
     kwargs = {

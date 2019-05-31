@@ -3,7 +3,6 @@ import time
 
 import pytest
 import requests_mock
-
 from scheduler.scheduler import Scheduler, minimum_duration
 
 from .utils import (
@@ -335,7 +334,7 @@ def test_failure_posted_to_callback_url(test_scheduler):
         request_json = m.request_history[0].json()
 
     assert cb_flag.is_set()
-    assert request_json["result"] == "failure"
+    assert request_json["status"] == "failure"
     assert request_json["task_id"] == 1
     assert request_json["self"]
     assert request_json["detail"] == BAD_ACTION_STR
@@ -370,7 +369,7 @@ def test_success_posted_to_callback_url(test_scheduler):
 
     assert cb_flag.is_set()
     assert action_flag.is_set()
-    assert request_json["result"] == "success"
+    assert request_json["status"] == "success"
     assert request_json["task_id"] == 1
     assert request_json["self"]
     assert request_json["started"]

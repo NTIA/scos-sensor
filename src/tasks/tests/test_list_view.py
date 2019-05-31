@@ -1,6 +1,5 @@
 import pytest
 from rest_framework import status
-
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.tests.utils import (
     create_task_results,
@@ -44,18 +43,18 @@ def test_private_entry_results_list_is_private(
     entry_name = simulate_acquisitions(admin_client, is_private=True)
     url = reverse_result_list(entry_name)
     response = user_client.get(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_404_NOT_FOUND)
+    validate_response(response, status.HTTP_403_FORBIDDEN)
 
 
 @pytest.mark.django_db
 def test_delete_list(user_client):
-    # If result doesn't exist, expect 405
+    # If result doesn't exist, expect 404
     url = reverse_result_list("doesntexist")
     response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
+    validate_response(response, status.HTTP_404_NOT_FOUND)
 
-    # If result does exist, expect 405
+    # If result does exist, expect 204
     entry_name = create_task_results(1, user_client)
     url = reverse_result_list(entry_name)
     response = user_client.delete(url, **HTTPS_KWARG)
-    validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
+    validate_response(response, status.HTTP_204_NO_CONTENT)
