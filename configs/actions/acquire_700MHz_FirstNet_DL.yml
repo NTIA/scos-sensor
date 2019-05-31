@@ -1,5 +1,5 @@
 single_frequency_fft:
-  name: acquire_700c_dl
+  name: acquire_700MHz_FirstNet_DL
   frequency: 763e6
   gain: 40
   sample_rate: 15.36e6
