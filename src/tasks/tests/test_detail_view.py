@@ -1,4 +1,5 @@
 from rest_framework import status
+
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.tests.utils import (
     create_task_results,

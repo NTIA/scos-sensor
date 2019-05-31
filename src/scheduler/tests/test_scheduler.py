@@ -3,6 +3,7 @@ import time
 
 import pytest
 import requests_mock
+
 from scheduler.scheduler import Scheduler, minimum_duration
 
 from .utils import (
