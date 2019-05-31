@@ -7,6 +7,7 @@ from pathlib import Path
 
 from hardware import usrp_iface
 from sensor import settings
+
 from .base import Action
 
 logger = logging.getLogger(__name__)

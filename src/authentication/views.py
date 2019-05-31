@@ -1,18 +1,18 @@
 from __future__ import absolute_import
 
-from rest_framework.generics import get_object_or_404
 from rest_framework.generics import (
     ListAPIView,
     ListCreateAPIView,
     RetrieveAPIView,
     RetrieveUpdateDestroyAPIView,
+    get_object_or_404,
 )
 from rest_framework.permissions import IsAdminUser
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 
 from .models import User
-from .serializers import UserProfileSerializer, UserDetailsSerializer
+from .serializers import UserDetailsSerializer, UserProfileSerializer
 
 
 class UserListView(APIView):

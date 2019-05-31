@@ -1,13 +1,12 @@
 from django.urls import path
 
 from .views import (
-    TaskResultsOverviewViewSet,
-    TaskResultListViewSet,
     TaskResultInstanceViewSet,
+    TaskResultListViewSet,
+    TaskResultsOverviewViewSet,
     task_root,
     upcoming_tasks,
 )
-
 
 urlpatterns = (
     path("", view=task_root, name="task-root"),

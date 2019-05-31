@@ -13,11 +13,12 @@ import os
 import django
 from django.core.wsgi import get_wsgi_application
 
+from scheduler import scheduler  # noqa
+from sensor import settings  # noqa
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()  # this is necessary because we need to handle our own thread
 
-from sensor import settings  # noqa
-from scheduler import scheduler  # noqa
 
 application = get_wsgi_application()
 

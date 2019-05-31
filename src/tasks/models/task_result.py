@@ -7,7 +7,6 @@ from schedule.models import ScheduleEntry
 from sensor.settings import MAX_TASK_RESULTS
 from tasks.consts import MAX_DETAIL_LEN
 
-
 UTC = timezone.timezone.utc
 
 

@@ -83,7 +83,6 @@ import logging
 from enum import Enum
 
 import numpy as np
-
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities

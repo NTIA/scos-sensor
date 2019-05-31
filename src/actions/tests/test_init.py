@@ -5,7 +5,6 @@ from ruamel.yaml.scanner import ScannerError
 
 import actions
 
-
 # Indentation makes this invalid
 INVALID_YAML = b"""\
 single_frequency_fft:

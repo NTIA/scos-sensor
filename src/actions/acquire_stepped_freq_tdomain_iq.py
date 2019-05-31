@@ -46,7 +46,6 @@ import logging
 from itertools import zip_longest
 
 import numpy as np
-
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities

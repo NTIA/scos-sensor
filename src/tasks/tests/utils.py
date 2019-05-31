@@ -1,15 +1,16 @@
 import datetime
+import json
 
 from django.test import RequestFactory
 from django.utils import timezone
-from rest_framework.reverse import reverse
 from rest_framework import status
+from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
-from schedule.tests.utils import post_schedule, TEST_SCHEDULE_ENTRY
+from schedule.tests.utils import TEST_SCHEDULE_ENTRY, post_schedule
 from scheduler.tests.utils import simulate_scheduler_run
 from sensor import V1
-from sensor.tests.utils import validate_response, HTTPS_KWARG
+from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.models import TaskResult
 
 TEST_MAX_TASK_RESULTS = 100  # Reduce from default of settings.MAX_TASK_RESULTS
@@ -127,3 +128,15 @@ def get_result_detail(client, schedule_entry_name, task_id):
     url = reverse_result_detail(schedule_entry_name, task_id)
     response = client.get(url, **HTTPS_KWARG)
     return validate_response(response, status.HTTP_200_OK)
+
+
+def update_acquisition_detail(client, schedule_entry_name, task_id, new_acquisition):
+    url = reverse_result_detail(schedule_entry_name, task_id)
+
+    kwargs = {
+        "data": json.dumps(new_acquisition),
+        "content_type": "application/json",
+        "wsgi.url_scheme": "https",
+    }
+
+    return client.put(url, **kwargs)

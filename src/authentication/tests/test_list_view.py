@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from schedule.tests.utils import TEST_PRIVATE_SCHEDULE_ENTRY, post_schedule
 from sensor import V1
-from sensor.tests.utils import validate_response, HTTPS_KWARG
+from sensor.tests.utils import HTTPS_KWARG, validate_response
 
 
 def test_user_cannot_view_private_entry_in_list(admin_client, user_client):

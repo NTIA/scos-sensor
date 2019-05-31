@@ -25,8 +25,7 @@ from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import settings
-from .views import schema_view, api_v1_root
-
+from .views import api_v1_root, schema_view
 
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r"^api/(?P<version>v[0-9]+)/"

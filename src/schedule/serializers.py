@@ -6,8 +6,8 @@ from rest_framework.reverse import reverse
 import actions
 from sensor import V1
 from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
-from .models import DEFAULT_PRIORITY, ScheduleEntry
 
+from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = "Lower number is higher priority (default={})".format(DEFAULT_PRIORITY)

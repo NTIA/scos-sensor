@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import logging
 
 from hardware import gps_iface
-from status.models import Location, GPS_LOCATION_DESCRIPTION
+from status.models import GPS_LOCATION_DESCRIPTION, Location
 
 from .base import Action
 

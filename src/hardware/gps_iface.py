@@ -3,7 +3,7 @@
 import logging
 import subprocess
 from datetime import datetime
-from time import time, sleep
+from time import sleep, time
 
 from hardware import usrp_iface
 

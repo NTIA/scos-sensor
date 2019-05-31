@@ -1,11 +1,11 @@
-from rest_framework import status, filters
+from rest_framework import filters, status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
-from .models import ScheduleEntry, Request
+from .models import Request, ScheduleEntry
 from .permissions import IsAdminOrOwnerOrReadOnly
-from .serializers import ScheduleEntrySerializer, AdminScheduleEntrySerializer
+from .serializers import AdminScheduleEntrySerializer, ScheduleEntrySerializer
 
 
 class ScheduleEntryViewSet(ModelViewSet):

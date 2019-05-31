@@ -8,7 +8,6 @@ from rest_framework.response import Response
 import actions
 from capabilities import capabilities
 
-
 logger = logging.getLogger(__name__)
 
 

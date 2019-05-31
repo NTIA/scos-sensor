@@ -5,9 +5,9 @@ from rest_framework.response import Response
 
 from scheduler import scheduler
 from sensor import utils
+
 from .models import Location
 from .serializers import LocationSerializer
-
 
 logger = logging.getLogger(__name__)
 

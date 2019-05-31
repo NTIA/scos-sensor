@@ -5,14 +5,14 @@ from .task_result import TaskResult
 
 
 class Acquisition(models.Model):
-    """Map between schedule entries and their task data and metadata.
+    """The data and metadata associated with a task.
 
-    Schedule Entry and Task ID map the acquisition to a specific task on the
-    sensor, while recording ID allows for a single task to create more than one
-    SigMF recording.
+    Task Result maps the acquisition to a specific task on the sensor, while
+    recording ID allows for a single task to create more than one SigMF
+    recording.
 
-    It is an error to create more than one Acquisition with the same schedule
-    entry, task id, and recording id.
+    It is an error to create more than one Acquisition associated with the same
+    task result with the same recording id.
 
     """
 

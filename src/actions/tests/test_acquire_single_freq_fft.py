@@ -2,13 +2,10 @@ import json
 from os import path
 
 from django.conf import settings
-
-# from jsonschema import validate as schema_validate
 from sigmf.validate import validate as sigmf_validate
 
 from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import simulate_acquisitions
-
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"

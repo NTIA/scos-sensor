@@ -1,10 +1,11 @@
-import time
 import threading
+import time
 
 import pytest
 import requests_mock
 
 from scheduler.scheduler import Scheduler, minimum_duration
+
 from .utils import (
     BAD_ACTION_STR,
     advance_testclock,

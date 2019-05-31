@@ -1,19 +1,18 @@
 import pytest
-
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from schedule.tests.utils import (
     EMPTY_SCHEDULE_RESPONSE,
-    TEST_SCHEDULE_ENTRY,
-    TEST_PRIVATE_SCHEDULE_ENTRY,
     TEST_ALTERNATE_SCHEDULE_ENTRY,
+    TEST_PRIVATE_SCHEDULE_ENTRY,
+    TEST_SCHEDULE_ENTRY,
     post_schedule,
-    update_schedule,
     reverse_detail_url,
+    update_schedule,
 )
 from sensor import V1
-from sensor.tests.utils import validate_response, HTTPS_KWARG
+from sensor.tests.utils import HTTPS_KWARG, validate_response
 
 
 def test_user_cannot_post_private_schedule(user_client):

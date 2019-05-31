@@ -1,6 +1,7 @@
 """Test aspects of RadioInterface with mocked USRP."""
 
 import pytest
+
 from hardware import usrp_iface
 
 # Create the RadioInterface with the mock usrp_block

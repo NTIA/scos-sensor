@@ -4,9 +4,10 @@ from itertools import count
 import pytest
 from django.core.exceptions import ValidationError
 
-from .utils import flatten
+from schedule.models import DEFAULT_PRIORITY, ScheduleEntry
 from scheduler import utils
-from schedule.models import ScheduleEntry, DEFAULT_PRIORITY
+
+from .utils import flatten
 
 
 @pytest.mark.parametrize(

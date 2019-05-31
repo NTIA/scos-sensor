@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from tasks.models import Acquisition
 from sensor import V1
+from tasks.models import Acquisition
 
 
 class AcquisitionHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):

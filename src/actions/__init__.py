@@ -11,7 +11,6 @@ from .acquire_stepped_freq_tdomain_iq import SteppedFrequencyTimeDomainIqAcquisi
 from .monitor_usrp import UsrpMonitor
 from .sync_gps import SyncGps
 
-
 logger = logging.getLogger(__name__)
 
 

@@ -2,19 +2,17 @@ import logging
 import tempfile
 from functools import partial
 
-from django.http import Http404, FileResponse
+import sigmf.archive
+import sigmf.sigmffile
+from django.http import FileResponse, Http404
 from rest_framework import filters, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.generics import get_object_or_404
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, DestroyModelMixin
-from rest_framework.decorators import api_view
+from rest_framework.mixins import DestroyModelMixin, ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import GenericViewSet
-
-import sigmf.archive
-import sigmf.sigmffile
 
 from schedule.models import ScheduleEntry
 from scheduler import scheduler
@@ -23,8 +21,7 @@ from sensor import settings
 from .models.task_result import TaskResult
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers.task import TaskSerializer
-from .serializers.task_result import TaskResultsOverviewSerializer, TaskResultSerializer
-
+from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSerializer
 
 logger = logging.getLogger(__name__)
 
