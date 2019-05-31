@@ -7,7 +7,7 @@ SRC_ROOT=${REPO_ROOT}/src
 
 echo "Sorting imports with isort... "
 seed-isort-config --application-directories=${SRC_ROOT} --settings-path=${SRC_ROOT}
-isort -rc ${SRC_ROOT}
+isort --recursive ${SRC_ROOT}
 echo
 echo "Formatting code with black... "
 black ${SRC_ROOT}
