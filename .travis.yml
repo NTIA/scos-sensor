@@ -26,6 +26,7 @@ before_script:
   - pip install -r ./src/requirements-dev.txt
 
 script:
+  - isort --check-only ./src
   - black --check ./src
   - tox -c ./src/tox.ini -e coverage
   - docker ps | grep api | grep -q healthy
