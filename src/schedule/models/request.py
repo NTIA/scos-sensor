@@ -1,7 +1,5 @@
 """Request model to save enough of a request to be passed to reverse()."""
 
-from __future__ import absolute_import
-
 from django.db import models
 from django.utils.encoding import iri_to_uri
 from django.utils.functional import cached_property

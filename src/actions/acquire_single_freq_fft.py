@@ -77,8 +77,6 @@ the _max_ of each column, and so "sample" detector simple chooses one of the
 
 """
 
-from __future__ import absolute_import
-
 import logging
 from enum import Enum
 

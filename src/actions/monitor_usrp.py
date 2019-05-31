@@ -1,7 +1,5 @@
 """Monitor the on-board USRP and touch or remove an indicator file."""
 
-from __future__ import absolute_import
-
 import logging
 from pathlib import Path
 
