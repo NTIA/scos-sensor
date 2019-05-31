@@ -1,5 +1,5 @@
 single_frequency_fft:
-  name: acquire_700c_dl
+  name: acquire_700MHz_P-SafetyNB_DL
   frequency: 772e6
   gain: 40
   sample_rate: 7.68e6
