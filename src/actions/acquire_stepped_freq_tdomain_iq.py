@@ -67,7 +67,7 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "cf32_le",  # 2x 32-bit float, Little Endian
-    "core:version": "0.0.1"
+    "core:version": "0.0.2"
 }
 
 
@@ -141,16 +141,28 @@ class SteppedFrequencyTimeDomainIq(Action):
         self.usrp.radio.clock_rate = clock_rate
 
     def acquire_data(self, parent_entry, task_id):
+        # Use the radio's actual reported sample rate instead of requested rate
+        sample_rate = self.usrp.radio.sample_rate
+
         # Build global metadata
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
-        sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
+        sigmf_md.set_global_field("core:sample_rate", sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
         sensor_def = capabilities['sensor_definition']
-        sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
-        sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
-        sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
+        sensor_def["id"] = settings.FQDN
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+        sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)
+
+        action_def = {
+            "name": self.name,
+            "description": self.description,
+            "type": ["TimeDomain"]
+        }
+
+        sigmf_md.set_global_field("ntia-scos:action", action_def)
+        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         # Acquire data and build per-capture metadata
         data = np.array([], dtype=np.complex64)
@@ -165,7 +177,9 @@ class SteppedFrequencyTimeDomainIq(Action):
             capture_md = {"core:frequency": fc, "core:datetime": dt}
             sigmf_md.add_capture(start_index=start_idx, metadata=capture_md)
             annotation_md = {
-                "applied_scale_factor": self.usrp.radio.scale_factor
+                "ntia-core:annotation_type": "CalibrationAnnotation",
+                "ntia-calibration:receiver_scaling_factor":
+                    self.usrp.radio.scale_factor
             }
             sigmf_md.add_annotation(start_index=start_idx, length=nsamps,
                                     metadata=annotation_md)

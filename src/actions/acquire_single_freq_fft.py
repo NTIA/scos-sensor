@@ -97,7 +97,7 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "rf32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.1"
+    "core:version": "0.0.2"
 }
 
 
@@ -222,14 +222,16 @@ class SingleFrequencyFftAcquisition(Action):
     def build_sigmf_md(self, parent_entry, task_id):
         logger.debug("Building SigMF metadata file")
 
+        # Use the radio's actual reported sample rate instead of requested rate
+        sample_rate = self.usrp.radio.sample_rate
+
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
-        sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
+        sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         sensor_def = capabilities['sensor_definition']
         sensor_def["id"] = settings.FQDN
         sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
-        # sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
         sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)
 
         action_def = {
