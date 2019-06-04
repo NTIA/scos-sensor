@@ -18,6 +18,7 @@ from schedule.models import ScheduleEntry
 from scheduler import scheduler
 from sensor import settings
 
+from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers.task import TaskSerializer
@@ -150,15 +151,16 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
     def archive(self, request, version, schedule_entry_name):
         queryset = self.get_queryset()
 
-        if not queryset.exists():
+        acquisitions = Acquisition.objects.filter(task_result__in=queryset)
+
+        if not acquisitions.exists():
             raise Http404
 
-        fqdn = settings.FQDN
-        fname = fqdn + "_" + schedule_entry_name + ".sigmf"
+        fname = settings.FQDN + "_" + schedule_entry_name + ".sigmf"
 
         # FileResponse handles closing the file
         tmparchive = tempfile.TemporaryFile()
-        build_sigmf_archive(tmparchive, schedule_entry_name, queryset)
+        build_sigmf_archive(tmparchive, schedule_entry_name, acquisitions)
         content_type = "application/x-tar"
         response = FileResponse(
             tmparchive, as_attachment=True, filename=fname, content_type=content_type
@@ -192,13 +194,15 @@ class TaskResultInstanceViewSet(
     @action(detail=True)
     def archive(self, request, version, schedule_entry_name, task_id):
         entry_name = schedule_entry_name
-        fqdn = settings.FQDN
-        fname = fqdn + "_" + entry_name + "_" + str(task_id) + ".sigmf"
-        acq = self.get_object()
+        fname = settings.FQDN + "_" + entry_name + "_" + str(task_id) + ".sigmf"
+        tr = self.get_object()
+        acquisitions = Acquisition.objects.filter(task_result=tr)
+        if not acquisitions:
+            raise Http404
 
         # FileResponse handles closing the file
         tmparchive = tempfile.TemporaryFile()
-        build_sigmf_archive(tmparchive, schedule_entry_name, [acq])
+        build_sigmf_archive(tmparchive, schedule_entry_name, acquisitions)
         content_type = "application/x-tar"
         response = FileResponse(
             tmparchive, as_attachment=True, filename=fname, content_type=content_type
@@ -217,14 +221,16 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
     """
     logger.debug("building sigmf archive")
 
+    multirecording = len(acquisitions) > 1
+
     for acq in acquisitions:
         with tempfile.NamedTemporaryFile() as tmpdata:
             tmpdata.write(acq.data)
             tmpdata.seek(0)  # move fd ptr to start of data for reading
-            name = schedule_entry_name + "_" + str(acq.task_id)
-            sigmf_file = sigmf.sigmffile.SigMFFile(
-                metadata=acq.sigmf_metadata, name=name
-            )
+            name = schedule_entry_name + "_" + str(acq.task_result.task_id)
+            if multirecording:
+                name += "-" + str(acq.recording_id)
+            sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.metadata, name=name)
             sigmf_file.set_data_file(tmpdata.name)
 
             sigmf.archive.SigMFArchive(sigmf_file, path=name, fileobj=fileobj)

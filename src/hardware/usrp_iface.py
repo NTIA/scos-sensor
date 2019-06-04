@@ -28,7 +28,8 @@ uhd = None
 radio = None
 is_available = False
 
-# Testing determined these gain values provide
+# Testing determined these gain values provide a good mix of sensitivity and
+# dynamic range performance
 VALID_GAINS = (0, 20, 40, 60)
 
 
