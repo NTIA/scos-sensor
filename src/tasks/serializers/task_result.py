@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
 from sensor import V1
-from tasks.models import TaskResult
+from tasks.models import Acquisition, TaskResult
 
 from .acquisition import AcquisitionSerializer
 
@@ -18,6 +18,9 @@ class TaskResultHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
 
 
 class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
+    archive = serializers.SerializerMethodField(
+        help_text="The link to a multi-recording archive of all available acquisitions"
+    )
     task_results = serializers.SerializerMethodField(
         help_text="The link to the task results"
     )
@@ -30,7 +33,23 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ScheduleEntry
-        fields = ("task_results", "task_results_available", "schedule_entry")
+        fields = ("archive", "task_results", "task_results_available", "schedule_entry")
+
+    def get_archive(self, obj):
+        # FIXME: This query can almost certiainly be optimized
+        acquisitions_available = Acquisition.objects.filter(
+            task_result__in=obj.task_results.all()
+        ).exists()
+
+        if not acquisitions_available:
+            return None
+
+        request = self.context["request"]
+        route = "task-result-list-archive"
+        kws = {"schedule_entry_name": obj.name}
+        kws.update(V1)
+        url = reverse(route, kwargs=kws, request=request)
+        return url
 
     def get_task_results(self, obj):
         request = self.context["request"]
