@@ -38,7 +38,7 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
     global is_available
     global radio
 
-    if settings.RUNNING_DEMO or settings.RUNNING_TESTS or settings.MOCK_RADIO:
+    if settings.MOCK_RADIO:
         logger.warning("Using mock USRP.")
         random = settings.MOCK_RADIO_RANDOM
         usrp = MockUsrp(randomize_values=random)
@@ -162,12 +162,20 @@ class RadioInterface(object):
             lo_frequency=self.frequency, gain=self.gain
         )
 
-    def acquire_samples(self, n, nskip=200000, retries=5):  # -> np.ndarray:
+    def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
-        o_retries = retries
+        max_retries = retries
+
         while True:
+
+            # No need to skip initial samples when simulating the radio
+            if settings.MOCK_RADIO:
+                nsamps = n
+            else:
+                nsamps = n + nskip
+
             samples = self.usrp.recv_num_samps(
-                n + nskip,  # number of samples
+                nsamps,  # number of samples
                 self.frequency,  # center frequency in Hz
                 self.sample_rate,  # sample rate in samples per second
                 [0],  # channel list
@@ -179,7 +187,10 @@ class RadioInterface(object):
             assert len(samples.shape) == 2 and samples.shape[0] == 1
             data = samples[0]  # isolate data for channel 0
             data_len = len(data)
-            data = data[nskip:]
+
+            if not settings.MOCK_RADIO:
+                data = data[nskip:]
+
             data = data * self.scale_factor
             if not len(data) == n:
                 if retries > 0:
@@ -189,7 +200,7 @@ class RadioInterface(object):
                     retries = retries - 1
                 else:
                     err = "Failed to acquire correct number of samples "
-                    err += "{} times in a row.".format(o_retries)
+                    err += "{} times in a row.".format(max_retries)
                     raise RuntimeError(err)
             else:
                 logger.debug("Successfully acquired {} samples.".format(n))

@@ -44,7 +44,7 @@ __cmd = path.split(sys.argv[0])[-1]
 IN_DOCKER = bool(environ.get("IN_DOCKER"))
 RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = bool(environ.get("DEMO"))
-MOCK_RADIO = bool(environ.get("MOCK_RADIO"))
+MOCK_RADIO = bool(environ.get("MOCK_RADIO")) or RUNNING_DEMO or RUNNING_TESTS
 MOCK_RADIO_RANDOM = bool(environ.get("MOCK_RADIO_RANDOM"))
 
 # Healthchecks - the existance of any of these indicates an unhealthy state

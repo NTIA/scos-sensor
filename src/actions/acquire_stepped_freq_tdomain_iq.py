@@ -145,7 +145,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         nsamps = int(sample_rate * tuning_parameters["duration_ms"] * 1e-3)
 
         dt = utils.get_datetime_str_now()
-        acq = self.sdr.radio.acquire_samples(nsamps).astype(np.complex64)
+        # Drop ~10 ms of samples
+        nskip = int(0.01 * sample_rate)
+        acq = self.sdr.radio.acquire_samples(nsamps, nskip=nskip).astype(np.complex64)
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)

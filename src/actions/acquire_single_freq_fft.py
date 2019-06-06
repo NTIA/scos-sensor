@@ -204,7 +204,10 @@ class SingleFrequencyFftAcquisition(Action):
         msg = "Acquiring {} FFTs at {} MHz"
         logger.debug(msg.format(self.nffts, self.frequency / 1e6))
 
-        data = self.sdr.radio.acquire_samples(self.nffts * self.fft_size)
+        # Drop ~10 ms of samples
+        nskip = int(0.01 * self.sample_rate)
+
+        data = self.sdr.radio.acquire_samples(self.nffts * self.fft_size, nskip=nskip)
         data.resize((self.nffts, self.fft_size))
 
         return data
