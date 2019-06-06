@@ -112,7 +112,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         for recording_id, fc in enumerate(self.fcs, start=1):
             data, sigmf_md = self.acquire_data(fc)
-            self.archive(task_result, data, sigmf_md, recording_id)
+            self.archive(task_result, recording_id, data, sigmf_md)
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
@@ -170,13 +170,16 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
     def set_sdr_sample_rate(self, sample_rate):
         self.sdr.radio.sample_rate = sample_rate
 
-    def archive(self, task_result, m4s_data, sigmf_md):
+    def archive(self, task_result, recording_id, m4s_data, sigmf_md):
         from tasks.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 
         Acquisition(
-            task_result=task_result, metadata=sigmf_md._metadata, data=m4s_data
+            task_result=task_result,
+            recording_id=recording_id,
+            metadata=sigmf_md._metadata,
+            data=m4s_data,
         ).save()
 
     @property
