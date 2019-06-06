@@ -15,7 +15,7 @@ services:
     healthcheck:
       test: test ! -e /sdr_unhealthy && test ! -e /scheduler_dead
       interval: 10s
-      timeout: 1s
+      timeout: 3s
       retries: 1
     restart: always
     depends_on:
