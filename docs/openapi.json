@@ -1109,6 +1109,7 @@
                         "logger",
                         "survey_700_band_iq",
                         "mock_acquire",
+                        "mock_multirec_acquire",
                         "admin_logger",
                         "monitor_usrp",
                         "sync_gps"

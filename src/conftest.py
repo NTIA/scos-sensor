@@ -6,26 +6,6 @@ import scheduler
 from authentication.models import User
 
 
-def pytest_addoption(parser):
-    parser.addoption(
-        "--update-api-docs",
-        action="store_true",
-        default=False,
-        help="Ensure API docs match code",
-    )
-
-
-def pytest_collection_modifyitems(config, items):
-    """Skips `test_api_docs_up_to_date` if CLI option not passed."""
-    if config.getoption("--update-api-docs"):
-        # --update-api-docs given on cli: do not skip api doc generation
-        return
-    skip_api_gen = pytest.mark.skip(reason="didn't pass --update-api-docs")
-    for item in items:
-        if "update_api_docs" in item.keywords:
-            item.add_marker(skip_api_gen)
-
-
 @pytest.yield_fixture
 def testclock():
     """Replace scheduler's timefn with manually steppable test timefn."""
