@@ -135,6 +135,9 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ("next_task_time", "is_private")
         write_only_fields = ("relative_stop", "validate_only")
+        # FIXME: This is required by drf_yasg, but may not be required for
+        #        built-in DRF 3.10+ OpenAPI generation
+        ref_name = "ScheduleEntry"
 
     def save(self, *args, **kwargs):
         """Don't save if validate_only is True."""
@@ -214,3 +217,6 @@ class AdminScheduleEntrySerializer(ScheduleEntrySerializer):
 
     class Meta(ScheduleEntrySerializer.Meta):
         read_only_fields = ("next_task_time",)
+        # FIXME: This is required by drf_yasg, but may not be required for
+        #        built-in DRF 3.10+ OpenAPI generation
+        ref_name = "AdminScheduleEntry"

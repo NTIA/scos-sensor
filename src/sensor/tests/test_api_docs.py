@@ -1,13 +1,11 @@
 import json
 from os import path
 
-import pytest
 from rest_framework.reverse import reverse
 
 from sensor import V1, settings
 
 
-@pytest.mark.update_api_docs
 def test_api_docs_up_to_date(admin_client):
     """Ensure that docs/openapi.json is up-to-date."""
 

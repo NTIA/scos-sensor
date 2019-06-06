@@ -53,332 +53,6 @@
             },
             "parameters": []
         },
-        "/v1/acquisitions/": {
-            "get": {
-                "operationId": "v1_acquisitions_list",
-                "description": "Returns an overview of how many acquisitions are available per schedule\nentry.",
-                "parameters": [
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of results to return per page.",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "The initial index from which to return the results.",
-                        "required": false,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "required": [
-                                "count",
-                                "results"
-                            ],
-                            "type": "object",
-                            "properties": {
-                                "count": {
-                                    "type": "integer"
-                                },
-                                "next": {
-                                    "type": "string",
-                                    "format": "uri",
-                                    "x-nullable": true
-                                },
-                                "previous": {
-                                    "type": "string",
-                                    "format": "uri",
-                                    "x-nullable": true
-                                },
-                                "results": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/AcquisitionsOverview"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": []
-        },
-        "/v1/acquisitions/{schedule_entry_name}/": {
-            "get": {
-                "operationId": "v1_acquisitions_list",
-                "description": "Returns a list of all acquisitions created by the given schedule entry.",
-                "parameters": [
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "description": "A search term.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "ordering",
-                        "in": "query",
-                        "description": "Which field to use when ordering the results.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of results to return per page.",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "The initial index from which to return the results.",
-                        "required": false,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "required": [
-                                "count",
-                                "results"
-                            ],
-                            "type": "object",
-                            "properties": {
-                                "count": {
-                                    "type": "integer"
-                                },
-                                "next": {
-                                    "type": "string",
-                                    "format": "uri",
-                                    "x-nullable": true
-                                },
-                                "previous": {
-                                    "type": "string",
-                                    "format": "uri",
-                                    "x-nullable": true
-                                },
-                                "results": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Acquisition"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "delete": {
-                "operationId": "v1_acquisitions_delete",
-                "description": "Deletes all acquisitions created by the given schedule entry.",
-                "parameters": [
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "description": "A search term.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "ordering",
-                        "in": "query",
-                        "description": "Which field to use when ordering the results.",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "schedule_entry_name",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
-        },
-        "/v1/acquisitions/{schedule_entry_name}/archive": {
-            "get": {
-                "operationId": "v1_acquisitions_archive",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "description": "A search term.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "ordering",
-                        "in": "query",
-                        "description": "Which field to use when ordering the results.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of results to return per page.",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "The initial index from which to return the results.",
-                        "required": false,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "required": [
-                                "count",
-                                "results"
-                            ],
-                            "type": "object",
-                            "properties": {
-                                "count": {
-                                    "type": "integer"
-                                },
-                                "next": {
-                                    "type": "string",
-                                    "format": "uri",
-                                    "x-nullable": true
-                                },
-                                "previous": {
-                                    "type": "string",
-                                    "format": "uri",
-                                    "x-nullable": true
-                                },
-                                "results": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Acquisition"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "schedule_entry_name",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
-        },
-        "/v1/acquisitions/{schedule_entry_name}/{task_id}/": {
-            "get": {
-                "operationId": "v1_acquisitions_read",
-                "description": "Returns all available metadata about an acquisition.",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Acquisition"
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "delete": {
-                "operationId": "v1_acquisitions_delete",
-                "description": "Deletes the specified acquisition.",
-                "parameters": [],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "schedule_entry_name",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
-                    "name": "task_id",
-                    "in": "path",
-                    "description": "The id of the task relative to the acquisition",
-                    "required": true,
-                    "type": "integer"
-                }
-            ]
-        },
-        "/v1/acquisitions/{schedule_entry_name}/{task_id}/archive": {
-            "get": {
-                "operationId": "v1_acquisitions_archive",
-                "description": "Downloads the acquisition's SigMF archive.",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Acquisition"
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "schedule_entry_name",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
-                    "name": "task_id",
-                    "in": "path",
-                    "description": "The id of the task relative to the acquisition",
-                    "required": true,
-                    "type": "integer"
-                }
-            ]
-        },
         "/v1/capabilities/": {
             "get": {
                 "operationId": "v1_capabilities_list",
@@ -395,9 +69,277 @@
             },
             "parameters": []
         },
-        "/v1/results/": {
+        "/v1/capabilities/{format}": {
             "get": {
-                "operationId": "v1_results_list",
+                "operationId": "v1_capabilities_read",
+                "description": "The capabilites of the sensor.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/schedule/": {
+            "get": {
+                "operationId": "v1_schedule_list",
+                "description": "Retrieves the current schedule.",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "ordering",
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/AdminScheduleEntry"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "post": {
+                "operationId": "v1_schedule_create",
+                "description": "Return NO CONTENT when input is valid but validate_only is True.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": []
+        },
+        "/v1/schedule/{name}/": {
+            "get": {
+                "operationId": "v1_schedule_read",
+                "description": "Returns the specified schedule entry.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "put": {
+                "operationId": "v1_schedule_update",
+                "description": "Updates the specified schedule entry.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "patch": {
+                "operationId": "v1_schedule_partial_update",
+                "description": "Partially updates the specified schedule entry.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/AdminScheduleEntry"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_schedule_delete",
+                "description": "Deletes the specified schedule entry.",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "[Required] The unique identifier used in URLs and filenames",
+                    "required": true,
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$"
+                }
+            ]
+        },
+        "/v1/status": {
+            "get": {
+                "operationId": "v1_status_list",
+                "description": "The status overview of the sensor.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": []
+        },
+        "/v1/status{format}": {
+            "get": {
+                "operationId": "v1_read",
+                "description": "The status overview of the sensor.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/tasks/": {
+            "get": {
+                "operationId": "v1_tasks_list",
+                "description": "Provides links to upcoming and completed tasks",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": []
+        },
+        "/v1/tasks/completed/": {
+            "get": {
+                "operationId": "v1_tasks_completed_list",
                 "description": "Returns an overview of how many results are available per schedule\nentry.",
                 "parameters": [
                     {
@@ -454,10 +396,103 @@
             },
             "parameters": []
         },
-        "/v1/results/{schedule_entry_name}/": {
+        "/v1/tasks/completed/{schedule_entry_name}/": {
             "get": {
-                "operationId": "v1_results_list",
+                "operationId": "v1_tasks_completed_list",
                 "description": "Returns a list of all results created by the given schedule entry.",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "ordering",
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TaskResult"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_tasks_completed_delete",
+                "description": "Deletes all results created by the given schedule entry.",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "schedule_entry_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/tasks/completed/{schedule_entry_name}/archive/": {
+            "get": {
+                "operationId": "v1_tasks_completed_archive",
+                "description": "Downloads the acquisition's SigMF archive.",
                 "parameters": [
                     {
                         "name": "search",
@@ -534,43 +569,10 @@
                 }
             ]
         },
-        "/v1/results/{schedule_entry_name}/{task_id}/": {
+        "/v1/tasks/completed/{schedule_entry_name}/archive{format}": {
             "get": {
-                "operationId": "v1_results_read",
-                "description": "Returns a specific result.",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/TaskResult"
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "schedule_entry_name",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
-                    "name": "task_id",
-                    "in": "path",
-                    "description": "The id of the task relative to the result",
-                    "required": true,
-                    "type": "integer"
-                }
-            ]
-        },
-        "/v1/schedule/": {
-            "get": {
-                "operationId": "v1_schedule_list",
-                "description": "Retrieves the current schedule.",
+                "operationId": "v1_tasks_archive",
+                "description": "Downloads the acquisition's SigMF archive.",
                 "parameters": [
                     {
                         "name": "search",
@@ -627,150 +629,7 @@
                                 "results": {
                                     "type": "array",
                                     "items": {
-                                        "required": [
-                                            "name",
-                                            "action"
-                                        ],
-                                        "type": "object",
-                                        "properties": {
-                                            "url": {
-                                                "title": "Url",
-                                                "description": "The url of the entry",
-                                                "type": "string",
-                                                "format": "uri",
-                                                "readOnly": true
-                                            },
-                                            "name": {
-                                                "title": "Name",
-                                                "description": "[Required] The unique identifier used in URLs and filenames",
-                                                "type": "string",
-                                                "format": "slug",
-                                                "pattern": "^[-a-zA-Z0-9_]+$",
-                                                "maxLength": 50,
-                                                "minLength": 1
-                                            },
-                                            "action": {
-                                                "title": "Action",
-                                                "description": "[Required] The name of the action to be scheduled",
-                                                "type": "string",
-                                                "enum": [
-                                                    "acquire_700_band_iq",
-                                                    "acquire_700c_dl",
-                                                    "logger",
-                                                    "mock_acquire",
-                                                    "admin_logger",
-                                                    "monitor_usrp",
-                                                    "sync_gps"
-                                                ]
-                                            },
-                                            "priority": {
-                                                "title": "Priority",
-                                                "description": "Lower number is higher priority (default=10)",
-                                                "type": "integer",
-                                                "maximum": 19,
-                                                "minimum": -20,
-                                                "x-nullable": true
-                                            },
-                                            "start": {
-                                                "title": "Start",
-                                                "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "x-nullable": true
-                                            },
-                                            "stop": {
-                                                "title": "Absolute stop",
-                                                "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "x-nullable": true
-                                            },
-                                            "relative_stop": {
-                                                "title": "Relative stop",
-                                                "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                                "type": "integer",
-                                                "minimum": 1,
-                                                "x-nullable": true
-                                            },
-                                            "interval": {
-                                                "title": "Interval",
-                                                "description": "Seconds between tasks, or leave blank to run once",
-                                                "type": "integer",
-                                                "minimum": 1,
-                                                "x-nullable": true
-                                            },
-                                            "is_active": {
-                                                "title": "Is active",
-                                                "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                                "type": "boolean",
-                                                "readOnly": true
-                                            },
-                                            "is_private": {
-                                                "title": "Is private",
-                                                "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                                "type": "boolean"
-                                            },
-                                            "callback_url": {
-                                                "title": "Callback url",
-                                                "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                                "type": "string",
-                                                "format": "uri",
-                                                "maxLength": 200,
-                                                "x-nullable": true
-                                            },
-                                            "next_task_time": {
-                                                "title": "Next task time",
-                                                "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "readOnly": true
-                                            },
-                                            "next_task_id": {
-                                                "title": "Next task id",
-                                                "description": "The id of the next task to be executed",
-                                                "type": "integer",
-                                                "readOnly": true
-                                            },
-                                            "created": {
-                                                "title": "Created",
-                                                "description": "The date the entry was created",
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "readOnly": true
-                                            },
-                                            "modified": {
-                                                "title": "Modified",
-                                                "description": "The date the entry was modified",
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "readOnly": true
-                                            },
-                                            "owner": {
-                                                "title": "Owner",
-                                                "description": "The name of the user who owns the entry",
-                                                "type": "string",
-                                                "format": "uri",
-                                                "readOnly": true
-                                            },
-                                            "acquisitions": {
-                                                "title": "Acquisitions",
-                                                "description": "The list of acquisitions related to the entry",
-                                                "type": "string",
-                                                "readOnly": true
-                                            },
-                                            "results": {
-                                                "title": "Results",
-                                                "description": "The list of results related to the entry",
-                                                "type": "string",
-                                                "readOnly": true
-                                            },
-                                            "validate_only": {
-                                                "title": "Validate only",
-                                                "description": "Only validate the input, do not modify the schedule",
-                                                "type": "boolean",
-                                                "default": false
-                                            }
-                                        }
+                                        "$ref": "#/definitions/TaskResult"
                                     }
                                 }
                             }
@@ -781,1078 +640,31 @@
                     "v1"
                 ]
             },
-            "post": {
-                "operationId": "v1_schedule_create",
-                "description": "Return NO CONTENT when input is valid but validate_only is True.",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "required": [
-                                "name",
-                                "action"
-                            ],
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "maxLength": 50,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ]
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean",
-                                    "readOnly": true
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "",
-                        "schema": {
-                            "required": [
-                                "name",
-                                "action"
-                            ],
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "maxLength": 50,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ]
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean",
-                                    "readOnly": true
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "parameters": []
+                {
+                    "name": "schedule_entry_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
         },
-        "/v1/schedule/{name}/": {
+        "/v1/tasks/completed/{schedule_entry_name}/{task_id}/": {
             "get": {
-                "operationId": "v1_schedule_read",
-                "description": "Returns the specified schedule entry.",
+                "operationId": "v1_tasks_completed_read",
+                "description": "Returns a specific result.",
                 "parameters": [],
                 "responses": {
                     "200": {
                         "description": "",
                         "schema": {
-                            "required": [
-                                "name",
-                                "action"
-                            ],
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "maxLength": 50,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ]
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean",
-                                    "readOnly": true
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "put": {
-                "operationId": "v1_schedule_update",
-                "description": "Updates the specified schedule entry.",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "readOnly": true,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ],
-                                    "readOnly": true
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean"
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "readOnly": true,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ],
-                                    "readOnly": true
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean"
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "v1"
-                ]
-            },
-            "patch": {
-                "operationId": "v1_schedule_partial_update",
-                "description": "Partially updates the specified schedule entry.",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "readOnly": true,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ],
-                                    "readOnly": true
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean"
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "url": {
-                                    "title": "Url",
-                                    "description": "The url of the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "name": {
-                                    "title": "Name",
-                                    "description": "[Required] The unique identifier used in URLs and filenames",
-                                    "type": "string",
-                                    "format": "slug",
-                                    "pattern": "^[-a-zA-Z0-9_]+$",
-                                    "readOnly": true,
-                                    "minLength": 1
-                                },
-                                "action": {
-                                    "title": "Action",
-                                    "description": "[Required] The name of the action to be scheduled",
-                                    "type": "string",
-                                    "enum": [
-                                        "acquire_700_band_iq",
-                                        "acquire_700c_dl",
-                                        "logger",
-                                        "mock_acquire",
-                                        "admin_logger",
-                                        "monitor_usrp",
-                                        "sync_gps"
-                                    ],
-                                    "readOnly": true
-                                },
-                                "priority": {
-                                    "title": "Priority",
-                                    "description": "Lower number is higher priority (default=10)",
-                                    "type": "integer",
-                                    "maximum": 19,
-                                    "minimum": -20,
-                                    "x-nullable": true
-                                },
-                                "start": {
-                                    "title": "Start",
-                                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "stop": {
-                                    "title": "Absolute stop",
-                                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-nullable": true
-                                },
-                                "relative_stop": {
-                                    "title": "Relative stop",
-                                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "interval": {
-                                    "title": "Interval",
-                                    "description": "Seconds between tasks, or leave blank to run once",
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "x-nullable": true
-                                },
-                                "is_active": {
-                                    "title": "Is active",
-                                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
-                                    "type": "boolean"
-                                },
-                                "is_private": {
-                                    "title": "Is private",
-                                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                                    "type": "boolean"
-                                },
-                                "callback_url": {
-                                    "title": "Callback url",
-                                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "maxLength": 200,
-                                    "x-nullable": true
-                                },
-                                "next_task_time": {
-                                    "title": "Next task time",
-                                    "description": "UTC time (ISO 8601) the next task is scheduled for",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "next_task_id": {
-                                    "title": "Next task id",
-                                    "description": "The id of the next task to be executed",
-                                    "type": "integer",
-                                    "readOnly": true
-                                },
-                                "created": {
-                                    "title": "Created",
-                                    "description": "The date the entry was created",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "modified": {
-                                    "title": "Modified",
-                                    "description": "The date the entry was modified",
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "readOnly": true
-                                },
-                                "owner": {
-                                    "title": "Owner",
-                                    "description": "The name of the user who owns the entry",
-                                    "type": "string",
-                                    "format": "uri",
-                                    "readOnly": true
-                                },
-                                "acquisitions": {
-                                    "title": "Acquisitions",
-                                    "description": "The list of acquisitions related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "results": {
-                                    "title": "Results",
-                                    "description": "The list of results related to the entry",
-                                    "type": "string",
-                                    "readOnly": true
-                                },
-                                "validate_only": {
-                                    "title": "Validate only",
-                                    "description": "Only validate the input, do not modify the schedule",
-                                    "type": "boolean",
-                                    "default": false
-                                }
-                            }
+                            "$ref": "#/definitions/TaskResult"
                         }
                     }
                 },
@@ -1861,8 +673,8 @@
                 ]
             },
             "delete": {
-                "operationId": "v1_schedule_delete",
-                "description": "Deletes the specified schedule entry.",
+                "operationId": "v1_tasks_completed_delete",
+                "description": "Deletes the specified acquisition.",
                 "parameters": [],
                 "responses": {
                     "204": {
@@ -1875,20 +687,313 @@
             },
             "parameters": [
                 {
-                    "name": "name",
+                    "name": "schedule_entry_name",
                     "in": "path",
-                    "description": "[Required] The unique identifier used in URLs and filenames",
                     "required": true,
-                    "type": "string",
-                    "format": "slug",
-                    "pattern": "^[-a-zA-Z0-9_]+$"
+                    "type": "string"
+                },
+                {
+                    "name": "task_id",
+                    "in": "path",
+                    "description": "The id of the task relative to the result",
+                    "required": true,
+                    "type": "integer"
                 }
             ]
         },
-        "/v1/status": {
+        "/v1/tasks/completed/{schedule_entry_name}/{task_id}/archive": {
             "get": {
-                "operationId": "v1_status_list",
-                "description": "The status overview of the sensor.",
+                "operationId": "v1_tasks_completed_archive",
+                "description": "Downloads the acquisition's SigMF archive.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TaskResult"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "schedule_entry_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "task_id",
+                    "in": "path",
+                    "description": "The id of the task relative to the result",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/v1/tasks/completed/{schedule_entry_name}/{task_id}/archive{format}": {
+            "get": {
+                "operationId": "v1_tasks_archive",
+                "description": "Downloads the acquisition's SigMF archive.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TaskResult"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "schedule_entry_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "task_id",
+                    "in": "path",
+                    "description": "The id of the task relative to the result",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/v1/tasks/completed/{schedule_entry_name}/{task_id}{format}": {
+            "get": {
+                "operationId": "v1_tasks_completed_read",
+                "description": "Returns a specific result.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TaskResult"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_tasks_completed_delete",
+                "description": "Deletes the specified acquisition.",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "schedule_entry_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "task_id",
+                    "in": "path",
+                    "description": "The id of the task relative to the result",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/v1/tasks/completed/{schedule_entry_name}{format}": {
+            "get": {
+                "operationId": "v1_tasks_completed_list",
+                "description": "Returns a list of all results created by the given schedule entry.",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "ordering",
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TaskResult"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_tasks_completed_delete",
+                "description": "Deletes all results created by the given schedule entry.",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "schedule_entry_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/tasks/completed{format}": {
+            "get": {
+                "operationId": "v1_tasks_list",
+                "description": "Returns an overview of how many results are available per schedule\nentry.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TaskResultsOverview"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/tasks/upcoming/": {
+            "get": {
+                "operationId": "v1_tasks_upcoming_list",
+                "description": "Returns a snapshot of upcoming tasks.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -1900,94 +1005,235 @@
                 ]
             },
             "parameters": []
+        },
+        "/v1/tasks/upcoming{format}": {
+            "get": {
+                "operationId": "v1_tasks_read",
+                "description": "Returns a snapshot of upcoming tasks.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/tasks/{format}": {
+            "get": {
+                "operationId": "v1_tasks_read",
+                "description": "Provides links to upcoming and completed tasks",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/{format}": {
+            "get": {
+                "operationId": "v1_read",
+                "description": "SCOS sensor API root.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
         }
     },
     "definitions": {
-        "AcquisitionsOverview": {
-            "type": "object",
-            "properties": {
-                "url": {
-                    "title": "Url",
-                    "description": "The url of the list of acquisitions",
-                    "type": "string",
-                    "format": "uri",
-                    "readOnly": true
-                },
-                "acquisitions_available": {
-                    "title": "Acquisitions available",
-                    "description": "The number of available acquisitions",
-                    "type": "string",
-                    "readOnly": true
-                },
-                "archive": {
-                    "title": "Archive",
-                    "description": "The url to download a SigMF archive of all acquisitions",
-                    "type": "string",
-                    "readOnly": true
-                },
-                "schedule_entry": {
-                    "title": "Schedule entry",
-                    "description": "The related schedule entry for the acquisition",
-                    "type": "string",
-                    "readOnly": true
-                }
-            }
-        },
-        "Acquisition": {
+        "AdminScheduleEntry": {
             "required": [
-                "task_id",
-                "sigmf_metadata"
+                "name",
+                "action"
             ],
             "type": "object",
             "properties": {
-                "url": {
-                    "title": "Url",
-                    "description": "The url of the acquisition",
+                "self": {
+                    "title": "Self",
+                    "description": "The url of the entry",
                     "type": "string",
                     "format": "uri",
                     "readOnly": true
                 },
-                "task_id": {
-                    "title": "Task id",
-                    "description": "The id of the task relative to the acquisition",
-                    "type": "integer"
+                "name": {
+                    "title": "Name",
+                    "description": "[Required] The unique identifier used in URLs and filenames",
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$",
+                    "maxLength": 50,
+                    "minLength": 1
                 },
-                "created": {
-                    "title": "Created",
-                    "description": "The time the acquisition was created",
+                "action": {
+                    "title": "Action",
+                    "description": "[Required] The name of the action to be scheduled",
+                    "type": "string",
+                    "enum": [
+                        "acquire_700c_dl",
+                        "logger",
+                        "survey_700_band_iq",
+                        "mock_acquire",
+                        "admin_logger",
+                        "monitor_usrp",
+                        "sync_gps"
+                    ]
+                },
+                "priority": {
+                    "title": "Priority",
+                    "description": "Lower number is higher priority (default=10)",
+                    "type": "integer",
+                    "maximum": 19,
+                    "minimum": -20,
+                    "x-nullable": true
+                },
+                "start": {
+                    "title": "Start",
+                    "description": "UTC time (ISO 8601) to start, or leave blank for 'now'",
+                    "type": "string",
+                    "format": "date-time",
+                    "x-nullable": true
+                },
+                "stop": {
+                    "title": "Absolute stop",
+                    "description": "UTC time (ISO 8601) to stop, or leave blank for 'never' (not valid with relative stop)",
+                    "type": "string",
+                    "format": "date-time",
+                    "x-nullable": true
+                },
+                "relative_stop": {
+                    "title": "Relative stop",
+                    "description": "Integer seconds after start to stop, or leave blank for 'never' (not valid with absolute stop)",
+                    "type": "integer",
+                    "minimum": 1,
+                    "x-nullable": true
+                },
+                "interval": {
+                    "title": "Interval",
+                    "description": "Seconds between tasks, or leave blank to run once",
+                    "type": "integer",
+                    "minimum": 1,
+                    "x-nullable": true
+                },
+                "is_active": {
+                    "title": "Is active",
+                    "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "is_private": {
+                    "title": "Is private",
+                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
+                    "type": "boolean"
+                },
+                "callback_url": {
+                    "title": "Callback url",
+                    "description": "If given, the scheduler will POST a `TaskResult` JSON object to this URL after each task completes",
+                    "type": "string",
+                    "format": "uri",
+                    "maxLength": 200,
+                    "x-nullable": true
+                },
+                "next_task_time": {
+                    "title": "Next task time",
+                    "description": "UTC time (ISO 8601) the next task is scheduled for",
                     "type": "string",
                     "format": "date-time",
                     "readOnly": true
                 },
-                "archive": {
-                    "title": "Archive",
-                    "description": "The url to download a SigMF archive of this acquisition",
+                "next_task_id": {
+                    "title": "Next task id",
+                    "description": "The id of the next task to be executed",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "created": {
+                    "title": "Created",
+                    "description": "The date the entry was created",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "modified": {
+                    "title": "Modified",
+                    "description": "The date the entry was modified",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "owner": {
+                    "title": "Owner",
+                    "description": "The name of the user who owns the entry",
                     "type": "string",
                     "format": "uri",
                     "readOnly": true
                 },
-                "sigmf_metadata": {
-                    "title": "Sigmf metadata",
-                    "description": "The sigmf meta data for the acquisition",
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
+                "task_results": {
+                    "title": "Task results",
+                    "description": "The list of results related to the entry",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "validate_only": {
+                    "title": "Validate only",
+                    "description": "Only validate the input, do not modify the schedule",
+                    "type": "boolean",
+                    "default": false
                 }
             }
         },
         "TaskResultsOverview": {
             "type": "object",
             "properties": {
-                "url": {
-                    "title": "Url",
-                    "description": "The url of the list of results",
+                "archive": {
+                    "title": "Archive",
+                    "description": "The link to a multi-recording archive of all available acquisitions",
                     "type": "string",
-                    "format": "uri",
                     "readOnly": true
                 },
-                "results_available": {
-                    "title": "Results available",
+                "task_results": {
+                    "title": "Task results",
+                    "description": "The link to the task results",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "task_results_available": {
+                    "title": "Task results available",
                     "description": "The number of available results",
                     "type": "string",
                     "readOnly": true
@@ -2000,27 +1246,74 @@
                 }
             }
         },
-        "TaskResult": {
+        "Acquisition": {
             "required": [
-                "task_id",
-                "started",
-                "finished",
-                "duration",
-                "result"
+                "metadata"
             ],
             "type": "object",
             "properties": {
-                "url": {
-                    "title": "Url",
+                "recording_id": {
+                    "title": "Recording id",
+                    "description": "The id of the recording relative to the task",
+                    "type": "integer"
+                },
+                "archive": {
+                    "title": "Archive",
+                    "description": "The url to download a SigMF archive of this acquisition",
+                    "type": "string",
+                    "format": "uri",
+                    "readOnly": true
+                },
+                "metadata": {
+                    "title": "Metadata",
+                    "description": "The SigMF metadata for the acquisition",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "TaskResult": {
+            "required": [
+                "task_id",
+                "data"
+            ],
+            "type": "object",
+            "properties": {
+                "self": {
+                    "title": "Self",
                     "description": "The url of the result",
                     "type": "string",
                     "format": "uri",
+                    "readOnly": true
+                },
+                "schedule_entry": {
+                    "title": "Schedule entry",
+                    "description": "The url of the parent schedule entry",
+                    "type": "string",
                     "readOnly": true
                 },
                 "task_id": {
                     "title": "Task id",
                     "description": "The id of the task relative to the result",
                     "type": "integer"
+                },
+                "status": {
+                    "title": "Status",
+                    "description": "\"success\" or \"failure\"",
+                    "type": "string",
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "detail": {
+                    "title": "Detail",
+                    "description": "Arbitrary detail string",
+                    "type": "string",
+                    "maxLength": 512
                 },
                 "started": {
                     "title": "Started",
@@ -2039,26 +1332,11 @@
                     "description": "Task duration in seconds",
                     "type": "number"
                 },
-                "result": {
-                    "title": "Result",
-                    "description": "\"success\" or \"failure\"",
-                    "type": "string",
-                    "enum": [
-                        1,
-                        2
-                    ]
-                },
-                "detail": {
-                    "title": "Detail",
-                    "description": "Arbitrary detail string",
-                    "type": "string",
-                    "maxLength": 512
-                },
-                "schedule_entry": {
-                    "title": "Schedule entry",
-                    "description": "The url of the parent schedule entry",
-                    "type": "string",
-                    "readOnly": true
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Acquisition"
+                    }
                 }
             }
         }
