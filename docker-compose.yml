@@ -57,7 +57,7 @@ services:
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
-    image: nginx:1.14-alpine
+    image: nginx:1.16-alpine
     restart: always
     ports:
       - '80:80'
@@ -89,7 +89,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-autoheal
-    image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
+      image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro

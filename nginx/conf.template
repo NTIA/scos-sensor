@@ -7,7 +7,6 @@ upstream wsgi-server {
     server api:8000 fail_timeout=0;
 }
 
-
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -17,7 +16,6 @@ server {
     # For testing, use 307 so that redirect is not cached in browser
     return 307 https://$host$request_uri;
 }
-
 
 server {
     # SSL configuration
@@ -29,7 +27,6 @@ server {
     proxy_buffers 16 16k;
     proxy_buffer_size 16k;
 
-    ssl on;
     ssl_certificate /etc/ssl/certs/ssl-cert.pem;
     ssl_certificate_key /etc/ssl/private/ssl-cert.key;
     ssl_protocols TLSv1.2;
