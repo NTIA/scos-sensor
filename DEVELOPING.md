@@ -38,14 +38,46 @@ recommend you initialize a virtual development environment using a tool such a
 
 ```bash
 $ cd src
-$ python2 -m pip install -r requirements-dev.txt
+$ python3 -m pip install -r requirements-dev.txt
 $ pytest          # faster, but less thorough
 $ tox             # tests code in clean virtualenv
 $ tox --recreate  # if you change `requirements.txt`
-$ tox -e lint     # check that code meets widely accepted coding standards
 $ tox -e coverage # check where test coverage lacks
 ```
 
+Committing
+----------
+
+Besides running the test suite and ensuring that all tests are passing, we also
+expect all python code that's checked in to have been run through an
+auto-formatter.
+
+This project uses a Python auto-formatter called Black. You probably won't like
+every decision it makes, but our continuous integration test-runner will reject
+your commit if it's not properly formatted.
+
+Additionally, import statement sorting is handled by `isort`.
+
+The continuous integration test-runner verifies the code is auto-formatted by
+checking that neither `isort` nor `black` would recommend any changes to the
+code. Occasionally, this can fail if these two autoformatters disagree. The
+only time I've seen this happen is with a commented-out import statement, which
+`isort` parses, and `black` treats as a comment. Solution: don't leave
+commented-out import statements in the code.
+
+There are several ways to autoformat your code before committing. First, IDE
+integration with on-save hooks is very useful. Second, there is a script,
+`scripts/autoformat_python.sh`, that will run both `isort` and `black` over the
+codebase. Lastly, if you've already pip-installed the dev requirements from the
+section above, you already have a utility called `pre-commit` installed that
+will automate setting up this project's git pre-commit hooks. Simply type the
+following _once_, and each time you make a commit, it will be appropriately
+autoformatted.
+
+
+```bash
+$ pre-commit install
+```
 
 Running Production Server with Local Changes
 --------------------------------------------
@@ -100,7 +132,7 @@ $ ./manage.py runserver
   outside of it, you may need to allow access to system sitepackages. For
   example, if you're using a virtualenv called `scos-sensor`, you can remove
   the following text file: `rm -f
-  ~/.virtualenvs/scos-sensor/lib/python2.7/no-global-site-packages.txt`, and
+  ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`, and
   thereafter use the `ignore-installed` flag to pip: `pip install -I -r
   requirements.txt`. This should let the devserver fall back to system
   sitepackages for the SDR driver only.

@@ -61,7 +61,7 @@ def get_timestamp_from_datetime(dt):
 
 
 def get_datetime_str_now():
-    return datetime.isoformat(datetime.utcnow()) + 'Z'
+    return datetime.isoformat(datetime.utcnow()) + "Z"
 
 
 def parse_datetime_str(d):

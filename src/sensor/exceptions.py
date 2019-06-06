@@ -1,7 +1,5 @@
 """Provides custom exception handing."""
 
-from __future__ import absolute_import
-
 import logging
 
 from django import db
@@ -24,10 +22,7 @@ def exception_handler(exc, context):
         if isinstance(exc, ProtectedError):
             response = handle_protected_error(exc, context)
         elif isinstance(exc, db.IntegrityError):
-            response = Response({
-                'detail': str(exc)
-            },
-                                status=status.HTTP_409_CONFLICT)
+            response = Response({"detail": str(exc)}, status=status.HTTP_409_CONFLICT)
         else:
             logger.exception("Caught unhandled exception", exc_info=exc)
 
@@ -35,30 +30,31 @@ def exception_handler(exc, context):
 
 
 def handle_protected_error(exc, context):
-    if 'name' in context['kwargs']:
-        entry_name = context['kwargs']['name']
+    if "name" in context["kwargs"]:
+        entry_name = context["kwargs"]["name"]
     else:
-        entry_name = context['kwargs']['pk']
+        entry_name = context["kwargs"]["pk"]
 
-    request = context['request']
+    request = context["request"]
+    view_name = "task-result-detail"
 
     protected_object_urls = []
     for protected_object in exc.protected_objects:
         task_id = protected_object.task_id
-        url_kwargs = {'schedule_entry_name': entry_name, 'task_id': task_id}
+        url_kwargs = {"schedule_entry_name": entry_name, "task_id": task_id}
         url_kwargs.update(V1)
-        view_name = 'acquisition-detail'
         url = reverse(view_name, kwargs=url_kwargs, request=request)
         protected_object_urls.append(url)
 
-    response = Response({
-        'detail':
-        ("Cannot delete schedule entry {!r} because acquisitions on disk "
-         "reference it. Delete the protected acquisitions first."
-         ).format(entry_name),
-        'protected_objects':
-        protected_object_urls
-    },
-                        status=status.HTTP_400_BAD_REQUEST)
+    response = Response(
+        {
+            "detail": (
+                "Cannot delete schedule entry {!r} because results on disk "
+                "reference it. Delete the protected results first."
+            ).format(entry_name),
+            "protected_objects": protected_object_urls,
+        },
+        status=status.HTTP_400_BAD_REQUEST,
+    )
 
     return response

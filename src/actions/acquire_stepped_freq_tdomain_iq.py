@@ -46,13 +46,11 @@ import logging
 from itertools import zip_longest
 
 import numpy as np
-
-from rest_framework.reverse import reverse
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
-from hardware import usrp_iface
-from sensor import V1, settings, utils
+from hardware import sdr
+from sensor import settings, utils
 
 from .base import Action
 
@@ -60,12 +58,12 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "cf32_le",  # 2x 32-bit float, Little Endian
-    "core:version": "0.0.2"
+    "core:version": "0.0.2",
 }
 
 
 # The sigmf-ns-scos version targeted by this action
-SCOS_TRANSFER_SPEC_VER = '0.2'
+SCOS_TRANSFER_SPEC_VER = "0.2"
 
 
 class SteppedFrequencyTimeDomainIqAcquisition(Action):
@@ -84,7 +82,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         nfcs = len(fcs)
 
-        parameter_names = ('gain', 'sample_rate', 'duration_ms')
+        parameter_names = ("gain", "sample_rate", "duration_ms")
         tuning_parameters = {}
 
         for fc, *params in zip_longest(fcs, gains, sample_rates, durations_ms):
@@ -99,41 +97,36 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         self.nfcs = nfcs
         self.fcs = fcs
         self.tuning_parameters = tuning_parameters
-        self.usrp = usrp_iface  # make instance variable to allow mocking
+        self.sdr = sdr  # make instance variable to allow mocking
 
     def __call__(self, schedule_entry_name, task_id):
         """This is the entrypoint function called by the scheduler."""
-        from schedule.models import ScheduleEntry
+        from tasks.models import TaskResult
 
-        # raises ScheduleEntry.DoesNotExist if no matching schedule entry
-        parent_entry = ScheduleEntry.objects.get(name=schedule_entry_name)
+        # Raises TaskResult.DoesNotExist if no matching task result
+        task_result = TaskResult.objects.get(
+            schedule_entry__name=schedule_entry_name, task_id=task_id
+        )
 
         self.test_required_components()
 
         for recording_id, fc in enumerate(self.fcs, start=1):
-            data, sigmf_md = self.acquire_data(fc, parent_entry, task_id)
-            self.archive(data, sigmf_md, parent_entry, task_id, recording_id)
-
-        kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
-        kws.update(V1)
-        detail = reverse(
-            'acquisition-detail', kwargs=kws, request=parent_entry.request)
-
-        return detail
+            data, sigmf_md = self.acquire_data(fc)
+            self.archive(task_result, recording_id, data, sigmf_md)
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        self.usrp.connect()
-        if not self.usrp.is_available:
-            msg = "acquisition failed: USRP required but not available"
+        self.sdr.connect()
+        if not self.sdr.is_available:
+            msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
-    def acquire_data(self, fc, parent_entry, task_id):
+    def acquire_data(self, fc):
         tuning_parameters = self.tuning_parameters[fc]
-        self.configure_usrp(fc, **tuning_parameters)
+        self.configure_sdr(fc, **tuning_parameters)
 
         # Use the radio's actual reported sample rate instead of requested rate
-        sample_rate = self.usrp.radio.sample_rate
+        sample_rate = self.sdr.radio.sample_rate
 
         # Build global metadata
         sigmf_md = SigMFFile()
@@ -141,7 +134,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        sensor_def = capabilities['sensor_definition']
+        sensor_def = capabilities["sensor_definition"]
         sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
         sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
@@ -149,46 +142,47 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         # Acquire data and build per-capture metadata
         data = np.array([], dtype=np.complex64)
 
-        nsamps = int(sample_rate * tuning_parameters['duration_ms'] * 1e-3)
+        nsamps = int(sample_rate * tuning_parameters["duration_ms"] * 1e-3)
 
         dt = utils.get_datetime_str_now()
-        acq = self.usrp.radio.acquire_samples(nsamps).astype(np.complex64)
+        # Drop ~10 ms of samples
+        nskip = int(0.01 * sample_rate)
+        acq = self.sdr.radio.acquire_samples(nsamps, nskip=nskip).astype(np.complex64)
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
-        annotation_md = {"applied_scale_factor": self.usrp.radio.scale_factor}
-        sigmf_md.add_annotation(start_index=0, length=nsamps,
-                                metadata=annotation_md)
+        annotation_md = {"applied_scale_factor": self.sdr.radio.scale_factor}
+        sigmf_md.add_annotation(start_index=0, length=nsamps, metadata=annotation_md)
 
         return data, sigmf_md
 
-    def configure_usrp(self, fc, gain, sample_rate, duration_ms):
-        self.set_usrp_clock_rate(sample_rate)
-        self.set_usrp_sample_rate(sample_rate)
-        self.usrp.radio.tune_frequency(fc)
-        self.usrp.radio.gain = gain
+    def configure_sdr(self, fc, gain, sample_rate, duration_ms):
+        self.set_sdr_clock_rate(sample_rate)
+        self.set_sdr_sample_rate(sample_rate)
+        self.sdr.radio.tune_frequency(fc)
+        self.sdr.radio.gain = gain
 
-    def set_usrp_clock_rate(self, sample_rate):
+    def set_sdr_clock_rate(self, sample_rate):
         clock_rate = sample_rate
         while clock_rate < 10e6:
             clock_rate *= 4
 
-        self.usrp.radio.clock_rate = clock_rate
+        self.sdr.radio.clock_rate = clock_rate
 
-    def set_usrp_sample_rate(self, sample_rate):
-        self.usrp.radio.sample_rate = sample_rate
+    def set_sdr_sample_rate(self, sample_rate):
+        self.sdr.radio.sample_rate = sample_rate
 
-    def archive(self, m4s_data, sigmf_md, parent_entry, task_id, recording_id):
-        from acquisitions.models import Acquisition
+    def archive(self, task_result, recording_id, m4s_data, sigmf_md):
+        from tasks.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 
         Acquisition(
-            schedule_entry=parent_entry,
-            task_id=task_id,
+            task_result=task_result,
             recording_id=recording_id,
-            sigmf_metadata=sigmf_md._metadata,
-            data=m4s_data).save()
+            metadata=sigmf_md._metadata,
+            data=m4s_data,
+        ).save()
 
     @property
     def description(self):
@@ -203,34 +197,34 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         total_samples = 0
         for fc in self.fcs:
             tuning_params = self.tuning_parameters[fc].copy()
-            tuning_params['fc_MHz'] = fc / 1e6
-            srate = tuning_params['sample_rate']
-            tuning_params['sample_rate_Msps'] = srate / 1e6
+            tuning_params["fc_MHz"] = fc / 1e6
+            srate = tuning_params["sample_rate"]
+            tuning_params["sample_rate_Msps"] = srate / 1e6
             acquisition_plan += acq_plan_template.format(**tuning_params)
-            total_samples += int(tuning_params['duration_ms'] / 1e6 * srate)
+            total_samples += int(tuning_params["duration_ms"] / 1e6 * srate)
 
         f_low = self.fcs[0]
-        f_low_srate = self.tuning_parameters[f_low]['sample_rate']
+        f_low_srate = self.tuning_parameters[f_low]["sample_rate"]
         f_low_edge = (f_low - f_low_srate / 2.0) / 1e6
 
         f_high = self.fcs[-1]
-        f_high_srate = self.tuning_parameters[f_high]['sample_rate']
+        f_high_srate = self.tuning_parameters[f_high]["sample_rate"]
         f_high_edge = (f_high - f_high_srate / 2.0) / 1e6
 
-        durations = [v['duration_ms'] for v in self.tuning_parameters.values()]
+        durations = [v["duration_ms"] for v in self.tuning_parameters.values()]
         min_duration_ms = np.sum(durations)
 
         filesize_mb = total_samples * 8 / 1e6  # 8 bytes per complex64 sample
 
         defs = {
-            'name': self.name,
-            'nfcs': self.nfcs,
-            'f_low_edge': f_low_edge,
-            'f_high_edge': f_high_edge,
-            'acquisition_plan': acquisition_plan,
-            'min_duration_ms': min_duration_ms,
-            'total_samples': total_samples,
-            'filesize_mb': filesize_mb
+            "name": self.name,
+            "nfcs": self.nfcs,
+            "f_low_edge": f_low_edge,
+            "f_high_edge": f_high_edge,
+            "acquisition_plan": acquisition_plan,
+            "min_duration_ms": min_duration_ms,
+            "total_samples": total_samples,
+            "filesize_mb": filesize_mb,
         }
 
         # __doc__ refers to the module docstring at the top of the file

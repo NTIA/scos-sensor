@@ -4,9 +4,10 @@ It exposes the WSGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
-"""
 
-from __future__ import absolute_import
+isort:skip_file
+
+"""
 
 import os
 
@@ -16,8 +17,8 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()  # this is necessary because we need to handle our own thread
 
-from sensor import settings  # noqa
 from scheduler import scheduler  # noqa
+from sensor import settings  # noqa
 
 application = get_wsgi_application()
 

@@ -1,7 +1,5 @@
 """A simple example action that logs a message."""
 
-from __future__ import absolute_import
-
 import logging
 
 from .base import Action

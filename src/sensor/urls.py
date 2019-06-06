@@ -17,54 +17,49 @@ Including another URLconf
 
 """
 
-from __future__ import absolute_import
-
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import settings
-from .views import schema_view, api_v1_root
-
+from .views import api_v1_root, schema_view
 
 # Matches api/v1, api/v2, etc...
-API_PREFIX = r'^api/(?P<version>v[0-9]+)/'
-DEFAULT_API_VERSION = settings.REST_FRAMEWORK['DEFAULT_VERSION']
+API_PREFIX = r"^api/(?P<version>v[0-9]+)/"
+DEFAULT_API_VERSION = settings.REST_FRAMEWORK["DEFAULT_VERSION"]
 
 api_urlpatterns = format_suffix_patterns(
     (
-        path('', api_v1_root, name='api-root'),
-        path('acquisitions/', include('acquisitions.urls')),
-        path('capabilities/', include('capabilities.urls')),
-        path('schedule/', include('schedule.urls')),
-        path('status', include('status.urls')),
-        path('users/', include('authentication.urls')),
-        path('results/', include('results.urls')),
-        path('schema/', schema_view.with_ui('redoc', cache_timeout=0),
-             name='api_schema')
+        path("", api_v1_root, name="api-root"),
+        path("capabilities/", include("capabilities.urls")),
+        path("schedule/", include("schedule.urls")),
+        path("status", include("status.urls")),
+        path("users/", include("authentication.urls")),
+        path("tasks/", include("tasks.urls")),
+        path(
+            "schema/", schema_view.with_ui("redoc", cache_timeout=0), name="api_schema"
+        ),
     )
 )
 
 # Modify admin portal before including url
 
 # Text to put in each page's <h1> (and above login form).
-admin.site.site_header = 'SCOS Sensor Configuration Portal'
+admin.site.site_header = "SCOS Sensor Configuration Portal"
 
 # Text to put at the top of the admin index page.
-admin.site.index_title = 'SCOS Sensor Configuration Portal'
+admin.site.index_title = "SCOS Sensor Configuration Portal"
 
 urlpatterns = (
-    path('', RedirectView.as_view(url='/api/')),
-    path('admin/', admin.site.urls),
-    path('api/',
-         RedirectView.as_view(url='/api/{}/'.format(DEFAULT_API_VERSION))),
+    path("", RedirectView.as_view(url="/api/")),
+    path("admin/", admin.site.urls),
+    path("api/", RedirectView.as_view(url="/api/{}/".format(DEFAULT_API_VERSION))),
     re_path(API_PREFIX, include(api_urlpatterns)),
-    path('api/auth/', include('rest_framework.urls'))
+    path("api/auth/", include("rest_framework.urls")),
 )
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ] + list(urlpatterns)
+
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + list(urlpatterns)

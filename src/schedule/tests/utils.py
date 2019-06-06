@@ -8,31 +8,31 @@ from sensor import V1
 
 EMPTY_SCHEDULE_RESPONSE = []
 
-TEST_SCHEDULE_ENTRY = {'name': 'test', 'action': 'logger', 'is_private': False}
+TEST_SCHEDULE_ENTRY = {"name": "test", "action": "logger", "is_private": False}
 
 TEST_ALTERNATE_SCHEDULE_ENTRY = {
-    'name': 'test_alternate',
-    'action': 'logger',
-    'is_private': False,
-    'priority': 5
+    "name": "test_alternate",
+    "action": "logger",
+    "is_private": False,
+    "priority": 5,
 }
 
 TEST_PRIVATE_SCHEDULE_ENTRY = {
-    'name': 'test_private',
-    'action': 'logger',
-    'is_private': True
+    "name": "test_private",
+    "action": "logger",
+    "is_private": True,
 }
 
 
 def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):
     kwargs = {
-        'data': json.dumps(entry),
-        'content_type': 'application/json',
-        'secure': True,
-        'wsgi.url_scheme': 'https'
+        "data": json.dumps(entry),
+        "content_type": "application/json",
+        "secure": True,
+        "wsgi.url_scheme": "https",
     }
 
-    url = reverse('schedule-list', kwargs=V1)
+    url = reverse("schedule-list", kwargs=V1)
     r = client.post(url, **kwargs)
 
     err = "Got status {}, expected {}".format(r.status_code, expected_status)
@@ -48,19 +48,19 @@ def update_schedule(client, entry_name, new_entry):
     url = reverse_detail_url(entry_name)
 
     kwargs = {
-        'data': json.dumps(new_entry),
-        'content_type': 'application/json',
-        'secure': True,
-        'wsgi.url_scheme': 'https'
+        "data": json.dumps(new_entry),
+        "content_type": "application/json",
+        "secure": True,
+        "wsgi.url_scheme": "https",
     }
 
     return client.put(url, **kwargs)
 
 
 def reverse_detail_url(entry_name):
-    kws = {'pk': entry_name}
+    kws = {"pk": entry_name}
     kws.update(V1)
-    url = reverse('schedule-detail', kwargs=kws)
+    url = reverse("schedule-detail", kwargs=kws)
     return url
 
 

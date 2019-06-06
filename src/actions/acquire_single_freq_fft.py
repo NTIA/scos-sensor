@@ -57,7 +57,7 @@ each row of the matrix.
 ## Frequency-domain processing
 
 After windowing, the data matrix is converted into the frequency domain using
-an FFT'd, doing the equivalent of the DFT defined as
+an FFT, doing the equivalent of the DFT defined as
 
 $$A_k = \sum_{{m=0}}^{{n-1}}
 a_m \exp\left\\{{-2\pi i{{mk \over n}}\right\\}} \qquad k = 0,\ldots,n-1$$
@@ -77,19 +77,15 @@ the _max_ of each column, and so "sample" detector simple chooses one of the
 
 """
 
-from __future__ import absolute_import
-
 import logging
-
-import numpy as np
 from enum import Enum
 
-from rest_framework.reverse import reverse
+import numpy as np
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
-from hardware import usrp_iface
-from sensor import V1, settings, utils
+from hardware import sdr
+from sensor import settings, utils
 
 from .base import Action
 
@@ -97,7 +93,7 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "f32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.1"
+    "core:version": "0.0.1",
 }
 
 
@@ -110,7 +106,7 @@ class M4sDetector(Enum):
 
 
 # The sigmf-ns-scos version targeted by this action
-SCOS_TRANSFER_SPEC_VER = '0.1'
+SCOS_TRANSFER_SPEC_VER = "0.2"
 
 
 def m4s_detector(array):
@@ -119,8 +115,7 @@ def m4s_detector(array):
     Detector is applied along each column.
 
     :param array: an (m x n) array of real frequency-domain linear power values
-    :returns: a (5 x n) in the order min, max, mean, median, sample in the case
-              that `detector` is `m4s`, otherwise a (1 x n) array
+    :returns: a (5 x n) in the order min, max, mean, median, sample
 
     """
     amin = np.min(array, axis=0)
@@ -146,7 +141,7 @@ class SingleFrequencyFftAcquisition(Action):
     """
 
     def __init__(self, name, frequency, gain, sample_rate, fft_size, nffts):
-        super(SingleFrequencyFftAcquisition, self).__init__()
+        super().__init__()
 
         self.name = name
         self.frequency = frequency
@@ -154,67 +149,65 @@ class SingleFrequencyFftAcquisition(Action):
         self.sample_rate = sample_rate
         self.fft_size = fft_size
         self.nffts = nffts
-        self.usrp = usrp_iface  # make instance variable to allow mocking
+        self.sdr = sdr  # make instance variable to allow mocking
         self.enbw = None
 
     def __call__(self, schedule_entry_name, task_id):
         """This is the entrypoint function called by the scheduler."""
-        from schedule.models import ScheduleEntry
+        from tasks.models import TaskResult
 
-        # raises ScheduleEntry.DoesNotExist if no matching schedule entry
-        parent_entry = ScheduleEntry.objects.get(name=schedule_entry_name)
+        # Raises TaskResult.DoesNotExist if no matching task result
+        task_result = TaskResult.objects.get(
+            schedule_entry__name=schedule_entry_name, task_id=task_id
+        )
 
         self.test_required_components()
-        self.configure_usrp()
-        data = self.acquire_data(parent_entry, task_id)
+        self.configure_sdr()
+        data = self.acquire_data()
         m4s_data = self.apply_detector(data)
         sigmf_md = self.build_sigmf_md()
-        self.archive(m4s_data, sigmf_md, parent_entry, task_id)
-
-        kws = {'schedule_entry_name': schedule_entry_name, 'task_id': task_id}
-        kws.update(V1)
-        detail = reverse(
-            'acquisition-detail', kwargs=kws, request=parent_entry.request)
-
-        return detail
+        self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        self.usrp.connect()
-        if not self.usrp.is_available:
-            msg = "acquisition failed: USRP required but not available"
+        self.sdr.connect()
+        if not self.sdr.is_available:
+            msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
-    def configure_usrp(self):
-        self.set_usrp_clock_rate()
-        self.set_usrp_sample_rate()
-        self.set_usrp_frequency()
-        self.set_usrp_gain()
+    def configure_sdr(self):
+        self.set_sdr_clock_rate()
+        self.set_sdr_sample_rate()
+        self.set_sdr_frequency()
+        self.set_sdr_gain()
 
-    def set_usrp_gain(self):
-        self.usrp.radio.gain = self.gain
+    def set_sdr_gain(self):
+        self.sdr.radio.gain = self.gain
 
-    def set_usrp_sample_rate(self):
-        self.usrp.radio.sample_rate = self.sample_rate
-        self.sample_rate = self.usrp.radio.sample_rate
+    def set_sdr_sample_rate(self):
+        self.sdr.radio.sample_rate = self.sample_rate
+        self.sample_rate = self.sdr.radio.sample_rate
 
-    def set_usrp_clock_rate(self):
+    def set_sdr_clock_rate(self):
         clock_rate = self.sample_rate
         while clock_rate < 10e6:
             clock_rate *= 4
 
-        self.usrp.radio.clock_rate = clock_rate
+        self.sdr.radio.clock_rate = clock_rate
 
-    def set_usrp_frequency(self):
+    def set_sdr_frequency(self):
         requested_frequency = self.frequency
-        self.usrp.radio.frequency = requested_frequency
-        self.frequency = self.usrp.radio.frequency
+        self.sdr.radio.frequency = requested_frequency
+        self.frequency = self.sdr.radio.frequency
 
-    def acquire_data(self, parent_entry, task_id):
+    def acquire_data(self):
         msg = "Acquiring {} FFTs at {} MHz"
         logger.debug(msg.format(self.nffts, self.frequency / 1e6))
 
-        data = self.usrp.radio.acquire_samples(self.nffts * self.fft_size)
+        # Drop ~10 ms of samples
+        nskip = int(0.01 * self.sample_rate)
+
+        data = self.sdr.radio.acquire_samples(self.nffts * self.fft_size, nskip=nskip)
         data.resize((self.nffts, self.fft_size))
 
         return data
@@ -227,14 +220,14 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
         sigmf_md.set_global_field("core:description", self.description)
 
-        sensor_def = capabilities['sensor_definition']
+        sensor_def = capabilities["sensor_definition"]
         sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
         sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
         sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
 
         capture_md = {
             "core:frequency": self.frequency,
-            "core:time": utils.get_datetime_str_now()
+            "core:time": utils.get_datetime_str_now(),
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
@@ -247,19 +240,20 @@ class SingleFrequencyFftAcquisition(Action):
                 "detector": detector.name + "_power",
                 "number_of_ffts": self.nffts,
                 "units": "dBm",
-                "reference": "not referenced"
+                "reference": "not referenced",
             }
 
             annotation_md = {
                 "scos:measurement_type": {
-                    "single_frequency_fft_detection": single_frequency_fft_md,
+                    "single_frequency_fft_detection": single_frequency_fft_md
                 }
             }
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
-                metadata=annotation_md)
+                metadata=annotation_md,
+            )
 
         return sigmf_md
 
@@ -268,10 +262,10 @@ class SingleFrequencyFftAcquisition(Action):
         logger.debug("Applying detector")
 
         window = np.blackman(self.fft_size)
-        window_power = sum(window**2)
+        window_power = sum(window ** 2)
         impedance = 50.0  # ohms
 
-        self.enbw = self.fft_size * window_power / sum(window)**2
+        self.enbw = self.fft_size * window_power / sum(window) ** 2
 
         Vsq2W_dB = -10.0 * np.log10(self.fft_size * window_power * impedance)
 
@@ -286,30 +280,37 @@ class SingleFrequencyFftAcquisition(Action):
         # Apply detector while we're linear
         # The m4s detector returns a (5 x fft_size) ndarray
         fdata_watts_m4s = m4s_detector(fdata_watts)
+
+        # If testing, don't flood output with divide-by-zero warnings
+        if settings.RUNNING_TESTS:
+            np_error_settings_savepoint = np.seterr(divide="ignore")
+
         fdata_dbm_m4s = 10 * np.log10(fdata_watts_m4s) + 30 + Vsq2W_dB
+
+        if settings.RUNNING_TESTS:
+            # Restore numpy error settings
+            np.seterr(**np_error_settings_savepoint)
 
         return fdata_dbm_m4s
 
-    def archive(self, m4s_data, sigmf_md, parent_entry, task_id):
-        from acquisitions.models import Acquisition
+    def archive(self, task_result, m4s_data, sigmf_md):
+        from tasks.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 
         Acquisition(
-            schedule_entry=parent_entry,
-            task_id=task_id,
-            sigmf_metadata=sigmf_md._metadata,
-            data=m4s_data).save()
+            task_result=task_result, metadata=sigmf_md._metadata, data=m4s_data
+        ).save()
 
     @property
     def description(self):
         defs = {
-            'name': self.name,
-            'frequency': self.frequency / 1e6,
-            'sample_rate': self.sample_rate / 1e6,
-            'fft_size': self.fft_size,
-            'nffts': self.nffts,
-            'gain': self.gain
+            "name": self.name,
+            "frequency": self.frequency / 1e6,
+            "sample_rate": self.sample_rate / 1e6,
+            "fft_size": self.fft_size,
+            "nffts": self.nffts,
+            "gain": self.gain,
         }
 
         # __doc__ refers to the module docstring at the top of the file
