@@ -82,14 +82,13 @@ services:
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
   autoheal:
-    image: alpine
+    image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
     depends_on:
       - api
     build:
       context: .
       dockerfile: docker/Dockerfile-autoheal
-      image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
