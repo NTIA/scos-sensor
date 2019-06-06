@@ -147,4 +147,16 @@ mock_acquire = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
     nffts=11,
 )
 actions.by_name["mock_acquire"] = mock_acquire
+
+# Add mock multi-recording acquisition for tests
+stepped_freq_action = actions.acquire_stepped_freq_tdomain_iq
+mock_multirec_acquire = stepped_freq_action.SteppedFrequencyTimeDomainIqAcquisition(
+    name="mock_multi_acquire",
+    fcs=[1.1e9, 1.2e9, 1.3e9],  # 1400, 1500, 1600 MHz
+    gains=[40, 40, 60],
+    sample_rates=[1e6, 1e6, 1e6],  # 1 MSa/s
+    durations_ms=[1, 2, 1],
+)
+actions.by_name["mock_multirec_acquire"] = mock_multirec_acquire
+
 actions.init()

@@ -36,6 +36,14 @@ MULTIPLE_ACQUISITIONS = {
     "action": "mock_acquire",
 }
 
+SINGLE_MULTI_RECORDING_ACQUISITION = {
+    "name": "test_multirec_acq",
+    "start": None,
+    "stop": None,
+    "interval": None,
+    "action": "mock_multirec_acquire",
+}
+
 
 def simulate_acquisitions(client, n=1, is_private=False, name=None):
     assert 0 < n <= 10
@@ -53,6 +61,19 @@ def simulate_acquisitions(client, n=1, is_private=False, name=None):
 
     entry = post_schedule(client, schedule_entry)
     simulate_scheduler_run(n)
+
+    return entry["name"]
+
+
+def simulate_multirec_acquisition(client, is_private=False, name=None):
+    schedule_entry = SINGLE_MULTI_RECORDING_ACQUISITION.copy()
+    schedule_entry["is_private"] = is_private
+
+    if name is not None:
+        schedule_entry["name"] = name
+
+    entry = post_schedule(client, schedule_entry)
+    simulate_scheduler_run()
 
     return entry["name"]
 
