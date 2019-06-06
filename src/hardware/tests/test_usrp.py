@@ -71,7 +71,7 @@ def test_scaled_data_acquisition():
     data = rx.acquire_samples(1000)
 
     # Pick an arbitrary sample and round to 5 decimal places
-    datum = int(data[236] * 1e6)
+    datum = int((data[236] * 1e6).real)
     true_val = 104190
 
     # Assert the value

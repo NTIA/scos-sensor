@@ -277,7 +277,16 @@ class SingleFrequencyFftAcquisition(Action):
         # Apply detector while we're linear
         # The m4s detector returns a (5 x fft_size) ndarray
         fdata_watts_m4s = m4s_detector(fdata_watts)
+
+        # If testing, don't flood output with divide-by-zero warnings
+        if settings.RUNNING_TESTS:
+            np_error_settings_savepoint = np.seterr(divide="ignore")
+
         fdata_dbm_m4s = 10 * np.log10(fdata_watts_m4s) + 30 + Vsq2W_dB
+
+        if settings.RUNNING_TESTS:
+            # Restore numpy error settings
+            np.seterr(**np_error_settings_savepoint)
 
         return fdata_dbm_m4s
 
