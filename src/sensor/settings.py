@@ -33,12 +33,6 @@ else:
 
 STATIC_ROOT = path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (
-    # ("js", path.join(STATIC_ROOT, "js")),
-    # ("css", path.join(STATIC_ROOT, "css")),
-    # ("images", path.join(STATIC_ROOT, "images")),
-    # ("fonts", path.join(STATIC_ROOT, "fonts")),
-)
 
 __cmd = path.split(sys.argv[0])[-1]
 IN_DOCKER = bool(environ.get("IN_DOCKER"))
