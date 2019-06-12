@@ -1,3 +1,3 @@
 # API versions
 
-V1 = {'version': 'v1'}
+V1 = {"version": "v1"}

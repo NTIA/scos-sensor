@@ -1,7 +1,5 @@
 """Request model to save enough of a request to be passed to reverse()."""
 
-from __future__ import absolute_import
-
 from django.db import models
 from django.utils.encoding import iri_to_uri
 from django.utils.functional import cached_property
@@ -10,6 +8,7 @@ from rest_framework.versioning import URLPathVersioning
 
 class Request(models.Model):
     """Save enough of a request to be passed to reverse()."""
+
     scheme = models.CharField(max_length=16, blank=True, null=True)
     version = models.CharField(max_length=16, blank=True, null=True)
     host = models.CharField(max_length=255, blank=True, null=True)

@@ -62,19 +62,19 @@ def simulate_scheduler_run(n=1):
 
 def create_entry(name, priority, start, stop, interval, action, cb_url=None):
     kwargs = {
-        'name': name,
-        'priority': priority,
-        'stop': stop,
-        'interval': interval,
-        'action': action,
-        'owner': User.objects.get_or_create(username='test')[0],
+        "name": name,
+        "priority": priority,
+        "stop": stop,
+        "interval": interval,
+        "action": action,
+        "owner": User.objects.get_or_create(username="test")[0],
     }
 
     if start is not None:
-        kwargs['start'] = start
+        kwargs["start"] = start
 
     if cb_url is not None:
-        kwargs['callback_url'] = cb_url
+        kwargs["callback_url"] = cb_url
 
     return ScheduleEntry.objects.create(**kwargs)
 
@@ -94,9 +94,10 @@ def create_action():
         flag.set()
         return "set flag"
 
-    cb.__name__ = 'testcb' + str(create_action.counter)
+    cb.__name__ = "testcb" + str(create_action.counter)
     actions.by_name[cb.__name__] = cb
     create_action.counter += 1
+
     return cb, flag
 
 
@@ -107,7 +108,7 @@ def create_bad_action():
     def bad_action(entry, task_id):
         raise Exception(BAD_ACTION_STR)
 
-    actions.by_name['bad_action'] = bad_action
+    actions.by_name["bad_action"] = bad_action
     return bad_action
 
 

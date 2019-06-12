@@ -1,11 +1,15 @@
 -rrequirements.txt
 
-flake8==3.7.5
-jedi==0.13.2
-jsonschema==2.6.0
+black==18.9b0
+flake8==3.7.7
+flake8-bugbear==19.3.0
+isort==4.3.20
+jedi==0.13.3
+jsonschema==3.0.1
 mkdocs==1.0.4
-pytest-cov==2.6.1
-pytest-django==3.4.7
+pre-commit==1.16.1
+pytest-cov==2.7.1
+pytest-django==3.5.0
 pytest-flake8==1.0.4
-tox==3.7.0
-yapf==0.26.0
+seed-isort-config==1.9.1
+tox==3.12.1

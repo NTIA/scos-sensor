@@ -4,8 +4,8 @@ from collections import namedtuple
 
 import numpy as np
 
-tune_result_params = ['actual_dsp_freq', 'actual_rf_freq']
-MockTuneResult = namedtuple('MockTuneResult', tune_result_params)
+tune_result_params = ["actual_dsp_freq", "actual_rf_freq"]
+MockTuneResult = namedtuple("MockTuneResult", tune_result_params)
 
 
 class MockUsrp(object):
@@ -17,8 +17,10 @@ class MockUsrp(object):
         self.clock_rate = 40e6
         self.gain = 0
 
-        self.total_fail_results = 0
-        self.current_fail_results = 0
+        # Simulate returning less than the requested number of samples from
+        # self.recv_num_samps
+        self.times_to_fail_recv = 0
+        self.times_failed_recv = 0
 
         self.randomize_values = randomize_values
 
@@ -26,12 +28,10 @@ class MockUsrp(object):
         self.auto_dc_offset = val
 
     def recv_num_samps(self, n, fc, fs, channels, gain):
-        if self.current_fail_results < self.total_fail_results:
-            self.current_fail_results += 1
+        if self.times_failed_recv < self.times_to_fail_recv:
+            self.times_failed_recv += 1
             return np.ones((1, 0), dtype=np.complex64)
 
-        self.current_fail_results = 0
-        self.total_fail_results += 1
         if self.randomize_values:
             i = np.random.normal(0.5, 0.5, n)
             q = np.random.normal(0.5, 0.5, n)
@@ -42,9 +42,9 @@ class MockUsrp(object):
         else:
             return np.ones((1, n), dtype=np.complex64)
 
-    def reset_bad_acquisitions(self):
-        self.total_fail_results = 0
-        self.current_fail_results = 0
+    def set_times_to_fail_recv(self, n):
+        self.times_to_fail_recv = n
+        self.times_failed_recv = 0
 
     def get_rx_freq(self):
         return self.f_lo + self.f_dsp

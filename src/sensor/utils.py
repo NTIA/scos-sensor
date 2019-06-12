@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 import numpy as np
@@ -52,12 +51,6 @@ class FindNearestDict(dict):
         dict.update(self, newdict)
 
 
-def touch(fname, times=None):
-    """Emulates unix `touch` utility."""
-    with open(fname, 'a'):
-        os.utime(fname, times)
-
-
 def get_datetime_from_timestamp(ts):
     return datetime.fromtimestamp(ts)
 
@@ -68,7 +61,7 @@ def get_timestamp_from_datetime(dt):
 
 
 def get_datetime_str_now():
-    return datetime.isoformat(datetime.utcnow()) + 'Z'
+    return datetime.isoformat(datetime.utcnow()) + "Z"
 
 
 def parse_datetime_str(d):

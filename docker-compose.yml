@@ -15,7 +15,7 @@ services:
     healthcheck:
       test: test ! -e /sdr_unhealthy && test ! -e /scheduler_dead
       interval: 10s
-      timeout: 1s
+      timeout: 3s
       retries: 1
     restart: always
     depends_on:
@@ -45,11 +45,6 @@ services:
       - '8000'
     volumes:
       - ${REPO_ROOT}:/opt/scos-sensor
-      # Uncomment to see code changes by restarting docker container (without rebuilding)
-      # - ./src:/src:ro
-      # - ./gunicorn:/gunicorn:ro
-      # - ./entrypoints:/entrypoints:ro
-      # - ./scripts:/scripts:ro
     cap_add:
       - SYS_PTRACE
     devices:
@@ -57,7 +52,7 @@ services:
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
-    image: nginx:1.14-alpine
+    image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
     ports:
       - '80:80'
@@ -68,9 +63,11 @@ services:
       < /etc/nginx/nginx.conf.template
       > /etc/nginx/conf.d/default.conf
       && exec nginx -g 'daemon off;'"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-nginx
     volumes:
       - ./nginx/conf.template:/etc/nginx/nginx.conf.template:ro
-      - ./src/static:/var/www/scos-sensor/static:ro
       - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
     environment:
@@ -82,14 +79,13 @@ services:
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
   autoheal:
-    image: alpine
+    image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
     depends_on:
       - api
     build:
       context: .
       dockerfile: docker/Dockerfile-autoheal
-    image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro

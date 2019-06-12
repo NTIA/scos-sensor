@@ -1,6 +1,7 @@
 """Test aspects of RadioInterface with mocked USRP."""
 
 import pytest
+
 from hardware import usrp_iface
 
 # Create the RadioInterface with the mock usrp_block
@@ -12,34 +13,37 @@ rx = usrp_iface.radio
 
 
 # Ensure the usrp can recover from acquisition errors
-def test_acquisition_errors():
-    """Test USRP bad acquisitions handled gracefully up to max_retries.
-
-    The mock usrp_block will return "bad" data equal to the number of times
-    aquire_samples() has been called until the reset_bad_acquisitions() has
-    been called.
-
-    """
-    rx.usrp.reset_bad_acquisitions()
+def test_acquire_samples_with_retries():
+    """Acquire samples should retry without error up to `max_retries`."""
     max_retries = 5
-    for i in range(max_retries + 2):
-        if i <= max_retries:
-            try:
-                rx.acquire_samples(1000, 1000, max_retries)
-            except RuntimeError:
-                msg = "Acquisition failing {} sequentially with {}\n"
-                msg += "retries requested should NOT have raised an error."
-                msg = msg.format(i, max_retries)
-                pytest.fail(msg)
-        else:
-            msg = "Acquisition failing {} sequentially with {}\n"
-            msg += "retries requested SHOULD have raised an error."
-            msg = msg.format(i, max_retries)
-            with pytest.raises(RuntimeError):
-                rx.acquire_samples(1000, 1000, max_retries)
-                pytest.fail(msg)
+    times_to_fail = 3
+    rx.usrp.set_times_to_fail_recv(times_to_fail)
 
-    rx.usrp.reset_bad_acquisitions()
+    try:
+        rx.acquire_samples(1000, retries=max_retries)
+    except RuntimeError:
+        msg = "Acquisition failing {} times sequentially with {}\n"
+        msg += "retries requested should NOT have raised an error."
+        msg = msg.format(times_to_fail, max_retries)
+        pytest.fail(msg)
+
+    rx.usrp.set_times_to_fail_recv(0)
+
+
+def test_acquire_samples_fails_when_over_max_retries():
+    """After `max_retries`, an error should be thrown."""
+    max_retries = 5
+    times_to_fail = 7
+    rx.usrp.set_times_to_fail_recv(times_to_fail)
+
+    msg = "Acquisition failing {} times sequentially with {}\n"
+    msg += "retries requested SHOULD have raised an error."
+    msg = msg.format(times_to_fail, max_retries)
+    with pytest.raises(RuntimeError):
+        rx.acquire_samples(1000, 1000, max_retries)
+        pytest.fail(msg)
+
+    rx.usrp.set_times_to_fail_recv(0)
 
 
 def test_tune_result():
@@ -64,17 +68,16 @@ def test_tune_result():
 
 def test_scaled_data_acquisition():
     # Do an arbitrary data collection
-    rx.usrp.reset_bad_acquisitions()
     rx.frequency = 1900e6
     rx.gain = 20
     data = rx.acquire_samples(1000)
 
     # Pick an arbitrary sample and round to 5 decimal places
-    datum = int(data[236] * 1e6)
+    datum = int((data[236] * 1e6).real)
     true_val = 104190
 
     # Assert the value
     msg = "Scale factor not correctly applied to acquisition.\n"
     msg += "Algorithm: {}\n".format(datum / 1e6)
     msg += "Expected: {}\n".format(true_val / 1e6)
-    assert (datum == true_val), msg
+    assert datum == true_val, msg

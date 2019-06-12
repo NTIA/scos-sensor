@@ -28,7 +28,8 @@ uhd = None
 radio = None
 is_available = False
 
-# Testing determined these gain values provide
+# Testing determined these gain values provide a good mix of sensitivity and
+# dynamic range performance
 VALID_GAINS = (0, 20, 40, 60)
 
 
@@ -37,13 +38,13 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
     global is_available
     global radio
 
-    if settings.RUNNING_DEMO or settings.RUNNING_TESTS or settings.MOCK_RADIO:
+    if settings.MOCK_RADIO:
         logger.warning("Using mock USRP.")
         random = settings.MOCK_RADIO_RANDOM
         usrp = MockUsrp(randomize_values=random)
         is_available = True
-        RESOURCES_DIR = path.join(REPO_ROOT, './src/hardware/tests/resources')
-        sf_file = path.join(RESOURCES_DIR, 'test_scale_factors.json')
+        RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
+        sf_file = path.join(RESOURCES_DIR, "test_scale_factors.json")
     else:
         if is_available and radio is not None:
             return True
@@ -54,7 +55,7 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
             logger.warning("uhd not available - disabling radio")
             return False
 
-        usrp_args = 'type=b200'  # find any b-series device
+        usrp_args = "type=b200"  # find any b-series device
 
         try:
             usrp = uhd.usrp.MultiUSRP(usrp_args)
@@ -158,26 +159,38 @@ class RadioInterface(object):
             return
 
         self.scale_factor = self.scale_factors.get_scale_factor(
-            lo_frequency=self.frequency, gain=self.gain)
+            lo_frequency=self.frequency, gain=self.gain
+        )
 
-    def acquire_samples(self, n, nskip=200000, retries=5):  # -> np.ndarray:
+    def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
-        o_retries = retries
+        max_retries = retries
+
         while True:
+
+            # No need to skip initial samples when simulating the radio
+            if settings.MOCK_RADIO:
+                nsamps = n
+            else:
+                nsamps = n + nskip
+
             samples = self.usrp.recv_num_samps(
-                n + nskip,          # number of samples
-                self.frequency,     # center frequency in Hz
-                self.sample_rate,   # sample rate in samples per second
-                [0],                # channel list
-                self.gain           # gain in dB
+                nsamps,  # number of samples
+                self.frequency,  # center frequency in Hz
+                self.sample_rate,  # sample rate in samples per second
+                [0],  # channel list
+                self.gain,  # gain in dB
             )
             # usrp.recv_num_samps returns a numpy array of shape
             # (n_channels, n_samples) and dtype complex64
             assert samples.dtype == np.complex64
             assert len(samples.shape) == 2 and samples.shape[0] == 1
-            data = samples[0]       # isolate data for channel 0
+            data = samples[0]  # isolate data for channel 0
             data_len = len(data)
-            data = data[nskip:]
+
+            if not settings.MOCK_RADIO:
+                data = data[nskip:]
+
             data = data * self.scale_factor
             if not len(data) == n:
                 if retries > 0:
@@ -187,7 +200,7 @@ class RadioInterface(object):
                     retries = retries - 1
                 else:
                     err = "Failed to acquire correct number of samples "
-                    err += "{} times in a row.".format(o_retries)
+                    err += "{} times in a row.".format(max_retries)
                     raise RuntimeError(err)
             else:
                 logger.debug("Successfully acquired {} samples.".format(n))

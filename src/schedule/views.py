@@ -1,12 +1,11 @@
-from rest_framework import serializers, status, filters
+from rest_framework import filters, status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
-import actions
-from .models import DEFAULT_PRIORITY, ScheduleEntry, Request
+from .models import Request, ScheduleEntry
 from .permissions import IsAdminOrOwnerOrReadOnly
-from .serializers import ScheduleEntrySerializer
+from .serializers import AdminScheduleEntrySerializer, ScheduleEntrySerializer
 
 
 class ScheduleEntryViewSet(ModelViewSet):
@@ -31,15 +30,15 @@ class ScheduleEntryViewSet(ModelViewSet):
     Deletes the specified schedule entry.
 
     """
+
     queryset = ScheduleEntry.objects.all()
     permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly,
+        IsAdminOrOwnerOrReadOnly
     ]
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    lookup_fields = ('schedule_entry__name', 'task_id')
-    ordering_fields = ('priority', 'start', 'next_task_time', 'created',
-                       'modified')
-    search_fields = ('name', 'action')
+    lookup_fields = ("schedule_entry__name", "task_id")
+    ordering_fields = ("priority", "start", "next_task_time", "created", "modified")
+    search_fields = ("name", "action")
 
     def create(self, request, *args, **kwargs):
         """Return NO CONTENT when input is valid but validate_only is True."""
@@ -48,7 +47,7 @@ class ScheduleEntryViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if serializer.validated_data.get('validate_only'):
+        if serializer.validated_data.get("validate_only"):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         self.perform_create(serializer)
@@ -74,42 +73,22 @@ class ScheduleEntryViewSet(ModelViewSet):
     def get_serializer_class(self):
         """Modify the base serializer based on user and request."""
 
-        updating = self.action in {'update', 'partial_update'}
+        updating = self.action in {"update", "partial_update"}
 
-        ro_fields = ()
-        if updating:
-            ro_fields += ('name', )
+        if self.request.user.is_staff:
+            SerializerBaseClass = AdminScheduleEntrySerializer
         else:
-            ro_fields += ('is_active', )
+            SerializerBaseClass = ScheduleEntrySerializer
 
-        if not self.request.user.is_staff:
-            ro_fields += ('is_private', )
+        ro_fields = SerializerBaseClass.Meta.read_only_fields
 
-        choices = actions.CHOICES
-        if self.request.user.is_staff:
-            choices += actions.ADMIN_CHOICES
+        if updating:
+            ro_fields += ("name", "action")
+        else:
+            ro_fields += ("is_active",)
 
-        min_priority = 0
-        if self.request.user.is_staff:
-            min_priority = -20
-
-        priority_help_text = "Lower number is higher priority (default={})"
-        priority_help_text = priority_help_text.format(DEFAULT_PRIORITY)
-
-        class Serializer(ScheduleEntrySerializer):
-            action = serializers.ChoiceField(
-                choices=choices,
-                read_only=updating,
-                help_text="[Required] The name of the action to be scheduled")
-
-            priority = serializers.IntegerField(
-                required=False,
-                allow_null=True,
-                min_value=min_priority,
-                max_value=19,
-                help_text=priority_help_text)
-
-            class Meta(ScheduleEntrySerializer.Meta):
+        class SerializerClass(SerializerBaseClass):
+            class Meta(SerializerBaseClass.Meta):
                 read_only_fields = ro_fields
 
-        return Serializer
+        return SerializerClass

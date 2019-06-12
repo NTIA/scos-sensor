@@ -1,7 +1,5 @@
-import logging
-
 import json
-
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -48,25 +46,25 @@ class ScaleFactors(object):
             f_div_min = self.frequencies[0]
             f_div_max = self.frequencies[-1]
             for div in self.divisions:
-                if f >= div['upper_bound']:
-                    f_div_min = div['upper_bound']
+                if f >= div["upper_bound"]:
+                    f_div_min = div["upper_bound"]
                 else:
                     # Check if we are in the division
-                    if f > div['lower_bound']:
+                    if f > div["lower_bound"]:
                         logger.warning("SDR tuned to within a division:")
                         logger.warning("    LO frequency: {}".format(f))
                         msg = "    Division: [{},{}]"
-                        lb = div['lower_bound']
-                        ub = div['upper_bound']
+                        lb = div["lower_bound"]
+                        ub = div["upper_bound"]
                         msg = msg.format(lb, ub)
                         logger.warning(msg)
                         msg = "Assumed scale factor of lower boundary."
                         logger.warning(msg)
-                        f_div_min = div['lower_bound']
-                        f_div_max = div['lower_bound']
+                        f_div_min = div["lower_bound"]
+                        f_div_max = div["lower_bound"]
                         bypass_freq_interpolation = True
                     else:
-                        f_div_max = div['lower_bound']
+                        f_div_max = div["lower_bound"]
 
                     break
             # Determine the index associated with the frequency/ies
@@ -85,18 +83,33 @@ class ScaleFactors(object):
             scale_factor = self.factors[f_i][g_i]
         elif bypass_freq_interpolation:
             scale_factor = self.interpolate_1d(
-                g, self.gains[g_i], self.gains[g_i + 1],
-                self.factors[f_i][g_i], self.factors[f_i][g_i + 1])
+                g,
+                self.gains[g_i],
+                self.gains[g_i + 1],
+                self.factors[f_i][g_i],
+                self.factors[f_i][g_i + 1],
+            )
         elif bypass_gain_interpolation:
             scale_factor = self.interpolate_1d(
-                f, self.frequencies[f_i], self.frequencies[f_i + 1],
-                self.factors[f_i][g_i], self.factors[f_i + 1][g_i])
+                f,
+                self.frequencies[f_i],
+                self.frequencies[f_i + 1],
+                self.factors[f_i][g_i],
+                self.factors[f_i + 1][g_i],
+            )
         else:
             scale_factor = self.interpolate_2d(
-                f, g, self.frequencies[f_i], self.frequencies[f_i + 1],
-                self.gains[g_i], self.gains[g_i + 1], self.factors[f_i][g_i],
-                self.factors[f_i + 1][g_i], self.factors[f_i][g_i + 1],
-                self.factors[f_i + 1][g_i + 1])
+                f,
+                g,
+                self.frequencies[f_i],
+                self.frequencies[f_i + 1],
+                self.gains[g_i],
+                self.gains[g_i + 1],
+                self.factors[f_i][g_i],
+                self.factors[f_i + 1][g_i],
+                self.factors[f_i][g_i + 1],
+                self.factors[f_i + 1][g_i + 1],
+            )
 
         logger.debug("Using power scale factor: {}".format(scale_factor))
         return scale_factor
@@ -104,7 +117,7 @@ class ScaleFactors(object):
     def get_scale_factor(self, lo_frequency, gain):
         """Get the linear scale factor for the current setup."""
         psf = self.get_power_scale_factor(lo_frequency, gain)
-        sf = 10**(psf / 20.0)
+        sf = 10 ** (psf / 20.0)
         logger.debug("Using linear scale factor: {}".format(sf))
         return sf
 
@@ -124,21 +137,21 @@ def load_from_json(fname):
         sf = json.load(f)
 
     # Dimensions of the factors array is not validated by the schema
-    factor_rows = len(sf['factors'])
-    nfrequencies = len(sf['frequencies'])
-    ngains = len(sf['gains'])
+    factor_rows = len(sf["factors"])
+    nfrequencies = len(sf["frequencies"])
+    ngains = len(sf["gains"])
 
     msg = "Number of rows in factors 2D array ({}) ".format(factor_rows)
     msg += "not equal to number of frequencies ({})".format(nfrequencies)
-    assert len(sf['factors']) == len(sf['frequencies']), msg
+    assert len(sf["factors"]) == len(sf["frequencies"]), msg
 
     msg = "factors row {!r} isn't the same length as the `gains` array ({})"
-    for row in sf['factors']:
+    for row in sf["factors"]:
         assert len(row) == ngains, format(row, ngains)
 
     # Ensure frequencies and gains arrays are already sorted
 
-    assert sf['frequencies'] == sorted(sf['frequencies']), "freqs not sorted"
-    assert sf['gains'] == sorted(sf['gains']), "gains not sorted"
+    assert sf["frequencies"] == sorted(sf["frequencies"]), "freqs not sorted"
+    assert sf["gains"] == sorted(sf["gains"]), "gains not sorted"
 
     return ScaleFactors(**sf)

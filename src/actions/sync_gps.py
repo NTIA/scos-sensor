@@ -1,11 +1,9 @@
 """Monitor the on-board USRP and touch or remove an indicator file."""
 
-from __future__ import absolute_import
-
 import logging
 
 from hardware import gps_iface
-from status.models import Location, GPS_LOCATION_DESCRIPTION
+from status.models import GPS_LOCATION_DESCRIPTION, Location
 
 from .base import Action
 
@@ -39,4 +37,5 @@ class SyncGps(Action):
                 gps=True,
                 description=GPS_LOCATION_DESCRIPTION,
                 latitude=latitude,
-                longitude=longitude)
+                longitude=longitude,
+            )

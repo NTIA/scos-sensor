@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from scheduler import scheduler
-from scheduler.serializers import TaskSerializer
 from sensor import utils
+
 from .models import Location
 from .serializers import LocationSerializer
 
@@ -25,13 +25,10 @@ def get_location():
 @api_view()
 def status(request, version, format=None):
     """The status overview of the sensor."""
-    context = {'request': request}
-    taskq = scheduler.thread.task_queue.to_list()
-    task_serializer = TaskSerializer(taskq, many=True, context=context)
-
-    return Response({
-        'scheduler': scheduler.thread.status,
-        'location': get_location(),
-        'system_time': utils.get_datetime_str_now(),
-        'task_queue': task_serializer.data
-    })
+    return Response(
+        {
+            "scheduler": scheduler.thread.status,
+            "location": get_location(),
+            "system_time": utils.get_datetime_str_now(),
+        }
+    )
