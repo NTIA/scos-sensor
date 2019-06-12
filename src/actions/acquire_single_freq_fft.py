@@ -105,10 +105,6 @@ class M4sDetector(Enum):
     sample = 5
 
 
-# The sigmf-ns-scos version targeted by this action
-SCOS_TRANSFER_SPEC_VER = '0.1'
-
-
 def m4s_detector(array):
     """Take min, max, mean, median, and random sample of n-dimensional array.
 
@@ -166,7 +162,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.configure_sdr()
         data = self.acquire_data()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md(parent_entry, task_id)
+        sigmf_md = self.build_sigmf_md(task_id)
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -213,11 +209,11 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, parent_entry, task_id):
+    def build_sigmf_md(self, task_id):
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
-        sample_rate = self.usrp.radio.sample_rate
+        sample_rate = self.sdr.radio.sample_rate
 
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
@@ -226,7 +222,6 @@ class SingleFrequencyFftAcquisition(Action):
         sensor_def = capabilities["sensor_definition"]
         sensor_def["id"] = settings.FQDN
         sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
-        sigmf_md.set_global_field("core:version", SCOS_TRANSFER_SPEC_VER)
 
         action_def = {
             "name": self.name,
@@ -260,7 +255,6 @@ class SingleFrequencyFftAcquisition(Action):
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
                 metadata=frequency_domain_detection_md)
-            )
 
         return sigmf_md
 
