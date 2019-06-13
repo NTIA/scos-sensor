@@ -164,10 +164,14 @@ class Scheduler(threading.Thread):
         if self.entry.callback_url:
             context = {"request": self.entry.request}
             result_json = TaskResultSerializer(tr, context=context).data
+            token = self.entry.owner.auth_token
+            headers = {'Authorization': 'Token ' + str(token)}
             requests_futures_session.post(
                 self.entry.callback_url,
                 json=result_json,
                 background_callback=self._callback_response_handler,
+                headers=headers,
+                verify=False
             )
 
     @staticmethod
