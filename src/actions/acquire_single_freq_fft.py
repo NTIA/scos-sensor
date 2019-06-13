@@ -93,7 +93,7 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "rf32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.2"
+    "core:version": "0.0.2",
 }
 
 
@@ -226,7 +226,7 @@ class SingleFrequencyFftAcquisition(Action):
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": ["FrequencyDomain"]
+            "type": ["FrequencyDomain"],
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
@@ -234,7 +234,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         capture_md = {
             "core:frequency": self.frequency,
-            "core:datetime": utils.get_datetime_str_now()
+            "core:datetime": utils.get_datetime_str_now(),
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
@@ -248,13 +248,14 @@ class SingleFrequencyFftAcquisition(Action):
                 "ntia-algorithm:detector": detector.name + "_power",
                 "ntia-algorithm:number_of_ffts": self.nffts,
                 "ntia-algorithm:units": "dBm",
-                "ntia-algorithm:reference": "not referenced"
+                "ntia-algorithm:reference": "not referenced",
             }
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
-                metadata=frequency_domain_detection_md)
+                metadata=frequency_domain_detection_md,
+            )
 
         return sigmf_md
 

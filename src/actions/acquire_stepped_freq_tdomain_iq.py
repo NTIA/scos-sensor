@@ -58,7 +58,7 @@ logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
     "core:datatype": "cf32_le",  # 2x 32-bit float, Little Endian
-    "core:version": "0.0.2"
+    "core:version": "0.0.2",
 }
 
 
@@ -136,7 +136,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": ["TimeDomain"]
+            "type": ["TimeDomain"],
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
@@ -155,8 +155,8 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
         annotation_md = {
-                "ntia-core:annotation_type": "CalibrationAnnotation",
-                "ntia-calibration:receiver_scaling_factor": self.sdr.radio.scale_factor
+            "ntia-core:annotation_type": "CalibrationAnnotation",
+            "ntia-calibration:receiver_scaling_factor": self.sdr.radio.scale_factor,
         }
         sigmf_md.add_annotation(start_index=0, length=nsamps, metadata=annotation_md)
 
