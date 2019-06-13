@@ -92,8 +92,8 @@ from .base import Action
 logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
-    "core:datatype": "f32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.1",
+    "core:datatype": "rf32_le",  # 32-bit float, Little Endian
+    "core:version": "0.0.2",
 }
 
 
@@ -105,17 +105,14 @@ class M4sDetector(Enum):
     sample = 5
 
 
-# The sigmf-ns-scos version targeted by this action
-SCOS_TRANSFER_SPEC_VER = "0.2"
-
-
 def m4s_detector(array):
     """Take min, max, mean, median, and random sample of n-dimensional array.
 
     Detector is applied along each column.
 
     :param array: an (m x n) array of real frequency-domain linear power values
-    :returns: a (5 x n) in the order min, max, mean, median, sample
+    :returns: a (5 x n) in the order min, max, mean, median, sample in the case
+              that `detector` is `m4s`, otherwise a (1 x n) array
 
     """
     amin = np.min(array, axis=0)
@@ -141,7 +138,7 @@ class SingleFrequencyFftAcquisition(Action):
     """
 
     def __init__(self, name, frequency, gain, sample_rate, fft_size, nffts):
-        super().__init__()
+        super(SingleFrequencyFftAcquisition, self).__init__()
 
         self.name = name
         self.frequency = frequency
@@ -165,7 +162,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.configure_sdr()
         data = self.acquire_data()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md()
+        sigmf_md = self.build_sigmf_md(task_id)
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -212,47 +209,52 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self):
+    def build_sigmf_md(self, task_id):
         logger.debug("Building SigMF metadata file")
+
+        # Use the radio's actual reported sample rate instead of requested rate
+        sample_rate = self.sdr.radio.sample_rate
 
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
-        sigmf_md.set_global_field("core:sample_rate", self.sample_rate)
-        sigmf_md.set_global_field("core:description", self.description)
+        sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         sensor_def = capabilities["sensor_definition"]
-        sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
-        sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
-        sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
+        sensor_def["id"] = settings.FQDN
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+
+        action_def = {
+            "name": self.name,
+            "description": self.description,
+            "type": ["FrequencyDomain"],
+        }
+
+        sigmf_md.set_global_field("ntia-scos:action", action_def)
+        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         capture_md = {
             "core:frequency": self.frequency,
-            "core:time": utils.get_datetime_str_now(),
+            "core:datetime": utils.get_datetime_str_now(),
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
         for i, detector in enumerate(M4sDetector):
-            single_frequency_fft_md = {
-                "number_of_samples_in_fft": self.fft_size,
-                "window": "blackman",
-                "equivalent_noise_bandwidth": self.enbw,
-                "detector": detector.name + "_power",
-                "number_of_ffts": self.nffts,
-                "units": "dBm",
-                "reference": "not referenced",
-            }
-
-            annotation_md = {
-                "scos:measurement_type": {
-                    "single_frequency_fft_detection": single_frequency_fft_md
-                }
+            frequency_domain_detection_md = {
+                "ntia-core:annotation_type": "FrequencyDomainDetection",
+                "ntia-algorithm:number_of_samples_in_fft": self.fft_size,
+                "ntia-algorithm:window": "blackman",
+                "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
+                "ntia-algorithm:detector": detector.name + "_power",
+                "ntia-algorithm:number_of_ffts": self.nffts,
+                "ntia-algorithm:units": "dBm",
+                "ntia-algorithm:reference": "not referenced",
             }
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
                 length=self.fft_size,
-                metadata=annotation_md,
+                metadata=frequency_domain_detection_md,
             )
 
         return sigmf_md
