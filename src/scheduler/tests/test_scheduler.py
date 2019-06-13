@@ -377,6 +377,7 @@ def test_success_posted_to_callback_url(test_scheduler):
     assert request_json["finished"]
     assert request_json["duration"]
 
+
 @pytest.mark.django_db
 def test_success_posted_to_secure_callback_url(test_scheduler):
     """If an entry has callback_url defined, scheduler should POST to it."""
@@ -387,7 +388,9 @@ def test_success_posted_to_secure_callback_url(test_scheduler):
 
     cb, action_flag = create_action()
     # less priority to force run after bad_entry fails
-    schedule_entry = create_entry("t", 20, None, None, None, cb.__name__, "mock://cburl")
+    schedule_entry = create_entry(
+        "t", 20, None, None, None, cb.__name__, "mock://cburl"
+    )
     token = schedule_entry.owner.auth_token
     s = test_scheduler
     advance_testclock(s.timefn, 1)
@@ -397,7 +400,9 @@ def test_success_posted_to_secure_callback_url(test_scheduler):
 
     request_json = None
     with requests_mock.Mocker() as m:
-        m.post("mock://cburl", request_headers={'Authorization': 'Token ' + str(token)})  # register mock url for posting
+        m.post(
+            "mock://cburl", request_headers={"Authorization": "Token " + str(token)}
+        )  # register mock url for posting
         s.run(blocking=False)
         time.sleep(0.1)  # let requests thread run
         request_json = m.request_history[0].json()
