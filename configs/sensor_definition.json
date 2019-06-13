@@ -1,6 +1,6 @@
 {
-    "id": "testsensor.sms.internal",
-    "antenna": {
+    "id": "",
+    "ntia-core:antenna": {
         "model": "L-com HG3512UP-NF"
     },
     "receiver": {

@@ -62,10 +62,6 @@ GLOBAL_INFO = {
 }
 
 
-# The sigmf-ns-scos version targeted by this action
-SCOS_TRANSFER_SPEC_VER = "0.2"
-
-
 class SteppedFrequencyTimeDomainIqAcquisition(Action):
     """Acquire IQ data at each of the requested frequecies.
 
@@ -111,7 +107,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         self.test_required_components()
 
         for recording_id, fc in enumerate(self.fcs, start=1):
-            data, sigmf_md = self.acquire_data(fc)
+            data, sigmf_md = self.acquire_data(fc, task_id)
             self.archive(task_result, recording_id, data, sigmf_md)
 
     def test_required_components(self):
@@ -121,7 +117,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
-    def acquire_data(self, fc):
+    def acquire_data(self, fc, task_id):
         tuning_parameters = self.tuning_parameters[fc]
         self.configure_sdr(fc, **tuning_parameters)
 
@@ -132,12 +128,19 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
-        sigmf_md.set_global_field("core:description", self.description)
 
         sensor_def = capabilities["sensor_definition"]
-        sigmf_md.set_global_field("ntia:sensor_definition", sensor_def)
-        sigmf_md.set_global_field("ntia:sensor_id", settings.FQDN)
-        sigmf_md.set_global_field("scos:version", SCOS_TRANSFER_SPEC_VER)
+        sensor_def["id"] = settings.FQDN
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+
+        action_def = {
+            "name": self.name,
+            "description": self.description,
+            "type": ["TimeDomain"],
+        }
+
+        sigmf_md.set_global_field("ntia-scos:action", action_def)
+        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         # Acquire data and build per-capture metadata
         data = np.array([], dtype=np.complex64)
@@ -151,7 +154,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
-        annotation_md = {"applied_scale_factor": self.sdr.radio.scale_factor}
+        annotation_md = {
+            "ntia-core:annotation_type": "CalibrationAnnotation",
+            "ntia-calibration:receiver_scaling_factor": self.sdr.radio.scale_factor,
+        }
         sigmf_md.add_annotation(start_index=0, length=nsamps, metadata=annotation_md)
 
         return data, sigmf_md
