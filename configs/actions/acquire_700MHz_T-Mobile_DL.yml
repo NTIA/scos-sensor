@@ -1,0 +1,7 @@
+single_frequency_fft:
+  name: acquire_700MHz_T-Mobile_DL
+  frequency: 731.5e6
+  gain: 40
+  sample_rate: 7.68e6
+  fft_size: 512
+  nffts: 300
