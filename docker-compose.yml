@@ -41,6 +41,7 @@ services:
       - IN_DOCKER=1
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
+      - CALLBACK_SSL_VERIFICATION
     expose:
       - '8000'
     volumes:

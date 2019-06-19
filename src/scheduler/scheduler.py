@@ -166,12 +166,13 @@ class Scheduler(threading.Thread):
             result_json = TaskResultSerializer(tr, context=context).data
             token = self.entry.owner.auth_token
             headers = {"Authorization": "Token " + str(token)}
+            verify_ssl = settings.CALLBACK_SSL_VERIFICATION
             requests_futures_session.post(
                 self.entry.callback_url,
                 json=result_json,
                 background_callback=self._callback_response_handler,
                 headers=headers,
-                verify=False,
+                verify=verify_ssl,
             )
 
     @staticmethod

@@ -40,6 +40,7 @@ RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = bool(environ.get("DEMO"))
 MOCK_RADIO = bool(environ.get("MOCK_RADIO")) or RUNNING_DEMO or RUNNING_TESTS
 MOCK_RADIO_RANDOM = bool(environ.get("MOCK_RADIO_RANDOM"))
+CALLBACK_SSL_VERIFICATION = bool(environ.get("CALLBACK_SSL_VERIFICATION"))
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
