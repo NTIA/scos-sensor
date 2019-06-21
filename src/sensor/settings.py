@@ -25,8 +25,8 @@ REPO_ROOT = path.dirname(BASE_DIR)
 
 FQDN = env("FQDN", "fqdn.unset")
 
-DOCKER_TAG = env("DOCKER_TAG")
-GIT_BRANCH = env("GIT_BRANCH")
+DOCKER_TAG = env("DOCKER_TAG", default=None)
+GIT_BRANCH = env("GIT_BRANCH", default=None)
 if not DOCKER_TAG or DOCKER_TAG == "latest":
     VERSION_STRING = GIT_BRANCH
 else:
