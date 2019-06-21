@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import sys
-from os import environ, path
+from environs import Env
+from os import path
+
+env = Env()
 
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -20,10 +23,10 @@ from os import environ, path
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 REPO_ROOT = path.dirname(BASE_DIR)
 
-FQDN = environ.get("FQDN", "fqdn.unset")
+FQDN = env("FQDN", "fqdn.unset")
 
-DOCKER_TAG = environ.get("DOCKER_TAG")
-GIT_BRANCH = environ.get("GIT_BRANCH")
+DOCKER_TAG = env("DOCKER_TAG")
+GIT_BRANCH = env("GIT_BRANCH")
 if not DOCKER_TAG or DOCKER_TAG == "latest":
     VERSION_STRING = GIT_BRANCH
 else:
@@ -35,12 +38,12 @@ STATIC_ROOT = path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
 __cmd = path.split(sys.argv[0])[-1]
-IN_DOCKER = bool(environ.get("IN_DOCKER"))
+IN_DOCKER = env.bool("IN_DOCKER", default=False)
 RUNNING_TESTS = "test" in __cmd
-RUNNING_DEMO = bool(environ.get("DEMO"))
-MOCK_RADIO = bool(environ.get("MOCK_RADIO")) or RUNNING_DEMO or RUNNING_TESTS
-MOCK_RADIO_RANDOM = bool(environ.get("MOCK_RADIO_RANDOM"))
-CALLBACK_SSL_VERIFICATION = bool(environ.get("CALLBACK_SSL_VERIFICATION"))
+RUNNING_DEMO = env.bool("DEMO", default=False)
+MOCK_RADIO = env.bool("MOCK_RADIO", default=False) or RUNNING_DEMO or RUNNING_TESTS
+MOCK_RADIO_RANDOM = env.bool("MOCK_RADIO_RANDOM", default=False)
+CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
@@ -81,10 +84,10 @@ if not IN_DOCKER or RUNNING_TESTS:
     ALLOWED_HOSTS = []
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECRET_KEY = environ["SECRET_KEY"]
-    DEBUG = environ["DEBUG"] == "true"
-    ALLOWED_HOSTS = environ["DOMAINS"].split() + environ["IPS"].split()
-    POSTGRES_PASSWORD = environ["POSTGRES_PASSWORD"]
+    SECRET_KEY = env.str("SECRET_KEY")
+    DEBUG = env.bool("DEBUG", default=False)
+    ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
+    POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
@@ -258,7 +261,7 @@ else:
             "ENGINE": "django.db.backends.postgresql",
             "NAME": "postgres",
             "USER": "postgres",
-            "PASSWORD": environ["POSTGRES_PASSWORD"],
+            "PASSWORD": env("POSTGRES_PASSWORD"),
             "HOST": "db",
             "PORT": "5432",
         }
@@ -314,7 +317,7 @@ LOGGING = {
     },
 }
 
-SENTRY_DSN = environ.get("SENTRY_DSN")
+SENTRY_DSN = env("SENTRY_DSN", default="")
 if SENTRY_DSN:
     import raven
 
