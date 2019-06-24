@@ -162,13 +162,22 @@ class Scheduler(threading.Thread):
         tr.save()
 
         if self.entry.callback_url:
-            context = {"request": self.entry.request}
-            result_json = TaskResultSerializer(tr, context=context).data
-            requests_futures_session.post(
-                self.entry.callback_url,
-                json=result_json,
-                background_callback=self._callback_response_handler,
-            )
+            try:
+                logger.debug("Trying callback")
+                context = {"request": self.entry.request}
+                result_json = TaskResultSerializer(tr, context=context).data
+                token = self.entry.owner.auth_token
+                headers = {"Authorization": "Token " + str(token)}
+                verify_ssl = settings.CALLBACK_SSL_VERIFICATION
+                requests_futures_session.post(
+                    self.entry.callback_url,
+                    json=result_json,
+                    background_callback=self._callback_response_handler,
+                    headers=headers,
+                    verify=verify_ssl,
+                )
+            except Exception as err:
+                logger.error(str(err))
 
     @staticmethod
     def _callback_response_handler(sess, resp):

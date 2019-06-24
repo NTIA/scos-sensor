@@ -379,6 +379,45 @@ def test_success_posted_to_callback_url(test_scheduler):
 
 
 @pytest.mark.django_db
+def test_success_posted_to_secure_callback_url(test_scheduler):
+    """If an entry has callback_url defined, scheduler should POST to it."""
+    cb_flag = threading.Event()
+
+    def cb_request_handler(sess, resp):
+        cb_flag.set()
+
+    cb, action_flag = create_action()
+    # less priority to force run after bad_entry fails
+    schedule_entry = create_entry(
+        "t", 20, None, None, None, cb.__name__, "mock://cburl"
+    )
+    token = schedule_entry.owner.auth_token
+    s = test_scheduler
+    advance_testclock(s.timefn, 1)
+    s._callback_response_handler = cb_request_handler
+
+    assert not action_flag.is_set()
+
+    request_json = None
+    with requests_mock.Mocker() as m:
+        m.post(
+            "mock://cburl", request_headers={"Authorization": "Token " + str(token)}
+        )  # register mock url for posting
+        s.run(blocking=False)
+        time.sleep(0.1)  # let requests thread run
+        request_json = m.request_history[0].json()
+
+    assert cb_flag.is_set()
+    assert action_flag.is_set()
+    assert request_json["status"] == "success"
+    assert request_json["task_id"] == 1
+    assert request_json["self"]
+    assert request_json["started"]
+    assert request_json["finished"]
+    assert request_json["duration"]
+
+
+@pytest.mark.django_db
 def test_starvation(test_scheduler):
     """A recurring high-pri task should not 'starve' a low-pri task."""
     # higher-pri recurring task that takes 3 ticks to complete enters at t=0
