@@ -2,6 +2,6 @@ single_frequency_fft:
   name: acquire_m4s_700MHz_P-SafetyNB_UL
   frequency: 802e6
   gain: 40
-  sample_rate: 7.68e6
+  sample_rate: 15.36e6
   fft_size: 512
   nffts: 300
