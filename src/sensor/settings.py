@@ -56,7 +56,7 @@ OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
 
 # JSON configs
-SCALE_FACTORS_FILE = path.join(CONFIG_DIR, "scale_factors.json")
+CALIBRATION_FILE = path.join(CONFIG_DIR, "calibration.json")
 SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, "actions")
 

@@ -8,7 +8,7 @@ from hardware import scale_factors
 from sensor.settings import REPO_ROOT
 
 RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
-TEST_SCALE_FACTORS_FILE = path.join(RESOURCES_DIR, "test_scale_factors.json")
+TEST_SCALE_FACTORS_FILE = path.join(RESOURCES_DIR, "test_calibration.json")
 
 sfs = scale_factors.load_from_json(TEST_SCALE_FACTORS_FILE)
 

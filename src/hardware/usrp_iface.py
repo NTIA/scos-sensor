@@ -22,6 +22,8 @@ from hardware.mocks.usrp_block import MockUsrp
 from sensor import settings
 from sensor.settings import REPO_ROOT
 
+from hardware.tests.test_scale_factors import TEST_SCALE_FACTORS_FILE
+
 logger = logging.getLogger(__name__)
 
 uhd = None
@@ -33,7 +35,7 @@ is_available = False
 VALID_GAINS = (0, 20, 40, 60)
 
 
-def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
+def connect(sf_file=settings.CALIBRATION_FILE):  # -> bool:
     global uhd
     global is_available
     global radio
@@ -44,7 +46,7 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
         usrp = MockUsrp(randomize_values=random)
         is_available = True
         RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
-        sf_file = path.join(RESOURCES_DIR, "test_scale_factors.json")
+        sf_file = path.join(RESOURCES_DIR, TEST_SCALE_FACTORS_FILE)
     else:
         if is_available and radio is not None:
             return True
@@ -78,7 +80,7 @@ def connect(sf_file=settings.SCALE_FACTORS_FILE):  # -> bool:
 
 
 class RadioInterface(object):
-    def __init__(self, usrp, sf_file=settings.SCALE_FACTORS_FILE):
+    def __init__(self, usrp, sf_file=settings.CALIBRATION_FILE):
         self.usrp = usrp
         self.scale_factor = 1
         try:

@@ -1,51 +1,44 @@
 import json
 import logging
 
+from collections import OrderedDict
+
 logger = logging.getLogger(__name__)
 
 
 class ScaleFactors(object):
-    def __init__(self, frequencies, gains, factors, divisions=None):
-        self.frequencies = frequencies
-        self.gains = gains
-        self.factors = factors
-        self.divisions = divisions
+    def __init__(
+        self,
+        calibration_datetime,
+        calibration_data,
+        calibration_frequency_divisions=None,
+    ):
+        self.calibration_datetime = calibration_datetime
+        self.calibration_data = calibration_data
+        self.calibration_frequency_divisions = calibration_frequency_divisions
 
     # Interpolate to get the power scale factor
     def get_power_scale_factor(self, lo_frequency, gain):
         """Find the scale factor closest to the current frequency/gain."""
+        frequencies = list(self.calibration_data.keys())
 
         # Get the LO and gain for the usrp
         f = lo_frequency
         g = gain
 
-        # Get the gain index for the SF interpolation
-        g_i = 0
-        bypass_gain_interpolation = True
-        if g <= self.gains[0]:
-            g_i = 0
-        elif g >= self.gains[-1]:
-            g_i = len(self.gains) - 1
-        else:
-            bypass_gain_interpolation = False
-            for i in range(len(self.gains) - 1):
-                if self.gains[i + 1] > g:
-                    g_i = i
-                    break
-
         # Get the frequency index range for the SF interpolation
         f_i = 0
         bypass_freq_interpolation = True
-        if f <= self.frequencies[0]:
+        if f <= frequencies[0]:
             f_i = 0
-        elif f >= self.frequencies[-1]:
-            f_i = len(self.frequencies) - 1
+        elif f >= frequencies[-1]:
+            f_i = len(frequencies) - 1
         else:
             # Narrow the frequency range to a division
             bypass_freq_interpolation = False
-            f_div_min = self.frequencies[0]
-            f_div_max = self.frequencies[-1]
-            for div in self.divisions:
+            f_div_min = frequencies[0]
+            f_div_max = frequencies[-1]
+            for div in self.calibration_frequency_divisions:
                 if f >= div["upper_bound"]:
                     f_div_min = div["upper_bound"]
                 else:
@@ -68,47 +61,82 @@ class ScaleFactors(object):
 
                     break
             # Determine the index associated with the frequency/ies
-            for i in range(len(self.frequencies) - 1):
-                if self.frequencies[i] < f_div_min:
+            for i in range(len(frequencies) - 1):
+                if frequencies[i] < f_div_min:
                     continue
-                if self.frequencies[i + 1] > f_div_max:
+                if frequencies[i + 1] > f_div_max:
                     f_i = i
                     break
-                if self.frequencies[i + 1] > f:
+                if frequencies[i + 1] > f:
                     f_i = i
                     break
 
+        closest_frequency = frequencies[f_i]
+        next_highest_frequency = (
+            frequencies[f_i + 1] if f_i + 1 < len(frequencies) else None
+        )
+        gains = list(self.calibration_data[closest_frequency].keys())
+
+        # Get the gain index for the SF interpolation
+        g_i = 0
+        bypass_gain_interpolation = True
+        if g <= gains[0]:
+            g_i = 0
+        elif g >= gains[-1]:
+            g_i = len(gains) - 1
+        else:
+            bypass_gain_interpolation = False
+            for i in range(len(gains) - 1):
+                if gains[i + 1] > g:
+                    g_i = i
+                    break
+
+        closest_gain = gains[g_i]
+        next_highest_gain = gains[g_i + 1] if g_i + 1 < len(gains) else None
+
         # Interpolate as needed
         if bypass_gain_interpolation and bypass_freq_interpolation:
-            scale_factor = self.factors[f_i][g_i]
+            scale_factor = self.calibration_data[closest_frequency][closest_gain][
+                "scale_factor"
+            ]
         elif bypass_freq_interpolation:
             scale_factor = self.interpolate_1d(
                 g,
-                self.gains[g_i],
-                self.gains[g_i + 1],
-                self.factors[f_i][g_i],
-                self.factors[f_i][g_i + 1],
+                gains[g_i],
+                gains[g_i + 1],
+                self.calibration_data[closest_frequency][closest_gain]["scale_factor"],
+                self.calibration_data[closest_frequency][next_highest_gain][
+                    "scale_factor"
+                ],
             )
         elif bypass_gain_interpolation:
             scale_factor = self.interpolate_1d(
                 f,
-                self.frequencies[f_i],
-                self.frequencies[f_i + 1],
-                self.factors[f_i][g_i],
-                self.factors[f_i + 1][g_i],
+                frequencies[f_i],
+                frequencies[f_i + 1],
+                self.calibration_data[closest_frequency][closest_gain]["scale_factor"],
+                self.calibration_data[next_highest_frequency][closest_gain][
+                    "scale_factor"
+                ],
             )
         else:
             scale_factor = self.interpolate_2d(
                 f,
                 g,
-                self.frequencies[f_i],
-                self.frequencies[f_i + 1],
-                self.gains[g_i],
-                self.gains[g_i + 1],
-                self.factors[f_i][g_i],
-                self.factors[f_i + 1][g_i],
-                self.factors[f_i][g_i + 1],
-                self.factors[f_i + 1][g_i + 1],
+                frequencies[f_i],
+                frequencies[f_i + 1],
+                gains[g_i],
+                gains[g_i + 1],
+                self.calibration_data[closest_frequency][closest_gain]["scale_factor"],
+                self.calibration_data[next_highest_frequency][closest_gain][
+                    "scale_factor"
+                ],
+                self.calibration_data[closest_frequency][next_highest_gain][
+                    "scale_factor"
+                ],
+                self.calibration_data[next_highest_frequency][next_highest_gain][
+                    "scale_factor"
+                ],
             )
 
         logger.debug("Using power scale factor: {}".format(scale_factor))
@@ -136,22 +164,41 @@ def load_from_json(fname):
     with open(fname) as f:
         sf = json.load(f)
 
-    # Dimensions of the factors array is not validated by the schema
-    factor_rows = len(sf["factors"])
-    nfrequencies = len(sf["frequencies"])
-    ngains = len(sf["gains"])
+    assert "calibration_datetime" in sf
+    assert "calibration_frequency_divisions" in sf
+    assert "calibration_points" in sf
 
-    msg = "Number of rows in factors 2D array ({}) ".format(factor_rows)
-    msg += "not equal to number of frequencies ({})".format(nfrequencies)
-    assert len(sf["factors"]) == len(sf["frequencies"]), msg
+    frequencies = [x["freq_sigan"] for x in sf["calibration_points"]]
 
-    msg = "factors row {!r} isn't the same length as the `gains` array ({})"
-    for row in sf["factors"]:
-        assert len(row) == ngains, format(row, ngains)
+    assert frequencies == sorted(frequencies)
 
-    # Ensure frequencies and gains arrays are already sorted
+    last_frequency = 0
+    last_gain = -1
+    last_gains = []
+    gains = []
+    calibration_data = OrderedDict()
+    for calibration_point in sf["calibration_points"]:
+        frequency = calibration_point["freq_sigan"]
+        gain = calibration_point["gain_sigan"]
+        # for calibration points with matching frequencies, the current gain must be greater than the last
+        if frequency == last_frequency:
+            assert gain > last_gain
+            gains.append(gain)
+        else:
+            # for calibration points with non-matching frequencies, the current frequency must be greater than the last
+            assert frequency > last_frequency
+            calibration_data[frequency] = OrderedDict()
+            # gains should be equal for all calibration points
+            if last_gains and len(calibration_data) > 2:
+                assert gains == last_gains
+            last_gains = gains
+            gains = [gain]
+        last_frequency = frequency
+        last_gain = gain
+        calibration_data[frequency][gain] = calibration_point
 
-    assert sf["frequencies"] == sorted(sf["frequencies"]), "freqs not sorted"
-    assert sf["gains"] == sorted(sf["gains"]), "gains not sorted"
-
-    return ScaleFactors(**sf)
+    return ScaleFactors(
+        sf["calibration_datetime"],
+        calibration_data,
+        sf["calibration_frequency_divisions"],
+    )
