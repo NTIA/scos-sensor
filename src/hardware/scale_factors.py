@@ -15,12 +15,15 @@ class ScaleFactors(object):
     ):
         self.calibration_datetime = calibration_datetime
         self.calibration_data = calibration_data
-        self.calibration_frequency_divisions = calibration_frequency_divisions
+        self.calibration_frequency_divisions = sorted(
+            calibration_frequency_divisions,
+            key=lambda division: division["lower_bound"],
+        )
 
     # Interpolate to get the power scale factor
     def get_power_scale_factor(self, lo_frequency, gain):
         """Find the scale factor closest to the current frequency/gain."""
-        frequencies = list(self.calibration_data.keys())
+        frequencies = sorted(self.calibration_data.keys())
 
         # Get the LO and gain for the usrp
         f = lo_frequency
@@ -75,7 +78,7 @@ class ScaleFactors(object):
         next_highest_frequency = (
             frequencies[f_i + 1] if f_i + 1 < len(frequencies) else None
         )
-        gains = list(self.calibration_data[closest_frequency].keys())
+        gains = sorted(self.calibration_data[closest_frequency].keys())
 
         # Get the gain index for the SF interpolation
         g_i = 0
@@ -168,25 +171,16 @@ def load_from_json(fname):
     assert "calibration_frequency_divisions" in sf
     assert "calibration_points" in sf
 
-    frequencies = [x["freq_sigan"] for x in sf["calibration_points"]]
-
-    assert frequencies == sorted(frequencies)
-
     last_frequency = 0
-    last_gain = -1
     last_gains = []
     gains = []
     calibration_data = OrderedDict()
     for calibration_point in sf["calibration_points"]:
         frequency = calibration_point["freq_sigan"]
         gain = calibration_point["gain_sigan"]
-        # for calibration points with matching frequencies, the current gain must be greater than the last
         if frequency == last_frequency:
-            assert gain > last_gain
             gains.append(gain)
         else:
-            # for calibration points with non-matching frequencies, the current frequency must be greater than the last
-            assert frequency > last_frequency
             calibration_data[frequency] = OrderedDict()
             # gains should be equal for all calibration points
             if last_gains and len(calibration_data) > 2:
@@ -194,7 +188,6 @@ def load_from_json(fname):
             last_gains = gains
             gains = [gain]
         last_frequency = frequency
-        last_gain = gain
         calibration_data[frequency][gain] = calibration_point
 
     return ScaleFactors(
