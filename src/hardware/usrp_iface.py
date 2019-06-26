@@ -22,8 +22,6 @@ from hardware.mocks.usrp_block import MockUsrp
 from sensor import settings
 from sensor.settings import REPO_ROOT
 
-from hardware.tests.test_scale_factors import TEST_SCALE_FACTORS_FILE
-
 logger = logging.getLogger(__name__)
 
 uhd = None
@@ -46,7 +44,7 @@ def connect(sf_file=settings.CALIBRATION_FILE):  # -> bool:
         usrp = MockUsrp(randomize_values=random)
         is_available = True
         RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
-        sf_file = path.join(RESOURCES_DIR, TEST_SCALE_FACTORS_FILE)
+        sf_file = path.join(RESOURCES_DIR, "test_calibration.json")
     else:
         if is_available and radio is not None:
             return True
