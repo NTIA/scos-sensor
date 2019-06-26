@@ -1,8 +1,6 @@
 import json
 import logging
 
-from collections import OrderedDict
-
 logger = logging.getLogger(__name__)
 
 
@@ -174,14 +172,14 @@ def load_from_json(fname):
     last_frequency = 0
     last_gains = []
     gains = []
-    calibration_data = OrderedDict()
+    calibration_data = {}
     for calibration_point in sf["calibration_points"]:
         frequency = calibration_point["freq_sigan"]
         gain = calibration_point["gain_sigan"]
         if frequency == last_frequency:
             gains.append(gain)
         else:
-            calibration_data[frequency] = OrderedDict()
+            calibration_data[frequency] = {}
             # gains should be equal for all calibration points
             if last_gains and len(calibration_data) > 2:
                 assert gains == last_gains
