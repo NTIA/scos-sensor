@@ -73,6 +73,8 @@ services:
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
     environment:
       - DOMAINS
+    extra_hosts:
+      - "scosmgrqa01.sms.internal:${MANAGER_IP}"
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
