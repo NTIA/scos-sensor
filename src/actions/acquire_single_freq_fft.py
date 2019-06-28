@@ -173,7 +173,6 @@ class SingleFrequencyFftAcquisition(Action):
             raise RuntimeError(msg)
 
     def configure_sdr(self):
-        self.set_sdr_clock_rate()
         self.set_sdr_sample_rate()
         self.set_sdr_frequency()
         self.set_sdr_gain()
@@ -184,13 +183,6 @@ class SingleFrequencyFftAcquisition(Action):
     def set_sdr_sample_rate(self):
         self.sdr.radio.sample_rate = self.sample_rate
         self.sample_rate = self.sdr.radio.sample_rate
-
-    def set_sdr_clock_rate(self):
-        clock_rate = self.sample_rate
-        while clock_rate < 10e6:
-            clock_rate *= 4
-
-        self.sdr.radio.clock_rate = clock_rate
 
     def set_sdr_frequency(self):
         requested_frequency = self.frequency

@@ -86,7 +86,7 @@ class RadioInterface(object):
         except Exception as err:
             logger.error("Unable to load scale factors, falling back to to 1")
             logger.exception(err)
-            self.scale_factors = None
+            self.calibration = None
 
     @property
     def sample_rate(self):  # -> float:

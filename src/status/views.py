@@ -27,8 +27,8 @@ def get_location():
 def get_last_calibration_time():
     """Returns datetime string of last calibration time"""
     sdr.connect()
-    if sdr.is_available and sdr.radio.scale_factors:
-        return sdr.radio.scale_factors.calibration_datetime
+    if sdr.is_available and sdr.radio.calibration:
+        return sdr.radio.calibration.calibration_datetime
     return "unknown"
 
 

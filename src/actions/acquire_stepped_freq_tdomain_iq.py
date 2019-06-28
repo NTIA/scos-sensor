@@ -163,17 +163,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         return data, sigmf_md
 
     def configure_sdr(self, fc, gain, sample_rate, duration_ms):
-        self.set_sdr_clock_rate(sample_rate)
         self.set_sdr_sample_rate(sample_rate)
         self.sdr.radio.tune_frequency(fc)
         self.sdr.radio.gain = gain
-
-    def set_sdr_clock_rate(self, sample_rate):
-        clock_rate = sample_rate
-        while clock_rate < 10e6:
-            clock_rate *= 4
-
-        self.sdr.radio.clock_rate = clock_rate
 
     def set_sdr_sample_rate(self, sample_rate):
         self.sdr.radio.sample_rate = sample_rate
