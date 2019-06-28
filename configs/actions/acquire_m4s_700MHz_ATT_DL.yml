@@ -1,6 +1,6 @@
 single_frequency_fft:
-  name: acquire_700MHz_FirstNet_UL
-  frequency: 793e6
+  name: acquire_m4s_700MHz_ATT_DL
+  frequency: 739e6
   gain: 40
   sample_rate: 15.36e6
   fft_size: 1024
