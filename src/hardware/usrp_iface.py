@@ -17,7 +17,7 @@ from os import path
 
 import numpy as np
 
-from hardware import scale_factors
+from hardware import calibration
 from hardware.mocks.usrp_block import MockUsrp
 from sensor import settings
 from sensor.settings import REPO_ROOT
@@ -33,7 +33,7 @@ is_available = False
 VALID_GAINS = (0, 20, 40, 60)
 
 
-def connect(sf_file=settings.CALIBRATION_FILE):  # -> bool:
+def connect(cal_file=settings.CALIBRATION_FILE):  # -> bool:
     global uhd
     global is_available
     global radio
@@ -44,7 +44,7 @@ def connect(sf_file=settings.CALIBRATION_FILE):  # -> bool:
         usrp = MockUsrp(randomize_values=random)
         is_available = True
         RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
-        sf_file = path.join(RESOURCES_DIR, "test_calibration.json")
+        cal_file = path.join(RESOURCES_DIR, "test_calibration.json")
     else:
         if is_available and radio is not None:
             return True
@@ -68,7 +68,7 @@ def connect(sf_file=settings.CALIBRATION_FILE):  # -> bool:
         logger.debug(usrp.get_pp_string())
 
     try:
-        radio_iface = RadioInterface(usrp=usrp, sf_file=sf_file)
+        radio_iface = RadioInterface(usrp=usrp, cal_file=cal_file)
         is_available = True
         radio = radio_iface
         return True
@@ -78,11 +78,11 @@ def connect(sf_file=settings.CALIBRATION_FILE):  # -> bool:
 
 
 class RadioInterface(object):
-    def __init__(self, usrp, sf_file=settings.CALIBRATION_FILE):
+    def __init__(self, usrp, cal_file=settings.CALIBRATION_FILE):
         self.usrp = usrp
         self.scale_factor = 1
         try:
-            self.scale_factors = scale_factors.load_from_json(sf_file)
+            self.calibration = calibration.load_from_json(cal_file)
         except Exception as err:
             logger.error("Unable to load scale factors, falling back to to 1")
             logger.exception(err)
@@ -94,9 +94,12 @@ class RadioInterface(object):
 
     @sample_rate.setter
     def sample_rate(self, rate):
+        """Sets the sample_rate and the clock_rate based on the sample_rate"""
         self.usrp.set_rx_rate(rate)
         fs_MHz = self.sample_rate / 1e6
         logger.debug("set USRP sample rate: {:.2f} MS/s".format(fs_MHz))
+        clock_rate = self.calibration.get_clock_rate(rate)
+        self.clock_rate = clock_rate
 
     @property
     def clock_rate(self):  # -> float:
@@ -155,10 +158,10 @@ class RadioInterface(object):
 
     def recompute_scale_factor(self):
         """Set the scale factor based on USRP gain and LO freq"""
-        if self.scale_factors is None:
+        if self.calibration is None:
             return
 
-        self.scale_factor = self.scale_factors.get_scale_factor(
+        self.scale_factor = self.calibration.get_scale_factor(
             lo_frequency=self.frequency, gain=self.gain
         )
 

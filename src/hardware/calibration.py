@@ -4,19 +4,28 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ScaleFactors(object):
+class Calibration(object):
     def __init__(
         self,
         calibration_datetime,
         calibration_data,
+        clock_rate_lookup_by_sample_rate,
         calibration_frequency_divisions=None,
     ):
         self.calibration_datetime = calibration_datetime
         self.calibration_data = calibration_data
+        self.clock_rate_lookup_by_sample_rate = clock_rate_lookup_by_sample_rate
         self.calibration_frequency_divisions = sorted(
             calibration_frequency_divisions,
             key=lambda division: division["lower_bound"],
         )
+
+    def get_clock_rate(self, sample_rate):
+        """Find the clock rate (Hz) using the given sample_rate (samples per second)"""
+        for mapping in self.clock_rate_lookup_by_sample_rate:
+            if mapping["sample_rate"] == sample_rate:
+                return mapping["clock_frequency"]
+        return sample_rate
 
     # Interpolate to get the power scale factor
     def get_power_scale_factor(self, lo_frequency, gain):
@@ -163,17 +172,18 @@ class ScaleFactors(object):
 
 def load_from_json(fname):
     with open(fname) as f:
-        sf = json.load(f)
+        calibration = json.load(f)
 
-    assert "calibration_datetime" in sf
-    assert "calibration_frequency_divisions" in sf
-    assert "calibration_points" in sf
+    assert "calibration_datetime" in calibration
+    assert "calibration_frequency_divisions" in calibration
+    assert "calibration_points" in calibration
+    assert "clock_rate_lookup_by_sample_rate" in calibration
 
     last_frequency = 0
     last_gains = []
     gains = []
     calibration_data = {}
-    for calibration_point in sf["calibration_points"]:
+    for calibration_point in calibration["calibration_points"]:
         frequency = calibration_point["freq_sigan"]
         gain = calibration_point["gain_sigan"]
         if frequency == last_frequency:
@@ -188,8 +198,9 @@ def load_from_json(fname):
         last_frequency = frequency
         calibration_data[frequency][gain] = calibration_point
 
-    return ScaleFactors(
-        sf["calibration_datetime"],
+    return Calibration(
+        calibration["calibration_datetime"],
         calibration_data,
-        sf["calibration_frequency_divisions"],
+        calibration["clock_rate_lookup_by_sample_rate"],
+        calibration["calibration_frequency_divisions"],
     )

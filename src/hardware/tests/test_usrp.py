@@ -81,3 +81,14 @@ def test_scaled_data_acquisition():
     msg += "Algorithm: {}\n".format(datum / 1e6)
     msg += "Expected: {}\n".format(true_val / 1e6)
     assert datum == true_val, msg
+
+
+def test_set_sample_rate_also_sets_clock_rate():
+    """Setting sample_rate should adjust clock_rate"""
+    expected_clock_rate = 30720000
+
+    rx.sample_rate = 15360000
+
+    observed_clock_rate = rx.clock_rate
+
+    assert expected_clock_rate == observed_clock_rate
