@@ -1,0 +1,10 @@
+stepped_frequency_time_domain_iq:
+  name: acquire_iq_700MHz_T-Mobile_DL
+  fcs:
+    - 731.5e6
+  gains:
+    - 40
+  sample_rates:
+    - 15.36e6
+  durations_ms:
+    - 1000
