@@ -41,7 +41,7 @@ services:
       - IN_DOCKER=1
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
-      - CALLBACK_SSL_VERIFICATION
+      - CALLBACK_SSL_VERIFICATION=False
     expose:
       - '8000'
     volumes:
@@ -50,6 +50,8 @@ services:
       - SYS_PTRACE
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
+    extra_hosts:
+      - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
@@ -73,8 +75,6 @@ services:
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
     environment:
       - DOMAINS
-    extra_hosts:
-      - "${MANAGER_FQDN}:${MANAGER_IP}"
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
