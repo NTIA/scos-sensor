@@ -256,7 +256,9 @@ class SingleFrequencyFftAcquisition(Action):
 
             if location:
                 frequency_domain_detection_md["core:latitude"] = str(location.latitude)
-                frequency_domain_detection_md["core:longitude"] = str(location.longitude)
+                frequency_domain_detection_md["core:longitude"] = str(
+                    location.longitude
+                )
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),

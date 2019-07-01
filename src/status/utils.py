@@ -4,6 +4,7 @@ from .models import Location
 
 logger = logging.getLogger(__name__)
 
+
 def get_location():
     """Returns Location object JSON if set or None and logs an error."""
     try:
