@@ -86,6 +86,7 @@ from sigmf.sigmffile import SigMFFile
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
+from status.utils import get_location
 
 from .base import Action
 
@@ -239,6 +240,8 @@ class SingleFrequencyFftAcquisition(Action):
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
+        location = get_location()
+
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
@@ -250,6 +253,10 @@ class SingleFrequencyFftAcquisition(Action):
                 "ntia-algorithm:units": "dBm",
                 "ntia-algorithm:reference": "not referenced",
             }
+
+            if location:
+                frequency_domain_detection_md["core:latitude"] = str(location.latitude)
+                frequency_domain_detection_md["core:longitude"] = str(location.longitude)
 
             sigmf_md.add_annotation(
                 start_index=(i * self.fft_size),
