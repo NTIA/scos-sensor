@@ -1,5 +1,7 @@
 import logging
 
+from hardware import sdr
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -22,6 +24,14 @@ def get_location():
         return None
 
 
+def get_last_calibration_time():
+    """Returns datetime string of last calibration time"""
+    sdr.connect()
+    if sdr.is_available and sdr.radio.calibration:
+        return sdr.radio.calibration.calibration_datetime
+    return "unknown"
+
+
 @api_view()
 def status(request, version, format=None):
     """The status overview of the sensor."""
@@ -30,5 +40,6 @@ def status(request, version, format=None):
             "scheduler": scheduler.thread.status,
             "location": get_location(),
             "system_time": utils.get_datetime_str_now(),
+            "last_calibration_time": get_last_calibration_time(),
         }
     )

@@ -1,0 +1,6529 @@
+{
+  "calibration_datetime": "2019-06-22T08:48:26.416213Z",
+  "calibration_frequency_divisions": [
+    {
+      "lower_bound": 1299999999,
+      "upper_bound": 1300000000
+    },
+    {
+      "lower_bound": 2199999998,
+      "upper_bound": 2200000000
+    },
+    {
+      "lower_bound": 3999999995,
+      "upper_bound": 4000000000
+    }
+  ],
+  "clock_rate_lookup_by_sample_rate": [
+    {
+      "sample_rate": 10000000,
+      "clock_frequency": 40000000
+    },
+    {
+      "sample_rate": 40000000,
+      "clock_frequency": 40000000
+    },
+    {
+      "sample_rate": 15360000,
+      "clock_frequency": 30720000
+    }
+  ],
+  "calibration_points": [
+    {
+      "freq_sigan": 400000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.5191814183,
+      "noise_figure": 10.5859836366,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 400000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6941142375,
+      "noise_figure": 7.09776070796,
+      "1dB_compression": -46.0
+    },
+    {
+      "freq_sigan": 410000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.3771321846,
+      "noise_figure": 10.6953223366,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 410000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5734064391,
+      "noise_figure": 7.19668711756,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 420000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.2604740087,
+      "noise_figure": 10.8219709095,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 420000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5036779749,
+      "noise_figure": 7.23578354286,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 430000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.3043638054,
+      "noise_figure": 10.6554173821,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 430000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6109093245,
+      "noise_figure": 6.96576407146,
+      "1dB_compression": -46.0
+    },
+    {
+      "freq_sigan": 440000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0808869759,
+      "noise_figure": 10.8785439067,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 440000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3959017369,
+      "noise_figure": 7.19937953636,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 450000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.1815441916,
+      "noise_figure": 10.746856635,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 450000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5605865107,
+      "noise_figure": 7.03284009166,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 460000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0611835299,
+      "noise_figure": 10.8174888511,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 460000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4539737485,
+      "noise_figure": 7.06347181006,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 470000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0876920277,
+      "noise_figure": 10.8053714672,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 470000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5210677337,
+      "noise_figure": 7.00831909336,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 480000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0361278269,
+      "noise_figure": 10.8660613365,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 480000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4484197219,
+      "noise_figure": 7.02831501886,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 490000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0658464233,
+      "noise_figure": 10.7765241422,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 490000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5426327083,
+      "noise_figure": 6.99994721386,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 500000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0130121119,
+      "noise_figure": 10.8567799872,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 500000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5408754869,
+      "noise_figure": 7.01106820656,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 510000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -43.0534647789,
+      "noise_figure": 11.2411901554,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 510000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6013503011,
+      "noise_figure": 7.79370623476,
+      "1dB_compression": -46.0
+    },
+    {
+      "freq_sigan": 520000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.9237410501,
+      "noise_figure": 10.9439287908,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 520000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4866931432,
+      "noise_figure": 7.01872574916,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 530000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.9725563459,
+      "noise_figure": 10.8619538693,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 530000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5617268754,
+      "noise_figure": 6.97405609266,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 540000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8697147822,
+      "noise_figure": 10.9573167982,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 540000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4835405093,
+      "noise_figure": 7.01995276796,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 550000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8979535723,
+      "noise_figure": 10.9620837197,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 550000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5353696389,
+      "noise_figure": 7.00150202276,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 560000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8760941016,
+      "noise_figure": 10.9403705143,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 560000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5466025171,
+      "noise_figure": 6.94793894326,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 570000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8653801088,
+      "noise_figure": 10.9622976729,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 570000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5346599146,
+      "noise_figure": 6.98220448706,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 580000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8883838684,
+      "noise_figure": 10.9366073798,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 580000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6014055604,
+      "noise_figure": 6.90119601326,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 590000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8819539832,
+      "noise_figure": 10.94188716,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 590000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5743099286,
+      "noise_figure": 6.94347561026,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 600000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.9162178554,
+      "noise_figure": 10.9505686736,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 600000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6434988837,
+      "noise_figure": 6.94678412546,
+      "1dB_compression": -46.0
+    },
+    {
+      "freq_sigan": 610000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8732964965,
+      "noise_figure": 10.9750330383,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 610000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6129816424,
+      "noise_figure": 6.95719478866,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 620000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8954137362,
+      "noise_figure": 10.6884649094,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 620000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.6488410897,
+      "noise_figure": 6.85413035576,
+      "1dB_compression": -46.0
+    },
+    {
+      "freq_sigan": 630000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.8323228792,
+      "noise_figure": 10.9828696115,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 630000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5881538975,
+      "noise_figure": 6.87033342776,
+      "1dB_compression": -46.0
+    },
+    {
+      "freq_sigan": 640000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.822137229,
+      "noise_figure": 10.9674260523,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 640000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5756469414,
+      "noise_figure": 6.88432476606,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 650000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.7600821642,
+      "noise_figure": 11.0642613985,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 650000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5150365764,
+      "noise_figure": 7.02480981286,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 660000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.7552046252,
+      "noise_figure": 11.1584708139,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 660000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5003241598,
+      "noise_figure": 7.18669698956,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 670000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.7146899777,
+      "noise_figure": 11.354311334,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 670000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.513503959,
+      "noise_figure": 7.41899521236,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 680000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.6978931462,
+      "noise_figure": 11.2979588508,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 680000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4873644513,
+      "noise_figure": 7.30864281546,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 690000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.7126462961,
+      "noise_figure": 11.1989422421,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 690000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5120073764,
+      "noise_figure": 7.17607553526,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 700000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.6717529413,
+      "noise_figure": 11.2704817,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 700000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4707796105,
+      "noise_figure": 7.24785914586,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 710000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.6854063131,
+      "noise_figure": 11.1092828507,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 710000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.5044854364,
+      "noise_figure": 6.96711946356,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 720000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.6609106448,
+      "noise_figure": 11.1131423236,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 720000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4643313975,
+      "noise_figure": 6.96057888886,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 730000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.6452218415,
+      "noise_figure": 11.1328980509,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 730000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4566783833,
+      "noise_figure": 7.02034101966,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 740000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.6230082883,
+      "noise_figure": 11.1550610779,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 740000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4323366591,
+      "noise_figure": 6.97910419876,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 750000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.5908848593,
+      "noise_figure": 11.1770459398,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 750000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.4053668707,
+      "noise_figure": 6.93613385926,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 760000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.5679226235,
+      "noise_figure": 11.1880322902,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 760000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3749587261,
+      "noise_figure": 6.96030960666,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 770000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.5641689376,
+      "noise_figure": 11.2757620444,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 770000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3835195216,
+      "noise_figure": 7.23316938256,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 780000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.5075392122,
+      "noise_figure": 11.2474252112,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 780000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3290194843,
+      "noise_figure": 6.98249735506,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 790000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.5613937796,
+      "noise_figure": 11.1954465417,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 790000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3896807094,
+      "noise_figure": 6.97730386766,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 800000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.4992081873,
+      "noise_figure": 11.2169171924,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 800000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3626704811,
+      "noise_figure": 6.94167505006,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 810000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.515836962,
+      "noise_figure": 11.2189055912,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 810000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3454044021,
+      "noise_figure": 6.93992731906,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 820000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.5107143305,
+      "noise_figure": 11.2170139016,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 820000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3465803074,
+      "noise_figure": 6.93897584176,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 830000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.4508867939,
+      "noise_figure": 11.29738844,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 830000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.2809786046,
+      "noise_figure": 7.02313122586,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 840000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.4813377062,
+      "noise_figure": 11.205669946,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 840000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.3048600127,
+      "noise_figure": 6.98527802626,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 850000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.3876067443,
+      "noise_figure": 11.3489517415,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 850000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.1624281519,
+      "noise_figure": 7.07945615196,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 860000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.4028133583,
+      "noise_figure": 11.3309569134,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 860000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.1918149006,
+      "noise_figure": 7.14599859976,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 870000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.3266281111,
+      "noise_figure": 11.4130798846,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 870000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.0957752799,
+      "noise_figure": 7.17173303256,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 880000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.2870455903,
+      "noise_figure": 11.4074530848,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 880000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.051698416,
+      "noise_figure": 7.13885696506,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 890000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.2665430983,
+      "noise_figure": 11.446038148,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 890000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -62.0236799604,
+      "noise_figure": 7.21312707086,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 900000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.1987520355,
+      "noise_figure": 11.4556764028,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 900000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.9628223496,
+      "noise_figure": 7.15090734696,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 910000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.1779079259,
+      "noise_figure": 11.6093110291,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 910000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.9309056288,
+      "noise_figure": 7.34724521856,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 920000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.1697590432,
+      "noise_figure": 11.5043946529,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 920000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.8924616235,
+      "noise_figure": 7.22068577426,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 930000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.0870947649,
+      "noise_figure": 11.635634315,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 930000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.7971118956,
+      "noise_figure": 7.40002126866,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 940000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.0864116284,
+      "noise_figure": 11.5870664905,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 940000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.8226427073,
+      "noise_figure": 7.24064984566,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 950000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -42.0052391816,
+      "noise_figure": 11.6868366368,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 950000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.7063612199,
+      "noise_figure": 7.38922215056,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 960000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.9594988382,
+      "noise_figure": 11.6814680575,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 960000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.6438624423,
+      "noise_figure": 7.38099671896,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 970000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.933160216,
+      "noise_figure": 11.717226719,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 970000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.6361366324,
+      "noise_figure": 7.42730798066,
+      "1dB_compression": -45.0
+    },
+    {
+      "freq_sigan": 980000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.7894306019,
+      "noise_figure": 11.8270836216,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 980000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.4259529989,
+      "noise_figure": 7.54018926756,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 990000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.8632250956,
+      "noise_figure": 11.7950566856,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 990000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.5254463767,
+      "noise_figure": 7.50761299036,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1000000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.7029575105,
+      "noise_figure": 11.982014518,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 1000000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.3282735269,
+      "noise_figure": 7.66677827466,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1010000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.762953766,
+      "noise_figure": 11.8539513321,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 1010000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.415290065,
+      "noise_figure": 7.48345558626,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1020000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.7024171414,
+      "noise_figure": 11.9491029339,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 1020000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.3468498755,
+      "noise_figure": 7.66313026906,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1030000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.6819597829,
+      "noise_figure": 11.940305922,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 1030000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.3124069091,
+      "noise_figure": 7.59150263436,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1040000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.6684152982,
+      "noise_figure": 11.9583134079,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 1040000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.294275177,
+      "noise_figure": 7.63771491366,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1050000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.6391497834,
+      "noise_figure": 11.9889075611,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 1050000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.2635564198,
+      "noise_figure": 7.63200907206,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1060000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.5674612146,
+      "noise_figure": 12.1172639944,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1060000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.1466513592,
+      "noise_figure": 7.80892102706,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1070000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.5615290463,
+      "noise_figure": 12.0675946717,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1070000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.1408934323,
+      "noise_figure": 7.75426493716,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1080000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.4446091037,
+      "noise_figure": 12.1782674811,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1080000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -61.0187437716,
+      "noise_figure": 7.83618180986,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1090000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.3773529341,
+      "noise_figure": 12.2311797145,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1090000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.9157677847,
+      "noise_figure": 7.97954236526,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1100000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.3764426086,
+      "noise_figure": 12.2553966102,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1100000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.9164295296,
+      "noise_figure": 7.93891603466,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1110000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.2374689134,
+      "noise_figure": 12.3885570811,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1110000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.7521196831,
+      "noise_figure": 8.11877431396,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1120000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.2876354652,
+      "noise_figure": 12.3472155525,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1120000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.8450742911,
+      "noise_figure": 8.03140414706,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1130000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.2008613909,
+      "noise_figure": 12.4343149998,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1130000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.6948351686,
+      "noise_figure": 8.14026287556,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1140000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.1473607314,
+      "noise_figure": 12.5031439213,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1140000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.6316390147,
+      "noise_figure": 8.19561714276,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1150000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.1667474216,
+      "noise_figure": 12.4690486415,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1150000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.6372579859,
+      "noise_figure": 8.15919271976,
+      "1dB_compression": -44.0
+    },
+    {
+      "freq_sigan": 1160000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -41.0316822341,
+      "noise_figure": 12.5707741689,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1160000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.4767908809,
+      "noise_figure": 8.24292293566,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1170000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.966625446,
+      "noise_figure": 12.4789397397,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1170000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.4008398177,
+      "noise_figure": 8.33246174066,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1180000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.9443917856,
+      "noise_figure": 12.6436743084,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1180000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.373224778,
+      "noise_figure": 8.36178005836,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1190000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.7579181678,
+      "noise_figure": 12.8297849589,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1190000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.1520036049,
+      "noise_figure": 8.51411785246,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1200000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.8056116012,
+      "noise_figure": 12.7743036916,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1200000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.1905532738,
+      "noise_figure": 8.47809964266,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1210000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.678771922,
+      "noise_figure": 12.8829915685,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1210000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.0466147223,
+      "noise_figure": 8.53241483826,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1220000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.5713545995,
+      "noise_figure": 13.0310417163,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1220000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.9373075398,
+      "noise_figure": 8.68784746686,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1230000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.6440929279,
+      "noise_figure": 12.9155105995,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1230000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -60.0304961585,
+      "noise_figure": 8.54112698346,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1240000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.4917530031,
+      "noise_figure": 13.1283039758,
+      "1dB_compression": -23.0
+    },
+    {
+      "freq_sigan": 1240000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.8559718079,
+      "noise_figure": 8.81019542426,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1250000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.5874448034,
+      "noise_figure": 13.004067368,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1250000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.9406964174,
+      "noise_figure": 8.69952853906,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1260000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.5872591907,
+      "noise_figure": 12.980064239,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1260000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.9086844251,
+      "noise_figure": 8.68455396446,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1270000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.4903254499,
+      "noise_figure": 13.0462855032,
+      "1dB_compression": -23.0
+    },
+    {
+      "freq_sigan": 1270000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.8114671542,
+      "noise_figure": 8.66910436026,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1280000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.5744509755,
+      "noise_figure": 13.2003216507,
+      "1dB_compression": -24.0
+    },
+    {
+      "freq_sigan": 1280000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.9166451454,
+      "noise_figure": 8.59507305886,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1290000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.509509733,
+      "noise_figure": 13.0334001568,
+      "1dB_compression": -23.0
+    },
+    {
+      "freq_sigan": 1290000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.7928686564,
+      "noise_figure": 8.66380902746,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1299999999.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -40.4903917023,
+      "noise_figure": 13.0883883039,
+      "1dB_compression": -23.0
+    },
+    {
+      "freq_sigan": 1299999999.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.7752847995,
+      "noise_figure": 8.70697740566,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1300000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.5180118734,
+      "noise_figure": 13.2374378113,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1300000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.771276199,
+      "noise_figure": 8.68678009576,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1310000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.5197917482,
+      "noise_figure": 13.2337967507,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1310000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.7630281221,
+      "noise_figure": 8.76466021726,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1320000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.4141719657,
+      "noise_figure": 13.312378692,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1320000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.6306600673,
+      "noise_figure": 8.78453227416,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1330000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.4243352792,
+      "noise_figure": 13.3285101137,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1330000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.6599338979,
+      "noise_figure": 8.73693162276,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1340000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.4063607015,
+      "noise_figure": 13.3254970601,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1340000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.6150201776,
+      "noise_figure": 8.78885488906,
+      "1dB_compression": -43.0
+    },
+    {
+      "freq_sigan": 1350000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.3385711347,
+      "noise_figure": 13.4153790925,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1350000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.5564166813,
+      "noise_figure": 8.80744657866,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1360000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.3688121645,
+      "noise_figure": 13.374541092,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1360000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.5727407125,
+      "noise_figure": 8.82951836266,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1370000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.3376045237,
+      "noise_figure": 13.3810180709,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1370000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.5239326473,
+      "noise_figure": 8.85410668566,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1380000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.272912154,
+      "noise_figure": 13.4804417802,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1380000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.4505838323,
+      "noise_figure": 8.94643214666,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1390000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.3198421635,
+      "noise_figure": 13.1959833411,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1390000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.4857415685,
+      "noise_figure": 8.83091948356,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1400000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.2167744427,
+      "noise_figure": 13.4782344602,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1400000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.3529738808,
+      "noise_figure": 8.97019345896,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1410000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.2345312801,
+      "noise_figure": 13.5064164345,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1410000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.3820177239,
+      "noise_figure": 8.94995129286,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1420000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.1852091955,
+      "noise_figure": 13.5043716784,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1420000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.3091422943,
+      "noise_figure": 8.93894891666,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1430000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.1016686553,
+      "noise_figure": 13.6173137588,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1430000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.2136000513,
+      "noise_figure": 9.01940837996,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1440000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.1144534154,
+      "noise_figure": 13.6052411717,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1440000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.2492902624,
+      "noise_figure": 9.04334238736,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1450000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.0609643573,
+      "noise_figure": 13.6535672524,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1450000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.1614677034,
+      "noise_figure": 9.04783756826,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1460000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.0207758299,
+      "noise_figure": 13.70699718,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1460000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.1215404297,
+      "noise_figure": 9.13083978746,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1470000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.063773626,
+      "noise_figure": 13.6686146677,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1470000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.1771801471,
+      "noise_figure": 9.07884410566,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1480000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.9828722979,
+      "noise_figure": 13.7582278982,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1480000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.0919138031,
+      "noise_figure": 9.16914381336,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1490000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -39.0333512646,
+      "noise_figure": 13.7044599692,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1490000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.1251208083,
+      "noise_figure": 9.16629155716,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1500000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.9773853927,
+      "noise_figure": 13.577052352,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1500000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.0672841765,
+      "noise_figure": 9.32608227016,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1510000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.9299676936,
+      "noise_figure": 13.8504358088,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1510000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.0271599576,
+      "noise_figure": 9.42800047096,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1520000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.9514571511,
+      "noise_figure": 13.8790885478,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1520000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -59.0625736783,
+      "noise_figure": 9.50185072026,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1530000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.8809995925,
+      "noise_figure": 13.9940912629,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1530000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.9567998961,
+      "noise_figure": 9.70398688436,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1540000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.8754595111,
+      "noise_figure": 14.0521004009,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1540000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.9979438341,
+      "noise_figure": 9.72212254016,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1550000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.8600368938,
+      "noise_figure": 14.028726762,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1550000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.95501636,
+      "noise_figure": 9.65747507496,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1560000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.8359273801,
+      "noise_figure": 13.9621068879,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1560000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.9057899026,
+      "noise_figure": 9.56311178426,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1570000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.8320314361,
+      "noise_figure": 13.9456445508,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1570000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.9413131434,
+      "noise_figure": 9.51564661236,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1580000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.8210363746,
+      "noise_figure": 13.9527106571,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1580000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.9033676033,
+      "noise_figure": 9.44231704636,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1590000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.7951504187,
+      "noise_figure": 14.0079837385,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1590000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.8828288013,
+      "noise_figure": 9.54947305016,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1600000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.7944407794,
+      "noise_figure": 13.9965831199,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1600000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.8920540376,
+      "noise_figure": 9.42452023296,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1610000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.7719109033,
+      "noise_figure": 13.7564871541,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1610000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.8691327052,
+      "noise_figure": 9.53267015796,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1620000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.7580896683,
+      "noise_figure": 14.0180940153,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1620000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.8425246354,
+      "noise_figure": 9.43307879946,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1630000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.7261815258,
+      "noise_figure": 14.0633363797,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1630000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.7847758365,
+      "noise_figure": 9.62918179996,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1640000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.680840003,
+      "noise_figure": 14.1104395748,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1640000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.7266518667,
+      "noise_figure": 9.55111051466,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1650000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.6641100154,
+      "noise_figure": 14.186281678,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1650000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.6947144506,
+      "noise_figure": 9.76840049906,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1660000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.6187140335,
+      "noise_figure": 14.2252820296,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1660000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.6182219599,
+      "noise_figure": 9.76559933876,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1670000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.6331137608,
+      "noise_figure": 14.2257665122,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1670000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.6425547503,
+      "noise_figure": 9.91478513596,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1680000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.614807717,
+      "noise_figure": 14.207811649,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1680000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.6101654409,
+      "noise_figure": 9.69834828736,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1690000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.564502145,
+      "noise_figure": 14.3854013556,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1690000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.5537466876,
+      "noise_figure": 10.0909833607,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1700000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.5812363724,
+      "noise_figure": 14.2913458973,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1700000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.5754733724,
+      "noise_figure": 9.98598812546,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1710000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.4976283557,
+      "noise_figure": 14.5093570813,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1710000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.5005838073,
+      "noise_figure": 10.2165599633,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1720000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.5140035791,
+      "noise_figure": 14.2420904079,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1720000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.4604399627,
+      "noise_figure": 10.1002093091,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1730000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.4743799808,
+      "noise_figure": 14.4024926367,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1730000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.4371784521,
+      "noise_figure": 10.1020266663,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1740000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.4351327152,
+      "noise_figure": 14.4275984325,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1740000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.3816551334,
+      "noise_figure": 10.0423195768,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1750000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3999141067,
+      "noise_figure": 14.4631487537,
+      "1dB_compression": -22.0
+    },
+    {
+      "freq_sigan": 1750000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.3057586236,
+      "noise_figure": 10.1442796538,
+      "1dB_compression": -42.0
+    },
+    {
+      "freq_sigan": 1760000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3927094284,
+      "noise_figure": 14.4724948047,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1760000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.3330497679,
+      "noise_figure": 10.0624903183,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1770000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3236515696,
+      "noise_figure": 14.5130877706,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1770000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.2210852524,
+      "noise_figure": 10.1530608218,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1780000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3638950447,
+      "noise_figure": 14.4945614389,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1780000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.3164513205,
+      "noise_figure": 10.1417627293,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1790000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3168655104,
+      "noise_figure": 14.617768393,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1790000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.2157861486,
+      "noise_figure": 10.3573534909,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1800000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3272677364,
+      "noise_figure": 14.6186900451,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1800000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.2333702652,
+      "noise_figure": 10.4142801833,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1810000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.3035959175,
+      "noise_figure": 14.6477640447,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1810000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.246102795,
+      "noise_figure": 10.4143325766,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1820000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.2281429514,
+      "noise_figure": 14.6350257187,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1820000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.1147592889,
+      "noise_figure": 10.264734247,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1830000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.1874567999,
+      "noise_figure": 14.3963933619,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1830000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -58.1004217727,
+      "noise_figure": 10.139657672,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1840000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.0850802188,
+      "noise_figure": 14.6731025263,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1840000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.9779620615,
+      "noise_figure": 10.1304959383,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1850000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -38.0144742553,
+      "noise_figure": 14.7721327757,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1850000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.8552390355,
+      "noise_figure": 10.3140641121,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1860000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.9641567558,
+      "noise_figure": 14.8378231223,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1860000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.7946816097,
+      "noise_figure": 10.3354824324,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1870000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.8817283679,
+      "noise_figure": 14.9031733457,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1870000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.6690175828,
+      "noise_figure": 10.4664889979,
+      "1dB_compression": -41.0
+    },
+    {
+      "freq_sigan": 1880000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.7891668978,
+      "noise_figure": 14.9791612901,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1880000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.5308886907,
+      "noise_figure": 10.6231845412,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1890000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.8094257876,
+      "noise_figure": 15.0569574769,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1890000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.5739508413,
+      "noise_figure": 10.7753713507,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1900000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.6064198812,
+      "noise_figure": 15.3174146623,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1900000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.3061468465,
+      "noise_figure": 11.0604845584,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1910000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.6992583704,
+      "noise_figure": 15.2977934307,
+      "1dB_compression": -21.0
+    },
+    {
+      "freq_sigan": 1910000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.4047944226,
+      "noise_figure": 11.2045704949,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1920000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.5449189025,
+      "noise_figure": 15.3904531791,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1920000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.2225745009,
+      "noise_figure": 11.2361266515,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1930000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.4881468708,
+      "noise_figure": 15.5884913108,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1930000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.1486515737,
+      "noise_figure": 11.5670037327,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1940000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.4726608285,
+      "noise_figure": 15.2773283033,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1940000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -57.1041508692,
+      "noise_figure": 11.4716298843,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1950000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.3093291203,
+      "noise_figure": 15.9256384739,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1950000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.8832308743,
+      "noise_figure": 12.3199677685,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1960000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.2884420122,
+      "noise_figure": 16.0830914987,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1960000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.8776364009,
+      "noise_figure": 12.4700260647,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1970000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.2207971864,
+      "noise_figure": 16.356831057,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1970000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.7813285925,
+      "noise_figure": 13.083486886,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1980000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.1293127403,
+      "noise_figure": 16.5342702548,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1980000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.6848280323,
+      "noise_figure": 13.2776198971,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 1990000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.0941092479,
+      "noise_figure": 16.9096101032,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 1990000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.6250745805,
+      "noise_figure": 14.1254197471,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2000000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.097949697,
+      "noise_figure": 17.0753242914,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2000000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.6332329091,
+      "noise_figure": 14.3017015044,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 2010000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9269357148,
+      "noise_figure": 17.5765058303,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2010000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.3809840161,
+      "noise_figure": 15.1866091223,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2020000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.0276329649,
+      "noise_figure": 17.5406623853,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2020000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.549826847,
+      "noise_figure": 15.1073509377,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2030000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8970458691,
+      "noise_figure": 17.3768438229,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2030000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.3775124693,
+      "noise_figure": 14.8031749088,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2040000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8976192581,
+      "noise_figure": 17.1635178948,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2040000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.3943883616,
+      "noise_figure": 14.317134413,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2050000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8444705658,
+      "noise_figure": 16.7208965174,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2050000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.312595719,
+      "noise_figure": 13.6869087157,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2060000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7553725701,
+      "noise_figure": 16.7973127862,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2060000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.1682146344,
+      "noise_figure": 13.5238774168,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2070000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7032110007,
+      "noise_figure": 17.0840955694,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2070000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.130387935,
+      "noise_figure": 14.0317242721,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2080000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.5630906965,
+      "noise_figure": 17.3763793036,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2080000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9401205306,
+      "noise_figure": 14.4533984483,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2090000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.4669030273,
+      "noise_figure": 17.6777540993,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2090000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.799205383,
+      "noise_figure": 15.0116404478,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2100000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.3955748225,
+      "noise_figure": 17.5654075057,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2100000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7242718117,
+      "noise_figure": 14.7180538846,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2110000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.283603849,
+      "noise_figure": 17.2770257829,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2110000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.5738923794,
+      "noise_figure": 14.0726014894,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2120000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.2036290387,
+      "noise_figure": 17.0390991759,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2120000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.4651195156,
+      "noise_figure": 13.5055416534,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2130000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.1057234326,
+      "noise_figure": 16.8647242907,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2130000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.3860916006,
+      "noise_figure": 12.9033794569,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2140000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.8866721166,
+      "noise_figure": 17.0153925839,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2140000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.0657569393,
+      "noise_figure": 12.9322357761,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2150000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.8977901412,
+      "noise_figure": 16.7800616979,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2150000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.076735938,
+      "noise_figure": 12.4236913901,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2160000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.6726443691,
+      "noise_figure": 17.0276003209,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2160000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.7954609411,
+      "noise_figure": 13.1167633992,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2170000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.6538578088,
+      "noise_figure": 17.1185901714,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2170000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.7436415573,
+      "noise_figure": 12.9437425724,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2180000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.5214502693,
+      "noise_figure": 17.5108773862,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2180000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.605133009,
+      "noise_figure": 13.7705282632,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2190000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.2858697177,
+      "noise_figure": 17.5945375173,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2190000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.2903850709,
+      "noise_figure": 13.6579088091,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2199999998.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.3023767096,
+      "noise_figure": 17.7435060165,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2199999998.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.3331156562,
+      "noise_figure": 14.0357449554,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2200000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.3964689113,
+      "noise_figure": 15.7501369688,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2200000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.5849196426,
+      "noise_figure": 12.1085412787,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2210000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.493903168,
+      "noise_figure": 15.5061420539,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2210000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.6962704016,
+      "noise_figure": 11.6941295627,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 2220000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.4286894627,
+      "noise_figure": 15.5528384131,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2220000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.6098824196,
+      "noise_figure": 11.7609057467,
+      "1dB_compression": -40.0
+    },
+    {
+      "freq_sigan": 2230000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.2479893545,
+      "noise_figure": 15.6241861781,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2230000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.3771225115,
+      "noise_figure": 11.6578525838,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2240000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.3397941214,
+      "noise_figure": 15.5022433247,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2240000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.5160654779,
+      "noise_figure": 11.3405574002,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2250000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.1039087029,
+      "noise_figure": 15.5716935945,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2250000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.1772784308,
+      "noise_figure": 11.328757715,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2260000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9750170393,
+      "noise_figure": 15.6952204937,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2260000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.0247299973,
+      "noise_figure": 11.4442451275,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2270000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.1477083278,
+      "noise_figure": 15.56356484,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2270000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.2321667959,
+      "noise_figure": 11.2302993792,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2280000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7077988899,
+      "noise_figure": 15.9755284752,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2280000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7156854315,
+      "noise_figure": 11.7199873181,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2290000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.030131627,
+      "noise_figure": 15.6650061851,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2290000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.0914788336,
+      "noise_figure": 11.4350803397,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2300000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9222933302,
+      "noise_figure": 15.8097963559,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2300000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9343970662,
+      "noise_figure": 11.6334674441,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2310000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8183341876,
+      "noise_figure": 15.9544821194,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2310000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.8177672569,
+      "noise_figure": 11.6849572039,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2320000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.949792279,
+      "noise_figure": 15.7722675409,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2320000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9931452305,
+      "noise_figure": 11.5328751678,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2330000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7880651627,
+      "noise_figure": 15.8739028669,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2330000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7808576598,
+      "noise_figure": 11.6639911629,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2340000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7346990677,
+      "noise_figure": 15.943153155,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2340000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7394143208,
+      "noise_figure": 11.7559092171,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2350000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9433781576,
+      "noise_figure": 15.7518114468,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2350000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9394439614,
+      "noise_figure": 11.4845970995,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2360000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7398466758,
+      "noise_figure": 15.935297247,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2360000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.6801455487,
+      "noise_figure": 11.7352068068,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2370000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8319353179,
+      "noise_figure": 15.8410697486,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2370000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7960601938,
+      "noise_figure": 11.6533861538,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2380000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9261751308,
+      "noise_figure": 15.8133319085,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2380000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9267585509,
+      "noise_figure": 11.5000544716,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2390000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.6251732335,
+      "noise_figure": 16.0371974806,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2390000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.5956493369,
+      "noise_figure": 11.8395563754,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2400000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.997664044,
+      "noise_figure": 15.6984703859,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2400000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.0262764567,
+      "noise_figure": 11.518416544,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2410000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7981744427,
+      "noise_figure": 15.940566694,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2410000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7680018059,
+      "noise_figure": 11.7470991997,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2420000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9000498815,
+      "noise_figure": 15.8732455035,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2420000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9162871319,
+      "noise_figure": 11.6599359235,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2430000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.0575972798,
+      "noise_figure": 15.7472803206,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2430000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.0889687017,
+      "noise_figure": 11.6367849005,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2440000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9400317727,
+      "noise_figure": 15.8113026587,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2440000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9105257334,
+      "noise_figure": 11.673547582,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2450000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.9994028129,
+      "noise_figure": 15.7515184133,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2450000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -56.0239784412,
+      "noise_figure": 11.5621734317,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2460000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.0096295755,
+      "noise_figure": 15.6895007452,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2460000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9873433507,
+      "noise_figure": 11.4926756052,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2470000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8460789963,
+      "noise_figure": 15.8563053528,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2470000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.8182814932,
+      "noise_figure": 11.6834217138,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2480000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -37.0002301513,
+      "noise_figure": 15.7866442153,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2480000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.9908625829,
+      "noise_figure": 11.6713438088,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2490000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8487444036,
+      "noise_figure": 15.9129369763,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2490000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.7649337358,
+      "noise_figure": 12.1885435596,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2500000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8590826211,
+      "noise_figure": 16.2280213815,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2500000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.8207092552,
+      "noise_figure": 12.4188618961,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2510000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.8679786173,
+      "noise_figure": 16.2052864342,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2510000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.8001689003,
+      "noise_figure": 12.5194710945,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2520000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.6543096671,
+      "noise_figure": 16.4140919795,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2520000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.5264561671,
+      "noise_figure": 12.7087815115,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2530000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.7624242282,
+      "noise_figure": 16.3447833774,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2530000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.6950660223,
+      "noise_figure": 12.6954171921,
+      "1dB_compression": -39.0
+    },
+    {
+      "freq_sigan": 2540000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.6214362207,
+      "noise_figure": 16.4024029464,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2540000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.4725500239,
+      "noise_figure": 12.6679305475,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2550000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.6388222367,
+      "noise_figure": 16.370474499,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2550000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.5117764229,
+      "noise_figure": 12.5680624127,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2560000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.6637554889,
+      "noise_figure": 16.2691193497,
+      "1dB_compression": -20.0
+    },
+    {
+      "freq_sigan": 2560000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.5113505666,
+      "noise_figure": 12.3874156179,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2570000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.4795916855,
+      "noise_figure": 16.3197336283,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2570000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.2891702188,
+      "noise_figure": 12.2955577864,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2580000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.4623589706,
+      "noise_figure": 16.3444862222,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2580000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.3409536652,
+      "noise_figure": 12.2716020881,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2590000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.4659216591,
+      "noise_figure": 16.3173313323,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2590000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.2991655361,
+      "noise_figure": 12.078649129,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2600000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.3321947778,
+      "noise_figure": 16.4459222393,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2600000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.116700066,
+      "noise_figure": 12.2529673345,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2610000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.4239169838,
+      "noise_figure": 16.3011470636,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2610000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.2527001727,
+      "noise_figure": 12.1444383892,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2620000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.346230098,
+      "noise_figure": 16.3718398012,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2620000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.1379114937,
+      "noise_figure": 12.2063536889,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2630000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.2603935598,
+      "noise_figure": 16.5122807961,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2630000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.0743013719,
+      "noise_figure": 12.4171929654,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2640000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.293890038,
+      "noise_figure": 16.4929213485,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2640000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -55.1341570386,
+      "noise_figure": 12.3294968746,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2650000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.2260284767,
+      "noise_figure": 16.5303827719,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2650000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.9990087557,
+      "noise_figure": 12.5180265941,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2660000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.1454273523,
+      "noise_figure": 16.6501743726,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2660000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.9997404467,
+      "noise_figure": 12.4931265503,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2670000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.161368385,
+      "noise_figure": 16.5583855874,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2670000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.9418979174,
+      "noise_figure": 12.4143723038,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2680000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -36.0668898153,
+      "noise_figure": 16.6615286975,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2680000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.8847494578,
+      "noise_figure": 12.5462378886,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2690000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.9938511423,
+      "noise_figure": 16.7581024533,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2690000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.7950953062,
+      "noise_figure": 12.6238085619,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2700000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.9707327457,
+      "noise_figure": 16.7559970534,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2700000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.7203054798,
+      "noise_figure": 12.5946182783,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2710000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.8618177316,
+      "noise_figure": 16.749379697,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2710000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.635328451,
+      "noise_figure": 12.7024637109,
+      "1dB_compression": -38.0
+    },
+    {
+      "freq_sigan": 2720000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.6483314931,
+      "noise_figure": 17.0629526324,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2720000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.3675588471,
+      "noise_figure": 12.8708576948,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2730000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.741820361,
+      "noise_figure": 16.9603374936,
+      "1dB_compression": -19.0
+    },
+    {
+      "freq_sigan": 2730000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.4060837807,
+      "noise_figure": 12.7392060809,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2740000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.5066571744,
+      "noise_figure": 17.1407190862,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2740000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.1755636981,
+      "noise_figure": 12.9247594351,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2750000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.4175086055,
+      "noise_figure": 17.2158985422,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2750000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.000978552,
+      "noise_figure": 13.0254033862,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2760000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.4637486401,
+      "noise_figure": 17.2075061576,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2760000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -54.0198731479,
+      "noise_figure": 13.0132039334,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2770000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.148506209,
+      "noise_figure": 17.4722411064,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2770000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.6846656498,
+      "noise_figure": 13.2887143648,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2780000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.0958880385,
+      "noise_figure": 17.5348675696,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2780000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.5374422252,
+      "noise_figure": 13.4097501894,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2790000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -35.1105219167,
+      "noise_figure": 17.5249208943,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2790000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.5623489484,
+      "noise_figure": 13.3780258739,
+      "1dB_compression": -37.0
+    },
+    {
+      "freq_sigan": 2800000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.8404870925,
+      "noise_figure": 17.7784819963,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2800000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.2375468495,
+      "noise_figure": 13.6770850946,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2810000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.9133289121,
+      "noise_figure": 17.7261275702,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2810000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.2915895234,
+      "noise_figure": 13.593299463,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2820000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.7867532269,
+      "noise_figure": 17.9623341752,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2820000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.1401917432,
+      "noise_figure": 13.7996302083,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2830000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.5734065861,
+      "noise_figure": 17.9938562406,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2830000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.8555201382,
+      "noise_figure": 13.9860717058,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2840000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.7528029455,
+      "noise_figure": 17.8680202143,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2840000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -53.0444389707,
+      "noise_figure": 13.7930747669,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2850000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.5465271798,
+      "noise_figure": 18.0533690577,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2850000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.7879124682,
+      "noise_figure": 14.0421955956,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2860000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.4920759998,
+      "noise_figure": 18.1107600502,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2860000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.7042719956,
+      "noise_figure": 14.0572139577,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2870000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.594197438,
+      "noise_figure": 18.0043912716,
+      "1dB_compression": -18.0
+    },
+    {
+      "freq_sigan": 2870000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.8470037523,
+      "noise_figure": 13.9632996466,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2880000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.287842011,
+      "noise_figure": 18.318162135,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2880000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.4569363691,
+      "noise_figure": 14.2882243438,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2890000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.4354241229,
+      "noise_figure": 18.1400007509,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2890000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.6351953507,
+      "noise_figure": 14.1555281487,
+      "1dB_compression": -36.0
+    },
+    {
+      "freq_sigan": 2900000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.2472072933,
+      "noise_figure": 18.3424446303,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2900000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.466231386,
+      "noise_figure": 14.340555007,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2910000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.0170745126,
+      "noise_figure": 18.5752245643,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2910000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.1847238407,
+      "noise_figure": 14.5716411501,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2920000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -34.0905229511,
+      "noise_figure": 18.5292593508,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2920000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -52.2549187587,
+      "noise_figure": 14.5363913317,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2930000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -33.6957132042,
+      "noise_figure": 18.9189140871,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2930000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -51.8196629121,
+      "noise_figure": 14.9525067776,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2940000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -33.7105264963,
+      "noise_figure": 18.8669663857,
+      "1dB_compression": -17.0
+    },
+    {
+      "freq_sigan": 2940000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -51.7947458291,
+      "noise_figure": 14.9267645105,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2950000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -33.5208599847,
+      "noise_figure": 19.0815764445,
+      "1dB_compression": -16.0
+    },
+    {
+      "freq_sigan": 2950000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -51.578549332,
+      "noise_figure": 15.1482880773,
+      "1dB_compression": -35.0
+    },
+    {
+      "freq_sigan": 2960000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -33.1431096231,
+      "noise_figure": 19.4389193106,
+      "1dB_compression": -16.0
+    },
+    {
+      "freq_sigan": 2960000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -51.1538899602,
+      "noise_figure": 15.5065170152,
+      "1dB_compression": -34.0
+    },
+    {
+      "freq_sigan": 2970000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -33.2081843865,
+      "noise_figure": 19.3359515739,
+      "1dB_compression": -16.0
+    },
+    {
+      "freq_sigan": 2970000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -51.2256924556,
+      "noise_figure": 15.4042479529,
+      "1dB_compression": -34.0
+    },
+    {
+      "freq_sigan": 2980000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -32.7394071406,
+      "noise_figure": 19.7902960966,
+      "1dB_compression": -16.0
+    },
+    {
+      "freq_sigan": 2980000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -50.7612050854,
+      "noise_figure": 15.8112172096,
+      "1dB_compression": -34.0
+    },
+    {
+      "freq_sigan": 2990000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -32.6230346538,
+      "noise_figure": 19.9393305614,
+      "1dB_compression": -16.0
+    },
+    {
+      "freq_sigan": 2990000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -50.5701772342,
+      "noise_figure": 16.0064665647,
+      "1dB_compression": -34.0
+    },
+    {
+      "freq_sigan": 3000000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -32.5361510375,
+      "noise_figure": 20.0265478892,
+      "1dB_compression": -16.0
+    },
+    {
+      "freq_sigan": 3000000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -50.4807428262,
+      "noise_figure": 16.0476061754,
+      "1dB_compression": -33.0
+    },
+    {
+      "freq_sigan": 3010000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -32.0425645575,
+      "noise_figure": 20.449090068,
+      "1dB_compression": -15.0
+    },
+    {
+      "freq_sigan": 3010000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -49.9572568003,
+      "noise_figure": 16.5423846295,
+      "1dB_compression": -33.0
+    },
+    {
+      "freq_sigan": 3020000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -32.032276248,
+      "noise_figure": 20.4898297006,
+      "1dB_compression": -15.0
+    },
+    {
+      "freq_sigan": 3020000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -49.8977102068,
+      "noise_figure": 16.6144957687,
+      "1dB_compression": -33.0
+    },
+    {
+      "freq_sigan": 3030000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.8013368159,
+      "noise_figure": 20.6677638658,
+      "1dB_compression": -15.0
+    },
+    {
+      "freq_sigan": 3030000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -49.6257999843,
+      "noise_figure": 16.8908591897,
+      "1dB_compression": -33.0
+    },
+    {
+      "freq_sigan": 3040000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.4696383261,
+      "noise_figure": 20.883189225,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3040000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -49.266486089,
+      "noise_figure": 17.2328468979,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3050000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.5078947629,
+      "noise_figure": 20.9706839394,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3050000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -49.2928892254,
+      "noise_figure": 17.1647867752,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3060000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.2580728714,
+      "noise_figure": 21.2467291974,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3060000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -49.0427241365,
+      "noise_figure": 17.3789172082,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3070000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.9943793033,
+      "noise_figure": 21.5233496185,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3070000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7354390489,
+      "noise_figure": 17.8466460823,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3080000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.2189859635,
+      "noise_figure": 21.2614827181,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3080000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.9275840258,
+      "noise_figure": 17.4896206859,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3090000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.9035702307,
+      "noise_figure": 21.545706158,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3090000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5522881026,
+      "noise_figure": 17.8378460873,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3100000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.9055210379,
+      "noise_figure": 21.5713345554,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3100000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5576279979,
+      "noise_figure": 17.8285278013,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3110000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.1003691198,
+      "noise_figure": 21.3544610361,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3110000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7763309911,
+      "noise_figure": 17.5800985246,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3120000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.6697778762,
+      "noise_figure": 21.7869974728,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3120000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2987036276,
+      "noise_figure": 18.0854751827,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3130000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.0314060238,
+      "noise_figure": 21.4366627382,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3130000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6748261885,
+      "noise_figure": 17.6895333257,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3140000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.9112483814,
+      "noise_figure": 21.5507733639,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3140000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5345491239,
+      "noise_figure": 17.8201237891,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3150000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.8000080498,
+      "noise_figure": 21.6101007512,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3150000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4672598789,
+      "noise_figure": 17.8542406273,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3160000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.0813718689,
+      "noise_figure": 21.4006691301,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3160000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7280195275,
+      "noise_figure": 17.6202369473,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3170000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.900220955,
+      "noise_figure": 21.5378512481,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3170000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4875069099,
+      "noise_figure": 17.8316973652,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3180000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.0018471765,
+      "noise_figure": 21.492272028,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3180000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5887822852,
+      "noise_figure": 17.7595036606,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3190000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -31.0604401369,
+      "noise_figure": 21.3919287315,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3190000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6756159218,
+      "noise_figure": 17.6588481778,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 3200000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.8133807423,
+      "noise_figure": 21.6441577197,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3200000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.3730330622,
+      "noise_figure": 17.9186522421,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3210000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.9323829933,
+      "noise_figure": 21.5377450501,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3210000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4976790855,
+      "noise_figure": 17.8570331425,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3220000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.6906097505,
+      "noise_figure": 21.7591482634,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3220000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2114909898,
+      "noise_figure": 18.1193940981,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3230000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.5873849247,
+      "noise_figure": 21.8829986081,
+      "1dB_compression": -14.0
+    },
+    {
+      "freq_sigan": 3230000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.1492234251,
+      "noise_figure": 18.1808065958,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3240000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.5160760256,
+      "noise_figure": 21.9371836911,
+      "1dB_compression": -13.0
+    },
+    {
+      "freq_sigan": 3240000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.0212923688,
+      "noise_figure": 18.2533804171,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3250000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.2097536053,
+      "noise_figure": 22.1045777706,
+      "1dB_compression": -13.0
+    },
+    {
+      "freq_sigan": 3250000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.7429259807,
+      "noise_figure": 18.5473315859,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 3260000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -30.0480453466,
+      "noise_figure": 22.4182114751,
+      "1dB_compression": -13.0
+    },
+    {
+      "freq_sigan": 3260000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.5008950215,
+      "noise_figure": 18.8028587337,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 3270000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -29.8822209773,
+      "noise_figure": 22.5650292733,
+      "1dB_compression": -13.0
+    },
+    {
+      "freq_sigan": 3270000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.3788486176,
+      "noise_figure": 18.9053607774,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 3280000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -29.5807545471,
+      "noise_figure": 22.8582435904,
+      "1dB_compression": -13.0
+    },
+    {
+      "freq_sigan": 3280000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.0423877466,
+      "noise_figure": 19.1631098376,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 3290000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -29.4482589231,
+      "noise_figure": 22.943171359,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3290000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.8512284095,
+      "noise_figure": 19.3971299124,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 3300000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -29.1997630567,
+      "noise_figure": 23.2962906587,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3300000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.6123544092,
+      "noise_figure": 19.6552648363,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 3310000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.7677595901,
+      "noise_figure": 23.6322108455,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3310000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.0895374611,
+      "noise_figure": 20.1581850892,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3320000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.857136967,
+      "noise_figure": 23.5588423685,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3320000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.234973203,
+      "noise_figure": 19.9932685446,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3330000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.3228051508,
+      "noise_figure": 24.0932217796,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3330000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.6901002957,
+      "noise_figure": 20.5197542853,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3340000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.3331637347,
+      "noise_figure": 24.1121932634,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3340000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.6300804083,
+      "noise_figure": 20.586833723,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3350000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.244143197,
+      "noise_figure": 24.18224663,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3350000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.6027102175,
+      "noise_figure": 20.602488496,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3360000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8476719965,
+      "noise_figure": 24.4313095316,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3360000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.246506334,
+      "noise_figure": 20.9483732207,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3370000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.102944458,
+      "noise_figure": 24.3134032079,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3370000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.4021603257,
+      "noise_figure": 20.7724226047,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3380000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9497724455,
+      "noise_figure": 24.4676135016,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3380000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.2344196545,
+      "noise_figure": 20.9627880834,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3390000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8322869436,
+      "noise_figure": 24.6006034328,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3390000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.1047923354,
+      "noise_figure": 21.1137458814,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3400000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.0831469038,
+      "noise_figure": 24.3392321403,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3400000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.3375380271,
+      "noise_figure": 20.8224300455,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3410000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.946716139,
+      "noise_figure": 24.4784187358,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3410000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.2035988052,
+      "noise_figure": 21.0019099895,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3420000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.058285648,
+      "noise_figure": 24.3844374373,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3420000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.3354181046,
+      "noise_figure": 20.883955547,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3430000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.2297251064,
+      "noise_figure": 24.1970518962,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3430000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.5048496339,
+      "noise_figure": 20.7003945125,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3440000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.2099778598,
+      "noise_figure": 24.2106138072,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3440000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.4892770946,
+      "noise_figure": 20.7166134887,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3450000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.3508235888,
+      "noise_figure": 24.0994406204,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3450000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.6299175693,
+      "noise_figure": 20.5598704971,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3460000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.5515112852,
+      "noise_figure": 23.8860025477,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3460000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.8474554744,
+      "noise_figure": 20.3537329376,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3470000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.4941626914,
+      "noise_figure": 23.8518607498,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3470000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.8227776868,
+      "noise_figure": 20.390208158,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3480000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.7921994242,
+      "noise_figure": 23.6874925599,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3480000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.0394342787,
+      "noise_figure": 20.2137254719,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3490000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.9658196375,
+      "noise_figure": 23.5080138921,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3490000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.2112468594,
+      "noise_figure": 20.0386508296,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3500000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.7874982052,
+      "noise_figure": 23.6863028917,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3500000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.0529931335,
+      "noise_figure": 20.1965838082,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3510000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -29.1525051818,
+      "noise_figure": 23.3206034919,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3510000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.4072118449,
+      "noise_figure": 19.8830264453,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3520000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.8944123052,
+      "noise_figure": 23.6038334619,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3520000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.1552963887,
+      "noise_figure": 20.1180597065,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3530000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -29.0057120878,
+      "noise_figure": 23.5050037105,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3530000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.2466063248,
+      "noise_figure": 19.9728741784,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3540000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.8783408761,
+      "noise_figure": 23.5889585382,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3540000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.1201659334,
+      "noise_figure": 20.133613858,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3550000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.637460979,
+      "noise_figure": 23.7844490574,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3550000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.8236904219,
+      "noise_figure": 20.415032882,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3560000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.5969127324,
+      "noise_figure": 23.8631401139,
+      "1dB_compression": -12.0
+    },
+    {
+      "freq_sigan": 3560000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.7588614326,
+      "noise_figure": 20.4924849437,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 3570000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.1716136929,
+      "noise_figure": 24.3624362112,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3570000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.3712698962,
+      "noise_figure": 20.8254473577,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3580000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.0937831466,
+      "noise_figure": 24.3510287461,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3580000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.2397649404,
+      "noise_figure": 20.9992250986,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3590000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8444439679,
+      "noise_figure": 24.624334862,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3590000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.9880983784,
+      "noise_figure": 21.2098457675,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3600000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.5351714252,
+      "noise_figure": 24.9158215976,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3600000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.6388433538,
+      "noise_figure": 21.5501998468,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3610000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4013480781,
+      "noise_figure": 25.035672456,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3610000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.4788946182,
+      "noise_figure": 21.7278931281,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3620000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.1550529194,
+      "noise_figure": 25.3017401284,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3620000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.2354237617,
+      "noise_figure": 21.9437594787,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3630000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.9178913475,
+      "noise_figure": 25.5307623303,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3630000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.0336444168,
+      "noise_figure": 22.1624628633,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3640000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.9121968749,
+      "noise_figure": 25.5376730443,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3640000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.006510441,
+      "noise_figure": 22.1344700891,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3650000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.6316402381,
+      "noise_figure": 25.802692568,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3650000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.7450454019,
+      "noise_figure": 22.4440593612,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3660000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.6256495756,
+      "noise_figure": 25.8349192,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3660000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.7400255139,
+      "noise_figure": 22.4734862119,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3670000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.5966853369,
+      "noise_figure": 25.8651369674,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3670000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.6917619975,
+      "noise_figure": 22.5072292668,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3680000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.2630520815,
+      "noise_figure": 26.2187621874,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3680000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.6002966717,
+      "noise_figure": 22.5885021684,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3690000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.4612822993,
+      "noise_figure": 26.0004521572,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3690000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.5933695,
+      "noise_figure": 22.5835317053,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3700000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.6410244734,
+      "noise_figure": 25.8021424744,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3700000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.7738419082,
+      "noise_figure": 22.4454115462,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3710000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.5591779201,
+      "noise_figure": 25.8737189751,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3710000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.6982353631,
+      "noise_figure": 22.512765533,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3720000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.8729775779,
+      "noise_figure": 25.6172162637,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3720000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.0025937232,
+      "noise_figure": 22.2513709962,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3730000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.9540356956,
+      "noise_figure": 25.4968169038,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3730000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.0293251506,
+      "noise_figure": 22.2139588629,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3740000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.9575028858,
+      "noise_figure": 25.5211199043,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3740000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.1034010885,
+      "noise_figure": 22.1705926368,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3750000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.3067785321,
+      "noise_figure": 25.1975072198,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3750000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.4710493233,
+      "noise_figure": 21.7581968072,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3760000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.2115786648,
+      "noise_figure": 25.2883465659,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3760000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.2981825522,
+      "noise_figure": 21.9598253878,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3770000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4158091304,
+      "noise_figure": 25.0780581208,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3770000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.5315080508,
+      "noise_figure": 21.7439360016,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3780000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.439226344,
+      "noise_figure": 25.1217201493,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3780000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.5165928516,
+      "noise_figure": 21.7528857006,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3790000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.3484387711,
+      "noise_figure": 25.0068306383,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 3790000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.538594648,
+      "noise_figure": 21.7423538743,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3800000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.2797680466,
+      "noise_figure": 25.2820229036,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3800000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.3546065506,
+      "noise_figure": 21.9170691989,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 3810000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.2248673819,
+      "noise_figure": 25.2689306157,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3810000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.2626195178,
+      "noise_figure": 22.0164523489,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3820000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.9993337208,
+      "noise_figure": 25.5114656037,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3820000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.0917257272,
+      "noise_figure": 22.1465486287,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3830000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.80164348,
+      "noise_figure": 25.6966406912,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3830000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.7995018493,
+      "noise_figure": 22.4723433087,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3840000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.5430369272,
+      "noise_figure": 25.9726517022,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3840000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.5968655584,
+      "noise_figure": 22.6210948433,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3850000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.2241497404,
+      "noise_figure": 26.2654752297,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 3850000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -43.2497479556,
+      "noise_figure": 22.9758469725,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 3860000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.8824348143,
+      "noise_figure": 26.6056644425,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 3860000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -42.8331341074,
+      "noise_figure": 23.3618345294,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 3870000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.6064508528,
+      "noise_figure": 26.85418231,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 3870000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -42.5583003525,
+      "noise_figure": 23.6313958531,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 3880000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.2844555262,
+      "noise_figure": 27.1694582822,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 3880000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -42.2264170924,
+      "noise_figure": 24.0072128961,
+      "1dB_compression": -26.0
+    },
+    {
+      "freq_sigan": 3890000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.7820241535,
+      "noise_figure": 27.5350539025,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3890000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.9304220894,
+      "noise_figure": 24.2253935145,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3900000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.7786402872,
+      "noise_figure": 27.6949107707,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3900000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.8531564431,
+      "noise_figure": 24.3541040201,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3910000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.5970872929,
+      "noise_figure": 27.9360431833,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3910000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.4847011024,
+      "noise_figure": 24.7325873563,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3920000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.4744356235,
+      "noise_figure": 28.0484416047,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3920000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.430304421,
+      "noise_figure": 24.7586489501,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3930000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.5030838202,
+      "noise_figure": 28.009726353,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3930000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.4615153468,
+      "noise_figure": 24.749610538,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3940000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.3446011758,
+      "noise_figure": 28.1629907876,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3940000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.2612419994,
+      "noise_figure": 24.9513416192,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3950000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.4028664004,
+      "noise_figure": 28.1083150493,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3950000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.38759097,
+      "noise_figure": 24.8306431586,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3960000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.486659876,
+      "noise_figure": 28.0171597505,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3960000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.3938907877,
+      "noise_figure": 24.8645708856,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3970000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.482670253,
+      "noise_figure": 27.9856964281,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3970000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.5038433912,
+      "noise_figure": 24.7489134084,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3980000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.4839924539,
+      "noise_figure": 27.9803551095,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3980000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.5320139323,
+      "noise_figure": 24.7318667308,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3990000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.6552705536,
+      "noise_figure": 27.8408588043,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3990000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.6025524194,
+      "noise_figure": 24.6631079368,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 3999999995.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.2663088821,
+      "noise_figure": 28.2201744924,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 3999999995.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -41.3603097263,
+      "noise_figure": 24.9313435729,
+      "1dB_compression": -25.0
+    },
+    {
+      "freq_sigan": 4000000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.2863450952,
+      "noise_figure": 24.1805384543,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4000000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.5790560113,
+      "noise_figure": 19.425938381,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4010000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.4175294446,
+      "noise_figure": 23.9595802755,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4010000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.6960728764,
+      "noise_figure": 19.3459661303,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4020000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.1696018655,
+      "noise_figure": 24.259878879,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4020000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.4353959018,
+      "noise_figure": 19.6271030703,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4030000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.9787213462,
+      "noise_figure": 24.4098937632,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4030000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.2342443932,
+      "noise_figure": 19.8122826957,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4040000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.7815331551,
+      "noise_figure": 24.6088849176,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4040000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.0028993802,
+      "noise_figure": 19.9775492052,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4050000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.50406882,
+      "noise_figure": 24.8849784501,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4050000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.6596100061,
+      "noise_figure": 20.3430747033,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4060000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.1485385077,
+      "noise_figure": 25.2317882651,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4060000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.2855278403,
+      "noise_figure": 20.6953563108,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4070000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.984101959,
+      "noise_figure": 25.3988604204,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4070000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.0425530861,
+      "noise_figure": 20.8827153315,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4080000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.6629236239,
+      "noise_figure": 25.7663899131,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4080000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.6816754383,
+      "noise_figure": 21.1928168608,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4090000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.3990448193,
+      "noise_figure": 26.0265801299,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4090000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.345189754,
+      "noise_figure": 21.5169474613,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4100000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.1714854884,
+      "noise_figure": 26.298788181,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4100000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.1426753992,
+      "noise_figure": 21.6289336668,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4110000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -23.9809794375,
+      "noise_figure": 26.4598663864,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4110000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.902279602,
+      "noise_figure": 21.8347678599,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4120000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -23.8341014832,
+      "noise_figure": 26.621290745,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4120000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.6770196252,
+      "noise_figure": 22.0170728189,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4130000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -23.9087810702,
+      "noise_figure": 26.5163888142,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4130000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.7666406644,
+      "noise_figure": 21.9367595841,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 4140000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -23.8231384369,
+      "noise_figure": 26.6458720384,
+      "1dB_compression": -6.0
+    },
+    {
+      "freq_sigan": 4140000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.6421146802,
+      "noise_figure": 22.0518089206,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 4150000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -23.9225385532,
+      "noise_figure": 26.5430519709,
+      "1dB_compression": -6.0
+    },
+    {
+      "freq_sigan": 4150000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.7236643934,
+      "noise_figure": 21.9619998866,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 4160000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.0860803728,
+      "noise_figure": 26.3355055476,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4160000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -44.9236505664,
+      "noise_figure": 21.7593783598,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 4170000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.2999034135,
+      "noise_figure": 26.1241424038,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4170000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.1152545521,
+      "noise_figure": 21.5806558024,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 4180000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.4411869088,
+      "noise_figure": 25.9646339885,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4180000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.2733047783,
+      "noise_figure": 21.408675517,
+      "1dB_compression": -27.0
+    },
+    {
+      "freq_sigan": 4190000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.8806879898,
+      "noise_figure": 25.4906904513,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4190000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.7311195063,
+      "noise_figure": 20.9849310417,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4200000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.1366362955,
+      "noise_figure": 25.5664283279,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4200000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.9129114929,
+      "noise_figure": 20.8226071232,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4210000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.4863395984,
+      "noise_figure": 24.9702557632,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4210000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.3530116009,
+      "noise_figure": 20.4316949984,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4220000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.7833079141,
+      "noise_figure": 24.7112509075,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4220000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.6626953856,
+      "noise_figure": 20.1465486891,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4230000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.0687525407,
+      "noise_figure": 24.4177931541,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4230000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.9816382686,
+      "noise_figure": 19.8292771244,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4240000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.204610382,
+      "noise_figure": 24.2506072812,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4240000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.0972621151,
+      "noise_figure": 19.7072246558,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4250000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.5677605715,
+      "noise_figure": 23.9144554222,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4250000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.473882599,
+      "noise_figure": 19.3180859874,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4260000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.4840258368,
+      "noise_figure": 23.9405142084,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4260000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.3718893705,
+      "noise_figure": 19.4376970752,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4270000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.6018935119,
+      "noise_figure": 23.7837934211,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4270000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.4780316331,
+      "noise_figure": 19.3099157145,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4280000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.6600362589,
+      "noise_figure": 23.7616511148,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4280000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.5622124789,
+      "noise_figure": 19.2405406354,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4290000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.3450331363,
+      "noise_figure": 24.0945419816,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4290000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.2146370136,
+      "noise_figure": 19.5791002996,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4300000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.3562569091,
+      "noise_figure": 24.1258315752,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4300000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.1601542443,
+      "noise_figure": 19.6091880164,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4310000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.1821982924,
+      "noise_figure": 24.1952051754,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4310000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.93200741,
+      "noise_figure": 19.8417774619,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4320000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.7554843499,
+      "noise_figure": 24.7090322781,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4320000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.536331941,
+      "noise_figure": 20.1685341134,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4330000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.7320684146,
+      "noise_figure": 24.6774616014,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4330000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.5336656958,
+      "noise_figure": 20.1651176937,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4340000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.3756592055,
+      "noise_figure": 25.0941926564,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4340000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.1123375509,
+      "noise_figure": 20.5960857789,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4350000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.1532312487,
+      "noise_figure": 25.3112280966,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4350000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.8837442691,
+      "noise_figure": 20.7894505911,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4360000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.0673038121,
+      "noise_figure": 25.3734646473,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4360000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.8294719606,
+      "noise_figure": 20.8733910608,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4370000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.8619166103,
+      "noise_figure": 25.5787170952,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4370000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.6069097694,
+      "noise_figure": 21.060221789,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4380000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.7507437103,
+      "noise_figure": 25.6775138628,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4380000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.4267744869,
+      "noise_figure": 21.2560426535,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4390000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.918519887,
+      "noise_figure": 25.4784891228,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4390000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.5980423106,
+      "noise_figure": 21.082869397,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4400000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.8793660914,
+      "noise_figure": 25.5464701999,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4400000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.5554965004,
+      "noise_figure": 21.1042476606,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4410000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -24.9258354432,
+      "noise_figure": 25.5056695858,
+      "1dB_compression": -7.0
+    },
+    {
+      "freq_sigan": 4410000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -45.853954419,
+      "noise_figure": 20.7982238369,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4420000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.2511359364,
+      "noise_figure": 25.1796800773,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4420000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.1357065652,
+      "noise_figure": 20.5618605809,
+      "1dB_compression": -28.0
+    },
+    {
+      "freq_sigan": 4430000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.356917556,
+      "noise_figure": 25.0433328501,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4430000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.1521632936,
+      "noise_figure": 20.581652531,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4440000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.7859088514,
+      "noise_figure": 24.6593624107,
+      "1dB_compression": -8.0
+    },
+    {
+      "freq_sigan": 4440000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.5180587486,
+      "noise_figure": 20.1877370861,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4450000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -25.9384617807,
+      "noise_figure": 24.5511163907,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4450000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.7468162267,
+      "noise_figure": 20.0016830035,
+      "1dB_compression": -29.0
+    },
+    {
+      "freq_sigan": 4460000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.1764905811,
+      "noise_figure": 24.2841552532,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4460000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -46.9435543714,
+      "noise_figure": 19.7954846277,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4470000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.4320869712,
+      "noise_figure": 24.0637454585,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4470000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.2252139631,
+      "noise_figure": 19.5705782307,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4480000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.5761196035,
+      "noise_figure": 23.8059761074,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4480000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.372355731,
+      "noise_figure": 19.3889263092,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4490000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -26.7682609014,
+      "noise_figure": 23.7001655707,
+      "1dB_compression": -9.0
+    },
+    {
+      "freq_sigan": 4490000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.5890254542,
+      "noise_figure": 19.2235537625,
+      "1dB_compression": -30.0
+    },
+    {
+      "freq_sigan": 4500000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.0076379393,
+      "noise_figure": 23.4795754444,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4500000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.8175133872,
+      "noise_figure": 19.0144306784,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4510000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.1474881968,
+      "noise_figure": 23.3824606848,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4510000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.9624919879,
+      "noise_figure": 18.8418604651,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4520000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4926455629,
+      "noise_figure": 22.796359874,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4520000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2514154138,
+      "noise_figure": 18.579877019,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4530000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.5709360327,
+      "noise_figure": 22.9512704628,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4530000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.3769702884,
+      "noise_figure": 18.4371700983,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4540000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7931011723,
+      "noise_figure": 22.7289591564,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4540000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5858605834,
+      "noise_figure": 18.2648324475,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4550000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9149069209,
+      "noise_figure": 22.667713605,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4550000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.758558327,
+      "noise_figure": 18.0837109816,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4560000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8045739227,
+      "noise_figure": 22.7439625344,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4560000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5873478229,
+      "noise_figure": 18.2695286899,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4570000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9220114411,
+      "noise_figure": 22.6073051403,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4570000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7054094027,
+      "noise_figure": 18.1555195073,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4580000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7363468244,
+      "noise_figure": 22.7818546259,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4580000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5049687835,
+      "noise_figure": 18.3644312365,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4590000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.6544263495,
+      "noise_figure": 22.8952196019,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4590000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4265674917,
+      "noise_figure": 18.4110963242,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4600000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.6444142764,
+      "noise_figure": 22.8654250312,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4600000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.3934816971,
+      "noise_figure": 18.4176034772,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4610000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4581969732,
+      "noise_figure": 23.3940827502,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4610000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.211039,
+      "noise_figure": 19.4093902598,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4620000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.3642763556,
+      "noise_figure": 23.0940819874,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4620000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.0979855528,
+      "noise_figure": 18.7116235888,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4630000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.3508309904,
+      "noise_figure": 23.373988467,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4630000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.1829960858,
+      "noise_figure": 18.6528179312,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4640000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.205594759,
+      "noise_figure": 23.272991811,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4640000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.9898169506,
+      "noise_figure": 18.8710124923,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4650000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4560238757,
+      "noise_figure": 23.0456717545,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4650000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2671926243,
+      "noise_figure": 18.5704874564,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4660000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.5056546322,
+      "noise_figure": 22.9927340739,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4660000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2948868144,
+      "noise_figure": 18.5557200188,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4670000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4806976204,
+      "noise_figure": 23.0455671267,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4670000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2783209121,
+      "noise_figure": 18.6133779663,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4680000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.6695919139,
+      "noise_figure": 22.9044097797,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4680000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4466458917,
+      "noise_figure": 18.4486711288,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4690000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.6218068951,
+      "noise_figure": 22.9123095409,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4690000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4426852803,
+      "noise_figure": 18.4989618483,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4700000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.638959977,
+      "noise_figure": 22.8480318483,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4700000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4379817539,
+      "noise_figure": 18.4138674624,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4710000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7532800655,
+      "noise_figure": 22.7519113915,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4710000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5797253381,
+      "noise_figure": 18.3797522147,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4720000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.6491505869,
+      "noise_figure": 22.8837640149,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4720000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4807530537,
+      "noise_figure": 18.4689329545,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4730000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7782974802,
+      "noise_figure": 23.1303833551,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4730000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5626742893,
+      "noise_figure": 18.3615897993,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4740000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8007667291,
+      "noise_figure": 22.7319791332,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4740000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5785934255,
+      "noise_figure": 18.3750654838,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4750000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7353454313,
+      "noise_figure": 22.8440569277,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4750000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5366945209,
+      "noise_figure": 18.4062033023,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4760000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7934068864,
+      "noise_figure": 22.7789194426,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4760000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6413712062,
+      "noise_figure": 18.3087508901,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4770000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8513871537,
+      "noise_figure": 22.7279662878,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4770000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6989273764,
+      "noise_figure": 18.2742722451,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4780000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8646235127,
+      "noise_figure": 22.6883657624,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4780000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6940290323,
+      "noise_figure": 18.2601701629,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4790000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.955924732,
+      "noise_figure": 22.591352854,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4790000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7537164751,
+      "noise_figure": 18.1696491291,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4800000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9910570951,
+      "noise_figure": 22.5402594577,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4800000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7588518391,
+      "noise_figure": 18.2057376303,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4810000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9776619189,
+      "noise_figure": 22.561266723,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4810000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7356747816,
+      "noise_figure": 18.2365448426,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4820000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.0472191192,
+      "noise_figure": 22.5231919547,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4820000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7772111624,
+      "noise_figure": 18.1341696708,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4830000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.0062119255,
+      "noise_figure": 22.493878785,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4830000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7093311411,
+      "noise_figure": 18.2141340021,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4840000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.0936076427,
+      "noise_figure": 22.3834174468,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4840000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.7221173647,
+      "noise_figure": 18.1494218611,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4850000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -28.0380824247,
+      "noise_figure": 22.5155828272,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4850000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6820972733,
+      "noise_figure": 18.2419540691,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4860000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.999991093,
+      "noise_figure": 22.579764492,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4860000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6262123199,
+      "noise_figure": 18.2703357018,
+      "1dB_compression": -32.0
+    },
+    {
+      "freq_sigan": 4870000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9560261545,
+      "noise_figure": 22.6018726651,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4870000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.5771911183,
+      "noise_figure": 18.2376414754,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4880000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.9509811331,
+      "noise_figure": 22.6286464444,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4880000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.6048604207,
+      "noise_figure": 18.2672127822,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4890000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8861940798,
+      "noise_figure": 22.6670056642,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4890000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.523037904,
+      "noise_figure": 18.3391022309,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4900000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8908395544,
+      "noise_figure": 22.7074477534,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4900000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4973145754,
+      "noise_figure": 18.3526446708,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4910000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.8431332591,
+      "noise_figure": 22.7430191758,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4910000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.4213219078,
+      "noise_figure": 18.4186652274,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4920000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7945670284,
+      "noise_figure": 22.7472473034,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4920000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.3262836836,
+      "noise_figure": 18.5269771258,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4930000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7844519247,
+      "noise_figure": 22.7791329389,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4930000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.3542716542,
+      "noise_figure": 18.4804671382,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4940000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.7099494524,
+      "noise_figure": 22.7879103038,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4940000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2628536776,
+      "noise_figure": 18.6067983449,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4950000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.4868595149,
+      "noise_figure": 22.842939982,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4950000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2954839452,
+      "noise_figure": 18.6103746037,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4960000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.5783036774,
+      "noise_figure": 22.9456547611,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4960000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.2531591431,
+      "noise_figure": 18.5906632482,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4970000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.5467703939,
+      "noise_figure": 23.0110280115,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4970000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.1473330279,
+      "noise_figure": 18.6863776228,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4980000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.5530610569,
+      "noise_figure": 24.0438528237,
+      "1dB_compression": -11.0
+    },
+    {
+      "freq_sigan": 4980000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -48.1326388737,
+      "noise_figure": 21.0123576962,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 4990000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.3944742059,
+      "noise_figure": 24.7745466685,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 4990000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.9208547126,
+      "noise_figure": 22.3330596294,
+      "1dB_compression": -31.0
+    },
+    {
+      "freq_sigan": 5000000000.0,
+      "gain_sigan": 40.0,
+      "scale_factor": -27.3084899008,
+      "noise_figure": 24.8356685434,
+      "1dB_compression": -10.0
+    },
+    {
+      "freq_sigan": 5000000000.0,
+      "gain_sigan": 60.0,
+      "scale_factor": -47.8111165627,
+      "noise_figure": 22.3269425573,
+      "1dB_compression": -31.0
+    }
+  ]
+}

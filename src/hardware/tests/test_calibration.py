@@ -4,13 +4,13 @@ from os import path
 
 import pytest
 
-from hardware import scale_factors
+from hardware import calibration
 from sensor.settings import REPO_ROOT
 
 RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
-TEST_SCALE_FACTORS_FILE = path.join(RESOURCES_DIR, "test_scale_factors.json")
+TEST_CALIBRATION_FILE = path.join(RESOURCES_DIR, "test_calibration.json")
 
-sfs = scale_factors.load_from_json(TEST_SCALE_FACTORS_FILE)
+cal = calibration.load_from_json(TEST_CALIBRATION_FILE)
 
 
 @pytest.mark.parametrize(
@@ -53,7 +53,7 @@ def test_scale_factor_calculation(sf, f, g):
 
     # Test all cases (rounding to 5 decimals to avoid floating point errors)
     sf = int(1e5 * sf)
-    csf = int(1e5 * sfs.get_power_scale_factor(f, g))
+    csf = int(1e5 * cal.get_power_scale_factor(f, g))
 
     msg = "Scale factor calculation failed.\n"
     msg += "Algorithm: {}\n".format(csf / 1e5)
