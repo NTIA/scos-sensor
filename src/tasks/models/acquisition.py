@@ -26,7 +26,7 @@ class Acquisition(models.Model):
         default=0, help_text="The id of the recording relative to the task"
     )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
-    data = models.BinaryField(help_text="", null=True)
+    data = models.FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)
 
     class Meta:
         db_table = "acquisitions"

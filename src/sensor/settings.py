@@ -59,6 +59,7 @@ CONFIG_DIR = path.join(REPO_ROOT, "configs")
 CALIBRATION_FILE = path.join(CONFIG_DIR, "calibration.json")
 SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, "actions")
+MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
 try:

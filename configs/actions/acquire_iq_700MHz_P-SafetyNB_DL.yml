@@ -7,4 +7,4 @@ stepped_frequency_time_domain_iq:
   sample_rates:
     - 15.36e6
   durations_ms:
-    - 1000  # 10000
+    - 10000

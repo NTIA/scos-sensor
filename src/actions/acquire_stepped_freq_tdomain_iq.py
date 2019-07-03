@@ -54,6 +54,8 @@ from sensor import settings, utils
 
 from .base import Action
 
+from django.core.files.base import ContentFile
+
 logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
@@ -170,17 +172,28 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
     def set_sdr_sample_rate(self, sample_rate):
         self.sdr.radio.sample_rate = sample_rate
 
-    def archive(self, task_result, recording_id, m4s_data, sigmf_md):
+    def archive(self, task_result, recording_id, acq_data, sigmf_md):
         from tasks.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 
-        Acquisition(
+        name = (
+            task_result.schedule_entry.name
+            + "_"
+            + str(task_result.task_id)
+            + "_"
+            + str(recording_id)
+            + ".sigmf-data"
+        )
+
+        acquisition = Acquisition(
             task_result=task_result,
             recording_id=recording_id,
             metadata=sigmf_md._metadata,
-            data=m4s_data,
-        ).save()
+        )
+        acquisition.data.save(name, ContentFile(acq_data))
+        acquisition.save()
+        logger.debug("Saved new file at {}".format(acquisition.data.path))
 
     @property
     def description(self):
