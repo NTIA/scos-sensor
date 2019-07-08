@@ -80,9 +80,7 @@ the _max_ of each column, and so "sample" detector simple chooses one of the
 import logging
 from enum import Enum
 
-import datetime
 import numpy as np
-import os
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
