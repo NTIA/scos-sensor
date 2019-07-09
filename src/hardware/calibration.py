@@ -38,8 +38,8 @@ class Calibration(object):
             logger.warning("Requested sample rate was not calibrated!")
             logger.warning("Assuming default sample rate:")
             logger.warning("    Requested sample rate: {}".format(sr))
-            logger.warning("    Assumed sample rate:   {}".format(sr[0]))
-            sr = sr[0]
+            logger.warning("    Assumed sample rate:   {}".format(srs[0]))
+            sr = srs[0]
         
         # Get the nearest calibrated frequency and its index
         f = lo_frequency
@@ -151,9 +151,9 @@ class Calibration(object):
         logger.debug("Using power scale factor: {}".format(scale_factor))
         return scale_factor
 
-    def get_scale_factor(self, sample_frequency, lo_frequency, gain):
+    def get_scale_factor(self, sample_rate, lo_frequency, gain):
         """Get the linear scale factor for the current setup."""
-        psf = self.get_power_scale_factor(sample_frequency, lo_frequency, gain)
+        psf = self.get_power_scale_factor(sample_rate, lo_frequency, gain)
         sf = 10 ** (psf / 20.0)
         logger.debug("Using linear scale factor: {}".format(sf))
         return sf
@@ -183,9 +183,11 @@ def load_from_json(fname):
         # Get the dictionary keys
         frequency = calibration_point["freq_sigan"]
         gain = calibration_point["gain_sigan"]
-        #sample_rate = calibration_point['sample_rate_sigan']
-        sample_rate = 1 #Debug until sample rate is added to cal file
-
+        try: # Fix until new calibration files are uploaded
+            sample_rate = calibration_point['sample_rate_sigan']
+        except KeyError:
+            sample_rate = calibration["clock_rate_lookup_by_sample_rate"][0]['sample_rate']
+        
         # Ensure the dictionary is fleshed out
         if sample_rate not in calibration_data.keys():
             calibration_data[sample_rate] = {}
