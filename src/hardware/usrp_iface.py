@@ -162,7 +162,7 @@ class RadioInterface(object):
             return
 
         self.scale_factor = self.calibration.get_scale_factor(
-            lo_frequency=self.frequency, gain=self.gain
+            sample_frequency=1, lo_frequency=self.frequency, gain=self.gain
         )
 
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
