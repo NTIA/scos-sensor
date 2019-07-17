@@ -1,0 +1,44 @@
+name: scos-sensor
+channels:
+  - conda-forge
+dependencies:
+  - python=3.6
+  - black=18.9b0
+  - Django=2.2.3
+  - flake8=3.7.7
+  - Pygments=2.4.2
+  - Markdown=3.1.1
+  - django-extensions=2.1.7
+  - django-filter=2.1.0
+  - djangorestframework=3.9.4
+  - docker-compose=1.24.0
+  - gunicorn=19.9.0
+  - isort=4.3.20
+  - jedi=0.13.3
+  - jsonfield=2.0.2
+  - jsonschema=3.0.1
+  - mkdocs=1.0.4
+  - numpy=1.16.4
+  - pytest-cov=2.7.1
+  - pytest-django=3.5.1
+  - pytest-flake8=1.0.4
+  - raven=6.10.0
+  - requests-futures=0.9.9
+  - requests-mock=1.6.0
+  - ruamel.yaml=0.15.96
+  - six=1.12.0
+  - pip
+  - pip:
+    - coreapi==2.3.3
+    - django-debug-toolbar==1.11
+    - drf-yasg==1.15.0
+    - -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF
+    - environs==4.2.0
+    - flake8-bugbear==19.3.0
+    - pre-commit==1.16.1
+    - psycopg2-binary==2.8.2
+    - seed-isort-config==1.9.1
+    - tox==3.12.1
+
+
+

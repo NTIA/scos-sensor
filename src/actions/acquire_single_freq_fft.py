@@ -90,6 +90,8 @@ from status.utils import get_location
 
 from .base import Action
 
+from django.core.files.base import ContentFile
+
 logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
@@ -301,9 +303,17 @@ class SingleFrequencyFftAcquisition(Action):
 
         logger.debug("Storing acquisition in database")
 
-        Acquisition(
-            task_result=task_result, metadata=sigmf_md._metadata, data=m4s_data
-        ).save()
+        name = (
+            task_result.schedule_entry.name
+            + "_"
+            + str(task_result.task_id)
+            + ".sigmf-data"
+        )
+
+        acquisition = Acquisition(task_result=task_result, metadata=sigmf_md._metadata)
+        acquisition.data.save(name, ContentFile(m4s_data))
+        acquisition.save()
+        logger.debug("Saved new file at {}".format(acquisition.data.path))
 
     @property
     def description(self):
