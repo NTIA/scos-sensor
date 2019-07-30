@@ -225,7 +225,7 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
 
     for acq in acquisitions:
         with tempfile.NamedTemporaryFile() as tmpdata:
-            tmpdata.write(acq.data)
+            tmpdata.write(acq.data.read())
             tmpdata.seek(0)  # move fd ptr to start of data for reading
             name = schedule_entry_name + "_" + str(acq.task_result.task_id)
             if multirecording:

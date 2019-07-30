@@ -10,6 +10,10 @@ from tasks.tests.utils import (
     simulate_acquisitions,
 )
 
+from tasks.models import Acquisition, TaskResult
+
+import os
+
 
 def test_non_existent_entry(user_client):
     with pytest.raises(AssertionError):
@@ -56,6 +60,19 @@ def test_delete_list(user_client):
 
     # If result does exist, expect 204
     entry_name = create_task_results(1, user_client)
+
     url = reverse_result_list(entry_name)
     response = user_client.delete(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_204_NO_CONTENT)
+
+
+def test_delete_list_data_files_deleted(user_client, test_scheduler):
+    entry_name = simulate_acquisitions(user_client)
+    task_result = TaskResult.objects.get(schedule_entry__name=entry_name)
+    acquisition = Acquisition.objects.get(task_result__id=task_result.id)
+    data_file = acquisition.data.path
+    assert os.path.exists(data_file)
+    url = reverse_result_list(entry_name)
+    response = user_client.delete(url, **HTTPS_KWARG)
+    validate_response(response, status.HTTP_204_NO_CONTENT)
+    assert not os.path.exists(data_file)

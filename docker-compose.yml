@@ -42,6 +42,7 @@ services:
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
       - CALLBACK_SSL_VERIFICATION=False
+      - MAX_TASK_RESULTS
     expose:
       - '8000'
     volumes:

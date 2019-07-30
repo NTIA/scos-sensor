@@ -90,6 +90,8 @@ from status.utils import get_location
 
 from .base import Action
 
+from django.core.files.base import ContentFile
+
 logger = logging.getLogger(__name__)
 
 GLOBAL_INFO = {
@@ -174,7 +176,6 @@ class SingleFrequencyFftAcquisition(Action):
             raise RuntimeError(msg)
 
     def configure_sdr(self):
-        self.set_sdr_clock_rate()
         self.set_sdr_sample_rate()
         self.set_sdr_frequency()
         self.set_sdr_gain()
@@ -185,13 +186,6 @@ class SingleFrequencyFftAcquisition(Action):
     def set_sdr_sample_rate(self):
         self.sdr.radio.sample_rate = self.sample_rate
         self.sample_rate = self.sdr.radio.sample_rate
-
-    def set_sdr_clock_rate(self):
-        clock_rate = self.sample_rate
-        while clock_rate < 10e6:
-            clock_rate *= 4
-
-        self.sdr.radio.clock_rate = clock_rate
 
     def set_sdr_frequency(self):
         requested_frequency = self.frequency
@@ -309,9 +303,17 @@ class SingleFrequencyFftAcquisition(Action):
 
         logger.debug("Storing acquisition in database")
 
-        Acquisition(
-            task_result=task_result, metadata=sigmf_md._metadata, data=m4s_data
-        ).save()
+        name = (
+            task_result.schedule_entry.name
+            + "_"
+            + str(task_result.task_id)
+            + ".sigmf-data"
+        )
+
+        acquisition = Acquisition(task_result=task_result, metadata=sigmf_md._metadata)
+        acquisition.data.save(name, ContentFile(m4s_data))
+        acquisition.save()
+        logger.debug("Saved new file at {}".format(acquisition.data.path))
 
     @property
     def description(self):

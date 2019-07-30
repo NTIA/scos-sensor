@@ -1,4 +1,5 @@
 import json
+import os
 from os import path
 
 from django.conf import settings
@@ -18,7 +19,16 @@ with open(SCHEMA_PATH, "r") as f:
 def test_detector(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client)
     tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
-    acquistion = Acquisition.objects.get(task_result=tr)
-    assert sigmf_validate(acquistion.metadata)
+    acquisition = Acquisition.objects.get(task_result=tr)
+    assert sigmf_validate(acquisition.metadata)
     # FIXME: update schema so that this passes
     # schema_validate(sigmf_metadata, schema)
+
+
+def test_data_file_created(user_client, test_scheduler):
+    entry_name = simulate_acquisitions(user_client)
+    tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
+    acquisition = Acquisition.objects.get(task_result=tr)
+    assert acquisition.data
+    assert path.exists(acquisition.data.path)
+    os.remove(acquisition.data.path)

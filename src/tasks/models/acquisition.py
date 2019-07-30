@@ -3,6 +3,8 @@ from jsonfield import JSONField
 
 from .task_result import TaskResult
 
+from django.db.models.signals import pre_delete
+
 
 class Acquisition(models.Model):
     """The data and metadata associated with a task.
@@ -26,7 +28,7 @@ class Acquisition(models.Model):
         default=0, help_text="The id of the recording relative to the task"
     )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
-    data = models.BinaryField(help_text="", null=True)
+    data = models.FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)
 
     class Meta:
         db_table = "acquisitions"
@@ -39,3 +41,11 @@ class Acquisition(models.Model):
             self.task_result.task_id,
             self.recording_id,
         )
+
+
+def clean_up_data(sender, **kwargs):
+    acq = kwargs["instance"]
+    acq.data.delete(save=False)
+
+
+pre_delete.connect(clean_up_data, sender=Acquisition)
