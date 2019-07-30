@@ -41,7 +41,7 @@ services:
       - IN_DOCKER=1
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
-      - CALLBACK_SSL_VERIFICATION=False
+      - CALLBACK_SSL_VERIFICATION
       - MAX_TASK_RESULTS
     expose:
       - '8000'
