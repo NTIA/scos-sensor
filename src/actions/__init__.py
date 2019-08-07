@@ -8,6 +8,7 @@ from sensor import settings
 from . import logger as logger_action
 from .acquire_single_freq_fft import SingleFrequencyFftAcquisition
 from .acquire_stepped_freq_tdomain_iq import SteppedFrequencyTimeDomainIqAcquisition
+from .mobile_acquire_single_freq_fft import MobileSingleFrequencyFftAcquisition
 from .monitor_usrp import UsrpMonitor
 from .sync_gps import SyncGps
 
@@ -35,6 +36,7 @@ action_classes = {
     "sync_gps": SyncGps,
     "single_frequency_fft": SingleFrequencyFftAcquisition,
     "stepped_frequency_time_domain_iq": SteppedFrequencyTimeDomainIqAcquisition,
+    "mobile_acquire_single_freq_fft": MobileSingleFrequencyFftAcquisition
 }
 
 
