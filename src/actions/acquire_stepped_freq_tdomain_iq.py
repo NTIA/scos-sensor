@@ -16,7 +16,7 @@
 # - Markdown reference: https://commonmark.org/help/
 # - SCOS Markdown Editor: https://ntia.github.io/scos-md-editor/
 #
-r"""Capture time-domain IQ samples at the following {nfcs} frequencies (MHz): {frequencies}.
+r"""Capture time-domain IQ samples at the following {nfcs} frequencies: {frequencies}.
 
 # {name}
 
@@ -237,7 +237,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         defs = {
             "name": self.name,
             "nfcs": self.nfcs,
-            "frequencies": ", ".join(["{:.2f}".format(fc / 1e6) for fc in self.fcs]),
+            "frequencies": ", ".join(
+                ["{:.2f} MHz".format(fc / 1e6) for fc in self.fcs]
+            ),
             "acquisition_plan": acquisition_plan,
             "min_duration_ms": min_duration_ms,
             "total_samples": total_samples,
