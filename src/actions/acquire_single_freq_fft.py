@@ -47,9 +47,10 @@ $$
 
 where $a_{{i,j}}$ is a complex time-domain sample.
 
-At the point, a Blackman window, defined as
+At the point, a Flat Top window, defined as
 
-$$w(n) = 0.42 - 0.5 \cos{{(2 \pi n / M)}} + 0.08 \cos{{(4 \pi n / M)}}$$
+$$w(n) &= 0.2156 - 0.4160 \cos{{(2 \pi n / M)}} + 0.2781 \cos{{(4 \pi n / M)}} -
+       & 0.0836 \cos{{(6 \pi n / M)}} + 0.0069 \cos{{(8 \pi n / M)}}$$
 
 where $M = {fft_size}$ is the number of points in the window, is applied to
 each row of the matrix.
@@ -240,7 +241,7 @@ class SingleFrequencyFftAcquisition(Action):
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
                 "ntia-algorithm:number_of_samples_in_fft": self.fft_size,
-                "ntia-algorithm:window": "blackman",
+                "ntia-algorithm:window": "flattop",
                 "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
                 "ntia-algorithm:detector": detector.name + "_power",
                 "ntia-algorithm:number_of_ffts": self.nffts,
