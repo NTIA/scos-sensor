@@ -3,6 +3,7 @@
 import datetime
 import json
 import random
+from copy import deepcopy
 from os import path
 
 import pytest
@@ -14,19 +15,16 @@ class TestCalibrationFile:
     # Ensure we load the test file
     setup_complete = False
 
-    """ Function to create the easily interpolated scale factor """
-
-    def easy_sf(self, sr, f, g):
-        return (-1 * g) + (sr / 1e6) + (f / 1e9)
-
-    """ Get a random index from a list """
+    def easy_gain(self, sr, f, g):
+        """ Create an easily interpolated value """
+        return (g) + (sr / 1e6) + (f / 1e9)
 
     def rand_index(self, l):
+        """ Get a random index for a list """
         return random.randint(0, len(l) - 1)
 
-    """ Check if a set of points is a duplicate """
-
     def check_duplicate(self, sr, f, g):
+        """ Check if a set of points was already tested """
         for pt in self.pytest_points:
             duplicate_f = f == pt["frequency"]
             duplicate_g = g == pt["gain"]
@@ -34,14 +32,12 @@ class TestCalibrationFile:
             if duplicate_f and duplicate_g and duplicate_sr:
                 return True
 
-    """ Handle floating point comparison """
-
     def is_close(self, a, b, tolerance):
+        """ Handle floating point comparisons """
         return abs(a - b) <= tolerance
 
-    """ Test a the calculated value against the algorithm """
-
     def run_pytest_point(self, sr, f, g, reason, sr_m=False, f_m=False, g_m=False):
+        """ Test the calculated value against the algorithm """
         # Check that the setup was completed
         assert self.setup_complete, "Setup was not completed"
 
@@ -58,10 +54,11 @@ class TestCalibrationFile:
             sr_m = sr
 
         # Calculate what the scale factor should be
-        sf = self.easy_sf(sr_m, f_m, g_m)
+        calc_gain_sigan = self.easy_gain(sr_m, f_m, g_m)
 
         # Get the scale factor from the algorithm
-        csf = self.sample_cal.get_power_scale_factor(sr, f, g)
+        interp_cal_data = self.sample_cal.get_calibration_dict(sr, f, g)
+        interp_gain_siggan = interp_cal_data["gain_sigan"]
 
         # Save the point so we don't duplicate
         self.pytest_points.append(
@@ -69,7 +66,7 @@ class TestCalibrationFile:
                 "sample_rate": int(sr),
                 "frequency": f,
                 "gain": g,
-                "scale_factor": sf,
+                "gain_sigan": calc_gain_sigan,
                 "test": reason,
             }
         )
@@ -77,8 +74,8 @@ class TestCalibrationFile:
         # Check if the point was calculated correctly
         tolerance = 1e-5
         msg = "Scale factor not correctly calculated!\r\n"
-        msg = "{}    Expected value:   {}\r\n".format(msg, sf)
-        msg = "{}    Calculated value: {}\r\n".format(msg, csf)
+        msg = "{}    Expected value:   {}\r\n".format(msg, calc_gain_sigan)
+        msg = "{}    Calculated value: {}\r\n".format(msg, interp_gain_siggan)
         msg = "{}    Tolerance: {}\r\n".format(msg, tolerance)
         msg = "{}    Test: {}\r\n".format(msg, reason)
         msg = "{}    Sample Rate: {}({})\r\n".format(msg, sr / 1e6, sr_m / 1e6)
@@ -87,13 +84,13 @@ class TestCalibrationFile:
         msg = "{}    Formula: -1 * (Gain - Frequency[GHz] - Sample Rate[MHz])\r\n".format(
             msg
         )
-        assert self.is_close(sf, csf, tolerance), msg
+        assert self.is_close(calc_gain_sigan, interp_gain_siggan, tolerance), msg
         return True
-
-    """ Create the dummy calibration file in the pytest temp directory """
 
     @pytest.fixture(autouse=True)
     def setup_calibration_file(self, tmpdir):
+        """ Create the dummy calibration file in the pytest temp directory """
+
         # Only setup once
         if self.setup_complete:
             return
@@ -156,27 +153,42 @@ class TestCalibrationFile:
                 {"sample_rate": int(sr), "clock_frequency": int(cr)}
             )
 
-        # Cycle through the sample rates, frequencies, and gains
-        cal_data["calibration_points"] = []
+        # Create the JSON architecture for the calibration data
+        cal_data["calibration_data"] = {}
+        cal_data["calibration_data"]["sample_rates"] = []
         for k in range(len(self.sample_rates)):
+            cal_data_sr = {}
+            cal_data_sr["sample_rate"] = self.sample_rates[k]
+            cal_data_sr["calibration_data"] = {}
+            cal_data_sr["calibration_data"]["frequencies"] = []
             for i in range(len(frequencies)):
+                cal_data_f = {}
+                cal_data_f["frequency"] = frequencies[i]
+                cal_data_f["calibration_data"] = {}
+                cal_data_f["calibration_data"]["gains"] = []
                 for j in range(len(gains)):
+                    cal_data_g = {}
+                    cal_data_g["gain"] = gains[j]
+
                     # Create the scale factor that ensures easy interpolation
-                    scale_factor = self.easy_sf(
+                    gain_sigan = self.easy_gain(
                         self.sample_rates[k], frequencies[i], gains[j]
                     )
 
                     # Create the data point
-                    cal_data["calibration_points"].append(
-                        {
-                            "sample_rate_sigan": int(self.sample_rates[k]),
-                            "freq_sigan": frequencies[i],
-                            "gain_sigan": gains[j],
-                            "scale_factor": scale_factor,
-                            "noise_figure": self.dummy_noise_figure,
-                            "1dB_compression": self.dummy_compression,
-                        }
-                    )
+                    cal_data_point = {
+                        "gain_sigan": gain_sigan,
+                        "noise_figure_sigan": self.dummy_noise_figure,
+                        "1dB_compression_sigan": self.dummy_compression,
+                    }
+
+                    # Add the generated dicts to the parent lists
+                    cal_data_g["calibration_data"] = deepcopy(cal_data_point)
+                    cal_data_f["calibration_data"]["gains"].append(deepcopy(cal_data_g))
+                cal_data_sr["calibration_data"]["frequencies"].append(
+                    deepcopy(cal_data_f)
+                )
+            cal_data["calibration_data"]["sample_rates"].append(deepcopy(cal_data_sr))
 
         # Write the new json file
         with open(self.calibration_file, "w+") as file:
@@ -210,9 +222,8 @@ class TestCalibrationFile:
         # Don't repeat test setup
         self.setup_complete = True
 
-    """ Test SF determination at boundary points """
-
     def test_sf_bound_points(self):
+        """ Test SF determination at boundary points """
         self.run_pytest_point(
             self.srs[0], self.frequency_min, self.gain_min, "Testing boundary points"
         )
@@ -220,9 +231,8 @@ class TestCalibrationFile:
             self.srs[0], self.frequency_max, self.gain_max, "Testing boundary points"
         )
 
-    """ Test points without interpolation """
-
     def test_sf_no_interpolation_points(self):
+        """ Test points without interpolation """
         for i in range(4 * self.test_repeat_times):
             while True:
                 g = self.g_s[self.rand_index(self.g_s)]
@@ -232,9 +242,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with frequency interpolation only """
-
     def test_sf_f_interpolation_points(self):
+        """ Test points with frequency interpolation only """
         for i in range(4 * self.test_repeat_times):
             while True:
                 g = self.g_s[self.rand_index(self.g_s)]
@@ -245,9 +254,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with gain interpolation only """
-
     def test_sf_g_interpolation_points(self):
+        """ Test points with gain interpolation only """
         for i in range(4 * self.test_repeat_times):
             while True:
                 g = self.gi_s[self.rand_index(self.gi_s)]
@@ -258,9 +266,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with frequency and gain interpolation only """
-
     def test_sf_g_f_interpolation_points(self):
+        """ Test points with frequency and gain interpolation only """
         for i in range(4 * self.test_repeat_times):
             while True:
                 g = self.gi_s[self.rand_index(self.gi_s)]
@@ -275,9 +282,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with a gain fudge factor """
-
     def test_g_fudge_points(self):
+        """ Test points with a gain fudge factor """
         for i in range(2 * self.test_repeat_times):
             while True:
                 g = self.gain_min
@@ -296,9 +302,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with a gain fudge factor and frequency interpolation """
-
     def test_g_fudge_f_interpolation_points(self):
+        """ Test points with a gain fudge factor and frequency interpolation """
         for i in range(2 * self.test_repeat_times):
             while True:
                 g = self.gain_min
@@ -325,9 +330,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with a gain fudge factor and out-of-bound frequencies """
-
     def test_g_fudge_f_oob_points(self):
+        """ Test points with a gain fudge factor and out-of-bound frequencies """
         for i in range(self.test_repeat_times):
             while True:
                 g = self.gain_min
@@ -382,9 +386,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with gain interpolation and out-of-bound frequencies """
-
     def test_g_interpolation_f_oob_points(self):
+        """ Test points with gain interpolation and out-of-bound frequencies """
         for i in range(2 * self.test_repeat_times):
             while True:
                 g = self.gi_s[self.rand_index(self.gi_s)]
@@ -412,10 +415,9 @@ class TestCalibrationFile:
                     f_m=f,
                 ):
                     break
-
-    """ Test points with out-of-bound frequencies """
 
     def test_f_oob_points(self):
+        """ Test points with out-of-bound frequencies """
         for i in range(2 * self.test_repeat_times):
             while True:
                 g = self.g_s[self.rand_index(self.g_s)]
@@ -442,9 +444,8 @@ class TestCalibrationFile:
                 ):
                     break
 
-    """ Test points with division frequencies """
-
     def test_division_f_points(self):
+        """ Test points with division frequencies """
         for i in range(self.test_repeat_times):
             for f in self.div_fs:
                 while True:
@@ -454,9 +455,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with gain interpolation and division frequencies """
-
     def test_g_interpolation_division_f_points(self):
+        """ Test points with gain interpolation and division frequencies """
         for i in range(self.test_repeat_times):
             for f in self.div_fs:
                 while True:
@@ -470,9 +470,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with gain fudge and division frequencies """
-
     def test_g_fudge_division_f_points(self):
+        """ Test points with gain fudge and division frequencies """
         for i in range(self.test_repeat_times):
             for f in self.div_fs:
                 while True:
@@ -486,9 +485,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with in-division frequencies """
-
     def test_in_division_f_points(self):
+        """ Test points with in-division frequencies """
         for j in range(self.test_repeat_times):
             for i in range(0, len(self.div_fs), 2):
                 while True:
@@ -503,9 +501,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with gain interpolation and in-division frequencies """
-
     def test_g_interpolation_in_division_f_points(self):
+        """ Test points with gain interpolation and in-division frequencies """
         for j in range(self.test_repeat_times):
             for i in range(0, len(self.div_fs), 2):
                 while True:
@@ -521,9 +518,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with gain fudge and in-division frequencies """
-
     def test_g_fudge_in_division_f_points(self):
+        """ Test points with gain fudge and in-division frequencies """
         for j in range(self.test_repeat_times):
             for i in range(0, len(self.div_fs), 2):
                 while True:
@@ -539,9 +535,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with gain and frequency interpolation at different sample rates """
-
     def test_sample_rate_points(self):
+        """ Test points with gain and frequency interpolation at different sample rates """
         for j in range(self.test_repeat_times):
             for i in range(len(self.srs)):
                 while True:
@@ -559,9 +554,8 @@ class TestCalibrationFile:
                     ):
                         break
 
-    """ Test points with gain and frequency interpolation at uncalibrated sample rates """
-
     def test_uncalibrated_sample_rate_points(self):
+        """ Test points with gain and frequency interpolation at uncalibrated sample rates """
         for i in range(4 * self.test_repeat_times):
             while True:
                 g = self.gi_s[self.rand_index(self.gi_s)]

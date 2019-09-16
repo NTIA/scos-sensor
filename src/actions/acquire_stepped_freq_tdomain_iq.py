@@ -156,7 +156,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
         annotation_md = {
             "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-calibration:receiver_scaling_factor": self.sdr.radio.scale_factor,
+            "ntia-calibration:gain_sigan": self.sdr.radio.sensor_calibration_data[
+                "gain_sigan"
+            ],
         }
         sigmf_md.add_annotation(start_index=0, length=nsamps, metadata=annotation_md)
 

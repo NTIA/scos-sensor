@@ -33,7 +33,10 @@ is_available = False
 VALID_GAINS = (0, 20, 40, 60)
 
 
-def connect(cal_file=settings.CALIBRATION_FILE):  # -> bool:
+def connect(
+    sensor_cal_file=settings.SENSOR_CALIBRATION_FILE,
+    sigan_cal_file=settings.SIGAN_CALIBRATION_FILE,
+):  # -> bool:
     global uhd
     global is_available
     global radio
@@ -43,8 +46,6 @@ def connect(cal_file=settings.CALIBRATION_FILE):  # -> bool:
         random = settings.MOCK_RADIO_RANDOM
         usrp = MockUsrp(randomize_values=random)
         is_available = True
-        RESOURCES_DIR = path.join(REPO_ROOT, "./src/hardware/tests/resources")
-        cal_file = path.join(RESOURCES_DIR, "test_calibration.json")
     else:
         if is_available and radio is not None:
             return True
@@ -68,7 +69,9 @@ def connect(cal_file=settings.CALIBRATION_FILE):  # -> bool:
         logger.debug(usrp.get_pp_string())
 
     try:
-        radio_iface = RadioInterface(usrp=usrp, cal_file=cal_file)
+        radio_iface = RadioInterface(
+            usrp=usrp, sensor_cal_file=sensor_cal_file, sigan_cal_file=sigan_cal_file
+        )
         is_available = True
         radio = radio_iface
         return True
@@ -78,15 +81,58 @@ def connect(cal_file=settings.CALIBRATION_FILE):  # -> bool:
 
 
 class RadioInterface(object):
-    def __init__(self, usrp, cal_file=settings.CALIBRATION_FILE):
+
+    # Define the default calibration dicts
+    DEFAULT_SIGAN_CALIBRATION = {
+        "gain_sigan": 0,
+        "enbw_sigan": None,
+        "noise_figure_sigan": 0,
+        "1db_compression_sigan": 100,
+    }
+    DEFAULT_SENSOR_CALIBRATION = {
+        "gain_sensor": 0,
+        "enbw_sensor": None,
+        "noise_figure_sensor": 0,
+        "1db_compression_sensor": 100,
+        "gain_preselector": 0,
+        "noise_figure_preselector": 0,
+        "1db_compression_preselector": 100,
+    }
+
+    def __init__(
+        self,
+        usrp,
+        sensor_cal_file=settings.SENSOR_CALIBRATION_FILE,
+        sigan_cal_file=settings.SIGAN_CALIBRATION_FILE,
+    ):
         self.usrp = usrp
-        self.scale_factor = 1
-        try:
-            self.calibration = calibration.load_from_json(cal_file)
-        except Exception as err:
-            logger.error("Unable to load scale factors, falling back to to 1")
-            logger.exception(err)
-            self.calibration = None
+
+        # Set the default calibration values
+        self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
+        self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
+
+        # Try and load sensor/sigan calibration data
+        if not settings.MOCK_RADIO:
+            try:
+                self.sensor_calibration = calibration.load_from_json(sensor_cal_file)
+            except Exception as err:
+                logger.error(
+                    "Unable to load sensor calibration data, reverting to none"
+                )
+                logger.exception(err)
+                self.sensor_calibration = None
+            try:
+                self.sigan_calibration = calibration.load_from_json(sigan_cal_file)
+            except Exception as err:
+                logger.error("Unable to load sigan calibration data, reverting to none")
+                logger.exception(err)
+                self.sigan_calibration = None
+        else:  # If in testing, create our own test files
+            import hardware.tests.resources.utils as test_utils
+
+            dummy_calibration = test_utils.create_dummy_calibration()
+            self.sensor_calibration = dummy_calibration
+            self.sigan_calibration = dummy_calibration
 
     @property
     def sample_rate(self):  # -> float:
@@ -98,7 +144,7 @@ class RadioInterface(object):
         self.usrp.set_rx_rate(rate)
         fs_MHz = self.sample_rate / 1e6
         logger.debug("set USRP sample rate: {:.2f} MS/s".format(fs_MHz))
-        clock_rate = self.calibration.get_clock_rate(rate)
+        clock_rate = self.sigan_calibration.get_clock_rate(rate)
         self.clock_rate = clock_rate
 
     @property
@@ -118,7 +164,6 @@ class RadioInterface(object):
     @frequency.setter
     def frequency(self, freq):
         self.tune_frequency(freq)
-        self.recompute_scale_factor()
 
     def tune_frequency(self, rf_freq, dsp_freq=0):
         if isinstance(self.usrp, MockUsrp):
@@ -154,23 +199,50 @@ class RadioInterface(object):
         self.usrp.set_rx_gain(gain)
         msg = "set USRP gain: {:.1f} dB"
         logger.debug(msg.format(self.usrp.get_rx_gain()))
-        self.recompute_scale_factor()
 
-    def recompute_scale_factor(self):
-        """Set the scale factor based on USRP gain and LO freq"""
-        if self.calibration is None:
-            return
+    def recompute_calibration_data(self):
+        """Set the calibration data based on the currently tuning"""
 
-        self.scale_factor = self.calibration.get_scale_factor(
-            sample_rate=self.sample_rate, lo_frequency=self.frequency, gain=self.gain
-        )
+        # Try and get the sensor calibration data
+        if self.sensor_calibration is not None:
+            self.sensor_calibration_data.update(
+                self.sensor_calibration.get_calibration_dict(
+                    sample_rate=self.sample_rate,
+                    lo_frequency=self.frequency,
+                    gain=self.gain,
+                )
+            )
+        else:
+            self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
+
+        # Try and get the sigan calibration data
+        if self.sigan_calibration is not None:
+            self.sigan_calibration_data.update(
+                self.sigan_calibration.get_calibration_dict(
+                    sample_rate=self.sample_rate,
+                    lo_frequency=self.frequency,
+                    gain=self.gain,
+                )
+            )
+        else:
+            self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
 
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
+
+        # Get the calibration data for the acquisition
+        self.recompute_calibration_data()
+
+        # Compute the linear gain
+        db_gain = (
+            self.sensor_calibration_data["gain_preselector"]
+            + self.sigan_calibration_data["gain_sigan"]
+        )
+        linear_gain = 10 ** (db_gain / 20.0)
+
+        # Try to acquire the samples
         max_retries = retries
-
         while True:
-
             # No need to skip initial samples when simulating the radio
             if settings.MOCK_RADIO:
                 nsamps = n
@@ -194,7 +266,6 @@ class RadioInterface(object):
             if not settings.MOCK_RADIO:
                 data = data[nskip:]
 
-            data = data * self.scale_factor
             if not len(data) == n:
                 if retries > 0:
                     msg = "USRP error: requested {} samples, but got {}."
@@ -207,4 +278,7 @@ class RadioInterface(object):
                     raise RuntimeError(err)
             else:
                 logger.debug("Successfully acquired {} samples.".format(n))
+
+                # Scale the data back to RF power and return it
+                data /= linear_gain
                 return data
