@@ -47,10 +47,10 @@ $$
 
 where $a_{{i,j}}$ is a complex time-domain sample.
 
-At the point, a Flat Top window, defined as
+At that point, a Flat Top window, defined as
 
-$$w(n) &= 0.2156 - 0.4160 \cos{{(2 \pi n / M)}} + 0.2781 \cos{{(4 \pi n / M)}} -
-       & 0.0836 \cos{{(6 \pi n / M)}} + 0.0069 \cos{{(8 \pi n / M)}}$$
+$$w(n) = &0.2156 - 0.4160 \cos{{(2 \pi n / M)}} + 0.2781 \cos{{(4 \pi n / M)}} -
+         &0.0836 \cos{{(6 \pi n / M)}} + 0.0069 \cos{{(8 \pi n / M)}}$$
 
 where $M = {fft_size}$ is the number of points in the window, is applied to
 each row of the matrix.
@@ -63,18 +63,30 @@ an FFT, doing the equivalent of the DFT defined as
 $$A_k = \sum_{{m=0}}^{{n-1}}
 a_m \exp\left\\{{-2\pi i{{mk \over n}}\right\\}} \qquad k = 0,\ldots,n-1$$
 
-The data matrix is then converted to power by taking the square of the
-magnitude of each complex sample individually. The resulting matrix is
-real-valued, 32-bit floats representing dBm.
+The data matrix is then converted to pseudo-power by taking the square of the
+magnitude of each complex sample individually, allowing power statistics to be
+taken.
 
 ## Applying detector
 
-Lastly, the M4S (min, max, mean, median, and sample) detector is applied to the
+Next, the M4S (min, max, mean, median, and sample) detector is applied to the
 data matrix. The input to the detector is a matrix of size ${nffts} \times
 {fft_size}$, and the output matrix is size $5 \times {fft_size}$, with the
 first row representing the min of each _column_, the second row representing
 the _max_ of each column, and so "sample" detector simple chooses one of the
 {nffts} FFTs at random.
+
+## Power conversion
+
+To finish the power conversion, the samples are divided by the characteristic
+impedance (50 ohms). The power is then referenced back to the RF power by
+dividing further by 2. The powers are normalized to the FFT bin width by
+dividing by the length of the FFT and converted to dBm. Finally, an FFT window
+correction factor is added to the powers given by
+
+$$ C_{{win}} = 20log \left( \frac{{1}}{{ mean \left( w(n) \right) }} \right)
+
+The resulting matrix is real-valued, 32-bit floats representing dBm.
 
 """
 
