@@ -84,16 +84,16 @@ class RadioInterface(object):
 
     # Define the default calibration dicts
     DEFAULT_SIGAN_CALIBRATION = {
-        "gain_sigan": 0,
-        "enbw_sigan": None,
+        "gain_sigan": None,  # Defaults to gain setting
+        "enbw_sigan": None,  # Defaults to sample rate
         "noise_figure_sigan": 0,
         "1db_compression_sigan": 100,
     }
     DEFAULT_SENSOR_CALIBRATION = {
-        "gain_sensor": 0,
-        "enbw_sensor": None,
-        "noise_figure_sensor": 0,
-        "1db_compression_sensor": 100,
+        "gain_sensor": None,  # Defaults to sigan gain
+        "enbw_sensor": None,  # Defaults to sigan enbw
+        "noise_figure_sensor": None,  # Defaults to sigan noise figure
+        "1db_compression_sensor": None,  # Defaults to sigan compression + preselector gain
         "gain_preselector": 0,
         "noise_figure_preselector": 0,
         "1db_compression_preselector": 100,
@@ -144,7 +144,14 @@ class RadioInterface(object):
         self.usrp.set_rx_rate(rate)
         fs_MHz = self.sample_rate / 1e6
         logger.debug("set USRP sample rate: {:.2f} MS/s".format(fs_MHz))
-        clock_rate = self.sigan_calibration.get_clock_rate(rate)
+        # Set the clock rate based on calibration
+        if self.sigan_calibration is not None:
+            clock_rate = self.sigan_calibration.get_clock_rate(rate)
+        else:
+            clock_rate = self.sample_rate
+            # Maximize clock rate while keeping it under 40e6
+            while clock_rate <= 20e6:
+                clock_rate *= 2
         self.clock_rate = clock_rate
 
     @property
@@ -226,6 +233,31 @@ class RadioInterface(object):
             )
         else:
             self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
+
+        # Catch any defaulting calibration values for the sigan
+        if self.sigan_calibration_data["gain_sigan"] is None:
+            self.sigan_calibration_data["gain_sigan"] = self.gain
+        if self.sigan_calibration_data["enbw_sigan"] is None:
+            self.sigan_calibration_data["enbw_sigan"] = self.sample_rate
+
+        # Catch any defaulting calibration values for the sensor
+        if self.sensor_calibration_data["gain_sensor"] is None:
+            self.sensor_calibration_data["gain_sensor"] = self.sigan_calibration_data[
+                "gain_sigan"
+            ]
+        if self.sensor_calibration_data["enbw_sensor"] is None:
+            self.sensor_calibration_data["enbw_sensor"] = self.sigan_calibration_data[
+                "enbw_sigan"
+            ]
+        if self.sensor_calibration_data["noise_figure_sensor"] is None:
+            self.sensor_calibration_data[
+                "noise_figure_sensor"
+            ] = self.sigan_calibration_data["noise_figure_sigan"]
+        if self.sensor_calibration_data["1db_compression_sensor"] is None:
+            self.sensor_calibration_data["1db_compression_sensor"] = (
+                self.sensor_calibration_data["gain_preselector"]
+                + self.sigan_calibration_data["1db_compression_sigan"]
+            )
 
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
