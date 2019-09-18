@@ -47,9 +47,10 @@ $$
 
 where $a_{{i,j}}$ is a complex time-domain sample.
 
-At the point, a Blackman window, defined as
+At that point, a Flat Top window, defined as
 
-$$w(n) = 0.42 - 0.5 \cos{{(2 \pi n / M)}} + 0.08 \cos{{(4 \pi n / M)}}$$
+$$w(n) = &0.2156 - 0.4160 \cos{{(2 \pi n / M)}} + 0.2781 \cos{{(4 \pi n / M)}} -
+         &0.0836 \cos{{(6 \pi n / M)}} + 0.0069 \cos{{(8 \pi n / M)}}$$
 
 where $M = {fft_size}$ is the number of points in the window, is applied to
 each row of the matrix.
@@ -62,18 +63,30 @@ an FFT, doing the equivalent of the DFT defined as
 $$A_k = \sum_{{m=0}}^{{n-1}}
 a_m \exp\left\\{{-2\pi i{{mk \over n}}\right\\}} \qquad k = 0,\ldots,n-1$$
 
-The data matrix is then converted to power by taking the square of the
-magnitude of each complex sample individually. The resulting matrix is
-real-valued, 32-bit floats representing dBm.
+The data matrix is then converted to pseudo-power by taking the square of the
+magnitude of each complex sample individually, allowing power statistics to be
+taken.
 
 ## Applying detector
 
-Lastly, the M4S (min, max, mean, median, and sample) detector is applied to the
+Next, the M4S (min, max, mean, median, and sample) detector is applied to the
 data matrix. The input to the detector is a matrix of size ${nffts} \times
 {fft_size}$, and the output matrix is size $5 \times {fft_size}$, with the
 first row representing the min of each _column_, the second row representing
 the _max_ of each column, and so "sample" detector simple chooses one of the
 {nffts} FFTs at random.
+
+## Power conversion
+
+To finish the power conversion, the samples are divided by the characteristic
+impedance (50 ohms). The power is then referenced back to the RF power by
+dividing further by 2. The powers are normalized to the FFT bin width by
+dividing by the length of the FFT and converted to dBm. Finally, an FFT window
+correction factor is added to the powers given by
+
+$$ C_{{win}} = 20log \left( \frac{{1}}{{ mean \left( w(n) \right) }} \right)
+
+The resulting matrix is real-valued, 32-bit floats representing dBm.
 
 """
 
@@ -81,16 +94,16 @@ import logging
 from enum import Enum
 
 import numpy as np
+from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
+from actions.utils import get_fft_window, get_fft_window_correction
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
 from status.utils import get_location
 
 from .base import Action
-
-from django.core.files.base import ContentFile
 
 logger = logging.getLogger(__name__)
 
@@ -240,7 +253,7 @@ class SingleFrequencyFftAcquisition(Action):
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
                 "ntia-algorithm:number_of_samples_in_fft": self.fft_size,
-                "ntia-algorithm:window": "blackman",
+                "ntia-algorithm:window": "flattop",
                 "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
                 "ntia-algorithm:detector": detector.name + "_power",
                 "ntia-algorithm:number_of_ffts": self.nffts,
@@ -266,37 +279,51 @@ class SingleFrequencyFftAcquisition(Action):
         """Take FFT of data, apply detector, and translate watts to dBm."""
         logger.debug("Applying detector")
 
-        window = np.blackman(self.fft_size)
-        window_power = sum(window ** 2)
-        impedance = 50.0  # ohms
+        # Get the fft window and its amplitude/energy correction factors
+        fft_window = get_fft_window("Flat Top", self.fft_size)
+        fft_window_acf = get_fft_window_correction(fft_window, "amplitude")
+        fft_window_ecf = get_fft_window_correction(fft_window, "energy")
+        fft_window_enbw = (fft_window_acf / fft_window_ecf) ** 2
 
-        self.enbw = self.fft_size * window_power / sum(window) ** 2
+        # Calculate the equivalent noise bandwidth of the bins
+        self.enbw = self.sample_rate / self.fft_size * fft_window_enbw
 
-        Vsq2W_dB = -10.0 * np.log10(self.fft_size * window_power * impedance)
+        # Apply the FFT window
+        data = data * fft_window
 
-        # Apply window
-        tdata_windowed = data * window
-        # Take FFT
-        fdata = np.fft.fft(tdata_windowed)
-        # Shift fc to center
-        fdata_shifted = np.fft.fftshift(fdata)
-        # Take power
-        fdata_watts = np.square(np.abs(fdata_shifted))
-        # Apply detector while we're linear
-        # The m4s detector returns a (5 x fft_size) ndarray
-        fdata_watts_m4s = m4s_detector(fdata_watts)
+        # Take and shift the fft (center fc)
+        complex_fft = np.fft.fft(data)
+        complex_fft = np.fft.fftshift(complex_fft)
 
-        # If testing, don't flood output with divide-by-zero warnings
+        # Convert to pseudo-power (full power conversion will occur after detector)
+        power_fft = np.abs(complex_fft)
+        power_fft = np.square(power_fft)
+
+        # Run the M4S detector
+        power_fft_m4s = m4s_detector(power_fft)
+
+        # If testing, don't flood output with divide-by-zero warnings from np.log10
         if settings.RUNNING_TESTS:
             np_error_settings_savepoint = np.seterr(divide="ignore")
 
-        fdata_dbm_m4s = 10 * np.log10(fdata_watts_m4s) + 30 + Vsq2W_dB
+        # Use impedance to finish power conversion and convert to dBm
+        impedance_factor = -10 * np.log10(50)
+        power_fft_m4s = 10 * np.log10(power_fft_m4s) + impedance_factor + 30
+        power_fft_m4s -= 3  # Account for double sided FFT
 
+        # If altered, restore numpy error settings
         if settings.RUNNING_TESTS:
-            # Restore numpy error settings
             np.seterr(**np_error_settings_savepoint)
 
-        return fdata_dbm_m4s
+        # Normalize the FFT
+        fft_normalization_factor = -20 * np.log10(self.fft_size)
+        power_fft_m4s += fft_normalization_factor
+
+        # Apply the window's amplitude correction factor
+        window_correction = 20 * np.log10(fft_window_acf)
+        power_fft_m4s += window_correction
+
+        return power_fft_m4s
 
     def archive(self, task_result, m4s_data, sigmf_md):
         from tasks.models import Acquisition

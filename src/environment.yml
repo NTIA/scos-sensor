@@ -26,6 +26,7 @@ dependencies:
   - requests-futures=0.9.9
   - requests-mock=1.6.0
   - ruamel.yaml=0.15.96
+  - scipy=1.3.1
   - six=1.12.0
   - pip
   - pip:
@@ -39,6 +40,3 @@ dependencies:
     - psycopg2-binary==2.8.2
     - seed-isort-config==1.9.1
     - tox==3.12.1
-
-
-
