@@ -1,15 +1,13 @@
 import logging
 
-from hardware import sdr
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from hardware import sdr
 from scheduler import scheduler
 from sensor import utils
 
 from .serializers import LocationSerializer
-
 from .utils import get_location
 
 logger = logging.getLogger(__name__)
@@ -27,8 +25,8 @@ def serialize_location():
 def get_last_calibration_time():
     """Returns datetime string of last calibration time"""
     sdr.connect()
-    if sdr.is_available and sdr.radio.calibration:
-        return sdr.radio.calibration.calibration_datetime
+    if sdr.is_available and sdr.radio.sensor_calibration:
+        return sdr.radio.sensor_calibration.calibration_datetime
     return "unknown"
 
 
