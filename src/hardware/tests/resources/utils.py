@@ -43,7 +43,11 @@ def create_dummy_calibration():
                     calibration_data[sr] = {}
                 if f not in calibration_data[sr].keys():
                     calibration_data[sr][f] = {}
-                calibration_data[sr][f][g] = {"gain_sigan": easy_gain(sr, f, g)}
+                calibration_data[sr][f][g] = {
+                    "gain_sigan": easy_gain(sr, f, g),
+                    "gain_preselector": -10,
+                    "gain_sensor": easy_gain(sr, f, g) - 10,
+                }
 
     return Calibration(
         calibration_datetime,

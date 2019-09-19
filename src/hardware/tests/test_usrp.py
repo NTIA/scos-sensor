@@ -114,7 +114,7 @@ class TestUSRP:
         data = self.rx.acquire_samples(1000)
 
         # The true value should be the 1 / linear gain
-        true_val = test_utils.easy_gain(int(10e6), 1e9, 20)
+        true_val = test_utils.easy_gain(int(10e6), 1e9, 20) - 10
         true_val = 10 ** (-1 * float(true_val) / 20)
 
         # Get the observed value
