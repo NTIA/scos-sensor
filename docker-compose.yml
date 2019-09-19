@@ -42,6 +42,7 @@ services:
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
       - CALLBACK_SSL_VERIFICATION
+      - MAX_TASK_RESULTS
     expose:
       - '8000'
     volumes:
@@ -50,6 +51,8 @@ services:
       - SYS_PTRACE
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
+    extra_hosts:
+      - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
 
   nginx:

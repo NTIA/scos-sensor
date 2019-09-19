@@ -16,8 +16,7 @@
 # - Markdown reference: https://commonmark.org/help/
 # - SCOS Markdown Editor: https://ntia.github.io/scos-md-editor/
 #
-r"""Capture time-domain IQ samples at {nfcs} frequencies between
-{f_low_edge:.2f} and {f_high_edge:.2f} MHz.
+r"""Capture time-domain IQ samples at the following {nfcs} frequencies: {frequencies}.
 
 # {name}
 
@@ -46,11 +45,13 @@ import logging
 from itertools import zip_longest
 
 import numpy as np
+from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
+from status.utils import get_location
 
 from .base import Action
 
@@ -169,17 +170,28 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
     def set_sdr_sample_rate(self, sample_rate):
         self.sdr.radio.sample_rate = sample_rate
 
-    def archive(self, task_result, recording_id, m4s_data, sigmf_md):
+    def archive(self, task_result, recording_id, acq_data, sigmf_md):
         from tasks.models import Acquisition
 
         logger.debug("Storing acquisition in database")
 
-        Acquisition(
+        name = (
+            task_result.schedule_entry.name
+            + "_"
+            + str(task_result.task_id)
+            + "_"
+            + str(recording_id)
+            + ".sigmf-data"
+        )
+
+        acquisition = Acquisition(
             task_result=task_result,
             recording_id=recording_id,
             metadata=sigmf_md._metadata,
-            data=m4s_data,
-        ).save()
+        )
+        acquisition.data.save(name, ContentFile(acq_data))
+        acquisition.save()
+        logger.debug("Saved new file at {}".format(acquisition.data.path))
 
     @property
     def description(self):
@@ -216,8 +228,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         defs = {
             "name": self.name,
             "nfcs": self.nfcs,
-            "f_low_edge": f_low_edge,
-            "f_high_edge": f_high_edge,
+            "frequencies": ", ".join(
+                ["{:.2f} MHz".format(fc / 1e6) for fc in self.fcs]
+            ),
             "acquisition_plan": acquisition_plan,
             "min_duration_ms": min_duration_ms,
             "total_samples": total_samples,

@@ -61,6 +61,7 @@ SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
 SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
 SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, "actions")
+MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
 try:
@@ -273,7 +274,7 @@ if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
 
 # Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
-MAX_TASK_RESULTS = 100
+MAX_TASK_RESULTS = env.int("MAX_TASK_RESULTS", default=100000)
 # Display at most MAX_TASK_QUEUE upcoming tasks in /tasks/upcoming
 MAX_TASK_QUEUE = 50
 

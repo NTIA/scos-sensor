@@ -8,6 +8,10 @@ from tasks.tests.utils import (
     update_result_detail,
 )
 
+from tasks.models import Acquisition, TaskResult
+
+import os
+
 
 def test_user_can_create_nonprivate_acquisition(user_client, test_scheduler):
     entry_name = simulate_acquisitions(user_client)
@@ -225,3 +229,21 @@ def test_admin_cant_modify_own_results(admin_client, test_scheduler):
     response = update_result_detail(admin_client, entry_name, 1, new_result_detail)
 
     validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+def test_deleted_result_deletes_data_file(user_client, test_scheduler):
+    """A user should be able to delete results they own."""
+    entry_name = simulate_acquisitions(user_client)
+    # schedule_entry = ScheduleEntry.objects.get(name=entry_name)
+    task_result = TaskResult.objects.get(schedule_entry__name=entry_name)
+    acquisition = Acquisition.objects.get(task_result__id=task_result.id)
+    data_file = acquisition.data.path
+    assert os.path.exists(data_file)
+    result_url = reverse_result_detail(entry_name, 1)
+
+    first_response = user_client.delete(result_url, **HTTPS_KWARG)
+    second_response = user_client.delete(result_url, **HTTPS_KWARG)
+
+    validate_response(first_response, status.HTTP_204_NO_CONTENT)
+    validate_response(second_response, status.HTTP_404_NOT_FOUND)
+    assert not os.path.exists(data_file)
