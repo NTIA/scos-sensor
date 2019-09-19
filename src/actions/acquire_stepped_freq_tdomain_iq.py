@@ -154,13 +154,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
-        annotation_md = {
-            "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-calibration:gain_sigan": self.sdr.radio.sensor_calibration_data[
-                "gain_sigan"
-            ],
-        }
-        sigmf_md.add_annotation(start_index=0, length=nsamps, metadata=annotation_md)
+        calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
+        sigmf_md.add_annotation(
+            start_index=0, length=nsamps, metadata=calibration_annotation_md
+        )
 
         return data, sigmf_md
 

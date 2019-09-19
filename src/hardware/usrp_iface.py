@@ -259,6 +259,14 @@ class RadioInterface(object):
                 + self.sigan_calibration_data["1db_compression_sigan"]
             )
 
+    def create_calibration_annotation(self):
+        annotation_md = {
+            "ntia-core:annotation_type": "CalibrationAnnotation",
+            "ntia-calibration:receiver_scaling_factor": -1
+            * self.sensor_calibration_data["gain_sigan"],
+        }
+        return annotation_md
+
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
 
