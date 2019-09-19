@@ -263,7 +263,7 @@ class RadioInterface(object):
         annotation_md = {
             "ntia-core:annotation_type": "CalibrationAnnotation",
             "ntia-calibration:receiver_scaling_factor": -1
-            * self.sensor_calibration_data["gain_sigan"],
+            * self.sensor_calibration_data["gain_sensor"],
         }
         return annotation_md
 
