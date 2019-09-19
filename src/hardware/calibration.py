@@ -23,7 +23,9 @@ class Calibration(object):
     def get_clock_rate(self, sample_rate):
         """Find the clock rate (Hz) using the given sample_rate (samples per second)"""
         for mapping in self.clock_rate_lookup_by_sample_rate:
-            if mapping["sample_rate"] == sample_rate:
+            mapped = freq_to_compare(mapping["sample_rate"])
+            actual = freq_to_compare(sample_rate)
+            if mapped == actual:
                 return mapping["clock_frequency"]
         return sample_rate
 
@@ -31,7 +33,7 @@ class Calibration(object):
         """Find the calibration points closest to the current frequency/gain."""
 
         # Check if the sample rate was calibrated
-        sr = sample_rate
+        sr = freq_to_compare(sample_rate)
         srs = sorted(self.calibration_data.keys())
         if sr not in srs:
             logger.warning("Requested sample rate was not calibrated!")
@@ -180,6 +182,12 @@ class Calibration(object):
         return self.interpolate_1d(y, y1, y2, z_y1, z_y2)
 
 
+def freq_to_compare(f):
+    """Allow a frequency of type [float] to be compared with =="""
+    f = int(round(f))
+    return f
+
+
 def load_from_json(fname):
     with open(fname) as file:
         calibration = json.load(file)
@@ -194,7 +202,7 @@ def load_from_json(fname):
     # Load all the calibration data
     calibration_data = {}
     for sample_rate_row in calibration["calibration_data"]["sample_rates"]:
-        sr = sample_rate_row["sample_rate"]
+        sr = freq_to_compare(sample_rate_row["sample_rate"])
         for frequency_row in sample_rate_row["calibration_data"]["frequencies"]:
             f = frequency_row["frequency"]
             for gain_row in frequency_row["calibration_data"]["gains"]:
