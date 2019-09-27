@@ -275,10 +275,7 @@ class RadioInterface(object):
         self.recompute_calibration_data()
 
         # Compute the linear gain
-        db_gain = (
-            self.sensor_calibration_data["gain_preselector"]
-            + self.sigan_calibration_data["gain_sigan"]
-        )
+        db_gain = self.sensor_calibration_data["gain_sensor"]
         linear_gain = 10 ** (db_gain / 20.0)
 
         # Try to acquire the samples
