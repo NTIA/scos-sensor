@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import sys
-from environs import Env
 from os import path
+
+from environs import Env
 
 env = Env()
 
@@ -56,7 +57,8 @@ OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
 
 # JSON configs
-CALIBRATION_FILE = path.join(CONFIG_DIR, "calibration.json")
+SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
+SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
 SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, "actions")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")

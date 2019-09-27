@@ -2,6 +2,9 @@
 env
 db.sqlite3
 
+# Test generated files
+files/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

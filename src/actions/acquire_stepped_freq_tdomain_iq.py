@@ -45,6 +45,7 @@ import logging
 from itertools import zip_longest
 
 import numpy as np
+from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
@@ -53,8 +54,6 @@ from sensor import settings, utils
 from status.utils import get_location
 
 from .base import Action
-
-from django.core.files.base import ContentFile
 
 logger = logging.getLogger(__name__)
 
@@ -156,18 +155,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
-
-        annotation_md = {
-            "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-calibration:receiver_scaling_factor": self.sdr.radio.scale_factor,
-        }
-
-        location = get_location()
-        if location:
-            annotation_md["core:latitude"] = str(location.latitude)
-            annotation_md["core:longitude"] = str(location.longitude)
-
-        sigmf_md.add_annotation(start_index=0, length=nsamps, metadata=annotation_md)
+        calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
+        sigmf_md.add_annotation(
+            start_index=0, length=nsamps, metadata=calibration_annotation_md
+        )
 
         return data, sigmf_md
 

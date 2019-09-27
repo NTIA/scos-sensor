@@ -23,141 +23,153 @@ class Calibration(object):
     def get_clock_rate(self, sample_rate):
         """Find the clock rate (Hz) using the given sample_rate (samples per second)"""
         for mapping in self.clock_rate_lookup_by_sample_rate:
-            if mapping["sample_rate"] == sample_rate:
+            mapped = freq_to_compare(mapping["sample_rate"])
+            actual = freq_to_compare(sample_rate)
+            if mapped == actual:
                 return mapping["clock_frequency"]
         return sample_rate
 
-    # Interpolate to get the power scale factor
-    def get_power_scale_factor(self, lo_frequency, gain):
-        """Find the scale factor closest to the current frequency/gain."""
-        frequencies = sorted(self.calibration_data.keys())
+    def get_calibration_dict(self, sample_rate, lo_frequency, gain):
+        """Find the calibration points closest to the current frequency/gain."""
 
-        # Get the LO and gain for the usrp
+        # Check if the sample rate was calibrated
+        sr = freq_to_compare(sample_rate)
+        srs = sorted(self.calibration_data.keys())
+        if sr not in srs:
+            logger.warning("Requested sample rate was not calibrated!")
+            logger.warning("Assuming default sample rate:")
+            logger.warning("    Requested sample rate: {}".format(sr))
+            logger.warning("    Assumed sample rate:   {}".format(srs[0]))
+            sr = srs[0]
+
+        # Get the nearest calibrated frequency and its index
         f = lo_frequency
-        g = gain
-
-        # Get the frequency index range for the SF interpolation
-        f_i = 0
+        fs = sorted(self.calibration_data[sr].keys())
+        f_i = -1
         bypass_freq_interpolation = True
-        if f <= frequencies[0]:
+        if f < fs[0]:  # Frequency below calibrated range
             f_i = 0
-        elif f >= frequencies[-1]:
-            f_i = len(frequencies) - 1
+            logger.warning("Tuned frequency is below calibrated range!")
+            logger.warning("Assuming lowest frequency:")
+            logger.warning("    Tuned frequency:   {}".format(f))
+            logger.warning("    Assumed frequency: {}".format(fs[f_i]))
+        elif f > fs[-1]:  # Frequency above calibrated range
+            f_i = len(fs) - 1
+            logger.warning("Tuned frequency is above calibrated range!")
+            logger.warning("Assuming highest frequency:")
+            logger.warning("    Tuned frequency:   {}".format(f))
+            logger.warning("    Assumed frequency: {}".format(fs[f_i]))
         else:
-            # Narrow the frequency range to a division
+            # Ensure we use frequency interpolation
             bypass_freq_interpolation = False
-            f_div_min = frequencies[0]
-            f_div_max = frequencies[-1]
+            # Check if we are within a frequency division
             for div in self.calibration_frequency_divisions:
-                if f >= div["upper_bound"]:
-                    f_div_min = div["upper_bound"]
-                else:
-                    # Check if we are in the division
-                    if f > div["lower_bound"]:
-                        logger.warning("SDR tuned to within a division:")
-                        logger.warning("    LO frequency: {}".format(f))
-                        msg = "    Division: [{},{}]"
-                        lb = div["lower_bound"]
-                        ub = div["upper_bound"]
-                        msg = msg.format(lb, ub)
-                        logger.warning(msg)
-                        msg = "Assumed scale factor of lower boundary."
-                        logger.warning(msg)
-                        f_div_min = div["lower_bound"]
-                        f_div_max = div["lower_bound"]
-                        bypass_freq_interpolation = True
-                    else:
-                        f_div_max = div["lower_bound"]
-
-                    break
-            # Determine the index associated with the frequency/ies
-            for i in range(len(frequencies) - 1):
-                if frequencies[i] < f_div_min:
-                    continue
-                if frequencies[i + 1] > f_div_max:
-                    f_i = i
-                    break
-                if frequencies[i + 1] > f:
-                    f_i = i
+                if f > div["lower_bound"] and f < div["upper_bound"]:
+                    logger.warning("Tuned frequency within a division!")
+                    logger.warning("Assuming frequency at lower bound:")
+                    logger.warning("    Tuned frequency:   {}".format(f))
+                    logger.warning(
+                        "    Lower bound:       {}".format(div["lower_bound"])
+                    )
+                    logger.warning(
+                        "    Upper bound:       {}".format(div["upper_bound"])
+                    )
+                    logger.warning(
+                        "    Assumed frequency: {}".format(div["lower_bound"])
+                    )
+                    f = div[
+                        "lower_bound"
+                    ]  # Interpolation will force this point; no interpolation error
+            # Determine the index associated with the closest frequency less than or equal to f
+            for i in range(len(fs) - 1):
+                f_i = i
+                # If the next frequency is larger, we're done
+                if fs[i + 1] > f:
                     break
 
-        closest_frequency = frequencies[f_i]
-        next_highest_frequency = (
-            frequencies[f_i + 1] if f_i + 1 < len(frequencies) else None
-        )
-        gains = sorted(self.calibration_data[closest_frequency].keys())
-
-        # Get the gain index for the SF interpolation
-        g_i = 0
+        # Get the nearest calibrated gain and its index
+        g = gain
+        gs = sorted(self.calibration_data[sr][fs[f_i]].keys())
+        g_i = -1
+        g_fudge = 0
         bypass_gain_interpolation = True
-        if g <= gains[0]:
+        if g < gs[0]:  # Gain below calibrated range
             g_i = 0
-        elif g >= gains[-1]:
-            g_i = len(gains) - 1
+            g_fudge = g - gs[0]
+            logger.warning("Current gain is below calibrated range!")
+            logger.warning("Assuming lowest gain and extending:")
+            logger.warning("    Current gain: {}".format(g))
+            logger.warning("    Assumed gain: {}".format(gs[0]))
+            logger.warning("    Fudge factor: {}".format(g_fudge))
+        elif g > gs[-1]:  # Gain above calibrated range
+            g_i = len(gs) - 1
+            g_fudge = g - gs[-1]
+            logger.warning("Current gain is above calibrated range!")
+            logger.warning("Assuming lowest gain and extending:")
+            logger.warning("    Current gain: {}".format(g))
+            logger.warning("    Assumed gain: {}".format(gs[-1]))
+            logger.warning("    Fudge factor: {}".format(g_fudge))
         else:
+            # Ensure we use gain interpolation
             bypass_gain_interpolation = False
-            for i in range(len(gains) - 1):
-                if gains[i + 1] > g:
-                    g_i = i
+            # Determine the index associated with the closest gain less than or equal to g
+            for i in range(len(gs) - 1):
+                g_i = i
+                # If the next gain is larger, we're done
+                if gs[i + 1] > g:
                     break
 
-        closest_gain = gains[g_i]
-        next_highest_gain = gains[g_i + 1] if g_i + 1 < len(gains) else None
+        # Get the list of calibration factors
+        calibration_factors = self.calibration_data[sr][fs[f_i]][gs[g_i]].keys()
 
-        # Interpolate as needed
-        if bypass_gain_interpolation and bypass_freq_interpolation:
-            scale_factor = self.calibration_data[closest_frequency][closest_gain][
-                "scale_factor"
-            ]
-        elif bypass_freq_interpolation:
-            scale_factor = self.interpolate_1d(
-                g,
-                gains[g_i],
-                gains[g_i + 1],
-                self.calibration_data[closest_frequency][closest_gain]["scale_factor"],
-                self.calibration_data[closest_frequency][next_highest_gain][
-                    "scale_factor"
-                ],
-            )
-        elif bypass_gain_interpolation:
-            scale_factor = self.interpolate_1d(
-                f,
-                frequencies[f_i],
-                frequencies[f_i + 1],
-                self.calibration_data[closest_frequency][closest_gain]["scale_factor"],
-                self.calibration_data[next_highest_frequency][closest_gain][
-                    "scale_factor"
-                ],
-            )
-        else:
-            scale_factor = self.interpolate_2d(
-                f,
-                g,
-                frequencies[f_i],
-                frequencies[f_i + 1],
-                gains[g_i],
-                gains[g_i + 1],
-                self.calibration_data[closest_frequency][closest_gain]["scale_factor"],
-                self.calibration_data[next_highest_frequency][closest_gain][
-                    "scale_factor"
-                ],
-                self.calibration_data[closest_frequency][next_highest_gain][
-                    "scale_factor"
-                ],
-                self.calibration_data[next_highest_frequency][next_highest_gain][
-                    "scale_factor"
-                ],
-            )
+        # Interpolate as needed for each calibration point
+        interpolated_calibration = {}
+        for cal_factor in calibration_factors:
+            if bypass_gain_interpolation and bypass_freq_interpolation:
+                factor = self.calibration_data[sr][fs[f_i]][gs[g_i]][cal_factor]
+            elif bypass_freq_interpolation:
+                factor = self.interpolate_1d(
+                    g,
+                    gs[g_i],
+                    gs[g_i + 1],
+                    self.calibration_data[sr][fs[f_i]][gs[g_i]][cal_factor],
+                    self.calibration_data[sr][fs[f_i]][gs[g_i + 1]][cal_factor],
+                )
+            elif bypass_gain_interpolation:
+                factor = self.interpolate_1d(
+                    f,
+                    fs[f_i],
+                    fs[f_i + 1],
+                    self.calibration_data[sr][fs[f_i]][gs[g_i]][cal_factor],
+                    self.calibration_data[sr][fs[f_i + 1]][gs[g_i]][cal_factor],
+                )
+            else:
+                factor = self.interpolate_2d(
+                    f,
+                    g,
+                    fs[f_i],
+                    fs[f_i + 1],
+                    gs[g_i],
+                    gs[g_i + 1],
+                    self.calibration_data[sr][fs[f_i]][gs[g_i]][cal_factor],
+                    self.calibration_data[sr][fs[f_i + 1]][gs[g_i]][cal_factor],
+                    self.calibration_data[sr][fs[f_i]][gs[g_i + 1]][cal_factor],
+                    self.calibration_data[sr][fs[f_i + 1]][gs[g_i + 1]][cal_factor],
+                )
 
-        logger.debug("Using power scale factor: {}".format(scale_factor))
-        return scale_factor
+            # Apply the gain fudge factor based off the calibration type
+            if "gain" in cal_factor:
+                factor += g_fudge
+            if "noise_figure" in cal_factor:
+                factor -= g_fudge
+            if "compression" in cal_factor:
+                factor -= g_fudge
 
-    def get_scale_factor(self, lo_frequency, gain):
-        """Get the linear scale factor for the current setup."""
-        psf = self.get_power_scale_factor(lo_frequency, gain)
-        sf = 10 ** (psf / 20.0)
-        logger.debug("Using linear scale factor: {}".format(sf))
-        return sf
+            # Add the calibration factor to the interpolated list
+            interpolated_calibration[cal_factor] = factor
+
+        # Return the interpolated calibration factors
+        return interpolated_calibration
 
     def interpolate_1d(self, x, x1, x2, y1, y2):
         """Interpolate between points in one dimension."""
@@ -170,34 +182,40 @@ class Calibration(object):
         return self.interpolate_1d(y, y1, y2, z_y1, z_y2)
 
 
-def load_from_json(fname):
-    with open(fname) as f:
-        calibration = json.load(f)
+def freq_to_compare(f):
+    """Allow a frequency of type [float] to be compared with =="""
+    f = int(round(f))
+    return f
 
+
+def load_from_json(fname):
+    with open(fname) as file:
+        calibration = json.load(file)
+
+    # Check that the required fields are in the dict
     assert "calibration_datetime" in calibration
     assert "calibration_frequency_divisions" in calibration
-    assert "calibration_points" in calibration
+    assert "calibration_data" in calibration
     assert "clock_rate_lookup_by_sample_rate" in calibration
 
-    last_frequency = 0
-    last_gains = []
-    gains = []
+    # Load all the calibration data
     calibration_data = {}
-    for calibration_point in calibration["calibration_points"]:
-        frequency = calibration_point["freq_sigan"]
-        gain = calibration_point["gain_sigan"]
-        if frequency == last_frequency:
-            gains.append(gain)
-        else:
-            calibration_data[frequency] = {}
-            # gains should be equal for all calibration points
-            if last_gains and len(calibration_data) > 2:
-                assert gains == last_gains
-            last_gains = gains
-            gains = [gain]
-        last_frequency = frequency
-        calibration_data[frequency][gain] = calibration_point
+    for sample_rate_row in calibration["calibration_data"]["sample_rates"]:
+        sr = freq_to_compare(sample_rate_row["sample_rate"])
+        for frequency_row in sample_rate_row["calibration_data"]["frequencies"]:
+            f = frequency_row["frequency"]
+            for gain_row in frequency_row["calibration_data"]["gains"]:
+                g = gain_row["gain"]
+                cal_point = gain_row["calibration_data"]
 
+                # Make sure the dicts are feshed out
+                if sr not in calibration_data.keys():
+                    calibration_data[sr] = {}
+                if f not in calibration_data[sr].keys():
+                    calibration_data[sr][f] = {}
+                calibration_data[sr][f][g] = cal_point
+
+    # Create and return the Calibration object
     return Calibration(
         calibration["calibration_datetime"],
         calibration_data,
