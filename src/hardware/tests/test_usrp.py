@@ -6,24 +6,16 @@ from copy import deepcopy
 
 import pytest
 
-import hardware.tests.resources.utils as test_utils
 from hardware import usrp_iface
+from hardware.tests.resources.utils import easy_gain, is_close
 
 
 class TestUSRP:
     # Ensure we write the test cal file and use mocks
     setup_complete = False
 
-    def easy_gain(self, f, g):
-        """ Create an easily interpolated value """
-        return (g) + (f / 1e9)
-
-    def is_close(self, a, b, tolerance):
-        """ Handle floating point comparisons """
-        return abs(a - b) <= tolerance
-
     @pytest.fixture(autouse=True)
-    def setup_calibration_file(self, tmpdir):
+    def setup_mock_usrp(self):
         """ Create the mock USRP """
 
         # Only setup once
@@ -114,7 +106,7 @@ class TestUSRP:
         data = self.rx.acquire_samples(1000)
 
         # The true value should be the 1 / linear gain
-        true_val = test_utils.easy_gain(int(10e6), 1e9, 20) - 10
+        true_val = easy_gain(int(10e6), 1e9, 20) - 10
         true_val = 10 ** (-1 * float(true_val) / 20)
 
         # Get the observed value
@@ -126,7 +118,7 @@ class TestUSRP:
         msg += "    Algorithm: {}\n".format(observed_val)
         msg += "    Expected: {}\n".format(true_val)
         msg += "    Tolerance: {}\r\n".format(tolerance)
-        assert self.is_close(true_val, observed_val, tolerance), msg
+        assert is_close(true_val, observed_val, tolerance), msg
 
     def test_set_sample_rate_also_sets_clock_rate(self):
         """Setting sample_rate should adjust clock_rate"""

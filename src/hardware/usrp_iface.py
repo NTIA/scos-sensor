@@ -150,8 +150,9 @@ class RadioInterface(object):
         else:
             clock_rate = self.sample_rate
             # Maximize clock rate while keeping it under 40e6
-            while clock_rate <= 20e6:
+            while clock_rate <= 40e6:
                 clock_rate *= 2
+            clock_rate /= 2
         self.clock_rate = clock_rate
 
     @property

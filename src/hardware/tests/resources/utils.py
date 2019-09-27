@@ -8,6 +8,11 @@ def easy_gain(sr, f, g):
     return (g) + (sr / 1e6) + (f / 1e9)
 
 
+def is_close(a, b, tolerance):
+    """ Handle floating point comparisons """
+    return abs(a - b) <= tolerance
+
+
 def create_dummy_calibration():
     """Create a dummy calibration object"""
 

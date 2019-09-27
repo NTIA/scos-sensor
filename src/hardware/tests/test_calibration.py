@@ -9,15 +9,12 @@ from os import path
 import pytest
 
 from hardware import calibration
+from hardware.tests.resources.utils import easy_gain, is_close
 
 
 class TestCalibrationFile:
     # Ensure we load the test file
     setup_complete = False
-
-    def easy_gain(self, sr, f, g):
-        """ Create an easily interpolated value """
-        return (g) + (sr / 1e6) + (f / 1e9)
 
     def rand_index(self, l):
         """ Get a random index for a list """
@@ -32,12 +29,14 @@ class TestCalibrationFile:
             if duplicate_f and duplicate_g and duplicate_sr:
                 return True
 
-    def is_close(self, a, b, tolerance):
-        """ Handle floating point comparisons """
-        return abs(a - b) <= tolerance
-
     def run_pytest_point(self, sr, f, g, reason, sr_m=False, f_m=False, g_m=False):
-        """ Test the calculated value against the algorithm """
+        """ Test the calculated value against the algorithm
+            Parameters:
+                sr, f, g -> Set values for the mock USRP
+                reason: Test case string for failure reference
+                sr_m, f_m, g_m -> Set values to use when calculating the expected value
+                                  May differ in from actual set points in edge cases
+                                  such as tuning in divisions or uncalibrated sample rate"""
         # Check that the setup was completed
         assert self.setup_complete, "Setup was not completed"
 
@@ -54,7 +53,7 @@ class TestCalibrationFile:
             sr_m = sr
 
         # Calculate what the scale factor should be
-        calc_gain_sigan = self.easy_gain(sr_m, f_m, g_m)
+        calc_gain_sigan = easy_gain(sr_m, f_m, g_m)
 
         # Get the scale factor from the algorithm
         interp_cal_data = self.sample_cal.get_calibration_dict(sr, f, g)
@@ -84,7 +83,7 @@ class TestCalibrationFile:
         msg = "{}    Formula: -1 * (Gain - Frequency[GHz] - Sample Rate[MHz])\r\n".format(
             msg
         )
-        assert self.is_close(calc_gain_sigan, interp_gain_siggan, tolerance), msg
+        assert is_close(calc_gain_sigan, interp_gain_siggan, tolerance), msg
         return True
 
     @pytest.fixture(autouse=True)
@@ -171,7 +170,7 @@ class TestCalibrationFile:
                     cal_data_g["gain"] = gains[j]
 
                     # Create the scale factor that ensures easy interpolation
-                    gain_sigan = self.easy_gain(
+                    gain_sigan = easy_gain(
                         self.sample_rates[k], frequencies[i], gains[j]
                     )
 
@@ -193,7 +192,6 @@ class TestCalibrationFile:
         # Write the new json file
         with open(self.calibration_file, "w+") as file:
             json.dump(cal_data, file, indent=4)
-            file.close()
 
         # Load the data back in
         self.sample_cal = calibration.load_from_json(self.calibration_file)

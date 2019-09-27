@@ -191,7 +191,6 @@ def freq_to_compare(f):
 def load_from_json(fname):
     with open(fname) as file:
         calibration = json.load(file)
-        file.close()
 
     # Check that the required fields are in the dict
     assert "calibration_datetime" in calibration
