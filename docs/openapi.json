@@ -1126,6 +1126,8 @@
                         "acquire_m4s_700MHz_Verizon_DL",
                         "acquire_m4s_700MHz_Verizon_UL",
                         "logger",
+                        "survey_700MHz_band_20dB_80ms_iq",
+                        "survey_700MHz_band_40dB_80ms_iq",
                         "survey_700MHz_band_iq",
                         "mock_acquire",
                         "mock_multirec_acquire",
