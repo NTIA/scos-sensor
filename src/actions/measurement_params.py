@@ -3,7 +3,15 @@ class MeasurementParams:
     class for holding parameters needed for spectrum monitoring measurement
     """
 
-    def __init__(self, center_frequency, gain, sample_rate, duration_ms=None, fft_size=None, num_ffts=None):
+    def __init__(
+        self,
+        center_frequency,
+        gain,
+        sample_rate,
+        duration_ms=None,
+        fft_size=None,
+        num_ffts=None,
+    ):
         self.center_frequency = center_frequency
         self.gain = gain
         self.sample_rate = sample_rate

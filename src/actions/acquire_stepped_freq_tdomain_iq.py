@@ -97,12 +97,12 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
                 err = "Wrong number of {}s, expected {}"
                 raise TypeError(err.format(param_name, num_center_frequencies))
 
-            #measurement_params_list[center_frequency] = dict(zip(parameter_names, params))
-            measurement_params_list.append(MeasurementParams(**dict(zip(parameter_names, params))))
+            measurement_params_list.append(
+                MeasurementParams(**dict(zip(parameter_names, params)))
+            )
 
         self.name = name
         self.num_center_frequencies = num_center_frequencies
-        #self.center_frequencies = center_frequencies
         self.measurement_params_list = measurement_params_list
         self.sdr = sdr  # make instance variable to allow mocking
 
@@ -117,10 +117,11 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         self.test_required_components()
 
-        #for recording_id, center_frequency in enumerate(self.center_frequencies, start=1):
-        for recording_id, measurement_params in enumerate(self.measurement_params_list, start=1):
+        for recording_id, measurement_params in enumerate(
+            self.measurement_params_list, start=1
+        ):
             data = self.acquire_data(measurement_params, task_id)
-            sigmf_md = self.build_sigmf_md(task_id, measurement_params)
+            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data)
             self.archive(task_result, recording_id, data, sigmf_md)
 
     def test_required_components(self):
@@ -130,10 +131,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
-    #def acquire_data(self, fc, task_id):
     def acquire_data(self, measurement_params, task_id):
-        #tuning_parameters = self.measurement_params_list[fc]
-        #elf.configure_sdr(fc, **tuning_parameters)
         self.configure_sdr(measurement_params)
 
         # Use the radio's actual reported sample rate instead of requested rate
@@ -142,17 +140,18 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         # Acquire data and build per-capture metadata
         data = np.array([], dtype=np.complex64)
 
-        #nsamps = self.get_num_samples(fc)
         num_samples = measurement_params.get_num_samples()
 
         # Drop ~10 ms of samples
         nskip = int(0.01 * sample_rate)
-        acq = self.sdr.radio.acquire_samples(num_samples, nskip=nskip).astype(np.complex64)
+        acq = self.sdr.radio.acquire_samples(num_samples, nskip=nskip).astype(
+            np.complex64
+        )
         data = np.append(data, acq)
 
         return data
 
-    def build_sigmf_md(self, task_id, measurement_params):
+    def build_sigmf_md(self, task_id, measurement_params, data):
         # Build global metadata
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
@@ -181,6 +180,42 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=calibration_annotation_md
+        )
+
+        time_domain_detection_md = {
+            "ntia-core:annotation_type": "TimeDomainDetection",
+            "ntia-algorithm:detector": "sample_iq",
+            "ntia-algorithm:detection_domain": "time",
+            "ntia-algorithm:number_of_samples": num_samples,
+            "ntia-algorithm:units": "volts",
+            "ntia-algorithm:reference": "not referenced",
+        }
+        sigmf_md.add_annotation(
+            start_index=0, length=num_samples, metadata=time_domain_detection_md
+        )
+
+        # calculate power
+        power = np.abs(data)
+        power = np.square(power)
+        max_power = np.max(power)
+
+        location = get_location()
+
+        sensor_annotation_md = {
+            "ntia-core:annotation_type": "SensorAnnotation",
+            "ntia-sensor:overload_sensor": max_power
+            > self.sdr.radio.sensor_calibration_data["1dB_compression_sensor"],
+            "ntia-sensor:overload_sigan": max_power
+            > self.sdr.radio.sigan_calibration_data["1dB_compression_sigan"],
+            "ntia-sensor:gain_setting_sigan": measurement_params.gain,
+        }
+
+        if location:
+            sensor_annotation_md["core:latitude"] = (location.latitude,)
+            sensor_annotation_md["core:longitude"] = location.longitude
+
+        sigmf_md.add_annotation(
+            start_index=0, length=num_samples, metadata=sensor_annotation_md
         )
 
         return sigmf_md
@@ -224,18 +259,18 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         acq_plan_template += "for {duration_ms} ms\n"
 
         total_samples = 0
-        #for fc in self.center_frequencies:
         for measurement_params in self.measurement_params_list:
-            #acquisition_plan += acq_plan_template.format(**tuning_params)
             acq_plan_template.format(
                 **{
                     "fc_MHz": measurement_params.center_frequency / 1e6,
                     "gain": measurement_params.gain,
                     "sample_rate_Msps": measurement_params.sample_rate / 1e6,
-                    "duration_ms": measurement_params.duration_ms
+                    "duration_ms": measurement_params.duration_ms,
                 }
             )
-            total_samples += int(measurement_params.duration_ms / 1e6 * measurement_params.sample_rate)
+            total_samples += int(
+                measurement_params.duration_ms / 1e6 * measurement_params.sample_rate
+            )
 
         f_low = self.measurement_params_list[0].center_frequency
         f_low_srate = self.measurement_params_list[0].sample_rate
@@ -254,7 +289,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             "name": self.name,
             "num_center_frequencies": self.num_center_frequencies,
             "center_frequencies": ", ".join(
-                ["{:.2f} MHz".format(param.center_frequency / 1e6) for param in self.measurement_params_list]
+                [
+                    "{:.2f} MHz".format(param.center_frequency / 1e6)
+                    for param in self.measurement_params_list
+                ]
             ),
             "acquisition_plan": acquisition_plan,
             "min_duration_ms": min_duration_ms,

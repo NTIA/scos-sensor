@@ -263,8 +263,22 @@ class RadioInterface(object):
     def create_calibration_annotation(self):
         annotation_md = {
             "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-calibration:receiver_scaling_factor": -1
-            * self.sensor_calibration_data["gain_sensor"],
+            "ntia-sensor:gain_sigan": -1 * self.sigan_calibration_data["gain_sigan"],
+            "ntia-sensor:noise_figure_sigan": self.sigan_calibration_data[
+                "noise_figure_sigan"
+            ],
+            "ntia-sensor:1db_compression_point_sigan": self.sigan_calibration_data[
+                "1db_compression_sigan"
+            ],
+            "ntia-sensor:enbw_sigan": self.sigan_calibration_data["enbw_sigan"],
+            "ntia-sensor:noise_figure_sensor": self.sensor_calibration_data[
+                "noise_figure_sensor"
+            ],
+            "ntia-sensor:1db_compression_point_sensor": self.sensor_calibration_data[
+                "1db_compression_sensor"
+            ],
+            "ntia-sensor:enbw_sensor": self.sensor_calibration_data["enbw_sensor"],
+            "ntia-sensor:mean_noise_power_sensor": "",
         }
         return annotation_md
 

@@ -158,17 +158,12 @@ class SingleFrequencyFftAcquisition(Action):
         super(SingleFrequencyFftAcquisition, self).__init__()
 
         self.name = name
-        # self.center_frequency = center_frequency
-        # self.gain = gain
-        # self.sample_rate = sample_rate
-        # self.fft_size = fft_size
-        # self.nffts = nffts
         self.measurement_params = MeasurementParams(
             center_frequency=frequency,
             gain=gain,
             sample_rate=sample_rate,
             fft_size=fft_size,
-            num_ffts=nffts
+            num_ffts=nffts,
         )
         self.sdr = sdr  # make instance variable to allow mocking
         self.enbw = None
@@ -186,7 +181,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.configure_sdr()
         data = self.acquire_data()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md(task_id)
+        sigmf_md = self.build_sigmf_md(task_id, data)
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -217,7 +212,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id):
+    def build_sigmf_md(self, task_id, data):
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
@@ -247,8 +242,6 @@ class SingleFrequencyFftAcquisition(Action):
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
-        location = get_location()
-
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
@@ -259,14 +252,8 @@ class SingleFrequencyFftAcquisition(Action):
                 "ntia-algorithm:number_of_ffts": self.measurement_params.num_ffts,
                 "ntia-algorithm:units": "dBm",
                 "ntia-algorithm:reference": "not referenced",
-                "nita-algorithm:detection_domain": "frequency"
+                "nita-algorithm:detection_domain": "frequency",
             }
-
-            if location:
-                frequency_domain_detection_md["core:latitude"] = str(location.latitude)
-                frequency_domain_detection_md["core:longitude"] = str(
-                    location.longitude
-                )
 
             sigmf_md.add_annotation(
                 start_index=(i * self.measurement_params.fft_size),
@@ -274,12 +261,36 @@ class SingleFrequencyFftAcquisition(Action):
                 metadata=frequency_domain_detection_md,
             )
 
-            calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
-            sigmf_md.add_annotation(
-                start_index=0,
-                length=self.measurement_params.fft_size,
-                metadata=calibration_annotation_md
-            )
+        calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
+        sigmf_md.add_annotation(
+            start_index=0,
+            length=self.measurement_params.fft_size * len(M4sDetector),
+            metadata=calibration_annotation_md,
+        )
+
+        location = get_location()
+        max_power = data[
+            self.measurement_params.fft_size : self.measurement_params.fft_size
+        ]
+        max_power = np.max(max_power)
+        sensor_annotation_md = {
+            "ntia-core:annotation_type": "SensorAnnotation",
+            "ntia-sensor:overload_sensor": max_power
+            > self.sdr.radio.sensor_calibration_data["1dB_compression_sensor"],
+            "ntia-sensor:overload_sigan": max_power
+            > self.sdr.radio.sigan_calibration_data["1dB_compression_sigan"],
+            "ntia-sensor:gain_setting_sigan": self.measurement_params.gain,
+        }
+
+        if location:
+            sensor_annotation_md["core:latitude"] = (location.latitude,)
+            sensor_annotation_md["core:longitude"] = location.longitude
+
+        sigmf_md.add_annotation(
+            start_index=0,
+            length=self.measurement_params.fft_size * len(M4sDetector),
+            metadata=sensor_annotation_md,
+        )
 
         return sigmf_md
 
