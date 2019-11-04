@@ -52,6 +52,7 @@ def create_dummy_calibration():
                     "gain_sigan": easy_gain(sr, f, g),
                     "gain_preselector": -10,
                     "gain_sensor": easy_gain(sr, f, g) - 10,
+                    "1dB_compression_sensor": 1,
                 }
 
     return Calibration(

@@ -268,20 +268,29 @@ class SingleFrequencyFftAcquisition(Action):
             metadata=calibration_annotation_md,
         )
 
-        location = get_location()
-        max_power = data[
-            self.measurement_params.fft_size : self.measurement_params.fft_size
-        ]
-        max_power = np.max(max_power)
+        # Recover the sigan overload flag
+        sigan_overload = self.sdr.radio.sigan_overload
+
+        # Check time domain average power versus calibrated compression
+        flattened_data = data.flatten()
+        time_domain_avg_power = 10 * np.log10(np.mean(np.abs(flattened_data) ** 2))
+        time_domain_avg_power += (
+            10 * np.log10(1 / (2 * 50)) + 30
+        )  # Convert log(V^2) to dBm
+        sensor_overload = (
+            time_domain_avg_power
+            > self.sdr.radio.sensor_calibration_data["1dB_compression_sensor"]
+        )
+
+        # Create SensorAnnotation and add gain setting and overload indicators
         sensor_annotation_md = {
             "ntia-core:annotation_type": "SensorAnnotation",
-            "ntia-sensor:overload_sensor": max_power
-            > self.sdr.radio.sensor_calibration_data["1dB_compression_sensor"],
-            "ntia-sensor:overload_sigan": max_power
-            > self.sdr.radio.sigan_calibration_data["1dB_compression_sigan"],
+            "ntia-sensor:overload_sensor": sensor_overload,
+            "ntia-sensor:overload_sigan": sigan_overload,
             "ntia-sensor:gain_setting_sigan": self.measurement_params.gain,
         }
 
+        location = get_location()
         if location:
             sensor_annotation_md["core:latitude"] = (location.latitude,)
             sensor_annotation_md["core:longitude"] = location.longitude
