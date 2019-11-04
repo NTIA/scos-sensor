@@ -279,7 +279,7 @@ class SingleFrequencyFftAcquisition(Action):
         )  # Convert log(V^2) to dBm
         sensor_overload = (
             time_domain_avg_power
-            > self.sdr.radio.sensor_calibration_data["1dB_compression_sensor"]
+            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
         )
 
         # Create SensorAnnotation and add gain setting and overload indicators
