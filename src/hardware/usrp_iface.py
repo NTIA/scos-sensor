@@ -100,7 +100,7 @@ class RadioInterface(object):
     }
 
     # Define the returned sample value for an ADC overload trigger
-    ADC_OVERLOAD_THRESHOLD = 1  # Get real value
+    ADC_OVERLOAD_THRESHOLD = 0.98  # ADC scale -1<sample<1
 
     def __init__(
         self,
