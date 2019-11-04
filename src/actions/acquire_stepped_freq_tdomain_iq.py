@@ -48,14 +48,13 @@ import numpy as np
 from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
+from actions.measurement_params import MeasurementParams
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
 from status.utils import get_location
 
 from .base import Action
-
-from actions.measurement_params import MeasurementParams
 
 logger = logging.getLogger(__name__)
 
@@ -194,22 +193,28 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             start_index=0, length=num_samples, metadata=time_domain_detection_md
         )
 
-        # calculate power
-        power = np.abs(data)
-        power = np.square(power)
-        max_power = np.max(power)
+        # Recover the sigan overload flag
+        sigan_overload = self.sdr.radio.sigan_overload
 
-        location = get_location()
+        # Check time domain average power versus calibrated compression
+        time_domain_avg_power = 10 * np.log10(np.mean(np.abs(data) ** 2))
+        time_domain_avg_power += (
+            10 * np.log10(1 / (2 * 50)) + 30
+        )  # Convert log(V^2) to dBm
+        sensor_overload = (
+            time_domain_avg_power
+            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
+        )
 
+        # Create SensorAnnotation and add gain setting and overload indicators
         sensor_annotation_md = {
             "ntia-core:annotation_type": "SensorAnnotation",
-            "ntia-sensor:overload_sensor": max_power
-            > self.sdr.radio.sensor_calibration_data["1dB_compression_sensor"],
-            "ntia-sensor:overload_sigan": max_power
-            > self.sdr.radio.sigan_calibration_data["1dB_compression_sigan"],
+            "ntia-sensor:overload_sensor": sensor_overload,
+            "ntia-sensor:overload_sigan": sigan_overload,
             "ntia-sensor:gain_setting_sigan": measurement_params.gain,
         }
 
+        location = get_location()
         if location:
             sensor_annotation_md["core:latitude"] = (location.latitude,)
             sensor_annotation_md["core:longitude"] = location.longitude
