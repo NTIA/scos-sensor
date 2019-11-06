@@ -99,8 +99,11 @@ class RadioInterface(object):
         "1db_compression_preselector": 100,
     }
 
-    # Define the returned sample value for an ADC overload trigger
-    ADC_OVERLOAD_THRESHOLD = 0.98  # ADC scale -1<sample<1
+    # Define thresholds for determining ADC overload for the sigan
+    ADC_FULL_RANGE_THRESHOLD = 0.98  # ADC scale -1<sample<1, magnitude threshold = 0.98
+    ADC_OVERLOAD_THRESHOLD = (
+        0.01
+    )  # Ratio of samples above the ADC full range to trigger overload
 
     def __init__(
         self,
@@ -338,10 +341,15 @@ class RadioInterface(object):
                 self.sigan_overload = False
                 i_samples = np.abs(np.real(data))
                 q_samples = np.abs(np.imag(data))
-                max_i = np.max(i_samples)
-                max_q = np.max(q_samples)
-                max_sample = np.max([max_i, max_q])
-                if max_sample > self.ADC_OVERLOAD_THRESHOLD:
+                i_over_threshold = sum(
+                    i > self.ADC_FULL_RANGE_THRESHOLD for i in i_samples
+                )
+                q_over_threshold = sum(
+                    q > self.ADC_FULL_RANGE_THRESHOLD for q in q_samples
+                )
+                total_over_threshold = i_over_threshold + q_over_threshold
+                ratio_over_threshold = float(total_over_threshold) / n
+                if ratio_over_threshold > self.ADC_OVERLOAD_THRESHOLD:
                     self.sigan_overload = True
 
                 # Scale the data back to RF power and return it
