@@ -36,12 +36,12 @@ def test_single_acquisition_archive_download(user_client, test_scheduler):
         datafile = sigmf_archive_contents.data_file
         datafile_actual_size = os.stat(datafile).st_size
         claimed_sha512 = md["global"]["core:sha512"]
-        number_of_sample_arrays = len(md["annotations"])
-        samples_per_array = md["annotations"][0]["core:sample_count"]
-        sample_array_size = samples_per_array * np.float32(0.0).nbytes
-        datafile_expected_size = number_of_sample_arrays * sample_array_size
+        total_samples = 0
+        for annotation in md["annotations"]:
+            if annotation["ntia-core:annotation_type"] == "FrequencyDomainDetection":
+                total_samples += annotation["core:sample_count"]
+        datafile_expected_size = total_samples * np.float32(0.0).nbytes
         actual_sha512 = sigmf.sigmf_hash.calculate_sha512(datafile)
-
         assert datafile_actual_size == datafile_expected_size
         assert claimed_sha512 == actual_sha512
 
@@ -66,7 +66,7 @@ def test_multirec_acquisition_archive_download(user_client, test_scheduler):
         assert len(sigmf_archive_contents) == 3
 
 
-def test_all_acquisitions_archive_download(user_client, test_scheduler):
+def test_all_acquisitions_archive_download(user_client, test_scheduler, tmpdir):
     entry_name = simulate_acquisitions(user_client, n=3)
     url = reverse_archive_all(entry_name)
     disposition = 'attachment; filename="{}_test_multiple_acq.sigmf"'
@@ -77,9 +77,12 @@ def test_all_acquisitions_archive_download(user_client, test_scheduler):
     assert response["content-disposition"] == disposition
     assert response["content-type"] == "application/x-tar"
 
-    with tempfile.NamedTemporaryFile() as tf:
+    import os.path
+
+    perm_temp_fname = os.path.join(tmpdir, "test_sigmf.tar")
+    with open(perm_temp_fname, "wb+") as tf:
         for content in response.streaming_content:
             tf.write(content)
 
-        sigmf_archive_contents = sigmf.archive.extract(tf.name)
-        assert len(sigmf_archive_contents) == 3
+    sigmf_archive_contents = sigmf.archive.extract(perm_temp_fname)
+    assert len(sigmf_archive_contents) == 3
