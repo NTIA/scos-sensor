@@ -185,14 +185,15 @@ class ScannedFrequencyFftAcquisition(Action):
         frequency_list = self.determine_center_frequencies()
         actual_frequency_list = []
         self.compute_window_narrowing_indeces()
-        self.sigmf_md = self.initialize_sigmf_md(task_id, frequency_list)
-        for f0 in frequency_list:
-            actual_frequency = self.set_sdr_frequency(f0)
+        self.sigmf_md = self.initialize_sigmf_md(task_id)
+        for i in range(len(frequency_list)):
+            center_frequency = frequency_list[i]
+            actual_frequency = self.set_sdr_frequency(center_frequency)
             actual_frequency_list.append(actual_frequency)
             sub_data = self.acquire_data()
             sub_m4s_data = self.apply_detector(sub_data)
             m4s_data = np.append(m4s_data, sub_m4s_data, axis=1)
-            self.add_sigmf_annotations()
+            self.add_sigmf_annotations(sub_data, i)
         self.archive(task_result, m4s_data, self.sigmf_md)
 
     def test_required_components(self):
@@ -212,6 +213,7 @@ class ScannedFrequencyFftAcquisition(Action):
         while self.end_frequency > last_f0_limit:
             next_f0 = f0s[-1] + self.sample_rate - (2 * self.FFT_WINDOW_NARROWING)
             f0s.append(next_f0)
+        self.blocks_in_sweep = len(f0s)
         return f0s
 
     def configure_sdr(self):
@@ -237,6 +239,7 @@ class ScannedFrequencyFftAcquisition(Action):
         narrowing_index = self.fft_size * (self.FFT_WINDOW_NARROWING / self.sample_rate)
         self.lower_window_index = int(narrowing_index)
         self.upper_window_index = int(self.fft_size - narrowing_index)
+        self.narrowed_fft_size = self.upper_window_index - self.lower_window_index - 1
 
     def acquire_data(self):
         """ Acquire samples with the current SDR configuration """
@@ -248,7 +251,7 @@ class ScannedFrequencyFftAcquisition(Action):
 
         return data
 
-    def initialize_sigmf_md(self, task_id, frequency_list):
+    def initialize_sigmf_md(self, task_id):
         logger.debug("Initializing SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
@@ -291,9 +294,7 @@ class ScannedFrequencyFftAcquisition(Action):
                     location.longitude
                 )
 
-            samples_per_fft = (self.fft_size - self.FFT_WINDOW_NARROWING) * len(
-                frequency_list
-            )
+            samples_per_fft = self.narrowed_fft_size * self.blocks_in_sweep
             sigmf_md.add_annotation(
                 start_index=(i * samples_per_fft),
                 length=samples_per_fft,
@@ -302,24 +303,17 @@ class ScannedFrequencyFftAcquisition(Action):
 
         return sigmf_md
 
-    def add_sigmf_annotations(self):
-        pass
-        """
-        Hold these until SigMF updates pulled to master
+    def add_sigmf_annotations(self, sub_data, block_number):
+        scan_length = self.blocks_in_sweep * self.narrowed_fft_size
 
-        final_fft_length = self.fft_size - 2*self.FFT_WINDOW_NARROWING
+        # Get the calibration data from the sigan
         calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
-        sigmf_md.add_annotation(
-            start_index=0,
-            length=final_fft_length,
-            metadata=calibration_annotation_md,
-        )
 
-        # Recover the sigan overload flag
-        sigan_overload = self.sdr.radio.sigan_overload
+        # Recover the sigan overload flag (wait for SigMF updates to be pulled in)
+        sigan_overload = False  # self.sdr.radio.sigan_overload
 
         # Check time domain average power versus calibrated compression
-        flattened_data = data.flatten()
+        flattened_data = sub_data.flatten()
         time_domain_avg_power = 10 * np.log10(np.mean(np.abs(flattened_data) ** 2))
         time_domain_avg_power += (
             10 * np.log10(1 / (2 * 50)) + 30
@@ -334,17 +328,40 @@ class ScannedFrequencyFftAcquisition(Action):
             "ntia-core:annotation_type": "SensorAnnotation",
             "ntia-sensor:overload_sensor": sensor_overload,
             "ntia-sensor:overload_sigan": sigan_overload,
-            "ntia-sensor:gain_setting_sigan": self.measurement_params.gain,
+            "ntia-sensor:gain_setting_sigan": self.sdr.radio.gain,
         }
+        location = get_location()
+        if location:
+            sensor_annotation_md["core:latitude"] = (location.latitude,)
+            sensor_annotation_md["core:longitude"] = location.longitude
 
-
-        capture_md = {# Add the captures as we go along
+        # Create the capture
+        capture_md = {
             "core:frequency": self.start_frequency,
             "core:datetime": utils.get_datetime_str_now(),
         }
 
-        sigmf_md.add_capture(start_index=0, metadata=capture_md)
-        """
+        # Add annotations/captures for this segment
+        for i in range(len(m4s_detector)):
+            # Determine the start index
+            start_index = (i * scan_length) + self.narrowed_fft_size * block_number
+
+            # Add the SensorAnnotation
+            self.sigmf_md.add_annotation(
+                start_index=start_index,
+                length=self.narrowed_fft_size,
+                metadata=sensor_annotation_md,
+            )
+
+            # Add the CalibrationAnnotation
+            self.sigmf_md.add_annotation(
+                start_index=start_index,
+                length=self.narrowed_fft_size,
+                metadata=calibration_annotation_md,
+            )
+
+            # Add the Capture
+            self.sigmf_md.add_capture(start_index=start_index, metadata=capture_md)
 
     def apply_detector(self, data):
         """Take FFT of data, apply detector, and translate watts to dBm."""
