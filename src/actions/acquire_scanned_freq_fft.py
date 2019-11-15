@@ -16,13 +16,13 @@
 # - Markdown reference: https://commonmark.org/help/
 # - SCOS Markdown Editor: https://ntia.github.io/scos-md-editor/
 #
-r"""Apply m4s detector over {nffts} {fft_size}-pt FFTs at {frequency:.2f} MHz.
+r"""Apply m4s detector over {nffts} {fft_size}-pt FFTs at {start_frequency:.2f} MHz.
 
 # {name}
 
 ## Radio setup and sample acquisition
 
-This action first tunes the radio to {frequency:.2f} MHz and requests a sample
+This action first tunes the radio to {start_frequency:.2f} MHz and requests a sample
 rate of {sample_rate:.2f} Msps and {gain} dB of gain.
 
 It then begins acquiring, and discards an appropriate number of samples while
@@ -91,6 +91,7 @@ The resulting matrix is real-valued, 32-bit floats representing dBm.
 """
 
 import logging
+from copy import deepcopy
 from enum import Enum
 
 import numpy as np
@@ -186,6 +187,7 @@ class ScannedFrequencyFftAcquisition(Action):
         actual_frequency_list = []
         self.compute_window_narrowing_indeces()
         self.sigmf_md = self.initialize_sigmf_md(task_id)
+        m4s_data = np.asarray([[], [], [], [], []])
         for i in range(len(frequency_list)):
             center_frequency = frequency_list[i]
             actual_frequency = self.set_sdr_frequency(center_frequency)
@@ -209,8 +211,10 @@ class ScannedFrequencyFftAcquisition(Action):
             self.start_frequency + (self.sample_rate / 2) - self.FFT_WINDOW_NARROWING
         )
         f0s = [starting_f0]
-        last_f0_limit = f0s[-1] + (self.sample_rate / 2) - self.FFT_WINDOW_NARROWING
-        while self.end_frequency > last_f0_limit:
+        while (
+            self.end_frequency
+            > f0s[-1] + (self.sample_rate / 2) - self.FFT_WINDOW_NARROWING
+        ):
             next_f0 = f0s[-1] + self.sample_rate - (2 * self.FFT_WINDOW_NARROWING)
             f0s.append(next_f0)
         self.blocks_in_sweep = len(f0s)
@@ -342,7 +346,7 @@ class ScannedFrequencyFftAcquisition(Action):
         }
 
         # Add annotations/captures for this segment
-        for i in range(len(m4s_detector)):
+        for i, detector in enumerate(M4sDetector):
             # Determine the start index
             start_index = (i * scan_length) + self.narrowed_fft_size * block_number
 
@@ -350,18 +354,20 @@ class ScannedFrequencyFftAcquisition(Action):
             self.sigmf_md.add_annotation(
                 start_index=start_index,
                 length=self.narrowed_fft_size,
-                metadata=sensor_annotation_md,
+                metadata=deepcopy(sensor_annotation_md),
             )
 
             # Add the CalibrationAnnotation
             self.sigmf_md.add_annotation(
                 start_index=start_index,
                 length=self.narrowed_fft_size,
-                metadata=calibration_annotation_md,
+                metadata=deepcopy(calibration_annotation_md),
             )
 
             # Add the Capture
-            self.sigmf_md.add_capture(start_index=start_index, metadata=capture_md)
+            self.sigmf_md.add_capture(
+                start_index=start_index, metadata=deepcopy(capture_md)
+            )
 
     def apply_detector(self, data):
         """Take FFT of data, apply detector, and translate watts to dBm."""

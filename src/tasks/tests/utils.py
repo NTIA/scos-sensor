@@ -45,7 +45,7 @@ SINGLE_MULTI_RECORDING_ACQUISITION = {
 }
 
 
-def simulate_acquisitions(client, n=1, is_private=False, name=None):
+def simulate_acquisitions(client, n=1, is_private=False, name=None, action=None):
     assert 0 < n <= 10
 
     if n == 1:
@@ -58,6 +58,9 @@ def simulate_acquisitions(client, n=1, is_private=False, name=None):
 
     if name is not None:
         schedule_entry["name"] = name
+
+    if action is not None:
+        schedule_entry["action"] = action
 
     entry = post_schedule(client, schedule_entry)
     simulate_scheduler_run(n)

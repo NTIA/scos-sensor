@@ -6,6 +6,7 @@ from ruamel.yaml import YAML
 from sensor import settings
 
 from . import logger as logger_action
+from .acquire_scanned_freq_fft import ScannedFrequencyFftAcquisition
 from .acquire_single_freq_fft import SingleFrequencyFftAcquisition
 from .acquire_stepped_freq_tdomain_iq import SteppedFrequencyTimeDomainIqAcquisition
 from .monitor_usrp import UsrpMonitor
@@ -34,6 +35,7 @@ action_classes = {
     "usrp_monitor": UsrpMonitor,
     "sync_gps": SyncGps,
     "single_frequency_fft": SingleFrequencyFftAcquisition,
+    "scanned_frequency_fft": ScannedFrequencyFftAcquisition,
     "stepped_frequency_time_domain_iq": SteppedFrequencyTimeDomainIqAcquisition,
 }
 
