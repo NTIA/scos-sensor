@@ -33,7 +33,7 @@ dependencies:
     - coreapi==2.3.3
     - django-debug-toolbar==1.11
     - drf-yasg==1.15.0
-    - -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF
+    - -e git+https://github.com/NTIA/SigMF.git@handle-annotation-merges#egg=SigMF
     - environs==4.2.0
     - flake8-bugbear==19.3.0
     - pre-commit==1.16.1
