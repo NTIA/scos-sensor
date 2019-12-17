@@ -1,5 +1,6 @@
-FROM ubuntu
+FROM i386/ubuntu
 
+RUN echo $(python3 -V)
 # Copy just the necessities from our PY3-enabled UHD container
 COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/lib/libuhd.so* /usr/local/lib/
 COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/lib/uhd/ /usr/local/lib/uhd/
@@ -17,6 +18,7 @@ RUN apt-get update -q && \
                    libboost-serialization1.65.1 libboost-system1.65.1 \
                    libboost-thread1.65.1 libusb-1.0-0 libpython3.6 \
                    libboost-program-options1.65.1 \
+                   build-essential libssl-dev libffi-dev python3-dev \
                    git python3-setuptools python3-pip python3-numpy && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
