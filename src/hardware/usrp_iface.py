@@ -277,7 +277,7 @@ class RadioInterface(object):
                 "1db_compression_sigan"
             ],
             "ntia-sensor:enbw_sigan": self.sigan_calibration_data["enbw_sigan"],
-            "ntia-sensor:gain_preselector": self.sigan_calibration_data[
+            "ntia-sensor:gain_preselector": self.sensor_calibration_data[
                 "gain_preselector"
             ],
             "ntia-sensor:noise_figure_sensor": self.sensor_calibration_data[
