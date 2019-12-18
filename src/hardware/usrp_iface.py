@@ -341,12 +341,8 @@ class RadioInterface(object):
                 self.sigan_overload = False
                 i_samples = np.abs(np.real(data))
                 q_samples = np.abs(np.imag(data))
-                i_over_threshold = sum(
-                    i > self.ADC_FULL_RANGE_THRESHOLD for i in i_samples
-                )
-                q_over_threshold = sum(
-                    q > self.ADC_FULL_RANGE_THRESHOLD for q in q_samples
-                )
+                i_over_threshold = np.sum(i_samples > self.ADC_FULL_RANGE_THRESHOLD)
+                q_over_threshold = np.sum(q_samples > self.ADC_FULL_RANGE_THRESHOLD)
                 total_over_threshold = i_over_threshold + q_over_threshold
                 ratio_over_threshold = float(total_over_threshold) / n
                 if ratio_over_threshold > self.ADC_OVERLOAD_THRESHOLD:
