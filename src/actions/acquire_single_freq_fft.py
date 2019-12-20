@@ -314,8 +314,9 @@ class SingleFrequencyFftAcquisition(Action):
         fft_window_enbw = (fft_window_acf / fft_window_ecf) ** 2
 
         # Calculate the equivalent noise bandwidth of the bins
-        self.enbw = self.sdr.radio.sensor_calibration_data["enbw_sensor"]
-        self.enbw /= self.measurement_params.fft_size * fft_window_enbw
+        self.enbw = self.sdr.radio.sample_rate
+        self.enbw *= fft_window_enbw
+        self.enbw /= self.measurement_params.fft_size
 
         # Apply the FFT window
         data = data * fft_window
