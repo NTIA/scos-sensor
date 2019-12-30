@@ -23,6 +23,7 @@ def test_detector(user_client, test_scheduler):
     assert sigmf_validate(acquisition.metadata)
     # FIXME: update schema so that this passes
     # schema_validate(sigmf_metadata, schema)
+    os.remove(acquisition.data.path)
 
 
 def test_data_file_created(user_client, test_scheduler):

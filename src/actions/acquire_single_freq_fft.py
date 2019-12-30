@@ -16,13 +16,13 @@
 # - Markdown reference: https://commonmark.org/help/
 # - SCOS Markdown Editor: https://ntia.github.io/scos-md-editor/
 #
-r"""Apply m4s detector over {nffts} {fft_size}-pt FFTs at {frequency:.2f} MHz.
+r"""Apply m4s detector over {nffts} {fft_size}-pt FFTs at {center_frequency:.2f} MHz.
 
 # {name}
 
 ## Radio setup and sample acquisition
 
-This action first tunes the radio to {frequency:.2f} MHz and requests a sample
+This action first tunes the radio to {center_frequency:.2f} MHz and requests a sample
 rate of {sample_rate:.2f} Msps and {gain} dB of gain.
 
 It then begins acquiring, and discards an appropriate number of samples while
@@ -97,6 +97,7 @@ import numpy as np
 from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
+from actions.measurement_params import MeasurementParams
 from actions.utils import get_fft_window, get_fft_window_correction
 from capabilities import capabilities
 from hardware import sdr
@@ -157,11 +158,13 @@ class SingleFrequencyFftAcquisition(Action):
         super(SingleFrequencyFftAcquisition, self).__init__()
 
         self.name = name
-        self.frequency = frequency
-        self.gain = gain
-        self.sample_rate = sample_rate
-        self.fft_size = fft_size
-        self.nffts = nffts
+        self.measurement_params = MeasurementParams(
+            center_frequency=frequency,
+            gain=gain,
+            sample_rate=sample_rate,
+            fft_size=fft_size,
+            num_ffts=nffts,
+        )
         self.sdr = sdr  # make instance variable to allow mocking
         self.enbw = None
 
@@ -178,7 +181,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.configure_sdr()
         data = self.acquire_data()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md(task_id)
+        sigmf_md = self.build_sigmf_md(task_id, data)
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -189,35 +192,27 @@ class SingleFrequencyFftAcquisition(Action):
             raise RuntimeError(msg)
 
     def configure_sdr(self):
-        self.set_sdr_sample_rate()
-        self.set_sdr_frequency()
-        self.set_sdr_gain()
-
-    def set_sdr_gain(self):
-        self.sdr.radio.gain = self.gain
-
-    def set_sdr_sample_rate(self):
-        self.sdr.radio.sample_rate = self.sample_rate
-        self.sample_rate = self.sdr.radio.sample_rate
-
-    def set_sdr_frequency(self):
-        requested_frequency = self.frequency
-        self.sdr.radio.frequency = requested_frequency
-        self.frequency = self.sdr.radio.frequency
+        self.sdr.radio.sample_rate = self.measurement_params.sample_rate
+        self.sdr.radio.tune_frequency(self.measurement_params.center_frequency)
+        self.sdr.radio.gain = self.measurement_params.gain
 
     def acquire_data(self):
         msg = "Acquiring {} FFTs at {} MHz"
-        logger.debug(msg.format(self.nffts, self.frequency / 1e6))
+        num_ffts = self.measurement_params.num_ffts
+        frequency = self.measurement_params.center_frequency
+        sample_rate = self.measurement_params.sample_rate
+        fft_size = self.measurement_params.fft_size
+        logger.debug(msg.format(num_ffts, frequency / 1e6))
 
         # Drop ~10 ms of samples
-        nskip = int(0.01 * self.sample_rate)
+        nskip = int(0.01 * sample_rate)
 
-        data = self.sdr.radio.acquire_samples(self.nffts * self.fft_size, nskip=nskip)
-        data.resize((self.nffts, self.fft_size))
+        data = self.sdr.radio.acquire_samples(num_ffts * fft_size, nskip=nskip)
+        data.resize((num_ffts, fft_size))
 
         return data
 
-    def build_sigmf_md(self, task_id):
+    def build_sigmf_md(self, task_id, data):
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
@@ -241,37 +236,70 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         capture_md = {
-            "core:frequency": self.frequency,
+            "core:frequency": self.sdr.radio.frequency,
             "core:datetime": utils.get_datetime_str_now(),
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
-        location = get_location()
-
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
-                "ntia-algorithm:number_of_samples_in_fft": self.fft_size,
+                "ntia-algorithm:number_of_samples_in_fft": self.measurement_params.fft_size,
                 "ntia-algorithm:window": "flattop",
                 "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
                 "ntia-algorithm:detector": detector.name + "_power",
-                "ntia-algorithm:number_of_ffts": self.nffts,
+                "ntia-algorithm:number_of_ffts": self.measurement_params.num_ffts,
                 "ntia-algorithm:units": "dBm",
                 "ntia-algorithm:reference": "not referenced",
+                "nita-algorithm:detection_domain": "frequency",
             }
 
-            if location:
-                frequency_domain_detection_md["core:latitude"] = str(location.latitude)
-                frequency_domain_detection_md["core:longitude"] = str(
-                    location.longitude
-                )
-
             sigmf_md.add_annotation(
-                start_index=(i * self.fft_size),
-                length=self.fft_size,
+                start_index=(i * self.measurement_params.fft_size),
+                length=self.measurement_params.fft_size,
                 metadata=frequency_domain_detection_md,
             )
+
+        calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
+        sigmf_md.add_annotation(
+            start_index=0,
+            length=self.measurement_params.fft_size * len(M4sDetector),
+            metadata=calibration_annotation_md,
+        )
+
+        # Recover the sigan overload flag
+        sigan_overload = self.sdr.radio.sigan_overload
+
+        # Check time domain average power versus calibrated compression
+        flattened_data = data.flatten()
+        time_domain_avg_power = 10 * np.log10(np.mean(np.abs(flattened_data) ** 2))
+        time_domain_avg_power += (
+            10 * np.log10(1 / (2 * 50)) + 30
+        )  # Convert log(V^2) to dBm
+        sensor_overload = (
+            time_domain_avg_power
+            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
+        )
+
+        # Create SensorAnnotation and add gain setting and overload indicators
+        sensor_annotation_md = {
+            "ntia-core:annotation_type": "SensorAnnotation",
+            "ntia-sensor:overload_sensor": sensor_overload,
+            "ntia-sensor:overload_sigan": sigan_overload,
+            "ntia-sensor:gain_setting_sigan": self.measurement_params.gain,
+        }
+
+        location = get_location()
+        if location:
+            sensor_annotation_md["core:latitude"] = (location.latitude,)
+            sensor_annotation_md["core:longitude"] = location.longitude
+
+        sigmf_md.add_annotation(
+            start_index=0,
+            length=self.measurement_params.fft_size * len(M4sDetector),
+            metadata=sensor_annotation_md,
+        )
 
         return sigmf_md
 
@@ -280,19 +308,20 @@ class SingleFrequencyFftAcquisition(Action):
         logger.debug("Applying detector")
 
         # Get the fft window and its amplitude/energy correction factors
-        fft_window = get_fft_window("Flat Top", self.fft_size)
+        fft_window = get_fft_window("Flat Top", self.measurement_params.fft_size)
         fft_window_acf = get_fft_window_correction(fft_window, "amplitude")
         fft_window_ecf = get_fft_window_correction(fft_window, "energy")
         fft_window_enbw = (fft_window_acf / fft_window_ecf) ** 2
 
         # Calculate the equivalent noise bandwidth of the bins
-        self.enbw = self.sdr.radio.sensor_calibration_data["enbw_sensor"]
-        self.enbw /= self.fft_size * fft_window_enbw
+        self.enbw = self.sdr.radio.sample_rate
+        self.enbw *= fft_window_enbw
+        self.enbw /= self.measurement_params.fft_size
 
         # Apply the FFT window
         data = data * fft_window
 
-        # Take and shift the fft (center fc)
+        # Take and shift the fft (center frequency)
         complex_fft = np.fft.fft(data)
         complex_fft = np.fft.fftshift(complex_fft)
 
@@ -317,7 +346,7 @@ class SingleFrequencyFftAcquisition(Action):
             np.seterr(**np_error_settings_savepoint)
 
         # Normalize the FFT
-        fft_normalization_factor = -20 * np.log10(self.fft_size)
+        fft_normalization_factor = -20 * np.log10(self.measurement_params.fft_size)
         power_fft_m4s += fft_normalization_factor
 
         # Apply the window's amplitude correction factor
@@ -347,11 +376,11 @@ class SingleFrequencyFftAcquisition(Action):
     def description(self):
         defs = {
             "name": self.name,
-            "frequency": self.frequency / 1e6,
-            "sample_rate": self.sample_rate / 1e6,
-            "fft_size": self.fft_size,
-            "nffts": self.nffts,
-            "gain": self.gain,
+            "center_frequency": self.measurement_params.center_frequency / 1e6,
+            "sample_rate": self.measurement_params.sample_rate / 1e6,
+            "fft_size": self.measurement_params.fft_size,
+            "nffts": self.measurement_params.num_ffts,
+            "gain": self.measurement_params.gain,
         }
 
         # __doc__ refers to the module docstring at the top of the file

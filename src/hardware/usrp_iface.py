@@ -99,6 +99,12 @@ class RadioInterface(object):
         "1db_compression_preselector": 100,
     }
 
+    # Define thresholds for determining ADC overload for the sigan
+    ADC_FULL_RANGE_THRESHOLD = 0.98  # ADC scale -1<sample<1, magnitude threshold = 0.98
+    ADC_OVERLOAD_THRESHOLD = (
+        0.01
+    )  # Ratio of samples above the ADC full range to trigger overload
+
     def __init__(
         self,
         usrp,
@@ -263,8 +269,25 @@ class RadioInterface(object):
     def create_calibration_annotation(self):
         annotation_md = {
             "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-calibration:receiver_scaling_factor": -1
-            * self.sensor_calibration_data["gain_sensor"],
+            "ntia-sensor:gain_sigan": self.sigan_calibration_data["gain_sigan"],
+            "ntia-sensor:noise_figure_sigan": self.sigan_calibration_data[
+                "noise_figure_sigan"
+            ],
+            "ntia-sensor:1db_compression_point_sigan": self.sigan_calibration_data[
+                "1db_compression_sigan"
+            ],
+            "ntia-sensor:enbw_sigan": self.sigan_calibration_data["enbw_sigan"],
+            "ntia-sensor:gain_preselector": self.sensor_calibration_data[
+                "gain_preselector"
+            ],
+            "ntia-sensor:noise_figure_sensor": self.sensor_calibration_data[
+                "noise_figure_sensor"
+            ],
+            "ntia-sensor:1db_compression_point_sensor": self.sensor_calibration_data[
+                "1db_compression_sensor"
+            ],
+            "ntia-sensor:enbw_sensor": self.sensor_calibration_data["enbw_sensor"],
+            "ntia-sensor:mean_noise_power_sensor": "",
         }
         return annotation_md
 
@@ -316,6 +339,17 @@ class RadioInterface(object):
                     raise RuntimeError(err)
             else:
                 logger.debug("Successfully acquired {} samples.".format(n))
+
+                # Check IQ values versus ADC max for sigan compression
+                self.sigan_overload = False
+                i_samples = np.abs(np.real(data))
+                q_samples = np.abs(np.imag(data))
+                i_over_threshold = np.sum(i_samples > self.ADC_FULL_RANGE_THRESHOLD)
+                q_over_threshold = np.sum(q_samples > self.ADC_FULL_RANGE_THRESHOLD)
+                total_over_threshold = i_over_threshold + q_over_threshold
+                ratio_over_threshold = float(total_over_threshold) / n
+                if ratio_over_threshold > self.ADC_OVERLOAD_THRESHOLD:
+                    self.sigan_overload = True
 
                 # Scale the data back to RF power and return it
                 data /= linear_gain
