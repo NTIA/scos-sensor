@@ -5,8 +5,9 @@ from os import path
 from django.conf import settings
 from sigmf.validate import validate as sigmf_validate
 
+from schedule.models import ScheduleEntry
 from tasks.models import Acquisition, TaskResult
-from tasks.tests.utils import simulate_acquisitions
+from tasks.tests.utils import simulate_acquisitions, SINGLE_ACQUISITION
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"
@@ -33,3 +34,16 @@ def test_data_file_created(user_client, test_scheduler):
     assert acquisition.data
     assert path.exists(acquisition.data.path)
     os.remove(acquisition.data.path)
+
+
+def test_metadata_scos(user_client, test_scheduler):
+    entry_name = simulate_acquisitions(user_client)
+    tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
+    acquisition = Acquisition.objects.get(task_result=tr)
+    assert sigmf_validate(acquisition.metadata)
+    assert 'ntia-scos:action' in acquisition.metadata['global']
+    assert acquisition.metadata['global']['ntia-scos:action']['name'] == SINGLE_ACQUISITION['action']
+    assert 'ntia-scos:schedule' in acquisition.metadata['global']
+    assert acquisition.metadata['global']['ntia-scos:schedule'] == ScheduleEntry.objects.get(name=entry_name)
+    assert 'ntia-scos:task_id' in acquisition.metadata['global']
+    assert acquisition.metadata['global']['ntia-scos:task_id'] == tr.task_id

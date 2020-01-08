@@ -200,6 +200,30 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         return super().to_internal_value(data)
 
+    def to_sigmf_json(self):
+        """Remove fields not part of SigMF"""
+        filtered_data = {}
+        data = self.data
+        FIELDS_TO_INCLUDE = [
+            'id',
+            'name',
+            'action',
+            'start',
+            'stop',
+            'interval',
+            'is_active',
+            'priority',
+            'next_task_time',
+            'next_task_id',
+            'created',
+            'modified',
+            'owner'
+        ]
+        for field in FIELDS_TO_INCLUDE:
+            if field in data:
+                filtered_data[field] = data[field]
+        return filtered_data
+
 
 class AdminScheduleEntrySerializer(ScheduleEntrySerializer):
     """ScheduleEntrySerializer class for superusers."""

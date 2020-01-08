@@ -181,7 +181,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.configure_sdr()
         data = self.acquire_data()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md(task_id, data)
+        sigmf_md = self.build_sigmf_md(task_id, data, task_result.schedule_entry)
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -212,7 +212,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, data):
+    def build_sigmf_md(self, task_id, data, schedule_entry):
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
@@ -234,6 +234,10 @@ class SingleFrequencyFftAcquisition(Action):
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+
+        from schedule.serializers import ScheduleEntrySerializer
+        serializer = ScheduleEntrySerializer(schedule_entry, context={'request': schedule_entry.request})
+        sigmf_md.set_global_field("ntia-scos:schedule", serializer.to_sigmf_json())
 
         capture_md = {
             "core:frequency": self.sdr.radio.frequency,

@@ -120,7 +120,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             self.measurement_params_list, start=1
         ):
             data = self.acquire_data(measurement_params, task_id)
-            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data)
+            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data, task_result.schedule_entry)
             self.archive(task_result, recording_id, data, sigmf_md)
 
     def test_required_components(self):
@@ -150,7 +150,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, measurement_params, data):
+    def build_sigmf_md(self, task_id, measurement_params, data, schedule_entry):
         # Build global metadata
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
@@ -169,6 +169,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+
+        from schedule.serializers import ScheduleEntrySerializer
+        serializer = ScheduleEntrySerializer(schedule_entry, context={'request': schedule_entry.request})
+        sigmf_md.set_global_field("ntia-scos:schedule", serializer.to_sigmf_json())
 
         dt = utils.get_datetime_str_now()
 
