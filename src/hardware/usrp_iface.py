@@ -269,7 +269,7 @@ class RadioInterface(object):
     def create_calibration_annotation(self):
         annotation_md = {
             "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-sensor:gain_sigan": -1 * self.sigan_calibration_data["gain_sigan"],
+            "ntia-sensor:gain_sigan": self.sigan_calibration_data["gain_sigan"],
             "ntia-sensor:noise_figure_sigan": self.sigan_calibration_data[
                 "noise_figure_sigan"
             ],
@@ -277,6 +277,9 @@ class RadioInterface(object):
                 "1db_compression_sigan"
             ],
             "ntia-sensor:enbw_sigan": self.sigan_calibration_data["enbw_sigan"],
+            "ntia-sensor:gain_preselector": self.sensor_calibration_data[
+                "gain_preselector"
+            ],
             "ntia-sensor:noise_figure_sensor": self.sensor_calibration_data[
                 "noise_figure_sensor"
             ],
@@ -341,12 +344,8 @@ class RadioInterface(object):
                 self.sigan_overload = False
                 i_samples = np.abs(np.real(data))
                 q_samples = np.abs(np.imag(data))
-                i_over_threshold = sum(
-                    i > self.ADC_FULL_RANGE_THRESHOLD for i in i_samples
-                )
-                q_over_threshold = sum(
-                    q > self.ADC_FULL_RANGE_THRESHOLD for q in q_samples
-                )
+                i_over_threshold = np.sum(i_samples > self.ADC_FULL_RANGE_THRESHOLD)
+                q_over_threshold = np.sum(q_samples > self.ADC_FULL_RANGE_THRESHOLD)
                 total_over_threshold = i_over_threshold + q_over_threshold
                 ratio_over_threshold = float(total_over_threshold) / n
                 if ratio_over_threshold > self.ADC_OVERLOAD_THRESHOLD:
