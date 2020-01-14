@@ -6,8 +6,8 @@ from usrp_iface import USRPRadio
 def get_radio():
     if settings.SENSOR_TYPE == "USRP":
         return USRPRadio()
-    elif settings.SENSOR_TYPE == "KEYSIGHT":
-        return KeysightRadio()
+    elif settings.SENSOR_TYPE == "KEYSIGHT_N6841A":
+        return KeysightN6841ARadio()
     elif settings.SENSOR_TYPE == "MOCK":
         return MockRadio()
     elif settings.SENSOR_TYPE == "MOCK_RANDOM" or settings.SENSOR_TYPE == "MOCK_RANDOM_32":
