@@ -1086,6 +1086,7 @@
             "properties": {
                 "self": {
                     "title": "Self",
+                    "description": "The url of the entry",
                     "type": "string",
                     "format": "uri",
                     "readOnly": true

@@ -222,9 +222,9 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_info(GLOBAL_INFO)
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
-        sensor_def = capabilities["sensor_definition"]
-        sensor_def["id"] = settings.FQDN
-        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+        sensor = capabilities["sensor"]
+        sensor["id"] = settings.FQDN
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
 
         action_def = {
             "name": self.name,

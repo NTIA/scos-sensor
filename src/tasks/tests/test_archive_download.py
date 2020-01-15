@@ -61,6 +61,7 @@ def test_multirec_acquisition_archive_download(user_client, test_scheduler):
     with tempfile.NamedTemporaryFile() as tf:
         for content in response.streaming_content:
             tf.write(content)
+        tf.flush()
 
         sigmf_archive_contents = sigmf.archive.extract(tf.name)
         assert len(sigmf_archive_contents) == 3

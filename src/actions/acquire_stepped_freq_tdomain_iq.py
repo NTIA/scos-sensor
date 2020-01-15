@@ -120,7 +120,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             self.measurement_params_list, start=1
         ):
             data = self.acquire_data(measurement_params, task_id)
-            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data, task_result.schedule_entry)
+            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data, task_result.schedule_entry, recording_id)
             self.archive(task_result, recording_id, data, sigmf_md)
 
     def test_required_components(self):
@@ -150,16 +150,16 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, measurement_params, data, schedule_entry):
+    def build_sigmf_md(self, task_id, measurement_params, data, schedule_entry, recording_id):
         # Build global metadata
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
         sample_rate = self.sdr.radio.sample_rate
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
-        sensor_def = capabilities["sensor_definition"]
-        sensor_def["id"] = settings.FQDN
-        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+        sensor = capabilities["sensor"]
+        sensor["id"] = settings.FQDN
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
 
         action_def = {
             "name": self.name,
@@ -169,6 +169,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+        sigmf_md.set_global_field("ntia-scos:recording_id", recording_id)
 
         from schedule.serializers import ScheduleEntrySerializer
         serializer = ScheduleEntrySerializer(schedule_entry, context={'request': schedule_entry.request})
