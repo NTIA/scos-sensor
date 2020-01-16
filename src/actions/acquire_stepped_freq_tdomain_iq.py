@@ -120,7 +120,13 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             self.measurement_params_list, start=1
         ):
             data = self.acquire_data(measurement_params, task_id)
-            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data, task_result.schedule_entry, recording_id)
+            sigmf_md = self.build_sigmf_md(
+                task_id,
+                measurement_params,
+                data,
+                task_result.schedule_entry,
+                recording_id,
+            )
             self.archive(task_result, recording_id, data, sigmf_md)
 
     @property
@@ -154,10 +160,14 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, measurement_params, data, schedule_entry, recording_id):
+    def build_sigmf_md(
+        self, task_id, measurement_params, data, schedule_entry, recording_id
+    ):
         # Build global metadata
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_info(GLOBAL_INFO.copy()) # prevent GLOBAL_INFO from being modified by sigmf
+        sigmf_md.set_global_info(
+            GLOBAL_INFO.copy()
+        )  # prevent GLOBAL_INFO from being modified by sigmf
         sample_rate = self.sdr.radio.sample_rate
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
@@ -177,7 +187,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             sigmf_md.set_global_field("ntia-scos:recording_id", recording_id)
 
         from schedule.serializers import ScheduleEntrySerializer
-        serializer = ScheduleEntrySerializer(schedule_entry, context={'request': schedule_entry.request})
+
+        serializer = ScheduleEntrySerializer(
+            schedule_entry, context={"request": schedule_entry.request}
+        )
         sigmf_md.set_global_field("ntia-scos:schedule", serializer.to_sigmf_json())
 
         dt = utils.get_datetime_str_now()

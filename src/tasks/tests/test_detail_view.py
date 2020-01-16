@@ -89,7 +89,9 @@ def test_user_cant_delete_others_results(
     )
 
     # admin user schedule entry
-    admin_result_name = simulate_frequency_fft_acquisitions(admin_client, name="admin_single_acq")
+    admin_result_name = simulate_frequency_fft_acquisitions(
+        admin_client, name="admin_single_acq"
+    )
     admin_result_url = reverse_result_detail(admin_result_name, 1)
 
     user_delete_admin_response = user_client.delete(admin_result_url, **HTTPS_KWARG)
@@ -132,7 +134,9 @@ def test_user_cant_modify_others_results(
     )
 
     # admin user schedule entry
-    admin_entry_name = simulate_frequency_fft_acquisitions(admin_client, name="admin_single_acq")
+    admin_entry_name = simulate_frequency_fft_acquisitions(
+        admin_client, name="admin_single_acq"
+    )
     admin_acq_url = reverse_result_detail(admin_entry_name, 1)
 
     new_result_detail = user_client.get(admin_acq_url, **HTTPS_KWARG).data
@@ -148,7 +152,9 @@ def test_user_cant_modify_others_results(
 
 
 def test_admin_can_create_private_results(admin_client, user_client, test_scheduler):
-    private_entry_name = simulate_frequency_fft_acquisitions(admin_client, is_private=True)
+    private_entry_name = simulate_frequency_fft_acquisitions(
+        admin_client, is_private=True
+    )
     private_result_url = reverse_result_detail(private_entry_name, 1)
     user_response = user_client.get(private_result_url, **HTTPS_KWARG)
     validate_response(user_response, status.HTTP_403_FORBIDDEN)
@@ -168,7 +174,9 @@ def test_admin_can_view_all_results(
     )
 
     # user schedule entry
-    user_result_name = simulate_frequency_fft_acquisitions(user_client, name="admin_single_acq")
+    user_result_name = simulate_frequency_fft_acquisitions(
+        user_client, name="admin_single_acq"
+    )
     user_result_url = reverse_result_detail(user_result_name, 1)
 
     admin_view_user_response = admin_client.get(user_result_url, **HTTPS_KWARG)
@@ -178,7 +186,9 @@ def test_admin_can_view_all_results(
 
 
 def test_admin_can_view_private_results(admin_client, alt_admin_client, test_scheduler):
-    private_entry_name = simulate_frequency_fft_acquisitions(alt_admin_client, is_private=True)
+    private_entry_name = simulate_frequency_fft_acquisitions(
+        alt_admin_client, is_private=True
+    )
     private_result_url = reverse_result_detail(private_entry_name, 1)
     response = admin_client.get(private_result_url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_200_OK)
@@ -209,7 +219,9 @@ def test_admin_can_delete_others_results(
     )
 
     # user schedule entry
-    user_result_name = simulate_frequency_fft_acquisitions(user_client, name="admin_single_acq")
+    user_result_name = simulate_frequency_fft_acquisitions(
+        user_client, name="admin_single_acq"
+    )
     user_result_url = reverse_result_detail(user_result_name, 1)
 
     admin_delete_user_response = admin_client.delete(user_result_url, **HTTPS_KWARG)

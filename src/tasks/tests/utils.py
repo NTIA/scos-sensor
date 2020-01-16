@@ -81,12 +81,16 @@ def simulate_frequency_fft_acquisitions(client, n=1, is_private=False, name=None
 
 def simulate_multirec_acquisition(client, is_private=False, name=None):
     schedule_entry = SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION.copy()
-    return simulate_acquisitions(client, schedule_entry, n=1, is_private=is_private, name=name)
+    return simulate_acquisitions(
+        client, schedule_entry, n=1, is_private=is_private, name=name
+    )
 
 
 def simulate_timedomain_iq_acquisition(client, is_private=False, name=None):
     schedule_entry = SINGLE_TIMEDOMAIN_IQ_ACQUISITION.copy()
-    return simulate_acquisitions(client, schedule_entry, n=1, is_private=is_private, name=name)
+    return simulate_acquisitions(
+        client, schedule_entry, n=1, is_private=is_private, name=name
+    )
 
 
 def create_task_results(n, user_client, entry_name=None):

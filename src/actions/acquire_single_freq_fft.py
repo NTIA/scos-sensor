@@ -219,7 +219,9 @@ class SingleFrequencyFftAcquisition(Action):
         sample_rate = self.sdr.radio.sample_rate
 
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_info(GLOBAL_INFO.copy()) # prevent GLOBAL_INFO from being modified by sigmf
+        sigmf_md.set_global_info(
+            GLOBAL_INFO.copy()
+        )  # prevent GLOBAL_INFO from being modified by sigmf
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         sensor = capabilities["sensor"]
@@ -236,7 +238,10 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
         from schedule.serializers import ScheduleEntrySerializer
-        serializer = ScheduleEntrySerializer(schedule_entry, context={'request': schedule_entry.request})
+
+        serializer = ScheduleEntrySerializer(
+            schedule_entry, context={"request": schedule_entry.request}
+        )
         sigmf_md.set_global_field("ntia-scos:schedule", serializer.to_sigmf_json())
 
         capture_md = {

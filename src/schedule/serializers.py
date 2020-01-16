@@ -205,19 +205,19 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         filtered_data = {}
         data = self.data
         FIELDS_TO_INCLUDE = [
-            'id',
-            'name',
-            'action',
-            'start',
-            'stop',
-            'interval',
-            'is_active',
-            'priority',
-            'next_task_time',
-            'next_task_id',
-            'created',
-            'modified',
-            'owner'
+            "id",
+            "name",
+            "action",
+            "start",
+            "stop",
+            "interval",
+            "is_active",
+            "priority",
+            "next_task_time",
+            "next_task_id",
+            "created",
+            "modified",
+            "owner",
         ]
         for field in FIELDS_TO_INCLUDE:
             if field in data:

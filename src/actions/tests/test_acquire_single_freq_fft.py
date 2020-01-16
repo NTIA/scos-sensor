@@ -7,7 +7,11 @@ from sigmf.validate import validate as sigmf_validate
 
 from actions.tests.utils import check_metadata_fields
 from tasks.models import Acquisition, TaskResult
-from tasks.tests.utils import simulate_frequency_fft_acquisitions, MULTIPLE_FREQUENCY_FFT_ACQUISITIONS, SINGLE_FREQUENCY_FFT_ACQUISITION
+from tasks.tests.utils import (
+    simulate_frequency_fft_acquisitions,
+    MULTIPLE_FREQUENCY_FFT_ACQUISITIONS,
+    SINGLE_FREQUENCY_FFT_ACQUISITION,
+)
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"
@@ -43,10 +47,13 @@ def test_metadata_single_acquisition(user_client, test_scheduler):
     assert sigmf_validate(acquisition.metadata)
     check_metadata_fields(acquisition, entry_name, SINGLE_FREQUENCY_FFT_ACQUISITION)
 
+
 def test_metadata_multiple_acquisition(user_client, test_scheduler):
     entry_name = simulate_frequency_fft_acquisitions(user_client, n=2)
     task_results = TaskResult.objects.filter(schedule_entry__name=entry_name)
     for task_result in task_results:
         acquisition = Acquisition.objects.get(task_result=task_result)
         assert sigmf_validate(acquisition.metadata)
-        check_metadata_fields(acquisition, entry_name, MULTIPLE_FREQUENCY_FFT_ACQUISITIONS)
+        check_metadata_fields(
+            acquisition, entry_name, MULTIPLE_FREQUENCY_FFT_ACQUISITIONS
+        )
