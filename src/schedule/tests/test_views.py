@@ -10,7 +10,7 @@ from schedule.tests.utils import (
 )
 from sensor import V1
 from sensor.tests.utils import HTTPS_KWARG, validate_response
-from tasks.tests.utils import simulate_acquisitions
+from tasks.tests.utils import simulate_frequency_fft_acquisitions
 
 
 def test_entry_posted_to_schedule_is_immediately_available(user_client):
@@ -85,7 +85,7 @@ def test_get_existing_entry_details_returns_200(user_client):
 
 def test_delete_entry_with_acquisitions_fails(user_client, test_scheduler):
     """Attempting to delete entry with protected acquisitions should fail."""
-    entry_name = simulate_acquisitions(user_client)
+    entry_name = simulate_frequency_fft_acquisitions(user_client)
     entry_url = reverse_detail_url(entry_name)
     response = user_client.delete(entry_url, **HTTPS_KWARG)
     rjson = validate_response(response, status.HTTP_400_BAD_REQUEST)

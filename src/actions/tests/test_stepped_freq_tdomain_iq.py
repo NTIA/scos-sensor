@@ -5,8 +5,10 @@ from os import path
 from django.conf import settings
 from sigmf.validate import validate as sigmf_validate
 
+
+from actions.tests.utils import check_metadata_fields
 from tasks.models import Acquisition, TaskResult
-from tasks.tests.utils import simulate_multirec_acquisition, SINGLE_MULTI_RECORDING_ACQUISITION
+from tasks.tests.utils import simulate_multirec_acquisition, SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION, simulate_timedomain_iq_acquisition, SINGLE_TIMEDOMAIN_IQ_ACQUISITION
 
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
@@ -41,13 +43,10 @@ def test_metadata_multirecording_acquisition(user_client, test_scheduler):
     tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
     acquisitions = Acquisition.objects.filter(task_result=tr)
     for acquisition in acquisitions:
-        assert sigmf_validate(acquisition.metadata)
-        assert 'ntia-scos:action' in acquisition.metadata['global']
-        assert acquisition.metadata['global']['ntia-scos:action']['name'] == SINGLE_MULTI_RECORDING_ACQUISITION['action']
-        assert 'ntia-scos:schedule' in acquisition.metadata['global']
-        assert acquisition.metadata['global']['ntia-scos:schedule']['name'] == entry_name
-        assert acquisition.metadata['global']['ntia-scos:schedule']['action'] == SINGLE_MULTI_RECORDING_ACQUISITION['action']
-        assert 'ntia-scos:task_id' in acquisition.metadata['global']
-        assert acquisition.metadata['global']['ntia-scos:task_id'] == tr.task_id
-        assert 'ntia-scos:recording_id' in acquisition.metadata['global']
-        assert acquisition.metadata['global']['ntia-scos:recording_id'] == acquisition.recording_id
+        check_metadata_fields(acquisition, entry_name, SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION, is_multirecording=True)
+
+def test_metadata_timedomain_iq_single_acquisition(user_client, test_scheduler):
+    entry_name = simulate_timedomain_iq_acquisition(user_client)
+    tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
+    acquisition = Acquisition.objects.get(task_result=tr)
+    check_metadata_fields(acquisition, entry_name, SINGLE_TIMEDOMAIN_IQ_ACQUISITION, is_multirecording=False)

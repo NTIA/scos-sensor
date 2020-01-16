@@ -6,7 +6,7 @@ from tasks.tests.utils import (
     create_task_results,
     get_results_overview,
     reverse_results_overview,
-    simulate_acquisitions,
+    simulate_frequency_fft_acquisitions,
 )
 
 
@@ -41,7 +41,7 @@ def test_admin_get_overview(admin_client):
 def test_overview_for_private_entry_is_private(
     admin_client, user_client, test_scheduler
 ):
-    simulate_acquisitions(admin_client, is_private=True)
+    simulate_frequency_fft_acquisitions(admin_client, is_private=True)
     overview = get_results_overview(user_client)
     assert overview == []
 

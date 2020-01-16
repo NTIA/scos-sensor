@@ -219,7 +219,7 @@ class SingleFrequencyFftAcquisition(Action):
         sample_rate = self.sdr.radio.sample_rate
 
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_info(GLOBAL_INFO)
+        sigmf_md.set_global_info(GLOBAL_INFO.copy()) # prevent GLOBAL_INFO from being modified by sigmf
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         sensor = capabilities["sensor"]

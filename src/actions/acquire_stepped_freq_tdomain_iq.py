@@ -123,6 +123,10 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             sigmf_md = self.build_sigmf_md(task_id, measurement_params, data, task_result.schedule_entry, recording_id)
             self.archive(task_result, recording_id, data, sigmf_md)
 
+    @property
+    def is_multirecording(self):
+        return len(self.measurement_params_list) > 1
+
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
         self.sdr.connect()
@@ -153,7 +157,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
     def build_sigmf_md(self, task_id, measurement_params, data, schedule_entry, recording_id):
         # Build global metadata
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_info(GLOBAL_INFO)
+        sigmf_md.set_global_info(GLOBAL_INFO.copy()) # prevent GLOBAL_INFO from being modified by sigmf
         sample_rate = self.sdr.radio.sample_rate
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
@@ -169,7 +173,8 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
         sigmf_md.set_global_field("ntia-scos:task_id", task_id)
-        sigmf_md.set_global_field("ntia-scos:recording_id", recording_id)
+        if self.is_multirecording:
+            sigmf_md.set_global_field("ntia-scos:recording_id", recording_id)
 
         from schedule.serializers import ScheduleEntrySerializer
         serializer = ScheduleEntrySerializer(schedule_entry, context={'request': schedule_entry.request})
