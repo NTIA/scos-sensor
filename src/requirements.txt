@@ -1,4 +1,4 @@
-Django==2.2.8
+Django==2.2.9
 Pygments==2.4.2
 Markdown==3.1.1
 -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF
