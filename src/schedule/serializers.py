@@ -211,13 +211,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             "start",
             "stop",
             "interval",
-            "is_active",
-            "priority",
-            "next_task_time",
-            "next_task_id",
-            "created",
-            "modified",
-            "owner",
+            "priority"
         ]
         for field in FIELDS_TO_INCLUDE:
             if field in data:

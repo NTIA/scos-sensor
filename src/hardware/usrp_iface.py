@@ -116,6 +116,7 @@ class RadioInterface(object):
         # Set the default calibration values
         self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
         self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
+        self.sigan_overload = False
 
         # Try and load sensor/sigan calibration data
         if not settings.MOCK_RADIO:
@@ -293,6 +294,7 @@ class RadioInterface(object):
 
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
+        self.sigan_overload = False
 
         # Get the calibration data for the acquisition
         self.recompute_calibration_data()

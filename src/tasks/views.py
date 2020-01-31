@@ -133,7 +133,7 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
 
         if not queryset.exists():
             raise Http404
-
+        logger.debug("get_queryset: " + str(queryset))
         return queryset.all()
 
     @action(detail=False, methods=("delete",))

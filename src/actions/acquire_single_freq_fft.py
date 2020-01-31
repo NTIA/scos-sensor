@@ -91,6 +91,7 @@ The resulting matrix is real-valued, 32-bit floats representing dBm.
 """
 
 import logging
+import time
 from enum import Enum
 
 import numpy as np
@@ -179,9 +180,11 @@ class SingleFrequencyFftAcquisition(Action):
 
         self.test_required_components()
         self.configure_sdr()
+        start_time = utils.get_datetime_str_now()
         data = self.acquire_data()
+        end_time = utils.get_datetime_str_now()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md(task_id, data, task_result.schedule_entry)
+        sigmf_md = self.build_sigmf_md(task_id, data, task_result.schedule_entry, start_time, end_time)
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -212,7 +215,8 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, data, schedule_entry):
+    def build_sigmf_md(self, task_id, data, schedule_entry, start_time, end_time):
+        profile_start_time = time.time()
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
@@ -224,25 +228,46 @@ class SingleFrequencyFftAcquisition(Action):
         )  # prevent GLOBAL_INFO from being modified by sigmf
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
+        measurement_object = {
+            "start_time": start_time,
+            "end_time": end_time,
+            "domain": "Frequency",
+            "measurement_type": "single-frequency"
+        }
+        logger.debug("Getting frequency information")
+        frequencies = self.get_frequencies(data, self.measurement_params)
+        measurement_object['low_frequency'] = frequencies[0]
+        measurement_object['high_frequency'] = frequencies[-1]
+        sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
+        logger.debug("Added measurement object")
+
         sensor = capabilities["sensor"]
         sensor["id"] = settings.FQDN
         sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
+        logger.debug("Getting last cal time")
+        from status.views import get_last_calibration_time
+        sigmf_md.set_global_field("ntia-sensor:calibration_datetime", get_last_calibration_time())
+
+        sigmf_md.set_global_field("ntia-scos:task", task_id)
 
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": ["FrequencyDomain"],
+            "summary": self.description.splitlines()[0]
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+        # sigmf_md.set_global_field("ntia-scos:task_id", task_id)
 
+        logger.debug("Serializing schedule entry")
         from schedule.serializers import ScheduleEntrySerializer
 
         serializer = ScheduleEntrySerializer(
             schedule_entry, context={"request": schedule_entry.request}
         )
-        sigmf_md.set_global_field("ntia-scos:schedule", serializer.to_sigmf_json())
+        schedule_entry_json = serializer.to_sigmf_json()
+        schedule_entry_json['id'] = schedule_entry.name
+        sigmf_md.set_global_field("ntia-scos:schedule", schedule_entry_json)
 
         capture_md = {
             "core:frequency": self.sdr.radio.frequency,
@@ -252,6 +277,7 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
         for i, detector in enumerate(M4sDetector):
+            logger.debug("Added frequency domain detection annotation for decector = " + detector.name)
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
                 "ntia-algorithm:number_of_samples_in_fft": self.measurement_params.fft_size,
@@ -261,7 +287,10 @@ class SingleFrequencyFftAcquisition(Action):
                 "ntia-algorithm:number_of_ffts": self.measurement_params.num_ffts,
                 "ntia-algorithm:units": "dBm",
                 "ntia-algorithm:reference": "not referenced",
-                "nita-algorithm:detection_domain": "frequency",
+                "ntia-algorithm:frequencies": frequencies,
+                "ntia-algorithm:frequency_start": frequencies[0],
+                "ntia-algorithm:frequency_stop": frequencies[-1],
+                "ntia-algorithm:frequency_step": frequencies[1] - frequencies[0],
             }
 
             sigmf_md.add_annotation(
@@ -270,6 +299,7 @@ class SingleFrequencyFftAcquisition(Action):
                 metadata=frequency_domain_detection_md,
             )
 
+        logger.debug("Adding calibration annotation")
         calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
         sigmf_md.add_annotation(
             start_index=0,
@@ -277,6 +307,7 @@ class SingleFrequencyFftAcquisition(Action):
             metadata=calibration_annotation_md,
         )
 
+        logger.debug("Checking for overload")
         # Recover the sigan overload flag
         sigan_overload = self.sdr.radio.sigan_overload
 
@@ -286,19 +317,21 @@ class SingleFrequencyFftAcquisition(Action):
         time_domain_avg_power += (
             10 * np.log10(1 / (2 * 50)) + 30
         )  # Convert log(V^2) to dBm
-        sensor_overload = (
-            time_domain_avg_power
-            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
-        )
+        sensor_overload = False
+        if self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]:
+            sensor_overload = (
+                time_domain_avg_power
+                > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
+            )
 
         # Create SensorAnnotation and add gain setting and overload indicators
         sensor_annotation_md = {
             "ntia-core:annotation_type": "SensorAnnotation",
-            "ntia-sensor:overload_sensor": sensor_overload,
-            "ntia-sensor:overload_sigan": sigan_overload,
+            "ntia-sensor:overload": sensor_overload or sigan_overload,
             "ntia-sensor:gain_setting_sigan": self.measurement_params.gain,
         }
 
+        logger.debug("Getting location")
         location = get_location()
         if location:
             sensor_annotation_md["core:latitude"] = (location.latitude,)
@@ -309,7 +342,8 @@ class SingleFrequencyFftAcquisition(Action):
             length=self.measurement_params.fft_size * len(M4sDetector),
             metadata=sensor_annotation_md,
         )
-
+        profile_end_time = time.time()
+        logger.debug("build_sigmf_md elapsed time (s): " + str(profile_end_time - profile_start_time))
         return sigmf_md
 
     def apply_detector(self, data):

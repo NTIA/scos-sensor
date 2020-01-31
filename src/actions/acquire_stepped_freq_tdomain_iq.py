@@ -119,13 +119,17 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         for recording_id, measurement_params in enumerate(
             self.measurement_params_list, start=1
         ):
+            start_time = utils.get_datetime_str_now()
             data = self.acquire_data(measurement_params, task_id)
+            end_time = utils.get_datetime_str_now()
             sigmf_md = self.build_sigmf_md(
                 task_id,
                 measurement_params,
                 data,
                 task_result.schedule_entry,
                 recording_id,
+                start_time,
+                end_time
             )
             self.archive(task_result, recording_id, data, sigmf_md)
 
@@ -161,7 +165,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         return data
 
     def build_sigmf_md(
-        self, task_id, measurement_params, data, schedule_entry, recording_id
+        self, task_id, measurement_params, data, schedule_entry, recording_id, start_time, end_time
     ):
         # Build global metadata
         sigmf_md = SigMFFile()
@@ -171,27 +175,44 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         sample_rate = self.sdr.radio.sample_rate
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
+        measurement_object = {
+            "start_time": start_time,
+            "end_time": end_time,
+            "domain": "Time",
+            "measurement_type": "survey" if self.is_multirecording else "single-frequency"
+        }
+        frequencies = self.get_frequencies(data, measurement_params)
+        measurement_object['low_frequency'] = frequencies[0]
+        measurement_object['high_frequency'] = frequencies[-1]
+        sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
+
         sensor = capabilities["sensor"]
         sensor["id"] = settings.FQDN
         sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
+        from status.views import get_last_calibration_time
+        sigmf_md.set_global_field("ntia-sensor:calibration_datetime", get_last_calibration_time())
 
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": ["TimeDomain"],
+            "summary": self.description.splitlines()[0]
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+        #sigmf_md.set_global_field("ntia-scos:task_id", task_id)
         if self.is_multirecording:
-            sigmf_md.set_global_field("ntia-scos:recording_id", recording_id)
+            sigmf_md.set_global_field("ntia-scos:recording", recording_id)
+
+        sigmf_md.set_global_field("ntia-scos:task", task_id)
 
         from schedule.serializers import ScheduleEntrySerializer
 
         serializer = ScheduleEntrySerializer(
             schedule_entry, context={"request": schedule_entry.request}
         )
-        sigmf_md.set_global_field("ntia-scos:schedule", serializer.to_sigmf_json())
+        schedule_entry_json = serializer.to_sigmf_json()
+        schedule_entry_json['id'] = schedule_entry.name
+        sigmf_md.set_global_field("ntia-scos:schedule", schedule_entry_json)
 
         dt = utils.get_datetime_str_now()
 
@@ -204,13 +225,19 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             start_index=0, length=num_samples, metadata=calibration_annotation_md
         )
 
+        # time = range(0, (num_samples-1)*(1/sample_rate), (1/sample_rate))
+        time = np.linspace(0, (1/sample_rate)*num_samples, num=num_samples, endpoint=False)
+
         time_domain_detection_md = {
             "ntia-core:annotation_type": "TimeDomainDetection",
             "ntia-algorithm:detector": "sample_iq",
-            "ntia-algorithm:detection_domain": "time",
             "ntia-algorithm:number_of_samples": num_samples,
             "ntia-algorithm:units": "volts",
             "ntia-algorithm:reference": "not referenced",
+            "ntia-algorithm:time": time,
+            "ntia-algorithm:time_start": 0,
+            "ntia-algorithm:time_stop": time[-1],
+            "ntia-algorithm:time_step": 1 / sample_rate
         }
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=time_domain_detection_md
@@ -224,16 +251,17 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         time_domain_avg_power += (
             10 * np.log10(1 / (2 * 50)) + 30
         )  # Convert log(V^2) to dBm
-        sensor_overload = (
-            time_domain_avg_power
-            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
-        )
+        sensor_overload = False
+        if self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]:
+            sensor_overload = (
+                time_domain_avg_power
+                > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
+            )
 
         # Create SensorAnnotation and add gain setting and overload indicators
         sensor_annotation_md = {
             "ntia-core:annotation_type": "SensorAnnotation",
-            "ntia-sensor:overload_sensor": sensor_overload,
-            "ntia-sensor:overload_sigan": sigan_overload,
+            "ntia-sensor:overload": sensor_overload or sigan_overload,
             "ntia-sensor:gain_setting_sigan": measurement_params.gain,
         }
 
