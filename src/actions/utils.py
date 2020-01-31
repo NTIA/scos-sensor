@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.signal import windows
 
+from status.utils import get_location
+
 
 def get_fft_window(window_type, window_length):
     # Generate the window with the right number of points
@@ -36,3 +38,23 @@ def get_fft_window_correction(window, correction_type="amplitude"):
 
     # Return the window correction factor
     return window_correction
+
+
+def get_coordinate_system_sigmf():
+    return {
+        "id": "WGS 1984",
+        "coordinate_system_type": "GeographicCoordinateSystem",
+        "distance_unit": "decimal degrees",
+        "time_unit": "seconds",
+    }
+
+
+def get_sensor_location_sigmf(sensor):
+    database_location = get_location()
+    if database_location:
+        if "location" not in sensor:
+            sensor["location"] = {}
+        if "x" not in sensor["location"] or not sensor["location"]["x"]:
+            sensor["location"]["x"] = database_location.longitude
+        if "y" not in sensor["location"] or not sensor["location"]["y"]:
+            sensor["location"]["y"] = database_location.latitude

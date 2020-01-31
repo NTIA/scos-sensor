@@ -12,10 +12,6 @@ def check_metadata_fields(
     )
     assert "ntia-scos:schedule" in acquisition.metadata["global"]
     assert acquisition.metadata["global"]["ntia-scos:schedule"]["name"] == entry_name
-    assert (
-        acquisition.metadata["global"]["ntia-scos:schedule"]["action"]
-        == schedule_entry["action"]
-    )
     assert "ntia-scos:task" in acquisition.metadata["global"]
     assert (
         acquisition.metadata["global"]["ntia-scos:task"]
@@ -30,10 +26,10 @@ def check_metadata_fields(
     else:
         assert "ntia-scos:recording" not in acquisition.metadata["global"]
 
-    assert 'ntia-core:measurement' in acquisition.metadata["global"]
-    assert acquisition.metadata['global']['ntia-core:measurement']['start_time']
-    assert acquisition.metadata['global']['ntia-core:measurement']['end_time']
-    assert acquisition.metadata['global']['ntia-core:measurement']['low_frequency']
-    assert acquisition.metadata['global']['ntia-core:measurement']['high_frequency']
-    assert acquisition.metadata['global']['ntia-core:measurement']['domain']
-    assert acquisition.metadata['global']['ntia-core:measurement']['measurement_type']
+    assert "ntia-core:measurement" in acquisition.metadata["global"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"]["time_start"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"]["time_stop"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"]["frequency_low"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"]["frequency_high"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"]["domain"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"]["measurement_type"]

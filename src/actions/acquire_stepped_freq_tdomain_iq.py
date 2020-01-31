@@ -49,10 +49,10 @@ from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
 from actions.measurement_params import MeasurementParams
+from actions.utils import get_coordinate_system_sigmf, get_sensor_location_sigmf
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
-from status.utils import get_location
 
 from .base import Action
 
@@ -129,7 +129,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
                 task_result.schedule_entry,
                 recording_id,
                 start_time,
-                end_time
+                end_time,
             )
             self.archive(task_result, recording_id, data, sigmf_md)
 
@@ -165,7 +165,14 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         return data
 
     def build_sigmf_md(
-        self, task_id, measurement_params, data, schedule_entry, recording_id, start_time, end_time
+        self,
+        task_id,
+        measurement_params,
+        data,
+        schedule_entry,
+        recording_id,
+        start_time,
+        end_time,
     ):
         # Build global metadata
         sigmf_md = SigMFFile()
@@ -176,30 +183,36 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         measurement_object = {
-            "start_time": start_time,
-            "end_time": end_time,
+            "time_start": start_time,
+            "time_stop": end_time,
             "domain": "Time",
-            "measurement_type": "survey" if self.is_multirecording else "single-frequency"
+            "measurement_type": "survey"
+            if self.is_multirecording
+            else "single-frequency",
         }
         frequencies = self.get_frequencies(data, measurement_params)
-        measurement_object['low_frequency'] = frequencies[0]
-        measurement_object['high_frequency'] = frequencies[-1]
+        measurement_object["frequency_low"] = frequencies[0]
+        measurement_object["frequency_high"] = frequencies[-1]
         sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
 
         sensor = capabilities["sensor"]
         sensor["id"] = settings.FQDN
+        get_sensor_location_sigmf(sensor)
         sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
         from status.views import get_last_calibration_time
-        sigmf_md.set_global_field("ntia-sensor:calibration_datetime", get_last_calibration_time())
+
+        sigmf_md.set_global_field(
+            "ntia-sensor:calibration_datetime", get_last_calibration_time()
+        )
 
         action_def = {
             "name": self.name,
             "description": self.description,
-            "summary": self.description.splitlines()[0]
+            "summary": self.description.splitlines()[0],
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        #sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+        # sigmf_md.set_global_field("ntia-scos:task_id", task_id)
         if self.is_multirecording:
             sigmf_md.set_global_field("ntia-scos:recording", recording_id)
 
@@ -211,8 +224,12 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             schedule_entry, context={"request": schedule_entry.request}
         )
         schedule_entry_json = serializer.to_sigmf_json()
-        schedule_entry_json['id'] = schedule_entry.name
+        schedule_entry_json["id"] = schedule_entry.name
         sigmf_md.set_global_field("ntia-scos:schedule", schedule_entry_json)
+
+        sigmf_md.set_global_field(
+            "ntia-location:coordinate_system", get_coordinate_system_sigmf()
+        )
 
         dt = utils.get_datetime_str_now()
 
@@ -225,19 +242,12 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             start_index=0, length=num_samples, metadata=calibration_annotation_md
         )
 
-        # time = range(0, (num_samples-1)*(1/sample_rate), (1/sample_rate))
-        time = np.linspace(0, (1/sample_rate)*num_samples, num=num_samples, endpoint=False)
-
         time_domain_detection_md = {
             "ntia-core:annotation_type": "TimeDomainDetection",
             "ntia-algorithm:detector": "sample_iq",
             "ntia-algorithm:number_of_samples": num_samples,
             "ntia-algorithm:units": "volts",
             "ntia-algorithm:reference": "not referenced",
-            "ntia-algorithm:time": time,
-            "ntia-algorithm:time_start": 0,
-            "ntia-algorithm:time_stop": time[-1],
-            "ntia-algorithm:time_step": 1 / sample_rate
         }
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=time_domain_detection_md
@@ -264,11 +274,6 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             "ntia-sensor:overload": sensor_overload or sigan_overload,
             "ntia-sensor:gain_setting_sigan": measurement_params.gain,
         }
-
-        location = get_location()
-        if location:
-            sensor_annotation_md["core:latitude"] = (location.latitude,)
-            sensor_annotation_md["core:longitude"] = location.longitude
 
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=sensor_annotation_md

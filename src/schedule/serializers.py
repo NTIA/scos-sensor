@@ -204,15 +204,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         """Remove fields not part of SigMF"""
         filtered_data = {}
         data = self.data
-        FIELDS_TO_INCLUDE = [
-            "id",
-            "name",
-            "action",
-            "start",
-            "stop",
-            "interval",
-            "priority"
-        ]
+        FIELDS_TO_INCLUDE = ["id", "name", "start", "stop", "interval", "priority"]
         for field in FIELDS_TO_INCLUDE:
             if field in data:
                 filtered_data[field] = data[field]
