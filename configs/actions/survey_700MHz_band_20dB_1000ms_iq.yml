@@ -1,5 +1,5 @@
 stepped_frequency_time_domain_iq:
-  name: survey_700MHz_band_20dB_80ms_iq
+  name: survey_700MHz_band_20dB_1000ms_iq
   fcs:
     - 700.5e6
     - 709e6
@@ -44,3 +44,4 @@ stepped_frequency_time_domain_iq:
     - 1000
     - 1000
     - 1000
+      
