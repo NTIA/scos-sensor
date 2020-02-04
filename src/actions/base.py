@@ -1,6 +1,3 @@
-import numpy as np
-
-
 class Action(object):
     """The action base class.
 
