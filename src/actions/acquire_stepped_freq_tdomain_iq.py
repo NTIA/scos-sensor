@@ -174,12 +174,14 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         start_time,
         end_time,
     ):
+        frequency = self.sdr.radio.frequency
+        sample_rate = self.sdr.radio.sample_rate
+
         # Build global metadata
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(
             GLOBAL_INFO.copy()
         )  # prevent GLOBAL_INFO from being modified by sigmf
-        sample_rate = self.sdr.radio.sample_rate
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         measurement_object = {
@@ -189,8 +191,8 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             "measurement_type": "survey"
             if self.is_multirecording
             else "single-frequency",
-            "frequency_tuned_low": self.sdr.radio.frequency,
-            "frequency_tuned_high": self.sdr.radio.frequency,
+            "frequency_tuned_low": frequency,
+            "frequency_tuned_high": frequency,
         }
         sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
 
@@ -232,8 +234,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         dt = utils.get_datetime_str_now()
 
         num_samples = measurement_params.get_num_samples()
-
-        capture_md = {"core:frequency": self.sdr.radio.frequency, "core:datetime": dt}
+        capture_md = {"core:frequency": frequency, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
         calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
         sigmf_md.add_annotation(

@@ -220,6 +220,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         # Use the radio's actual reported sample rate instead of requested rate
         sample_rate = self.sdr.radio.sample_rate
+        frequency = self.sdr.radio.frequency
 
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(
@@ -232,8 +233,8 @@ class SingleFrequencyFftAcquisition(Action):
             "time_stop": end_time,
             "domain": "Frequency",
             "measurement_type": "single-frequency",
-            "frequency_tuned_low": self.sdr.radio.frequency,
-            "frequency_tuned_high": self.sdr.radio.frequency,
+            "frequency_tuned_low": frequency,
+            "frequency_tuned_high": frequency,
         }
         sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
 
@@ -272,15 +273,13 @@ class SingleFrequencyFftAcquisition(Action):
         )
 
         capture_md = {
-            "core:frequency": self.sdr.radio.frequency,
+            "core:frequency": frequency,
             "core:datetime": utils.get_datetime_str_now(),
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
-        frequencies = get_fft_frequencies(
-            data, self.sdr.radio.sample_rate, self.sdr.radio.frequency
-        ).tolist()
+        frequencies = get_fft_frequencies(data, sample_rate, frequency).tolist()
 
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {

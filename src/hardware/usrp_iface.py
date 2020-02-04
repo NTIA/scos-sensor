@@ -41,15 +41,15 @@ def connect(
     global is_available
     global radio
 
+    if is_available and radio is not None:
+        return True
+
     if settings.MOCK_RADIO:
         logger.warning("Using mock USRP.")
         random = settings.MOCK_RADIO_RANDOM
         usrp = MockUsrp(randomize_values=random)
         is_available = True
     else:
-        if is_available and radio is not None:
-            return True
-
         try:
             import uhd
         except ImportError:
