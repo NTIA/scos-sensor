@@ -98,12 +98,7 @@ from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
 from actions.measurement_params import MeasurementParams
-from actions.utils import (
-    get_coordinate_system_sigmf,
-    get_fft_window,
-    get_fft_window_correction,
-    get_sensor_location_sigmf,
-)
+from actions.utils import *
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
@@ -237,10 +232,9 @@ class SingleFrequencyFftAcquisition(Action):
             "time_stop": end_time,
             "domain": "Frequency",
             "measurement_type": "single-frequency",
+            "frequency_tuned_low": self.sdr.radio.frequency,
+            "frequency_tuned_high": self.sdr.radio.frequency,
         }
-        frequencies = self.get_frequencies(data, self.measurement_params).tolist()
-        measurement_object["frequency_low"] = frequencies[0]
-        measurement_object["frequency_high"] = frequencies[-1]
         sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
 
         sensor = capabilities["sensor"]
@@ -284,16 +278,23 @@ class SingleFrequencyFftAcquisition(Action):
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
+        frequencies = get_fft_frequencies(
+            data, self.sdr.radio.sample_rate, self.sdr.radio.frequency
+        ).tolist()
+
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
                 "ntia-core:annotation_type": "FrequencyDomainDetection",
                 "ntia-algorithm:number_of_samples_in_fft": self.measurement_params.fft_size,
                 "ntia-algorithm:window": "flattop",
                 "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
-                "ntia-algorithm:detector": detector.name + "_power",
+                "ntia-algorithm:detector": "fft_" + detector.name + "_power",
                 "ntia-algorithm:number_of_ffts": self.measurement_params.num_ffts,
                 "ntia-algorithm:units": "dBm",
                 "ntia-algorithm:reference": "not referenced",
+                "ntia-algorithm:frequency_start": frequencies[0],
+                "ntia-algorithm:frequency_stop": frequencies[-1],
+                "ntia-algorithm:frequency_step": frequencies[1] - frequencies[0],
             }
 
             sigmf_md.add_annotation(

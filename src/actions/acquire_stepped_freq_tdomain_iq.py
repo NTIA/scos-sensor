@@ -189,10 +189,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             "measurement_type": "survey"
             if self.is_multirecording
             else "single-frequency",
+            "frequency_tuned_low": self.sdr.radio.frequency,
+            "frequency_tuned_high": self.sdr.radio.frequency,
         }
-        frequencies = self.get_frequencies(data, measurement_params)
-        measurement_object["frequency_low"] = frequencies[0]
-        measurement_object["frequency_high"] = frequencies[-1]
         sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
 
         sensor = capabilities["sensor"]
@@ -212,7 +211,6 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        # sigmf_md.set_global_field("ntia-scos:task_id", task_id)
         if self.is_multirecording:
             sigmf_md.set_global_field("ntia-scos:recording", recording_id)
 

@@ -102,8 +102,8 @@ class RadioInterface(object):
     # Define thresholds for determining ADC overload for the sigan
     ADC_FULL_RANGE_THRESHOLD = 0.98  # ADC scale -1<sample<1, magnitude threshold = 0.98
     ADC_OVERLOAD_THRESHOLD = (
-        0.01
-    )  # Ratio of samples above the ADC full range to trigger overload
+        0.01  # Ratio of samples above the ADC full range to trigger overload
+    )
 
     def __init__(
         self,
@@ -288,7 +288,6 @@ class RadioInterface(object):
                 "1db_compression_sensor"
             ],
             "ntia-sensor:enbw_sensor": self.sensor_calibration_data["enbw_sensor"],
-            "ntia-sensor:mean_noise_power_sensor": "",
         }
         return annotation_md
 

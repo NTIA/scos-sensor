@@ -40,6 +40,14 @@ def get_fft_window_correction(window, correction_type="amplitude"):
     return window_correction
 
 
+def get_fft_frequencies(data, sample_rate, center_frequency):
+    frequency_info = {}
+    time_step = 1 / sample_rate
+    frequencies = np.fft.fftfreq(data.size, time_step)
+    frequencies = np.fft.fftshift(frequencies) + center_frequency
+    return frequencies
+
+
 def get_coordinate_system_sigmf():
     return {
         "id": "WGS 1984",

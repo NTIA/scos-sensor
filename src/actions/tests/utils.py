@@ -29,7 +29,11 @@ def check_metadata_fields(
     assert "ntia-core:measurement" in acquisition.metadata["global"]
     assert acquisition.metadata["global"]["ntia-core:measurement"]["time_start"]
     assert acquisition.metadata["global"]["ntia-core:measurement"]["time_stop"]
-    assert acquisition.metadata["global"]["ntia-core:measurement"]["frequency_low"]
-    assert acquisition.metadata["global"]["ntia-core:measurement"]["frequency_high"]
+    assert acquisition.metadata["global"]["ntia-core:measurement"][
+        "frequency_tuned_low"
+    ]
+    assert acquisition.metadata["global"]["ntia-core:measurement"][
+        "frequency_tuned_high"
+    ]
     assert acquisition.metadata["global"]["ntia-core:measurement"]["domain"]
     assert acquisition.metadata["global"]["ntia-core:measurement"]["measurement_type"]

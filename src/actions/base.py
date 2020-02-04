@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Action(object):
     """The action base class.
 
@@ -24,13 +25,6 @@ class Action(object):
 
     def __call__(self, schedule_entry_name, task_id):
         raise NotImplementedError("Implement action logic.")
-
-    def get_frequencies(self, data, measurement_params):
-        frequency_info = {}
-        timestep = 1 / measurement_params.sample_rate
-        frequencies = np.fft.fftfreq(data.size, timestep)
-        frequencies = np.fft.fftshift(frequencies) + measurement_params.center_frequency
-        return frequencies
 
     @property
     def summary(self):
