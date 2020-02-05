@@ -1,5 +1,5 @@
 stepped_frequency_time_domain_iq:
-  name: survey_700MHz_band_40dB_1000ms_iq
+  name: survey_700MHz_band_10dB_80ms_iq
   fcs:
     - 700.5e6
     - 709e6
@@ -12,16 +12,16 @@ stepped_frequency_time_domain_iq:
     - 793e6
     - 802e6
   gains:
-    - 40
-    - 40
-    - 40
-    - 40
-    - 40
-    - 40
-    - 40
-    - 40
-    - 40
-    - 40
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
   sample_rates:
     - 15.36e6
     - 15.36e6
@@ -34,13 +34,13 @@ stepped_frequency_time_domain_iq:
     - 15.36e6
     - 15.36e6
   durations_ms:
-    - 1000
-    - 1000
-    - 1000
-    - 1000
-    - 1000
-    - 1000
-    - 1000
-    - 1000
-    - 1000
-    - 1000
+    - 80
+    - 80
+    - 80
+    - 80
+    - 80
+    - 80
+    - 80
+    - 80
+    - 80
+    - 80
