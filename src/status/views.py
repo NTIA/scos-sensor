@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -26,7 +27,8 @@ def get_last_calibration_time():
     """Returns datetime string of last calibration time"""
     sdr.connect()
     if sdr.is_available and sdr.radio.sensor_calibration:
-        return sdr.radio.sensor_calibration.calibration_datetime
+        cal_datetime = sdr.radio.sensor_calibration.calibration_datetime
+        return utils.convert_to_millisecond_iso_format(cal_datetime)
     return "unknown"
 
 

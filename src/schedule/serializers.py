@@ -5,7 +5,11 @@ from rest_framework.reverse import reverse
 
 import actions
 from sensor import V1
-from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
+from sensor.utils import (
+    convert_to_millisecond_iso_format,
+    get_datetime_from_timestamp,
+    get_timestamp_from_datetime,
+)
 
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
@@ -207,7 +211,12 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         FIELDS_TO_INCLUDE = ["id", "name", "start", "stop", "interval", "priority"]
         for field in FIELDS_TO_INCLUDE:
             if field in data:
-                filtered_data[field] = data[field]
+                if field in ["start", "stop"] and data[field]:
+                    filtered_data[field] = convert_to_millisecond_iso_format(
+                        data[field]
+                    )
+                else:
+                    filtered_data[field] = data[field]
         return filtered_data
 
 

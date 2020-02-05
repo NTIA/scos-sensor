@@ -4,8 +4,8 @@ Markdown==3.1.1
 -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF
 coreapi==2.3.3
 django-debug-toolbar==1.11
-django-extensions==2.1.7
-django-filter==2.1.0
+django-extensions==2.2.6
+django-filter==2.2.0
 djangorestframework==3.9.4
 docker-compose==1.24.0
 drf-yasg==1.15.0
@@ -14,6 +14,7 @@ gunicorn==19.9.0
 jsonfield==2.0.2
 numpy>=1.16.4
 psycopg2-binary==2.8.2
+python-dateutil==2.8.1
 raven==6.10.0
 requests-futures==0.9.9
 requests-mock==1.6.0

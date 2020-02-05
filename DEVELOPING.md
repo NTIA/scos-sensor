@@ -16,7 +16,7 @@ you've done the setup setups in "Running Tests", etc.
 Running Tests
 -------------
 
-`scos-sensor` depends on python3.6+.
+`scos-sensor` depends on python3.7+.
 
 Ideally, you should add a test that covers any new feature that you add. If
 you've done that, then running the included test suite is the easiest way to
