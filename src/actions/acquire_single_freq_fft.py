@@ -274,7 +274,7 @@ class SingleFrequencyFftAcquisition(Action):
 
         capture_md = {
             "core:frequency": frequency,
-            "core:datetime": utils.get_datetime_str_now(),
+            "core:datetime": self.sdr.radio.capture_time,
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)

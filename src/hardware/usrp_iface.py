@@ -19,7 +19,7 @@ import numpy as np
 
 from hardware import calibration
 from hardware.mocks.usrp_block import MockUsrp
-from sensor import settings
+from sensor import settings, utils
 from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
@@ -117,6 +117,7 @@ class RadioInterface(object):
         self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
         self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
         self.sigan_overload = False
+        self.capture_time = None
 
         # Try and load sensor/sigan calibration data
         if not settings.MOCK_RADIO:
@@ -294,6 +295,7 @@ class RadioInterface(object):
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
         self.sigan_overload = False
+        self.capture_time = None
 
         # Get the calibration data for the acquisition
         self.recompute_calibration_data()
@@ -311,6 +313,7 @@ class RadioInterface(object):
             else:
                 nsamps = n + nskip
 
+            self.capture_time = utils.get_datetime_str_now()
             samples = self.usrp.recv_num_samps(
                 nsamps,  # number of samples
                 self.frequency,  # center frequency in Hz

@@ -231,10 +231,11 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             "ntia-location:coordinate_system", get_coordinate_system_sigmf()
         )
 
-        dt = utils.get_datetime_str_now()
-
         num_samples = measurement_params.get_num_samples()
-        capture_md = {"core:frequency": frequency, "core:datetime": dt}
+        capture_md = {
+            "core:frequency": frequency,
+            "core:datetime": self.sdr.radio.capture_time,
+        }
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
         calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
         sigmf_md.add_annotation(
