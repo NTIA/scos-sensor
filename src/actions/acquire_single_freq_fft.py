@@ -319,7 +319,8 @@ class SingleFrequencyFftAcquisition(Action):
             10 * np.log10(1 / (2 * 50)) + 30
         )  # Convert log(V^2) to dBm
         sensor_overload = False
-        if self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]:
+        # explicitly check is not None since 1db compression could be 0
+        if self.sdr.radio.sensor_calibration_data["1db_compression_sensor"] is not None:
             sensor_overload = (
                 time_domain_avg_power
                 > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
