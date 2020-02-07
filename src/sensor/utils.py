@@ -69,8 +69,13 @@ def parse_datetime_str(d):
     return datetime.strptime(d, DATETIME_FORMAT)
 
 
-def convert_to_millisecond_iso_format(d):
+def convert_datetime_to_millisecond_iso_format(timestamp):
+    return timestamp.replace(tzinfo=None).isoformat(timespec="milliseconds") + "Z"
+
+
+def convert_string_to_millisecond_iso_format(timestamp):
     # convert iso formatted datetime string to millisecond iso format
-    cal_datetime = parser.isoparse(d)
-    cal_datetime = cal_datetime.replace(tzinfo=None)
-    return cal_datetime.isoformat(timespec="milliseconds") + "Z"
+    if timestamp:
+        parsed_timestamp = parser.isoparse(timestamp)
+        return convert_datetime_to_millisecond_iso_format(parsed_timestamp)
+    return None

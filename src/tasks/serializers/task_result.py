@@ -3,6 +3,7 @@ from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
 from sensor import V1
+from sensor.utils import convert_string_to_millisecond_iso_format
 from tasks.models import Acquisition, TaskResult
 
 from .acquisition import AcquisitionSerializer
@@ -96,6 +97,13 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
             "duration",
             "data",
         )
+
+    def to_representation(self, instance):
+        """Change to millisecond datetime format"""
+        ret = super().to_representation(instance)
+        ret["started"] = convert_string_to_millisecond_iso_format(ret["started"])
+        ret["finished"] = convert_string_to_millisecond_iso_format(ret["finished"])
+        return ret
 
     def get_schedule_entry(self, obj):
         request = self.context["request"]

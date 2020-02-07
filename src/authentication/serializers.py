@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from sensor import V1
+from sensor.utils import convert_string_to_millisecond_iso_format
 
 from .models import User
 
@@ -46,6 +47,15 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
         return urls
 
+    def to_representation(self, instance):
+        """Change to millisecond datetime format"""
+        ret = super().to_representation(instance)
+        ret["date_joined"] = convert_string_to_millisecond_iso_format(
+            ret["date_joined"]
+        )
+        ret["last_login"] = convert_string_to_millisecond_iso_format(ret["last_login"])
+        return ret
+
 
 class UserDetailsSerializer(UserProfileSerializer):
     """Private user account view."""
@@ -71,3 +81,12 @@ class UserDetailsSerializer(UserProfileSerializer):
 
     def get_has_usable_password(self, obj):
         return obj.has_usable_password()
+
+    def to_representation(self, instance):
+        """Change to millisecond datetime format"""
+        ret = super().to_representation(instance)
+        ret["date_joined"] = convert_string_to_millisecond_iso_format(
+            ret["date_joined"]
+        )
+        ret["last_login"] = convert_string_to_millisecond_iso_format(ret["last_login"])
+        return ret

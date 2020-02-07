@@ -6,7 +6,8 @@ from rest_framework.reverse import reverse
 import actions
 from sensor import V1
 from sensor.utils import (
-    convert_to_millisecond_iso_format,
+    convert_datetime_to_millisecond_iso_format,
+    convert_string_to_millisecond_iso_format,
     get_datetime_from_timestamp,
     get_timestamp_from_datetime,
 )
@@ -35,7 +36,7 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
             return None
 
         dt = get_datetime_from_timestamp(ts)
-        dt_str = super(DateTimeFromTimestampField, self).to_representation(dt)
+        dt_str = convert_datetime_to_millisecond_iso_format(dt)
 
         return dt_str
 
@@ -204,6 +205,13 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         return super().to_internal_value(data)
 
+    def to_representation(self, instance):
+        """Change to millisecond datetime format"""
+        ret = super().to_representation(instance)
+        ret["modified"] = convert_string_to_millisecond_iso_format(ret["modified"])
+        ret["created"] = convert_string_to_millisecond_iso_format(ret["created"])
+        return ret
+
     def to_sigmf_json(self):
         """Remove fields not part of SigMF"""
         filtered_data = {}
@@ -211,12 +219,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         FIELDS_TO_INCLUDE = ["id", "name", "start", "stop", "interval", "priority"]
         for field in FIELDS_TO_INCLUDE:
             if field in data:
-                if field in ["start", "stop"] and data[field]:
-                    filtered_data[field] = convert_to_millisecond_iso_format(
-                        data[field]
-                    )
-                else:
-                    filtered_data[field] = data[field]
+                filtered_data[field] = data[field]
         return filtered_data
 
 
