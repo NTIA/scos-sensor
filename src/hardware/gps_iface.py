@@ -5,7 +5,7 @@ import subprocess
 from datetime import datetime
 from time import sleep, time
 
-from hardware import usrp_iface
+from hardware import radio
 
 logger = logging.getLogger(__name__)
 
@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 def get_lat_long(timeout_s=1):
     """Use low-level UHD and USRP block methods to sync with GPS."""
 
-    if not usrp_iface.is_available:
+    if not radio.is_available:
         return None
 
-    uhd = usrp_iface.uhd
-    usrp = usrp_iface.radio.usrp
+    uhd = radio.uhd
+    usrp = radio.usrp
 
     logger.debug("Waiting for GPS lock... ")
     start = time()

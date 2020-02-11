@@ -3,7 +3,7 @@
 import logging
 from pathlib import Path
 
-from hardware import usrp_iface
+from hardware import radio
 from sensor import settings
 
 from .base import Action
@@ -17,7 +17,7 @@ class UsrpMonitor(Action):
     def __init__(self, admin_only=True):
         super(UsrpMonitor, self).__init__(admin_only=admin_only)
 
-        self.usrp = usrp_iface
+        self.radio = radio
 
     def __call__(self, name, tid):
         logger.debug("Performing USRP health check")
@@ -35,7 +35,7 @@ class UsrpMonitor(Action):
 
         if healthy:
             try:
-                data = self.usrp.radio.acquire_samples(requested_samples)
+                data = self.radio.acquire_time_domain_samples(requested_samples)
             except Exception:
                 detail = "Unable to acquire USRP"
                 healthy = False
@@ -59,7 +59,7 @@ class UsrpMonitor(Action):
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        self.usrp.connect()
-        if not self.usrp.is_available:
+        # self.usrp.connect()
+        if not self.radio.is_available:
             msg = "acquisition failed: USRP required but not available"
             raise RuntimeError(msg)

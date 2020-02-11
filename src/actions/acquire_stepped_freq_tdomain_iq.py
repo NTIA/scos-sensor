@@ -49,7 +49,7 @@ from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
 from capabilities import capabilities
-from hardware import sdr
+from hardware import radio
 from sensor import settings, utils
 from status.utils import get_location
 
@@ -94,7 +94,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         self.nfcs = nfcs
         self.fcs = fcs
         self.tuning_parameters = tuning_parameters
-        self.sdr = sdr  # make instance variable to allow mocking
+        self.radio = radio  # make instance variable to allow mocking
 
     def __call__(self, schedule_entry_name, task_id):
         """This is the entrypoint function called by the scheduler."""
@@ -113,8 +113,8 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        self.sdr.connect()
-        if not self.sdr.is_available:
+        # self.radio.connect()
+        if not self.radio.is_available:
             msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
@@ -123,7 +123,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         self.configure_sdr(fc, **tuning_parameters)
 
         # Use the radio's actual reported sample rate instead of requested rate
-        sample_rate = self.sdr.radio.sample_rate
+        sample_rate = self.radio.sample_rate
 
         # Build global metadata
         sigmf_md = SigMFFile()
@@ -151,11 +151,13 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         dt = utils.get_datetime_str_now()
         # Drop ~10 ms of samples
         nskip = int(0.01 * sample_rate)
-        acq = self.sdr.radio.acquire_samples(nsamps, nskip=nskip).astype(np.complex64)
+        acq = self.radio.acquire_time_domain_samples(
+            nsamps, num_samples_skip=nskip
+        ).astype(np.complex64)
         data = np.append(data, acq)
         capture_md = {"core:frequency": fc, "core:datetime": dt}
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
-        calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
+        calibration_annotation_md = self.radio.create_calibration_annotation()
         sigmf_md.add_annotation(
             start_index=0, length=nsamps, metadata=calibration_annotation_md
         )
@@ -163,12 +165,15 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         return data, sigmf_md
 
     def configure_sdr(self, fc, gain, sample_rate, duration_ms):
-        self.set_sdr_sample_rate(sample_rate)
-        self.sdr.radio.tune_frequency(fc)
-        self.sdr.radio.gain = gain
+        # self.set_sdr_sample_rate(sample_rate)
+        self.radio.sample_rate = sample_rate
+        # self.radio.tune_frequency(fc)
+        self.radio.frequency = fc
+        self.radio.gain = gain
+        self.radio.configure(self.name)
 
-    def set_sdr_sample_rate(self, sample_rate):
-        self.sdr.radio.sample_rate = sample_rate
+    # def set_sdr_sample_rate(self, sample_rate):
+    #     self.radio.radio.sample_rate = sample_rate
 
     def archive(self, task_result, recording_id, acq_data, sigmf_md):
         from tasks.models import Acquisition

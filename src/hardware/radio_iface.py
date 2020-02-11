@@ -1,41 +1,35 @@
-from abc import ABC
-from sensor import settings
-from usrp_iface import USRPRadio
+from abc import ABC, abstractmethod
 
-
-def get_radio():
-    if settings.SENSOR_TYPE == "USRP":
-        return USRPRadio()
-    elif settings.SENSOR_TYPE == "KEYSIGHT_N6841A":
-        return KeysightN6841ARadio()
-    elif settings.SENSOR_TYPE == "MOCK":
-        return MockRadio()
-    elif settings.SENSOR_TYPE == "MOCK_RANDOM" or settings.SENSOR_TYPE == "MOCK_RANDOM_32":
-        return MockRadio(random=True)
-    else:
-        raise Exception("Unsupported SENSOR_TYPE")
 
 class RadioInterface(ABC):
+    @property
+    @abstractmethod
+    def is_available(self):
+        pass
 
     @property
     @abstractmethod
     def sample_rate(self):  # -> float:
-        raise NotImplementedError("Implement sample_rate getter")
+        pass
 
     @sample_rate.setter
     @abstractmethod
     def sample_rate(self, sample_rate):
-        raise NotImplementedError("Implement sample_rate setter")
+        pass
 
     @property
     @abstractmethod
     def frequency(self):  # -> float:
-        raise NotImplementedError("Implement frequency getter")
+        pass
 
     @frequency.setter
     @abstractmethod
     def frequency(self, frequency):
-        raise NotImplementedError("Implement frequency setter")
+        pass
+
+    @abstractmethod
+    def configure(self, action_name):
+        pass
 
     @property
     @abstractmethod
@@ -52,9 +46,5 @@ class RadioInterface(ABC):
         raise NotImplementedError("Implement acquire_time_domain_samples")
 
     @abstractmethod
-    def acquire_frequency_domain_samples(self, fft_size, num_ffts, retries=5):
-        raise NotImplementedError("Implement acquire_frequency_domain_samples")
-
-    @abstractmethod
     def create_calibration_annotation(self):
-        raise NotImplementedError("Implement create_calibration_annotation")
+        pass

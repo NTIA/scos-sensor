@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import pytest
 
-from hardware import usrp_iface
+from hardware import radio
 from hardware.tests.resources.utils import easy_gain, is_close
 
 
@@ -23,10 +23,10 @@ class TestUSRP:
             return
 
         # Create the RadioInterface with the mock usrp_block and get the radio
-        usrp_iface.connect()
-        if not usrp_iface.is_available:
+        # usrp_iface.connect()
+        if not radio.is_available:
             raise RuntimeError("Receiver is not available.")
-        self.rx = usrp_iface.radio
+        self.rx = radio
 
         # Alert that the setup was complete
         self.setup_complete = True
@@ -43,7 +43,7 @@ class TestUSRP:
         self.rx.usrp.set_times_to_fail_recv(times_to_fail)
 
         try:
-            self.rx.acquire_samples(1000, retries=max_retries)
+            self.rx.acquire_time_domain_samples(1000, retries=max_retries)
         except RuntimeError:
             msg = "Acquisition failing {} times sequentially with {}\n"
             msg += "retries requested should NOT have raised an error."
@@ -66,7 +66,7 @@ class TestUSRP:
         msg += "retries requested SHOULD have raised an error."
         msg = msg.format(times_to_fail, max_retries)
         with pytest.raises(RuntimeError):
-            self.rx.acquire_samples(1000, 1000, max_retries)
+            self.rx.acquire_time_domain_samples(1000, 1000, max_retries)
             pytest.fail(msg)
 
         self.rx.usrp.set_times_to_fail_recv(0)
@@ -103,7 +103,7 @@ class TestUSRP:
         self.rx.sample_rate = int(10e6)
         self.rx.frequency = 1e9
         self.rx.gain = 20
-        data = self.rx.acquire_samples(1000)
+        data = self.rx.acquire_time_domain_samples(1000)
 
         # The true value should be the 1 / linear gain
         true_val = easy_gain(int(10e6), 1e9, 20) - 10

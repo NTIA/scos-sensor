@@ -91,19 +91,18 @@ The resulting matrix is real-valued, 32-bit floats representing dBm.
 """
 
 import logging
-from enum import Enum
 
 import numpy as np
 from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
-from actions.utils import get_fft_window, get_fft_window_correction
 from capabilities import capabilities
-from hardware import sdr
+from hardware import radio
 from sensor import settings, utils
 from status.utils import get_location
 
 from .base import Action
+from .utils import *
 
 logger = logging.getLogger(__name__)
 
@@ -111,34 +110,6 @@ GLOBAL_INFO = {
     "core:datatype": "rf32_le",  # 32-bit float, Little Endian
     "core:version": "0.0.2",
 }
-
-
-class M4sDetector(Enum):
-    min = 1
-    max = 2
-    mean = 3
-    median = 4
-    sample = 5
-
-
-def m4s_detector(array):
-    """Take min, max, mean, median, and random sample of n-dimensional array.
-
-    Detector is applied along each column.
-
-    :param array: an (m x n) array of real frequency-domain linear power values
-    :returns: a (5 x n) in the order min, max, mean, median, sample in the case
-              that `detector` is `m4s`, otherwise a (1 x n) array
-
-    """
-    amin = np.min(array, axis=0)
-    amax = np.max(array, axis=0)
-    mean = np.mean(array, axis=0)
-    median = np.median(array, axis=0)
-    random_sample = array[np.random.randint(0, array.shape[0], 1)][0]
-    m4s = np.array([amin, amax, mean, median, random_sample], dtype=np.float32)
-
-    return m4s
 
 
 class SingleFrequencyFftAcquisition(Action):
@@ -162,7 +133,7 @@ class SingleFrequencyFftAcquisition(Action):
         self.sample_rate = sample_rate
         self.fft_size = fft_size
         self.nffts = nffts
-        self.sdr = sdr  # make instance variable to allow mocking
+        self.radio = radio  # make instance variable to allow mocking
         self.enbw = None
 
     def __call__(self, schedule_entry_name, task_id):
@@ -183,8 +154,8 @@ class SingleFrequencyFftAcquisition(Action):
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
-        self.sdr.connect()
-        if not self.sdr.is_available:
+        # self.radio.connect()
+        if not self.radio.is_available:
             msg = "acquisition failed: SDR required but not available"
             raise RuntimeError(msg)
 
@@ -194,16 +165,16 @@ class SingleFrequencyFftAcquisition(Action):
         self.set_sdr_gain()
 
     def set_sdr_gain(self):
-        self.sdr.radio.gain = self.gain
+        self.radio.gain = self.gain
 
     def set_sdr_sample_rate(self):
-        self.sdr.radio.sample_rate = self.sample_rate
-        self.sample_rate = self.sdr.radio.sample_rate
+        self.radio.sample_rate = self.sample_rate
+        self.sample_rate = self.radio.sample_rate
 
     def set_sdr_frequency(self):
         requested_frequency = self.frequency
-        self.sdr.radio.frequency = requested_frequency
-        self.frequency = self.sdr.radio.frequency
+        self.radio.frequency = requested_frequency
+        self.frequency = self.radio.frequency
 
     def acquire_data(self):
         msg = "Acquiring {} FFTs at {} MHz"
@@ -212,16 +183,25 @@ class SingleFrequencyFftAcquisition(Action):
         # Drop ~10 ms of samples
         nskip = int(0.01 * self.sample_rate)
 
-        data = self.sdr.radio.acquire_samples(self.nffts * self.fft_size, nskip=nskip)
-        data.resize((self.nffts, self.fft_size))
-
+        data = self.radio.acquire_time_domain_samples(
+            self.nffts * self.fft_size, num_samples_skip=nskip
+        )
         return data
+
+    def apply_detector(self, data):
+        complex_fft, self.enbw = get_frequency_domain_data(
+            data, self.radio.sample_rate, self.fft_size
+        )
+        power_fft = convert_volts_to_watts(complex_fft)
+        power_fft_m4s = apply_detector(power_fft)
+        power_fft_dbm = convert_watts_to_dbm(power_fft_m4s)
+        return power_fft_dbm
 
     def build_sigmf_md(self, task_id):
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
-        sample_rate = self.sdr.radio.sample_rate
+        sample_rate = self.radio.sample_rate
 
         sigmf_md = SigMFFile()
         sigmf_md.set_global_info(GLOBAL_INFO)
@@ -272,63 +252,21 @@ class SingleFrequencyFftAcquisition(Action):
                 length=self.fft_size,
                 metadata=frequency_domain_detection_md,
             )
+            logger.debug("sample_count = " + str(self.fft_size))
+
+        calibration_annotation_md = self.radio.create_calibration_annotation()
+        sigmf_md.add_annotation(
+            start_index=0,
+            length=self.fft_size * len(M4sDetector),
+            metadata=calibration_annotation_md,
+        )
 
         return sigmf_md
-
-    def apply_detector(self, data):
-        """Take FFT of data, apply detector, and translate watts to dBm."""
-        logger.debug("Applying detector")
-
-        # Get the fft window and its amplitude/energy correction factors
-        fft_window = get_fft_window("Flat Top", self.fft_size)
-        fft_window_acf = get_fft_window_correction(fft_window, "amplitude")
-        fft_window_ecf = get_fft_window_correction(fft_window, "energy")
-        fft_window_enbw = (fft_window_acf / fft_window_ecf) ** 2
-
-        # Calculate the equivalent noise bandwidth of the bins
-        self.enbw = self.sdr.radio.sensor_calibration_data["enbw_sensor"]
-        self.enbw /= self.fft_size * fft_window_enbw
-
-        # Apply the FFT window
-        data = data * fft_window
-
-        # Take and shift the fft (center fc)
-        complex_fft = np.fft.fft(data)
-        complex_fft = np.fft.fftshift(complex_fft)
-
-        # Convert to pseudo-power (full power conversion will occur after detector)
-        power_fft = np.abs(complex_fft)
-        power_fft = np.square(power_fft)
-
-        # Run the M4S detector
-        power_fft_m4s = m4s_detector(power_fft)
-
-        # If testing, don't flood output with divide-by-zero warnings from np.log10
-        if settings.RUNNING_TESTS:
-            np_error_settings_savepoint = np.seterr(divide="ignore")
-
-        # Use impedance to finish power conversion and convert to dBm
-        impedance_factor = -10 * np.log10(50)
-        power_fft_m4s = 10 * np.log10(power_fft_m4s) + impedance_factor + 30
-        power_fft_m4s -= 3  # Account for double sided FFT
-
-        # If altered, restore numpy error settings
-        if settings.RUNNING_TESTS:
-            np.seterr(**np_error_settings_savepoint)
-
-        # Normalize the FFT
-        fft_normalization_factor = -20 * np.log10(self.fft_size)
-        power_fft_m4s += fft_normalization_factor
-
-        # Apply the window's amplitude correction factor
-        window_correction = 20 * np.log10(fft_window_acf)
-        power_fft_m4s += window_correction
-
-        return power_fft_m4s
 
     def archive(self, task_result, m4s_data, sigmf_md):
         from tasks.models import Acquisition
 
+        logger.debug("data type = " + str(type(m4s_data[0][0])))
         logger.debug("Storing acquisition in database")
 
         name = (

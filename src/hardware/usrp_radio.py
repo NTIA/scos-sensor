@@ -1,115 +1,121 @@
 """Maintains a persistent connection to the USRP.
 
 Example usage:
-    >>> from hardware import usrp_iface
-    >>> usrp_iface.connect()
-    >>> usrp_iface.is_available
+    >>> from hardware import radio
+    >>> radio.is_available
     True
-    >>> rx = usrp_iface.radio
+    >>> rx = radio
     >>> rx.sample_rate = 10e6
     >>> rx.frequency = 700e6
     >>> rx.gain = 40
-    >>> samples = rx.acquire_samples(1000)
+    >>> samples = rx.acquire_time_domain_samples(1000)
 """
 
 import logging
 from os import path
 
 import numpy as np
+from ruamel.yaml import YAML
 
 from hardware import calibration
 from hardware.mocks.usrp_block import MockUsrp
+from hardware.radio_iface import RadioInterface
 from sensor import settings
 from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
 
-uhd = None
-radio = None
-is_available = False
-
 # Testing determined these gain values provide a good mix of sensitivity and
 # dynamic range performance
 VALID_GAINS = (0, 20, 40, 60)
 
-
-def connect(
-    sensor_cal_file=settings.SENSOR_CALIBRATION_FILE,
-    sigan_cal_file=settings.SIGAN_CALIBRATION_FILE,
-):  # -> bool:
-    global uhd
-    global is_available
-    global radio
-
-    if settings.MOCK_RADIO:
-        logger.warning("Using mock USRP.")
-        random = settings.MOCK_RADIO_RANDOM
-        usrp = MockUsrp(randomize_values=random)
-        is_available = True
-    else:
-        if is_available and radio is not None:
-            return True
-
-        try:
-            import uhd
-        except ImportError:
-            logger.warning("uhd not available - disabling radio")
-            return False
-
-        usrp_args = "type=b200"  # find any b-series device
-
-        try:
-            usrp = uhd.usrp.MultiUSRP(usrp_args)
-        except RuntimeError:
-            err = "No device found matching search parameters {!r}\n"
-            err = err.format(usrp_args)
-            raise RuntimeError(err)
-
-        logger.debug("Using the following USRP:")
-        logger.debug(usrp.get_pp_string())
-
-    try:
-        radio_iface = RadioInterface(
-            usrp=usrp, sensor_cal_file=sensor_cal_file, sigan_cal_file=sigan_cal_file
-        )
-        is_available = True
-        radio = radio_iface
-        return True
-    except Exception as err:
-        logger.exception(err)
-        return False
+# Define the default calibration dicts
+DEFAULT_SIGAN_CALIBRATION = {
+    "gain_sigan": None,  # Defaults to gain setting
+    "enbw_sigan": None,  # Defaults to sample rate
+    "noise_figure_sigan": 0,
+    "1db_compression_sigan": 100,
+}
 
 
-class RadioInterface(object):
+DEFAULT_SENSOR_CALIBRATION = {
+    "gain_sensor": None,  # Defaults to sigan gain
+    "enbw_sensor": None,  # Defaults to sigan enbw
+    "noise_figure_sensor": None,  # Defaults to sigan noise figure
+    "1db_compression_sensor": None,  # Defaults to sigan compression + preselector gain
+    "gain_preselector": 0,
+    "noise_figure_preselector": 0,
+    "1db_compression_preselector": 100,
+}
 
-    # Define the default calibration dicts
-    DEFAULT_SIGAN_CALIBRATION = {
-        "gain_sigan": None,  # Defaults to gain setting
-        "enbw_sigan": None,  # Defaults to sample rate
-        "noise_figure_sigan": 0,
-        "1db_compression_sigan": 100,
-    }
-    DEFAULT_SENSOR_CALIBRATION = {
-        "gain_sensor": None,  # Defaults to sigan gain
-        "enbw_sensor": None,  # Defaults to sigan enbw
-        "noise_figure_sensor": None,  # Defaults to sigan noise figure
-        "1db_compression_sensor": None,  # Defaults to sigan compression + preselector gain
-        "gain_preselector": 0,
-        "noise_figure_preselector": 0,
-        "1db_compression_preselector": 100,
-    }
 
+class USRPRadio(RadioInterface):
     def __init__(
         self,
-        usrp,
         sensor_cal_file=settings.SENSOR_CALIBRATION_FILE,
         sigan_cal_file=settings.SIGAN_CALIBRATION_FILE,
     ):
-        self.usrp = usrp
+        self.uhd = None
+        self.usrp = None
+        self._is_available = False
 
+        self.sensor_calibration_data = None
+        self.sigan_calibration_data = None
+        self.sensor_calibration = None
+        self.sigan_calibration = None
+
+        self.lo_freq = None
+        self.dsp_freq = None
+
+        self.connect()
+
+        self.get_calibration(sensor_cal_file, sigan_cal_file)
+
+    def connect(self):
+        if settings.MOCK_RADIO:
+            logger.warning("Using mock USRP.")
+            random = settings.MOCK_RADIO_RANDOM
+            self.usrp = MockUsrp(randomize_values=random)
+            self._is_available = True
+        else:
+            if self.is_available:  # already connected
+                return
+
+            try:
+                import uhd
+
+                self.uhd = uhd
+            except ImportError as ie:
+                logger.warning("uhd not available - disabling radio")
+                raise
+
+            usrp_args = "type=b200"  # find any b-series device
+
+            try:
+                self.usrp = uhd.usrp.MultiUSRP(usrp_args)
+            except RuntimeError:
+                err = "No device found matching search parameters {!r}\n"
+                err = err.format(usrp_args)
+                raise RuntimeError(err)
+
+            logger.debug("Using the following USRP:")
+            logger.debug(self.usrp.get_pp_string())
+
+            try:
+                self._is_available = True
+                return True
+            except Exception as err:
+                logger.exception(err)
+                return False
+
+    @property
+    def is_available(self):
+        return self._is_available
+
+    def get_calibration(self, sensor_cal_file, sigan_cal_file):
         # Set the default calibration values
-        self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
-        self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
+        self.sensor_calibration_data = DEFAULT_SENSOR_CALIBRATION.copy()
+        self.sigan_calibration_data = DEFAULT_SIGAN_CALIBRATION.copy()
 
         # Try and load sensor/sigan calibration data
         if not settings.MOCK_RADIO:
@@ -178,7 +184,7 @@ class RadioInterface(object):
             tune_result = self.usrp.set_rx_freq(rf_freq, dsp_freq)
             logger.debug(tune_result)
         else:
-            tune_request = uhd.types.TuneRequest(rf_freq, dsp_freq)
+            tune_request = self.uhd.types.TuneRequest(rf_freq, dsp_freq)
             tune_result = self.usrp.set_rx_freq(tune_request)
             # FIXME: report actual values when available - see note below
             msg = "rf_freq: {}, dsp_freq: {}"
@@ -221,7 +227,7 @@ class RadioInterface(object):
                 )
             )
         else:
-            self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
+            self.sensor_calibration_data = DEFAULT_SENSOR_CALIBRATION.copy()
 
         # Try and get the sigan calibration data
         if self.sigan_calibration is not None:
@@ -233,7 +239,7 @@ class RadioInterface(object):
                 )
             )
         else:
-            self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
+            self.sigan_calibration_data = DEFAULT_SIGAN_CALIBRATION.copy()
 
         # Catch any defaulting calibration values for the sigan
         if self.sigan_calibration_data["gain_sigan"] is None:
@@ -268,8 +274,13 @@ class RadioInterface(object):
         }
         return annotation_md
 
-    def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
-        """Aquire nskip+n samples and return the last n"""
+    def configure(self, action_name):
+        pass
+
+    def acquire_time_domain_samples(
+        self, num_samples, num_samples_skip=0, retries=5
+    ):  # -> np.ndarray:
+        """Aquire num_samples_skip+num_samples samples and return the last num_samples"""
 
         # Get the calibration data for the acquisition
         self.recompute_calibration_data()
@@ -283,9 +294,9 @@ class RadioInterface(object):
         while True:
             # No need to skip initial samples when simulating the radio
             if settings.MOCK_RADIO:
-                nsamps = n
+                nsamps = num_samples
             else:
-                nsamps = n + nskip
+                nsamps = num_samples + num_samples_skip
 
             samples = self.usrp.recv_num_samps(
                 nsamps,  # number of samples
@@ -302,12 +313,12 @@ class RadioInterface(object):
             data_len = len(data)
 
             if not settings.MOCK_RADIO:
-                data = data[nskip:]
+                data = data[num_samples_skip:]
 
-            if not len(data) == n:
+            if not len(data) == num_samples:
                 if retries > 0:
                     msg = "USRP error: requested {} samples, but got {}."
-                    logger.warning(msg.format(n + nskip, data_len))
+                    logger.warning(msg.format(num_samples + num_samples_skip, data_len))
                     logger.warning("Retrying {} more times.".format(retries))
                     retries = retries - 1
                 else:
@@ -315,7 +326,7 @@ class RadioInterface(object):
                     err += "{} times in a row.".format(max_retries)
                     raise RuntimeError(err)
             else:
-                logger.debug("Successfully acquired {} samples.".format(n))
+                logger.debug("Successfully acquired {} samples.".format(num_samples))
 
                 # Scale the data back to RF power and return it
                 data /= linear_gain

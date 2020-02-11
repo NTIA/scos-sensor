@@ -172,16 +172,12 @@ class Scheduler(threading.Thread):
                 requests_futures_session.post(
                     self.entry.callback_url,
                     json=result_json,
-                    background_callback=Scheduler._callback_response_handler,
+                    background_callback=self._callback_response_handler,
                     headers=headers,
                     verify=verify_ssl,
-                    hooks={'response': self.print_url}
                 )
             except Exception as err:
                 logger.error(str(err))
-
-    def print_url(r, *args, **kwargs):
-        logger.debug("response URL: " + r.url)
 
     @staticmethod
     def _callback_response_handler(sess, resp):
@@ -287,4 +283,3 @@ def minimum_duration(blocking):
 # of running it in its own microservice is that we _must not_ run the
 # application server in multiple processes (multiple threads are fine).
 thread = Scheduler()
-
