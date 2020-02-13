@@ -279,7 +279,9 @@ class SingleFrequencyFftAcquisition(Action):
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
 
-        frequencies = get_fft_frequencies(data, sample_rate, frequency).tolist()
+        frequencies = get_fft_frequencies(
+            self.measurement_params.fft_size, sample_rate, frequency
+        ).tolist()
 
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
