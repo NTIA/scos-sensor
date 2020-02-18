@@ -290,7 +290,7 @@ class SingleFrequencyFftAcquisition(Action):
                 "ntia-algorithm:detector": "fft_" + detector.name + "_power",
                 "ntia-algorithm:number_of_ffts": self.measurement_params.num_ffts,
                 "ntia-algorithm:units": "dBm",
-                "ntia-algorithm:reference": "not referenced",
+                "ntia-algorithm:reference": "preselector input",
                 "ntia-algorithm:frequency_start": frequencies[0],
                 "ntia-algorithm:frequency_stop": frequencies[-1],
                 "ntia-algorithm:frequency_step": frequencies[1] - frequencies[0],

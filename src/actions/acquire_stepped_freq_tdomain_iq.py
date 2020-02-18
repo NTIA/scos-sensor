@@ -245,7 +245,7 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
             "ntia-algorithm:detector": "sample_iq",
             "ntia-algorithm:number_of_samples": num_samples,
             "ntia-algorithm:units": "volts",
-            "ntia-algorithm:reference": "not referenced",
+            "ntia-algorithm:reference": "preselector input",
         }
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=time_domain_detection_md
