@@ -2,8 +2,8 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
+from schedule.serializers import ISOMillisecondDateTimeFormatField
 from sensor import V1
-from sensor.utils import convert_string_to_millisecond_iso_format
 from tasks.models import Acquisition, TaskResult
 
 from .acquisition import AcquisitionSerializer
@@ -83,6 +83,8 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
         help_text="The url of the parent schedule entry"
     )
     data = AcquisitionSerializer(many=True)
+    started = ISOMillisecondDateTimeFormatField(help_text="The time the task started")
+    finished = ISOMillisecondDateTimeFormatField(help_text="The time the task finished")
 
     class Meta:
         model = TaskResult
@@ -97,13 +99,6 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
             "duration",
             "data",
         )
-
-    def to_representation(self, instance):
-        """Change to millisecond datetime format"""
-        ret = super().to_representation(instance)
-        ret["started"] = convert_string_to_millisecond_iso_format(ret["started"])
-        ret["finished"] = convert_string_to_millisecond_iso_format(ret["finished"])
-        return ret
 
     def get_schedule_entry(self, obj):
         request = self.context["request"]

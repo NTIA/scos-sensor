@@ -1304,6 +1304,8 @@
         "TaskResult": {
             "required": [
                 "task_id",
+                "started",
+                "finished",
                 "data"
             ],
             "type": "object",

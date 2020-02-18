@@ -93,24 +93,19 @@ The resulting matrix is real-valued, 32-bit floats representing dBm.
 import logging
 from enum import Enum
 
-import numpy as np
 from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
+from actions.fft import *
 from actions.measurement_params import MeasurementParams
-from actions.utils import *
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
 
 from .base import Action
+from .sigmf import GLOBAL_INFO, get_coordinate_system_sigmf, get_sensor_location_sigmf
 
 logger = logging.getLogger(__name__)
-
-GLOBAL_INFO = {
-    "core:datatype": "rf32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.2",
-}
 
 
 class M4sDetector(Enum):
@@ -226,6 +221,9 @@ class SingleFrequencyFftAcquisition(Action):
         sigmf_md.set_global_info(
             GLOBAL_INFO.copy()
         )  # prevent GLOBAL_INFO from being modified by sigmf
+        sigmf_md.set_global_field(
+            "core:datatype", "rf32_le"
+        )  # 32-bit float, Little Endian
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
         measurement_object = {

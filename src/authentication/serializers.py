@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from schedule.serializers import ISOMillisecondDateTimeFormatField
 from sensor import V1
-from sensor.utils import convert_string_to_millisecond_iso_format
 
 from .models import User
 
@@ -13,6 +13,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     schedule_entries = serializers.SerializerMethodField(
         help_text="The list of schedule entries owned by the user"
     )
+    date_joined = ISOMillisecondDateTimeFormatField()
+    last_login = ISOMillisecondDateTimeFormatField()
 
     class Meta:
         model = User
@@ -20,9 +22,9 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             "self",
             "username",
             "is_active",
+            "schedule_entries",
             "date_joined",
             "last_login",
-            "schedule_entries",
         )
         extra_kwargs = {
             "self": {"view_name": "user-detail"},
@@ -46,15 +48,6 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             urls.append(reverse(route, kwargs=kws, request=request))
 
         return urls
-
-    def to_representation(self, instance):
-        """Change to millisecond datetime format"""
-        ret = super().to_representation(instance)
-        ret["date_joined"] = convert_string_to_millisecond_iso_format(
-            ret["date_joined"]
-        )
-        ret["last_login"] = convert_string_to_millisecond_iso_format(ret["last_login"])
-        return ret
 
 
 class UserDetailsSerializer(UserProfileSerializer):
@@ -81,12 +74,3 @@ class UserDetailsSerializer(UserProfileSerializer):
 
     def get_has_usable_password(self, obj):
         return obj.has_usable_password()
-
-    def to_representation(self, instance):
-        """Change to millisecond datetime format"""
-        ret = super().to_representation(instance)
-        ret["date_joined"] = convert_string_to_millisecond_iso_format(
-            ret["date_joined"]
-        )
-        ret["last_login"] = convert_string_to_millisecond_iso_format(ret["last_login"])
-        return ret
