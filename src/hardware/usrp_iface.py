@@ -19,7 +19,7 @@ import numpy as np
 
 from hardware import calibration
 from hardware.mocks.usrp_block import MockUsrp
-from sensor import settings
+from sensor import settings, utils
 from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
@@ -41,15 +41,15 @@ def connect(
     global is_available
     global radio
 
+    if is_available and radio is not None:
+        return True
+
     if settings.MOCK_RADIO:
         logger.warning("Using mock USRP.")
         random = settings.MOCK_RADIO_RANDOM
         usrp = MockUsrp(randomize_values=random)
         is_available = True
     else:
-        if is_available and radio is not None:
-            return True
-
         try:
             import uhd
         except ImportError:
@@ -102,8 +102,8 @@ class RadioInterface(object):
     # Define thresholds for determining ADC overload for the sigan
     ADC_FULL_RANGE_THRESHOLD = 0.98  # ADC scale -1<sample<1, magnitude threshold = 0.98
     ADC_OVERLOAD_THRESHOLD = (
-        0.01
-    )  # Ratio of samples above the ADC full range to trigger overload
+        0.01  # Ratio of samples above the ADC full range to trigger overload
+    )
 
     def __init__(
         self,
@@ -116,6 +116,8 @@ class RadioInterface(object):
         # Set the default calibration values
         self.sensor_calibration_data = self.DEFAULT_SENSOR_CALIBRATION.copy()
         self.sigan_calibration_data = self.DEFAULT_SIGAN_CALIBRATION.copy()
+        self.sigan_overload = False
+        self.capture_time = None
 
         # Try and load sensor/sigan calibration data
         if not settings.MOCK_RADIO:
@@ -287,12 +289,13 @@ class RadioInterface(object):
                 "1db_compression_sensor"
             ],
             "ntia-sensor:enbw_sensor": self.sensor_calibration_data["enbw_sensor"],
-            "ntia-sensor:mean_noise_power_sensor": "",
         }
         return annotation_md
 
     def acquire_samples(self, n, nskip=0, retries=5):  # -> np.ndarray:
         """Aquire nskip+n samples and return the last n"""
+        self.sigan_overload = False
+        self.capture_time = None
 
         # Get the calibration data for the acquisition
         self.recompute_calibration_data()
@@ -310,6 +313,7 @@ class RadioInterface(object):
             else:
                 nsamps = n + nskip
 
+            self.capture_time = utils.get_datetime_str_now()
             samples = self.usrp.recv_num_samps(
                 nsamps,  # number of samples
                 self.frequency,  # center frequency in Hz

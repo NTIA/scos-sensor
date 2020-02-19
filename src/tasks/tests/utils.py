@@ -20,23 +20,23 @@ EMPTY_RESULTS_RESPONSE = []
 
 EMPTY_ACQUISITIONS_RESPONSE = []
 
-SINGLE_ACQUISITION = {
+SINGLE_FREQUENCY_FFT_ACQUISITION = {
     "name": "test_acq",
     "start": None,
     "stop": None,
     "interval": None,
-    "action": "mock_acquire",
+    "action": "mock_acquire_single_frequency_fft",
 }
 
-MULTIPLE_ACQUISITIONS = {
+MULTIPLE_FREQUENCY_FFT_ACQUISITIONS = {
     "name": "test_multiple_acq",
     "start": None,
     "relative_stop": 5,
     "interval": 1,
-    "action": "mock_acquire",
+    "action": "mock_acquire_single_frequency_fft",
 }
 
-SINGLE_MULTI_RECORDING_ACQUISITION = {
+SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION = {
     "name": "test_multirec_acq",
     "start": None,
     "stop": None,
@@ -44,14 +44,19 @@ SINGLE_MULTI_RECORDING_ACQUISITION = {
     "action": "mock_multirec_acquire",
 }
 
+SINGLE_TIMEDOMAIN_IQ_ACQUISITION = {
+    "name": "test_time_domain_iq_acquire",
+    "start": None,
+    "stop": None,
+    "interval": None,
+    "action": "mock_time_domain_iq_acquire",
+}
 
-def simulate_acquisitions(client, n=1, is_private=False, name=None):
+
+def simulate_acquisitions(client, schedule_entry, n=1, is_private=False, name=None):
     assert 0 < n <= 10
 
-    if n == 1:
-        schedule_entry = SINGLE_ACQUISITION.copy()
-    else:
-        schedule_entry = MULTIPLE_ACQUISITIONS.copy()
+    if n > 1:
         schedule_entry["relative_stop"] = n + 1
 
     schedule_entry["is_private"] = is_private
@@ -65,17 +70,27 @@ def simulate_acquisitions(client, n=1, is_private=False, name=None):
     return entry["name"]
 
 
+def simulate_frequency_fft_acquisitions(client, n=1, is_private=False, name=None):
+    if n == 1:
+        schedule_entry = SINGLE_FREQUENCY_FFT_ACQUISITION.copy()
+    else:
+        schedule_entry = MULTIPLE_FREQUENCY_FFT_ACQUISITIONS.copy()
+
+    return simulate_acquisitions(client, schedule_entry, n, is_private, name)
+
+
 def simulate_multirec_acquisition(client, is_private=False, name=None):
-    schedule_entry = SINGLE_MULTI_RECORDING_ACQUISITION.copy()
-    schedule_entry["is_private"] = is_private
+    schedule_entry = SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION.copy()
+    return simulate_acquisitions(
+        client, schedule_entry, n=1, is_private=is_private, name=name
+    )
 
-    if name is not None:
-        schedule_entry["name"] = name
 
-    entry = post_schedule(client, schedule_entry)
-    simulate_scheduler_run()
-
-    return entry["name"]
+def simulate_timedomain_iq_acquisition(client, is_private=False, name=None):
+    schedule_entry = SINGLE_TIMEDOMAIN_IQ_ACQUISITION.copy()
+    return simulate_acquisitions(
+        client, schedule_entry, n=1, is_private=is_private, name=name
+    )
 
 
 def create_task_results(n, user_client, entry_name=None):

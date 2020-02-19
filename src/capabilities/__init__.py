@@ -16,4 +16,4 @@ def load_from_json(fname):
         logger.exception("Unable to load JSON file {}".format(fname))
 
 
-capabilities["sensor_definition"] = load_from_json(SENSOR_DEFINITION_FILE)
+capabilities["sensor"] = load_from_json(SENSOR_DEFINITION_FILE)

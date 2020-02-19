@@ -26,7 +26,8 @@ def get_last_calibration_time():
     """Returns datetime string of last calibration time"""
     sdr.connect()
     if sdr.is_available and sdr.radio.sensor_calibration:
-        return sdr.radio.sensor_calibration.calibration_datetime
+        cal_datetime = sdr.radio.sensor_calibration.calibration_datetime
+        return utils.convert_string_to_millisecond_iso_format(cal_datetime)
     return "unknown"
 
 

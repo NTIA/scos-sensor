@@ -317,6 +317,7 @@ LOGGING = {
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},
         "status": {"handlers": ["console"], "level": LOGLEVEL},
+        "tasks": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 

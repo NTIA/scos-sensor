@@ -25,10 +25,10 @@
     ],
     "securityDefinitions": {
         "token": {
+            "type": "apiKey",
             "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. Non-admin user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can do that in the Sensor Configuration Portal, but only the account's token should be stored and used for general purpose API access. Example cURL call: `curl -kLsS -H \"Authorization: Token 529c30e6e04b3b546f2e073e879b75fdfa147c15\" https://greyhound5.sms.internal/api/v1`",
-            "in": "header",
             "name": "Token",
-            "type": "apiKey"
+            "in": "header"
         }
     },
     "security": [
@@ -1126,11 +1126,16 @@
                         "acquire_m4s_700MHz_Verizon_DL",
                         "acquire_m4s_700MHz_Verizon_UL",
                         "logger",
+                        "survey_700MHz_band_10dB_1000ms_iq",
+                        "survey_700MHz_band_10dB_80ms_iq",
+                        "survey_700MHz_band_20dB_1000ms_iq",
                         "survey_700MHz_band_20dB_80ms_iq",
+                        "survey_700MHz_band_40dB_1000ms_iq",
                         "survey_700MHz_band_40dB_80ms_iq",
                         "survey_700MHz_band_iq",
-                        "mock_acquire",
+                        "mock_acquire_single_frequency_fft",
                         "mock_multirec_acquire",
+                        "mock_time_domain_iq_acquire",
                         "admin_logger",
                         "monitor_usrp",
                         "sync_gps"
@@ -1299,6 +1304,8 @@
         "TaskResult": {
             "required": [
                 "task_id",
+                "started",
+                "finished",
                 "data"
             ],
             "type": "object",

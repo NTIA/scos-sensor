@@ -2,14 +2,13 @@ name: scos-sensor
 channels:
   - conda-forge
 dependencies:
-  - python=3.6
+  - python=3.7
   - black=18.9b0
-  - Django=2.2.8
   - flake8=3.7.7
   - Pygments=2.4.2
   - Markdown=3.1.1
-  - django-extensions=2.1.7
-  - django-filter=2.1.0
+  - django-extensions=2.2.6
+  - django-filter=2.2.0
   - djangorestframework=3.9.4
   - docker-compose=1.24.0
   - gunicorn=19.9.0
@@ -19,6 +18,7 @@ dependencies:
   - jsonschema=3.0.1
   - mkdocs=1.0.4
   - numpy=1.16.4
+  - python-dateutil=2.8.1
   - pytest-cov=2.7.1
   - pytest-django=3.5.1
   - pytest-flake8=1.0.4
@@ -31,6 +31,7 @@ dependencies:
   - pip
   - pip:
     - coreapi==2.3.3
+    - Django==2.2.9
     - django-debug-toolbar==1.11
     - drf-yasg==1.15.0
     - -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF

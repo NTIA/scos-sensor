@@ -52,16 +52,11 @@ from actions.measurement_params import MeasurementParams
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
-from status.utils import get_location
 
 from .base import Action
+from .sigmf import GLOBAL_INFO, get_coordinate_system_sigmf, get_sensor_location_sigmf
 
 logger = logging.getLogger(__name__)
-
-GLOBAL_INFO = {
-    "core:datatype": "cf32_le",  # 2x 32-bit float, Little Endian
-    "core:version": "0.0.2",
-}
 
 
 class SteppedFrequencyTimeDomainIqAcquisition(Action):
@@ -119,9 +114,23 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         for recording_id, measurement_params in enumerate(
             self.measurement_params_list, start=1
         ):
+            start_time = utils.get_datetime_str_now()
             data = self.acquire_data(measurement_params, task_id)
-            sigmf_md = self.build_sigmf_md(task_id, measurement_params, data)
+            end_time = utils.get_datetime_str_now()
+            sigmf_md = self.build_sigmf_md(
+                task_id,
+                measurement_params,
+                data,
+                task_result.schedule_entry,
+                recording_id,
+                start_time,
+                end_time,
+            )
             self.archive(task_result, recording_id, data, sigmf_md)
+
+    @property
+    def is_multirecording(self):
+        return len(self.measurement_params_list) > 1
 
     def test_required_components(self):
         """Fail acquisition if a required component is not available."""
@@ -150,31 +159,81 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, measurement_params, data):
+    def build_sigmf_md(
+        self,
+        task_id,
+        measurement_params,
+        data,
+        schedule_entry,
+        recording_id,
+        start_time,
+        end_time,
+    ):
+        frequency = self.sdr.radio.frequency
+        sample_rate = self.sdr.radio.sample_rate
+
         # Build global metadata
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_info(GLOBAL_INFO)
-        sample_rate = self.sdr.radio.sample_rate
+        sigmf_md.set_global_info(
+            GLOBAL_INFO.copy()
+        )  # prevent GLOBAL_INFO from being modified by sigmf
+        sigmf_md.set_global_field(
+            "core:datatype", "cf32_le"
+        )  # 2x 32-bit float, Little Endian
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
-        sensor_def = capabilities["sensor_definition"]
-        sensor_def["id"] = settings.FQDN
-        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+        measurement_object = {
+            "time_start": start_time,
+            "time_stop": end_time,
+            "domain": "Time",
+            "measurement_type": "survey"
+            if self.is_multirecording
+            else "single-frequency",
+            "frequency_tuned_low": frequency,
+            "frequency_tuned_high": frequency,
+        }
+        sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
+
+        sensor = capabilities["sensor"]
+        sensor["id"] = settings.FQDN
+        get_sensor_location_sigmf(sensor)
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
+        from status.views import get_last_calibration_time
+
+        sigmf_md.set_global_field(
+            "ntia-sensor:calibration_datetime", get_last_calibration_time()
+        )
 
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": ["TimeDomain"],
+            "summary": self.description.splitlines()[0],
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+        if self.is_multirecording:
+            sigmf_md.set_global_field("ntia-scos:recording", recording_id)
 
-        dt = utils.get_datetime_str_now()
+        sigmf_md.set_global_field("ntia-scos:task", task_id)
+
+        from schedule.serializers import ScheduleEntrySerializer
+
+        serializer = ScheduleEntrySerializer(
+            schedule_entry, context={"request": schedule_entry.request}
+        )
+        schedule_entry_json = serializer.to_sigmf_json()
+        schedule_entry_json["id"] = schedule_entry.name
+        sigmf_md.set_global_field("ntia-scos:schedule", schedule_entry_json)
+
+        sigmf_md.set_global_field(
+            "ntia-location:coordinate_system", get_coordinate_system_sigmf()
+        )
 
         num_samples = measurement_params.get_num_samples()
-
-        capture_md = {"core:frequency": self.sdr.radio.frequency, "core:datetime": dt}
+        capture_md = {
+            "core:frequency": frequency,
+            "core:datetime": self.sdr.radio.capture_time,
+        }
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
         calibration_annotation_md = self.sdr.radio.create_calibration_annotation()
         sigmf_md.add_annotation(
@@ -184,10 +243,9 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         time_domain_detection_md = {
             "ntia-core:annotation_type": "TimeDomainDetection",
             "ntia-algorithm:detector": "sample_iq",
-            "ntia-algorithm:detection_domain": "time",
             "ntia-algorithm:number_of_samples": num_samples,
             "ntia-algorithm:units": "volts",
-            "ntia-algorithm:reference": "not referenced",
+            "ntia-algorithm:reference": "preselector input",
         }
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=time_domain_detection_md
@@ -201,23 +259,20 @@ class SteppedFrequencyTimeDomainIqAcquisition(Action):
         time_domain_avg_power += (
             10 * np.log10(1 / (2 * 50)) + 30
         )  # Convert log(V^2) to dBm
-        sensor_overload = (
-            time_domain_avg_power
-            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
-        )
+        sensor_overload = False
+        # explicitly check is not None since 1db compression could be 0
+        if self.sdr.radio.sensor_calibration_data["1db_compression_sensor"] is not None:
+            sensor_overload = (
+                time_domain_avg_power
+                > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
+            )
 
         # Create SensorAnnotation and add gain setting and overload indicators
         sensor_annotation_md = {
             "ntia-core:annotation_type": "SensorAnnotation",
-            "ntia-sensor:overload_sensor": sensor_overload,
-            "ntia-sensor:overload_sigan": sigan_overload,
+            "ntia-sensor:overload": sensor_overload or sigan_overload,
             "ntia-sensor:gain_setting_sigan": measurement_params.gain,
         }
-
-        location = get_location()
-        if location:
-            sensor_annotation_md["core:latitude"] = (location.latitude,)
-            sensor_annotation_md["core:longitude"] = location.longitude
 
         sigmf_md.add_annotation(
             start_index=0, length=num_samples, metadata=sensor_annotation_md

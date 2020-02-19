@@ -93,25 +93,19 @@ The resulting matrix is real-valued, 32-bit floats representing dBm.
 import logging
 from enum import Enum
 
-import numpy as np
 from django.core.files.base import ContentFile
 from sigmf.sigmffile import SigMFFile
 
+from actions.fft import *
 from actions.measurement_params import MeasurementParams
-from actions.utils import get_fft_window, get_fft_window_correction
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
-from status.utils import get_location
 
 from .base import Action
+from .sigmf import GLOBAL_INFO, get_coordinate_system_sigmf, get_sensor_location_sigmf
 
 logger = logging.getLogger(__name__)
-
-GLOBAL_INFO = {
-    "core:datatype": "rf32_le",  # 32-bit float, Little Endian
-    "core:version": "0.0.2",
-}
 
 
 class M4sDetector(Enum):
@@ -179,9 +173,13 @@ class SingleFrequencyFftAcquisition(Action):
 
         self.test_required_components()
         self.configure_sdr()
+        start_time = utils.get_datetime_str_now()
         data = self.acquire_data()
+        end_time = utils.get_datetime_str_now()
         m4s_data = self.apply_detector(data)
-        sigmf_md = self.build_sigmf_md(task_id, data)
+        sigmf_md = self.build_sigmf_md(
+            task_id, data, task_result.schedule_entry, start_time, end_time
+        )
         self.archive(task_result, m4s_data, sigmf_md)
 
     def test_required_components(self):
@@ -212,35 +210,76 @@ class SingleFrequencyFftAcquisition(Action):
 
         return data
 
-    def build_sigmf_md(self, task_id, data):
+    def build_sigmf_md(self, task_id, data, schedule_entry, start_time, end_time):
         logger.debug("Building SigMF metadata file")
 
         # Use the radio's actual reported sample rate instead of requested rate
         sample_rate = self.sdr.radio.sample_rate
+        frequency = self.sdr.radio.frequency
 
         sigmf_md = SigMFFile()
-        sigmf_md.set_global_info(GLOBAL_INFO)
+        sigmf_md.set_global_info(
+            GLOBAL_INFO.copy()
+        )  # prevent GLOBAL_INFO from being modified by sigmf
+        sigmf_md.set_global_field(
+            "core:datatype", "rf32_le"
+        )  # 32-bit float, Little Endian
         sigmf_md.set_global_field("core:sample_rate", sample_rate)
 
-        sensor_def = capabilities["sensor_definition"]
-        sensor_def["id"] = settings.FQDN
-        sigmf_md.set_global_field("ntia-sensor:sensor", sensor_def)
+        measurement_object = {
+            "time_start": start_time,
+            "time_stop": end_time,
+            "domain": "Frequency",
+            "measurement_type": "single-frequency",
+            "frequency_tuned_low": frequency,
+            "frequency_tuned_high": frequency,
+        }
+        sigmf_md.set_global_field("ntia-core:measurement", measurement_object)
+
+        sensor = capabilities["sensor"]
+        sensor["id"] = settings.FQDN
+        get_sensor_location_sigmf(sensor)
+        sigmf_md.set_global_field("ntia-sensor:sensor", sensor)
+
+        from status.views import get_last_calibration_time
+
+        sigmf_md.set_global_field(
+            "ntia-sensor:calibration_datetime", get_last_calibration_time()
+        )
+
+        sigmf_md.set_global_field("ntia-scos:task", task_id)
 
         action_def = {
             "name": self.name,
             "description": self.description,
-            "type": ["FrequencyDomain"],
+            "summary": self.description.splitlines()[0],
         }
 
         sigmf_md.set_global_field("ntia-scos:action", action_def)
-        sigmf_md.set_global_field("ntia-scos:task_id", task_id)
+
+        from schedule.serializers import ScheduleEntrySerializer
+
+        serializer = ScheduleEntrySerializer(
+            schedule_entry, context={"request": schedule_entry.request}
+        )
+        schedule_entry_json = serializer.to_sigmf_json()
+        schedule_entry_json["id"] = schedule_entry.name
+        sigmf_md.set_global_field("ntia-scos:schedule", schedule_entry_json)
+
+        sigmf_md.set_global_field(
+            "ntia-location:coordinate_system", get_coordinate_system_sigmf()
+        )
 
         capture_md = {
-            "core:frequency": self.sdr.radio.frequency,
-            "core:datetime": utils.get_datetime_str_now(),
+            "core:frequency": frequency,
+            "core:datetime": self.sdr.radio.capture_time,
         }
 
         sigmf_md.add_capture(start_index=0, metadata=capture_md)
+
+        frequencies = get_fft_frequencies(
+            self.measurement_params.fft_size, sample_rate, frequency
+        ).tolist()
 
         for i, detector in enumerate(M4sDetector):
             frequency_domain_detection_md = {
@@ -248,11 +287,13 @@ class SingleFrequencyFftAcquisition(Action):
                 "ntia-algorithm:number_of_samples_in_fft": self.measurement_params.fft_size,
                 "ntia-algorithm:window": "flattop",
                 "ntia-algorithm:equivalent_noise_bandwidth": self.enbw,
-                "ntia-algorithm:detector": detector.name + "_power",
+                "ntia-algorithm:detector": "fft_" + detector.name + "_power",
                 "ntia-algorithm:number_of_ffts": self.measurement_params.num_ffts,
                 "ntia-algorithm:units": "dBm",
-                "ntia-algorithm:reference": "not referenced",
-                "nita-algorithm:detection_domain": "frequency",
+                "ntia-algorithm:reference": "preselector input",
+                "ntia-algorithm:frequency_start": frequencies[0],
+                "ntia-algorithm:frequency_stop": frequencies[-1],
+                "ntia-algorithm:frequency_step": frequencies[1] - frequencies[0],
             }
 
             sigmf_md.add_annotation(
@@ -277,30 +318,26 @@ class SingleFrequencyFftAcquisition(Action):
         time_domain_avg_power += (
             10 * np.log10(1 / (2 * 50)) + 30
         )  # Convert log(V^2) to dBm
-        sensor_overload = (
-            time_domain_avg_power
-            > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
-        )
+        sensor_overload = False
+        # explicitly check is not None since 1db compression could be 0
+        if self.sdr.radio.sensor_calibration_data["1db_compression_sensor"] is not None:
+            sensor_overload = (
+                time_domain_avg_power
+                > self.sdr.radio.sensor_calibration_data["1db_compression_sensor"]
+            )
 
         # Create SensorAnnotation and add gain setting and overload indicators
         sensor_annotation_md = {
             "ntia-core:annotation_type": "SensorAnnotation",
-            "ntia-sensor:overload_sensor": sensor_overload,
-            "ntia-sensor:overload_sigan": sigan_overload,
+            "ntia-sensor:overload": sensor_overload or sigan_overload,
             "ntia-sensor:gain_setting_sigan": self.measurement_params.gain,
         }
-
-        location = get_location()
-        if location:
-            sensor_annotation_md["core:latitude"] = (location.latitude,)
-            sensor_annotation_md["core:longitude"] = location.longitude
 
         sigmf_md.add_annotation(
             start_index=0,
             length=self.measurement_params.fft_size * len(M4sDetector),
             metadata=sensor_annotation_md,
         )
-
         return sigmf_md
 
     def apply_detector(self, data):
