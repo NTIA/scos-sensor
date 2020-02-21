@@ -1,5 +1,4 @@
-ARG BASE_IMAGE=ubuntu
-FROM $BASE_IMAGE
+FROM ubuntu
 
 RUN echo $(python3 -V)
 # Copy just the necessities from our PY3-enabled UHD container
