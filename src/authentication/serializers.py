@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from schedule.serializers import ISOMillisecondDateTimeFormatField
 from sensor import V1
 
 from .models import User
@@ -12,6 +13,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     schedule_entries = serializers.SerializerMethodField(
         help_text="The list of schedule entries owned by the user"
     )
+    date_joined = ISOMillisecondDateTimeFormatField()
+    last_login = ISOMillisecondDateTimeFormatField()
 
     class Meta:
         model = User
@@ -19,9 +22,9 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             "self",
             "username",
             "is_active",
+            "schedule_entries",
             "date_joined",
             "last_login",
-            "schedule_entries",
         )
         extra_kwargs = {
             "self": {"view_name": "user-detail"},

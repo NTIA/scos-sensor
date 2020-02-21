@@ -1126,11 +1126,16 @@
                         "acquire_m4s_700MHz_Verizon_DL",
                         "acquire_m4s_700MHz_Verizon_UL",
                         "logger",
+                        "survey_700MHz_band_10dB_1000ms_iq",
+                        "survey_700MHz_band_10dB_80ms_iq",
+                        "survey_700MHz_band_20dB_1000ms_iq",
                         "survey_700MHz_band_20dB_80ms_iq",
+                        "survey_700MHz_band_40dB_1000ms_iq",
                         "survey_700MHz_band_40dB_80ms_iq",
                         "survey_700MHz_band_iq",
-                        "mock_acquire",
+                        "mock_acquire_single_frequency_fft",
                         "mock_multirec_acquire",
+                        "mock_time_domain_iq_acquire",
                         "admin_logger",
                         "monitor_usrp",
                         "sync_gps"
@@ -1299,6 +1304,8 @@
         "TaskResult": {
             "required": [
                 "task_id",
+                "started",
+                "finished",
                 "data"
             ],
             "type": "object",

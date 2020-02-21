@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import numpy as np
+from dateutil import parser
 
 from .settings import DATETIME_FORMAT
 
@@ -61,8 +62,24 @@ def get_timestamp_from_datetime(dt):
 
 
 def get_datetime_str_now():
-    return datetime.isoformat(datetime.utcnow()) + "Z"
+    return datetime.utcnow().isoformat(timespec="milliseconds") + "Z"
 
 
 def parse_datetime_str(d):
     return datetime.strptime(d, DATETIME_FORMAT)
+
+
+def parse_datetime_iso_format_str(d):
+    return parser.isoparse(d)
+
+
+def convert_datetime_to_millisecond_iso_format(timestamp):
+    return timestamp.replace(tzinfo=None).isoformat(timespec="milliseconds") + "Z"
+
+
+def convert_string_to_millisecond_iso_format(timestamp):
+    # convert iso formatted datetime string to millisecond iso format
+    if timestamp:
+        parsed_timestamp = parse_datetime_iso_format_str(timestamp)
+        return convert_datetime_to_millisecond_iso_format(parsed_timestamp)
+    return None

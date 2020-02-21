@@ -25,7 +25,8 @@ def serialize_location():
 def get_last_calibration_time():
     """Returns datetime string of last calibration time"""
     if radio.is_available and radio.sensor_calibration:
-        return radio.sensor_calibration.calibration_datetime
+        cal_datetime = radio.sensor_calibration.calibration_datetime
+        return utils.convert_string_to_millisecond_iso_format(cal_datetime)
     return "unknown"
 
 

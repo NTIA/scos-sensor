@@ -5,7 +5,12 @@ from rest_framework.reverse import reverse
 
 import actions
 from sensor import V1
-from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
+from sensor.utils import (
+    convert_datetime_to_millisecond_iso_format,
+    get_datetime_from_timestamp,
+    get_timestamp_from_datetime,
+    parse_datetime_iso_format_str,
+)
 
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
@@ -31,7 +36,7 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
             return None
 
         dt = get_datetime_from_timestamp(ts)
-        dt_str = super(DateTimeFromTimestampField, self).to_representation(dt)
+        dt_str = convert_datetime_to_millisecond_iso_format(dt)
 
         return dt_str
 
@@ -42,6 +47,23 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
 
         dt = super(DateTimeFromTimestampField, self).to_internal_value(dt_str)
         return get_timestamp_from_datetime(dt)
+
+
+class ISOMillisecondDateTimeFormatField(serializers.DateTimeField):
+    def to_representation(self, dt):
+        """Convert integer timestamp to an ISO 8601 datetime string."""
+        if dt is None:
+            return None
+
+        dt_str = convert_datetime_to_millisecond_iso_format(dt)
+        return dt_str
+
+    def to_internal_value(self, dt_str):
+        """Parse an ISO 8601 datetime string and return a timestamp integer."""
+        if dt_str is None:
+            return None
+
+        return parse_datetime_iso_format_str(dt_str)
 
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
@@ -99,6 +121,12 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         required=False,
         default=False,
         help_text="Only validate the input, do not modify the schedule",
+    )
+    modified = ISOMillisecondDateTimeFormatField(
+        read_only=True, help_text="The date the entry was modified"
+    )
+    created = ISOMillisecondDateTimeFormatField(
+        read_only=True, help_text="The date the entry was created"
     )
 
     class Meta:
@@ -199,6 +227,16 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             data["stop"] = data.pop("absolute_stop")
 
         return super().to_internal_value(data)
+
+    def to_sigmf_json(self):
+        """Remove fields not part of SigMF"""
+        filtered_data = {}
+        data = self.data
+        FIELDS_TO_INCLUDE = ["id", "name", "start", "stop", "interval", "priority"]
+        for field in FIELDS_TO_INCLUDE:
+            if field in data:
+                filtered_data[field] = data[field]
+        return filtered_data
 
 
 class AdminScheduleEntrySerializer(ScheduleEntrySerializer):

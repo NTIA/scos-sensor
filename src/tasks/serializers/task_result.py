@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from schedule.models import ScheduleEntry
+from schedule.serializers import ISOMillisecondDateTimeFormatField
 from sensor import V1
 from tasks.models import Acquisition, TaskResult
 
@@ -82,6 +83,8 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
         help_text="The url of the parent schedule entry"
     )
     data = AcquisitionSerializer(many=True)
+    started = ISOMillisecondDateTimeFormatField(help_text="The time the task started")
+    finished = ISOMillisecondDateTimeFormatField(help_text="The time the task finished")
 
     class Meta:
         model = TaskResult

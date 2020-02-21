@@ -7,7 +7,7 @@ from tasks.tests.utils import (
     get_result_list,
     reverse_result_detail,
     reverse_result_list,
-    simulate_acquisitions,
+    simulate_frequency_fft_acquisitions,
 )
 
 from tasks.models import Acquisition, TaskResult
@@ -45,7 +45,7 @@ def test_multiple_result_response(user_client, test_scheduler):
 def test_private_entry_results_list_is_private(
     admin_client, user_client, test_scheduler
 ):
-    entry_name = simulate_acquisitions(admin_client, is_private=True)
+    entry_name = simulate_frequency_fft_acquisitions(admin_client, is_private=True)
     url = reverse_result_list(entry_name)
     response = user_client.get(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_403_FORBIDDEN)
@@ -67,7 +67,7 @@ def test_delete_list(user_client):
 
 
 def test_delete_list_data_files_deleted(user_client, test_scheduler):
-    entry_name = simulate_acquisitions(user_client)
+    entry_name = simulate_frequency_fft_acquisitions(user_client)
     task_result = TaskResult.objects.get(schedule_entry__name=entry_name)
     acquisition = Acquisition.objects.get(task_result__id=task_result.id)
     data_file = acquisition.data.path

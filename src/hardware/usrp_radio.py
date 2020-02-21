@@ -20,10 +20,14 @@ from ruamel.yaml import YAML
 from hardware import calibration
 from hardware.mocks.usrp_block import MockUsrp
 from hardware.radio_iface import RadioInterface
-from sensor import settings
+from sensor import settings, utils
 from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
+
+uhd = None
+radio = None
+is_available = False
 
 # Testing determined these gain values provide a good mix of sensitivity and
 # dynamic range performance
@@ -50,6 +54,12 @@ DEFAULT_SENSOR_CALIBRATION = {
 
 
 class USRPRadio(RadioInterface):
+    # Define thresholds for determining ADC overload for the sigan
+    ADC_FULL_RANGE_THRESHOLD = 0.98  # ADC scale -1<sample<1, magnitude threshold = 0.98
+    ADC_OVERLOAD_THRESHOLD = (
+        0.01  # Ratio of samples above the ADC full range to trigger overload
+    )
+
     def __init__(
         self,
         sensor_cal_file=settings.SENSOR_CALIBRATION_FILE,
@@ -66,28 +76,29 @@ class USRPRadio(RadioInterface):
 
         self.lo_freq = None
         self.dsp_freq = None
+        self.sigan_overload = False
+        self.capture_time = None
 
         self.connect()
-
         self.get_calibration(sensor_cal_file, sigan_cal_file)
 
     def connect(self):
+        if self._is_available:
+            return True
+
         if settings.MOCK_RADIO:
             logger.warning("Using mock USRP.")
             random = settings.MOCK_RADIO_RANDOM
             self.usrp = MockUsrp(randomize_values=random)
             self._is_available = True
         else:
-            if self.is_available:  # already connected
-                return
-
             try:
                 import uhd
 
                 self.uhd = uhd
-            except ImportError as ie:
+            except ImportError:
                 logger.warning("uhd not available - disabling radio")
-                raise
+                return False
 
             usrp_args = "type=b200"  # find any b-series device
 
@@ -184,7 +195,7 @@ class USRPRadio(RadioInterface):
             tune_result = self.usrp.set_rx_freq(rf_freq, dsp_freq)
             logger.debug(tune_result)
         else:
-            tune_request = self.uhd.types.TuneRequest(rf_freq, dsp_freq)
+            tune_request = uhd.types.TuneRequest(rf_freq, dsp_freq)
             tune_result = self.usrp.set_rx_freq(tune_request)
             # FIXME: report actual values when available - see note below
             msg = "rf_freq: {}, dsp_freq: {}"
@@ -269,8 +280,24 @@ class USRPRadio(RadioInterface):
     def create_calibration_annotation(self):
         annotation_md = {
             "ntia-core:annotation_type": "CalibrationAnnotation",
-            "ntia-calibration:receiver_scaling_factor": -1
-            * self.sensor_calibration_data["gain_sensor"],
+            "ntia-sensor:gain_sigan": self.sigan_calibration_data["gain_sigan"],
+            "ntia-sensor:noise_figure_sigan": self.sigan_calibration_data[
+                "noise_figure_sigan"
+            ],
+            "ntia-sensor:1db_compression_point_sigan": self.sigan_calibration_data[
+                "1db_compression_sigan"
+            ],
+            "ntia-sensor:enbw_sigan": self.sigan_calibration_data["enbw_sigan"],
+            "ntia-sensor:gain_preselector": self.sensor_calibration_data[
+                "gain_preselector"
+            ],
+            "ntia-sensor:noise_figure_sensor": self.sensor_calibration_data[
+                "noise_figure_sensor"
+            ],
+            "ntia-sensor:1db_compression_point_sensor": self.sensor_calibration_data[
+                "1db_compression_sensor"
+            ],
+            "ntia-sensor:enbw_sensor": self.sensor_calibration_data["enbw_sensor"],
         }
         return annotation_md
 
@@ -281,7 +308,8 @@ class USRPRadio(RadioInterface):
         self, num_samples, num_samples_skip=0, retries=5
     ):  # -> np.ndarray:
         """Aquire num_samples_skip+num_samples samples and return the last num_samples"""
-
+        self.sigan_overload = False
+        self.capture_time = None
         # Get the calibration data for the acquisition
         self.recompute_calibration_data()
 
@@ -298,6 +326,7 @@ class USRPRadio(RadioInterface):
             else:
                 nsamps = num_samples + num_samples_skip
 
+            self.capture_time = utils.get_datetime_str_now()
             samples = self.usrp.recv_num_samps(
                 nsamps,  # number of samples
                 self.frequency,  # center frequency in Hz
@@ -327,6 +356,17 @@ class USRPRadio(RadioInterface):
                     raise RuntimeError(err)
             else:
                 logger.debug("Successfully acquired {} samples.".format(num_samples))
+
+                # Check IQ values versus ADC max for sigan compression
+                self.sigan_overload = False
+                i_samples = np.abs(np.real(data))
+                q_samples = np.abs(np.imag(data))
+                i_over_threshold = np.sum(i_samples > self.ADC_FULL_RANGE_THRESHOLD)
+                q_over_threshold = np.sum(q_samples > self.ADC_FULL_RANGE_THRESHOLD)
+                total_over_threshold = i_over_threshold + q_over_threshold
+                ratio_over_threshold = float(total_over_threshold) / num_samples
+                if ratio_over_threshold > self.ADC_OVERLOAD_THRESHOLD:
+                    self.sigan_overload = True
 
                 # Scale the data back to RF power and return it
                 data /= linear_gain

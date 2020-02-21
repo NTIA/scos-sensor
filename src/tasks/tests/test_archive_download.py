@@ -10,13 +10,13 @@ from tasks.tests.utils import (
     HTTPS_KWARG,
     reverse_archive,
     reverse_archive_all,
-    simulate_acquisitions,
+    simulate_frequency_fft_acquisitions,
     simulate_multirec_acquisition,
 )
 
 
 def test_single_acquisition_archive_download(user_client, test_scheduler):
-    entry_name = simulate_acquisitions(user_client, n=1)
+    entry_name = simulate_frequency_fft_acquisitions(user_client, n=1)
     task_id = 1
     url = reverse_archive(entry_name, task_id)
     disposition = 'attachment; filename="{}_test_acq_1.sigmf"'
@@ -30,6 +30,7 @@ def test_single_acquisition_archive_download(user_client, test_scheduler):
     with tempfile.NamedTemporaryFile() as tf:
         for content in response.streaming_content:
             tf.write(content)
+        tf.flush()
 
         sigmf_archive_contents = sigmf.sigmffile.fromarchive(tf.name)
         md = sigmf_archive_contents._metadata
@@ -68,13 +69,14 @@ def test_multirec_acquisition_archive_download(user_client, test_scheduler):
     with tempfile.NamedTemporaryFile() as tf:
         for content in response.streaming_content:
             tf.write(content)
+        tf.flush()
 
         sigmf_archive_contents = sigmf.archive.extract(tf.name)
         assert len(sigmf_archive_contents) == 3
 
 
 def test_all_acquisitions_archive_download(user_client, test_scheduler):
-    entry_name = simulate_acquisitions(user_client, n=3)
+    entry_name = simulate_frequency_fft_acquisitions(user_client, n=3)
     url = reverse_archive_all(entry_name)
     disposition = 'attachment; filename="{}_test_multiple_acq.sigmf"'
     disposition = disposition.format(sensor.settings.FQDN)
@@ -87,6 +89,7 @@ def test_all_acquisitions_archive_download(user_client, test_scheduler):
     with tempfile.NamedTemporaryFile() as tf:
         for content in response.streaming_content:
             tf.write(content)
+        tf.flush()
 
         sigmf_archive_contents = sigmf.archive.extract(tf.name)
         assert len(sigmf_archive_contents) == 3
