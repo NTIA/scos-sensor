@@ -13,8 +13,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     schedule_entries = serializers.SerializerMethodField(
         help_text="The list of schedule entries owned by the user"
     )
-    date_joined = ISOMillisecondDateTimeFormatField()
-    last_login = ISOMillisecondDateTimeFormatField()
+    date_joined = ISOMillisecondDateTimeFormatField(read_only=True)
+    last_login = ISOMillisecondDateTimeFormatField(read_only=True)
 
     class Meta:
         model = User
