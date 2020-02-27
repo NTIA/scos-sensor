@@ -16,11 +16,11 @@ before_install:
   # Setup shell environment
   - source env.template
   # Create fake usb device node to make api container happy
-  - sudo mkdir -p /dev/bus/usb/001
-  - sudo mknod /dev/bus/usb/001/001 c 189 260
+  # - sudo mkdir -p /dev/bus/usb/001
+  # - sudo mknod /dev/bus/usb/001/001 c 189 260
 
 install:
-  - docker-compose up --build -d
+  - MOCK_RADIO=1 docker-compose up --build -d
 
 before_script:
   - pip install -r ./src/requirements-dev.txt
