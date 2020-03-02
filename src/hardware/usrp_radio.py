@@ -96,7 +96,7 @@ class USRPRadio(RadioInterface):
             usrp_args = "type=b200"  # find any b-series device
 
             try:
-                self.usrp = uhd.usrp.MultiUSRP(usrp_args)
+                self.usrp = self.uhd.usrp.MultiUSRP(usrp_args)
             except RuntimeError:
                 err = "No device found matching search parameters {!r}\n"
                 err = err.format(usrp_args)
@@ -188,7 +188,7 @@ class USRPRadio(RadioInterface):
             tune_result = self.usrp.set_rx_freq(rf_freq, dsp_freq)
             logger.debug(tune_result)
         else:
-            tune_request = uhd.types.TuneRequest(rf_freq, dsp_freq)
+            tune_request = self.uhd.types.TuneRequest(rf_freq, dsp_freq)
             tune_result = self.usrp.set_rx_freq(tune_request)
             # FIXME: report actual values when available - see note below
             msg = "rf_freq: {}, dsp_freq: {}"
