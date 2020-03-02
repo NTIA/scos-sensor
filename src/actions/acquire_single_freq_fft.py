@@ -287,14 +287,6 @@ class SingleFrequencyFftAcquisition(Action):
         calibration_annotation_md = self.radio.create_calibration_annotation()
         sigmf_md.add_annotation(
             start_index=0,
-            length=self.measurement_params.fft_size
-            * len(M4sDetector),  # todo check this
-            metadata=calibration_annotation_md,
-        )
-
-        calibration_annotation_md = self.radio.create_calibration_annotation()
-        sigmf_md.add_annotation(
-            start_index=0,
             length=self.measurement_params.fft_size * len(M4sDetector),
             metadata=calibration_annotation_md,
         )
