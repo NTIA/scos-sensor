@@ -12,22 +12,15 @@ Example usage:
 """
 
 import logging
-from os import path
 
 import numpy as np
-from ruamel.yaml import YAML
 
 from hardware import calibration
 from hardware.mocks.usrp_block import MockUsrp
 from hardware.radio_iface import RadioInterface
 from sensor import settings, utils
-from sensor.settings import REPO_ROOT
 
 logger = logging.getLogger(__name__)
-
-uhd = None
-radio = None
-is_available = False
 
 # Testing determined these gain values provide a good mix of sensitivity and
 # dynamic range performance
