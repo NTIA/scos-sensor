@@ -64,7 +64,7 @@ stored in a local database. The full metadata can be read directly through the
 self-hosted website or retrieved in plain text via a single API call. Our
 metadata and data format is an extension of, and compatible with, the
 [SigMF](https://github.com/gnuradio/sigmf) specification. The [SCOS Data
-Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec) describes
+Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia) describes
 the `scos` namespace.
 
 When deploying equipment remotely, the robustness and security of software
@@ -261,7 +261,7 @@ References
 ----------
 
  - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
- - [SCOS Data Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec)
+ - [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
 
 
 License
