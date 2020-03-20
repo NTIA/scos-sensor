@@ -1,5 +1,5 @@
 from sensor import settings
-from hardware.usrp_radio import USRPRadio
+# from hardware.usrp_radio import USRPRadio
 
 radio = None
 
@@ -14,4 +14,4 @@ def get_radio():
         raise Exception("Unsupported SENSOR_TYPE")
 
 
-get_radio()
+# get_radio()

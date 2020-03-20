@@ -9,7 +9,7 @@ jsonschema==3.0.1
 mkdocs==1.0.4
 pre-commit==1.16.1
 pytest-cov==2.7.1
-pytest-django==3.5.1
+pytest-django==3.8.0
 pytest-flake8==1.0.4
 seed-isort-config==1.9.1
 tox==3.12.1

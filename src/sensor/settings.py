@@ -23,6 +23,9 @@ env = Env()
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 REPO_ROOT = path.dirname(BASE_DIR)
+# REPO_ROOT = env("APP_ROOT", default=None)
+# if not REPO_ROOT:
+#     REPO_ROOT = path.dirname(BASE_DIR)
 
 FQDN = env("FQDN", "fqdn.unset")
 
@@ -48,8 +51,9 @@ SENSOR_TYPE = env("SENSOR_TYPE", default="USRP")
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
-SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
+
+
 
 LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 
@@ -58,17 +62,14 @@ OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
 
 # JSON configs
-SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
-SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
 SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
-ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, "actions")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
-try:
-    os.remove(SDR_HEALTHCHECK_FILE)
-except OSError:
-    pass
+# try:
+#     os.remove(SDR_HEALTHCHECK_FILE)
+# except OSError:
+#     pass
 
 # As defined in SigMF
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
@@ -160,6 +161,7 @@ INSTALLED_APPS = [
     "authentication.apps.AuthenticationConfig",
     "capabilities.apps.CapabilitiesConfig",
     "hardware.apps.HardwareConfig",
+    "handlers.apps.HandlersConfig",
     "tasks.apps.TasksConfig",
     "schedule.apps.ScheduleConfig",
     "scheduler.apps.SchedulerConfig",
@@ -312,13 +314,16 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "loggers": {
         "actions": {"handlers": ["console"], "level": LOGLEVEL},
+        #"django": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
+        "handlers": {"handlers": ["console"], "level": LOGLEVEL},
         "hardware": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},
         "status": {"handlers": ["console"], "level": LOGLEVEL},
         "tasks": {"handlers": ["console"], "level": LOGLEVEL},
+        "scos_actions": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 

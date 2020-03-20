@@ -1,8 +1,7 @@
 """A simple example action that logs a message."""
 
 import logging
-
-from .base import Action
+from scos_actions.actions.interfaces.action import Action
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +23,7 @@ class Logger(Action):
         super(Logger, self).__init__(admin_only=admin_only)
         self.loglvl = loglvl
 
-    def __call__(self, name, tid):
+    def __call__(self, schedule_entry_json, task_id, sensor_definition):
         msg = "running test {name}/{tid}"
-        logger.log(level=self.loglvl, msg=msg.format(name=name, tid=tid))
+        schedule_entry_name = schedule_entry_json["name"]
+        logger.log(level=self.loglvl, msg=msg.format(name=schedule_entry_name, tid=task_id))

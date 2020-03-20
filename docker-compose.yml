@@ -28,6 +28,7 @@ services:
       dockerfile: docker/Dockerfile-api
       args:
         - BASE_IMAGE
+        - DOCKER_GIT_CREDENTIALS
     environment:
       - ADMIN_EMAIL
       - ADMIN_PASSWORD

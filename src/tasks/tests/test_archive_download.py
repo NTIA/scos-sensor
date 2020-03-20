@@ -72,7 +72,7 @@ def test_multirec_acquisition_archive_download(user_client, test_scheduler):
         tf.flush()
 
         sigmf_archive_contents = sigmf.archive.extract(tf.name)
-        assert len(sigmf_archive_contents) == 3
+        assert len(sigmf_archive_contents) == 10
 
 
 def test_all_acquisitions_archive_download(user_client, test_scheduler):
