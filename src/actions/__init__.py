@@ -27,14 +27,15 @@ registered_actions = {
 
 for name, module in discovered_plugins.items():
     discover = importlib.import_module(name+'.discover')
-    for name, action in discover.actions.items():
-        logger.debug("action: " + name + "=" + str(action))
-        registered_actions[name] = action
     if settings.MOCK_RADIO or settings.RUNNING_TESTS:
-        for name, action in discover.test_actions.items():
-            logger.debug("test_action: " + name + "=" + str(action))
+        if hasattr(discover, 'test_actions'):
+            for name, action in discover.test_actions.items():
+                logger.debug("test_action: " + name + "=" + str(action))
+                registered_actions[name] = action
+    else:
+        for name, action in discover.actions.items():
+            logger.debug("action: " + name + "=" + str(action))
             registered_actions[name] = action
-
 
 by_name = registered_actions
 

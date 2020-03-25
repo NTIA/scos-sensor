@@ -23,6 +23,7 @@ install:
   - MOCK_RADIO=1 docker-compose up --build -d
 
 before_script:
+  - python3 -m pip install --upgrade pip
   - pip install -r ./src/requirements-dev.txt
 
 script:

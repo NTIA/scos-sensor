@@ -3,7 +3,7 @@ import logging
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from hardware import radio
+#from hardware import radio
 from scheduler import scheduler
 
 from .serializers import LocationSerializer
