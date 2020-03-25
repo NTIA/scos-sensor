@@ -26,6 +26,7 @@ registered_actions = {
 
 
 for name, module in discovered_plugins.items():
+    logger.debug("Looking for actions in " + name + ": " + str(module))
     discover = importlib.import_module(name+'.discover')
     if settings.MOCK_RADIO or settings.RUNNING_TESTS:
         if hasattr(discover, 'test_actions'):
