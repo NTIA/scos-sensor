@@ -8,19 +8,14 @@ logger = logging.getLogger(__name__)
 
 
 class Archive:
-
     def __call__(self, task_result_id, recording_id, acq_data, sigmf_md):
         task_result = TaskResult.object.get(id=task_result_id)
 
         logger.debug("Storing acquisition in database")
 
-        name = (
-            task_result.schedule_entry.name
-            + "_"
-            + str(task_result.task_id)
-        )
-        if recording_id: # recording_id always starts with 1
-            name += "_"+ str(recording_id)
+        name = task_result.schedule_entry.name + "_" + str(task_result.task_id)
+        if recording_id:  # recording_id always starts with 1
+            name += "_" + str(recording_id)
         name += ".sigmf-data"
 
         acquisition = Acquisition(

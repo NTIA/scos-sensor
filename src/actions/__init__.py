@@ -10,9 +10,8 @@ logger = logging.getLogger(__name__)
 
 discovered_plugins = {
     name: importlib.import_module(name)
-    for finder, name, ispkg
-    in pkgutil.iter_modules()
-    if name.startswith('scos_')
+    for finder, name, ispkg in pkgutil.iter_modules()
+    if name.startswith("scos_")
 }
 logger.debug(discovered_plugins)
 
@@ -27,9 +26,9 @@ registered_actions = {
 
 for name, module in discovered_plugins.items():
     logger.debug("Looking for actions in " + name + ": " + str(module))
-    discover = importlib.import_module(name+'.discover')
+    discover = importlib.import_module(name + ".discover")
     if settings.MOCK_RADIO or settings.RUNNING_TESTS:
-        if hasattr(discover, 'test_actions'):
+        if hasattr(discover, "test_actions"):
             for name, action in discover.test_actions.items():
                 logger.debug("test_action: " + name + "=" + str(action))
                 registered_actions[name] = action

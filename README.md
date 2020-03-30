@@ -153,13 +153,16 @@ Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 Adding Actions
 --------------
 
-To expose a new action to the API, check out the available [action
-classes](src/actions). An _action class_ is a parameterized implementation of
-an action. If an existing class covers your needs, you can simply add a text
-[config file](configs/actions/README.md) and restart the sensor.
+This repository contains a basic logger action. Measurement and GPS actions 
+are exposed to scos-sensor in installed python packages. If any python
+package begins with "scos_", and contains <package_name>.discover.actions,
+these actions will automatically be available for scheduling.
 
-If no existing action class meets your needs, see [Writing Custom
-Actions](DEVELOPING.md#writing-custom-actions).
+The [scos_actions](https://github.com/NTIA/scos_actions) repository is the base repository for actions, and 
+contains actions that can be re-used with different parameters. See
+the [scos_actions](https://github.com/NTIA/scos_actions) repository for more details.
+
+The [scos_usrp](https://github.com/NTIA/scos_usrp) repository contains USRP specific actions.
 
 
 Architecture

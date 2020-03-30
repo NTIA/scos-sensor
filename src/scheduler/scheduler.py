@@ -151,7 +151,9 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
-            detail = self.task.action_caller(schedule_entry_json, task_id, capabilities["sensor"])
+            detail = self.task.action_caller(
+                schedule_entry_json, task_id, capabilities["sensor"]
+            )
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):

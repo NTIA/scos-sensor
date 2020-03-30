@@ -8,7 +8,10 @@ from sensor import V1
 
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
-from scos_actions.utils import convert_datetime_to_millisecond_iso_format, parse_datetime_iso_format_str
+from scos_actions.utils import (
+    convert_datetime_to_millisecond_iso_format,
+    parse_datetime_iso_format_str,
+)
 
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = "Lower number is higher priority (default={})".format(DEFAULT_PRIORITY)

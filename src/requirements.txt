@@ -10,7 +10,7 @@ django-filter==2.2.0
 djangorestframework==3.11.0
 docker-compose==1.25.4
 drf-yasg==1.17.1
-environs==4.2.0
+environs==7.3.1
 gunicorn==19.9.0
 jsonfield==3.1.0
 numpy>=1.16.4

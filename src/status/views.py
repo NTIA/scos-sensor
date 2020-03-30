@@ -3,8 +3,9 @@ import logging
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-#from hardware import radio
+# from hardware import radio
 from scheduler import scheduler
+from . import last_calibration_time
 
 from .serializers import LocationSerializer
 from .utils import get_location
@@ -38,6 +39,6 @@ def status(request, version, format=None):
             "scheduler": scheduler.thread.status,
             "location": serialize_location(),
             "system_time": get_datetime_str_now(),
-            #"last_calibration_time": get_last_calibration_time(),
+            "last_calibration_time": last_calibration_time(),
         }
     )

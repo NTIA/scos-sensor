@@ -54,7 +54,6 @@ CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
 
 
-
 LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 
 OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
@@ -314,7 +313,7 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "loggers": {
         "actions": {"handlers": ["console"], "level": LOGLEVEL},
-        #"django": {"handlers": ["console"], "level": LOGLEVEL},
+        # "django": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "handlers": {"handlers": ["console"], "level": LOGLEVEL},
         "hardware": {"handlers": ["console"], "level": LOGLEVEL},
@@ -324,6 +323,7 @@ LOGGING = {
         "status": {"handlers": ["console"], "level": LOGLEVEL},
         "tasks": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_actions": {"handlers": ["console"], "level": LOGLEVEL},
+        "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 

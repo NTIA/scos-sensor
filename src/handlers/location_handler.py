@@ -17,4 +17,3 @@ def location_action_completed_callback(sender, **kwargs):
             latitude=latitude,
             longitude=longitude,
         )
-
