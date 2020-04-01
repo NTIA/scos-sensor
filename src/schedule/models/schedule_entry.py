@@ -120,7 +120,11 @@ class ScheduleEntry(models.Model):
             "object to this URL after each task completes"
         ),
     )
-
+    GPS_sync_start = models.BigIntegerField(
+        null=True,
+        blank=True,
+        help_text="Start time for GPS sync. If left empty, then no GPS sync",
+    )
     # read-only fields
     next_task_time = models.BigIntegerField(
         null=True,

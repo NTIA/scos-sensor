@@ -151,6 +151,8 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
+            if self.entry.GPS_sync_start:
+                schedule_entry_json['GPS_sync_start'] = self.entry.GPS_sync_start
             detail = self.task.action_caller(
                 schedule_entry_json, task_id, capabilities["sensor"]
             )

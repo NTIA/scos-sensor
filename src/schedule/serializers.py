@@ -142,6 +142,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             "is_active",
             "is_private",
             "callback_url",
+            "GPS_sync_start",
             "next_task_time",
             "next_task_id",
             "created",
