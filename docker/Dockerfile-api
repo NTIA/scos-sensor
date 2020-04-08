@@ -1,13 +1,5 @@
-FROM ubuntu
-
-# Copy just the necessities from our PY3-enabled UHD container
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/lib/libuhd.so* /usr/local/lib/
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/lib/uhd/ /usr/local/lib/uhd/
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/lib/python3/dist-packages/uhd/ /usr/lib/python3/dist-packages/uhd/
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/include/uhd.h /usr/local/include/
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/include/uhd/  /usr/local/include/uhd/
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/bin/uhd_* /usr/local/bin/
-COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/share/uhd/images/usrp_b2* /usr/local/share/uhd/images/
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
 
 RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive \
