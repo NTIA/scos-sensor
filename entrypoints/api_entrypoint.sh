@@ -11,6 +11,9 @@ function cleanup_demodb {
 trap cleanup_demodb SIGTERM
 trap cleanup_demodb SIGINT
 
+echo "Installing Drivers"
+python3 /scripts/install_drivers.py
+
 echo "Starting Migrations"
 python3 manage.py migrate
 
