@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# A quick script to download data directly from a scos-sensor
+# A quick script to download data directly from a scos-sensor. Takes either user input, or a config file if specified
 
 # Set variables
 doublecheck="y"
 remaining=0
 
-# Read in config file from command line (if present)
+# Read in config file from command line (if given)
 source "$1"
 
-# Take user input if no config file is given, and save the config
+# Otherwise, take user input and save the config
 if [ "$1" == "" ]; then
     set -- data_download.cfg
     doublecheck="n"
@@ -29,7 +29,7 @@ if [ "$1" == "" ]; then
     printf "First file to copy: $firstfile\n"
     printf "Last file to copy: $lastfile\n"
     printf "Save location: $filepath\n"
-    printf "Minimum filesize: ${cleanup}MB \n"
+    printf "Minimum filesize kept: ${cleanup}MB \n"
 
     read -e -i "$doublecheck" -p "Check the above settings. Do you wish to proceed (y/n)? " doublecheck
 
@@ -43,7 +43,7 @@ if [ "$1" == "" ]; then
     echo "cleanup=$cleanup" >> ./$1
 fi
 
-# Delete files that are under size
+# Delete files that are under minimum size
 find $filepath -name "*.sigmf" -type 'f' -size -${cleanup}M -delete
 
 # Copy files using curl
@@ -53,6 +53,7 @@ if [ $doublecheck == "y" ]; then
         start=$SECONDS
         if [ ! -f $filepath/$schedule\_$i.sigmf ]; then
             curl -o $filepath/$schedule\_$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/tasks/completed/$schedule/$i/archive
+            # Poorly try to estimate copy time remaining
             remaining=$(( (((SECONDS - start) * (lastfile - firstfile - i) / 60) + remaining) / 2 ))
             printf "Downloaded ${schedule}_${i}.sigmf. ${remaining} mins remaining. \n"
         fi
