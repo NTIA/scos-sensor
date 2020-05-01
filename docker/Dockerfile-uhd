@@ -1,4 +1,4 @@
-FROM ubuntu as build
+FROM ubuntu:18.04 as build
 
 # Everything AFTER the "v" in the GitHub tag
 ARG UHD_TAG=3.13.1.0-rc1
@@ -20,7 +20,7 @@ RUN cmake -DENABLE_PYTHON_API=ON -DENABLE_PYTHON3=ON ../
 RUN make && make test && make install
 RUN python3 /usr/local/lib/uhd/utils/uhd_images_downloader.py
 
-FROM ubuntu
+FROM ubuntu:18.04
 
 # Copy just the necessities to run B2xx with python3
 COPY --from=build /usr/local/lib/libuhd.so* /usr/local/lib/

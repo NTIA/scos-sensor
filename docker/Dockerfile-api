@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:18.04
 
 # Copy just the necessities from our PY3-enabled UHD container
 COPY --from=smsntia/uhd_b2xx_py3:3.13.1.0-rc1 /usr/local/lib/libuhd.so* /usr/local/lib/
