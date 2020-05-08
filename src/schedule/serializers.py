@@ -75,7 +75,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         required=False,
         allow_null=True,
         default=None,
-        help_text="UTC time (ISO 8601) to start, or leave blank for 'now'",
+        help_text="UTC time (ISO 8601) to start, or leave blank for 'now'. [Required] for GPS sync start",
     )
     stop = DateTimeFromTimestampField(
         required=False,
@@ -136,13 +136,13 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             "action",
             "priority",
             "start",
+            "GPS_sync_start",
             "stop",
             "relative_stop",
             "interval",
             "is_active",
             "is_private",
             "callback_url",
-            "GPS_sync_start",
             "next_task_time",
             "next_task_id",
             "created",

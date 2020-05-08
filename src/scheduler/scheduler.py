@@ -138,6 +138,7 @@ class Scheduler(threading.Thread):
     def _call_task_action(self):
         entry_name = self.task.schedule_entry_name
         task_id = self.task.task_id
+        time = self.task.time
         from schedule.serializers import ScheduleEntrySerializer
         from tasks.serializers import TaskResultSerializer
 
@@ -152,7 +153,9 @@ class Scheduler(threading.Thread):
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
             if self.entry.GPS_sync_start:
-                schedule_entry_json['GPS_sync_start'] = self.entry.GPS_sync_start
+                ## time was delayed 5 seconds when GPS_sync_start is True (in schedule_entry.__init__() method)
+                ## adding those 5 seconds back now.
+                schedule_entry_json['GPS_sync_start'] = time + 5
             detail = self.task.action_caller(
                 schedule_entry_json, task_id, capabilities["sensor"]
             )

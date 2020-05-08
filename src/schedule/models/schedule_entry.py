@@ -94,7 +94,7 @@ class ScheduleEntry(models.Model):
         null=True,
         blank=True,
         validators=(MinValueValidator(1),),
-        help_text="Seconds between tasks, or leave blank to run once",
+        help_text="Seconds between tasks, or leave blank to run once. Must be greater than 5 for GPS sync start",
     )
     is_active = models.BooleanField(
         default=True,
@@ -120,10 +120,10 @@ class ScheduleEntry(models.Model):
             "object to this URL after each task completes"
         ),
     )
-    GPS_sync_start = models.BigIntegerField(
-        null=True,
-        blank=True,
-        help_text="Start time for GPS sync. If left empty, then no GPS sync",
+    GPS_sync_start = models.BooleanField(
+        default=False,
+        editable=True,
+        help_text="GPS clock will be used to trigger the start of the task",
     )
     # read-only fields
     next_task_time = models.BigIntegerField(
@@ -160,6 +160,7 @@ class ScheduleEntry(models.Model):
         ordering = ("created",)
 
     def __init__(self, *args, **kwargs):
+        print("MAX: schedule_entry __init__() is called")
         relative_stop = kwargs.pop("relative_stop", None)
 
         super(ScheduleEntry, self).__init__(*args, **kwargs)
@@ -168,11 +169,16 @@ class ScheduleEntry(models.Model):
             self.stop = self.start + relative_stop
 
         if self.next_task_time is None:
-            self.next_task_time = self.start
+            if self.GPS_sync_start == True:
+                print("MAX: schedule_entry __init__ next_task_time was {} is now {} ".format(self.start, self.start - 5))
+                self.next_task_time = self.start - 5
+            else:
+                self.next_task_time = self.start          
 
         # used by .save to detect whether to reset .next_task_time
         self.__start = self.start
         self.__interval = self.interval
+
 
     def update(self, *args, **kwargs):
         super(ScheduleEntry, self).update(*args, **kwargs)
@@ -200,6 +206,9 @@ class ScheduleEntry(models.Model):
         if times:
             if self.interval:
                 self.next_task_time = times[-1] + self.interval
+                #if self.GPS_sync_start == True:
+                #    print("MAX: next_task_time was set back from {} to {}".format(self.next_task_time, self.next_task_time-5))
+                #    self.next_task_time = self.next_task_time - 5
             else:
                 # interval is None and time consumed
                 self.is_active = False
