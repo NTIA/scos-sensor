@@ -160,7 +160,6 @@ class ScheduleEntry(models.Model):
         ordering = ("created",)
 
     def __init__(self, *args, **kwargs):
-        print("MAX: schedule_entry __init__() is called")
         relative_stop = kwargs.pop("relative_stop", None)
 
         super(ScheduleEntry, self).__init__(*args, **kwargs)
@@ -170,7 +169,8 @@ class ScheduleEntry(models.Model):
 
         if self.next_task_time is None:
             if self.GPS_sync_start == True:
-                print("MAX: schedule_entry __init__ next_task_time was {} is now {} ".format(self.start, self.start - 5))
+                ## GPS tasks are scheduled 5 seconds early, so that GPS clock sync can be acquired.
+                ## the measurement will occur at the original self.start time (works with interval tasks too)
                 self.next_task_time = self.start - 5
             else:
                 self.next_task_time = self.start          
@@ -206,9 +206,6 @@ class ScheduleEntry(models.Model):
         if times:
             if self.interval:
                 self.next_task_time = times[-1] + self.interval
-                #if self.GPS_sync_start == True:
-                #    print("MAX: next_task_time was set back from {} to {}".format(self.next_task_time, self.next_task_time-5))
-                #    self.next_task_time = self.next_task_time - 5
             else:
                 # interval is None and time consumed
                 self.is_active = False
