@@ -1,4 +1,4 @@
-FROM ubuntu as build
+FROM ubuntu:18.04 as build
 
 # Everything AFTER the "v" in the GitHub tag
 ARG UHD_TAG=3.13.1.0-rc1
