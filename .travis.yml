@@ -18,6 +18,7 @@ before_install:
   # Create fake usb device node to make api container happy
   - sudo mkdir -p /dev/bus/usb/001
   - sudo mknod /dev/bus/usb/001/001 c 189 260
+  - mkdir data
 
 install:
   - docker-compose up --build -d
