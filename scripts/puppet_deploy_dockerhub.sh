@@ -8,7 +8,6 @@
 set -e # exit on error
 
 cd $REPO_ROOT
-mkdir data
 docker-compose pull
 # docker-compose run api /src/manage.py createsuperuser
 docker-compose up -d --no-build

@@ -8,7 +8,6 @@
 set -e # exit on error
 
 cd $REPO_ROOT
-mkdir data
 docker-compose up -d
 touch .deployed
 touch .github
