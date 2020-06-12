@@ -2,6 +2,7 @@ version: '3'
 
 services:
   db:
+    user: ${USER}
     image: postgres:11-alpine
     restart: always
     environment:
@@ -10,6 +11,7 @@ services:
       - '127.0.0.1:5432:5432'
     volumes:
       - ./data:/var/lib/postgresql/data
+      - /etc/passwd:/etc/passwd:ro
 
   api:
     healthcheck:
