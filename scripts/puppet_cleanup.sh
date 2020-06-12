@@ -11,7 +11,7 @@ cd $REPO_ROOT
 
 if [ -e .github ]; then
     if [ -e data ]; then
-        rm -rf data
+        rm -rf dbdata/pgdata
     fi
 fi
 
