@@ -27,7 +27,8 @@
             "env": {
                 "MOCK_RADIO": "false",
                 "MOCK_RADIO_RANDOM": "false"
-            }
+            },
+            "envFile": "${workspaceFolder}/env"
         }
     ]
 }
