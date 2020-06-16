@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Pytest",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "cwd": "${workspaceFolder}/src",
+            "env": {
+                "MOCK_RADIO": "true"
+            }
+        },
+        {
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
@@ -13,7 +23,11 @@
                 "runserver",
                 "--noreload"
             ],
-            "django": true
+            "django": true,
+            "env": {
+                "MOCK_RADIO": "false",
+                "MOCK_RADIO_RANDOM": "false"
+            }
         }
     ]
 }
