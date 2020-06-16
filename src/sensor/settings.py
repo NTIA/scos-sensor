@@ -61,9 +61,12 @@ OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
 
 # JSON configs
-SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
-SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
-SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
+if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
+    SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
+if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
+    SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
+if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
+    SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
@@ -326,6 +329,7 @@ LOGGING = {
         "tasks": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_actions": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
+        "scos_sensor_keysight": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 
