@@ -8,6 +8,9 @@
 set -e # exit on error
 
 cd $REPO_ROOT
+
+export USER=$(id -u):$(id -g)
+
 docker-compose up -d
 touch .deployed
 touch .github

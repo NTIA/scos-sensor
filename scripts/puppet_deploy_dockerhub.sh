@@ -8,6 +8,9 @@
 set -e # exit on error
 
 cd $REPO_ROOT
+
+export USER=$(id -u):$(id -g)
+
 docker-compose pull
 # docker-compose run api /src/manage.py createsuperuser
 docker-compose up -d --no-build
