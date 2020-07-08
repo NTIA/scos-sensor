@@ -34,13 +34,20 @@ available tests in a virtual environment against all supported version of
 python. Running `pytest` directly is faster, but running `tox` is a more
 thorough test.
 
-The following commands install the sensor's development requirements. We highly
-recommend you initialize a virtual development environment using a tool such a
-`conda` or `virtualenv` first.
+We highly recommend you initialize a virtual development environment using a tool such a
+`conda` or `venv` first.
+
+The following describes the steps to setup a virtual environment using venv.
+
+1. Install required system packages: `sudo apt install python3-gpg python3-venv`
+2. Create virtual environment: `python3 -m venv --system-site-packages ./venv`
+3. Activate virtual environment (repeat when using a new terminal): `source ./venv/bin/activate`
+4. Install dependencies: `python3 -m pip install -r requirements-dev.txt`
+
+The following commands can be used for testing.
 
 ```bash
 $ cd src
-$ python3 -m pip install -r requirements-dev.txt
 $ pytest          # faster, but less thorough
 $ tox             # tests code in clean virtualenv
 $ tox --recreate  # if you change `requirements.txt`
