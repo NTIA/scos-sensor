@@ -2,12 +2,13 @@ version: '3'
 
 services:
   db:
-    user: ${USER}
+    user: ${POSTGRES_USER}
     image: postgres:11-alpine
     restart: always
     environment:
       - POSTGRES_PASSWORD
       - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
