@@ -8,7 +8,7 @@ services:
     environment:
       - POSTGRES_PASSWORD
       - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_USER
+      #- POSTGRES_USER
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
