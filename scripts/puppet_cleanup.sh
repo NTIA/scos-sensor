@@ -10,7 +10,7 @@ cd $REPO_ROOT
 # Only remove the database if deployment has occured via Github
 
 if [ -e .github ]; then
-    if [ -e data ]; then
+    if [ -e dbdata/pgdata ]; then
         rm -rf dbdata/pgdata
     fi
 fi
