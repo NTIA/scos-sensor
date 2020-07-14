@@ -14,10 +14,6 @@ fi
 
 set -e # exit on error
 cd $REPO_ROOT
-# if [ ! -d "./data" ]
-# then
-#   mkdir ./data
-# fi
 
 chown postgres:postgres ./dbdata
 export POSTGRES_USER=$(id -u postgres):$(id -g postgres)
