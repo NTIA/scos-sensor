@@ -5,9 +5,19 @@
 # system to pick up the environment variables and various deployment/dependency
 # timing issues. I.e. Puppet is not good at single run/deployment stuff.
 
-set -e # exit on error
+id -u postgres > /dev/null
+if [ $? -ne 0 ]
+then
+  set -e # exit on error
+  useradd -s /usr/sbin/nologin postgres
+fi
 
+set -e # exit on error
 cd $REPO_ROOT
+
+chown postgres:postgres ./dbdata
+export POSTGRES_USER=$(id -u postgres):$(id -g postgres)
+
 docker-compose up -d
 touch .deployed
 touch .github

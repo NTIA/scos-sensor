@@ -99,7 +99,6 @@ node_modules
 swagger.json
 
 # vscode
-.vscode/
 .pytest_cache/
 greyhound-*.json
 /.admin_password
