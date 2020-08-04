@@ -53,6 +53,8 @@ CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
 
+SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
+SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
 
 LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 
