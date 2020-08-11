@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # This script is called during the first Github Puppet run to initialize the
