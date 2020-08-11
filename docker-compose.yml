@@ -96,6 +96,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
     command: /entrypoints/autoheal_entrypoint.sh
-
-volumes:
-  pgdata:
