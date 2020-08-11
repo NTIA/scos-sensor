@@ -2,17 +2,20 @@ version: '3'
 
 services:
   db:
-    user: ${POSTGRES_USER}
-    image: postgres:11-alpine
+    #user: ${POSTGRES_USER}
+    image: postgres:12
     restart: always
     environment:
+      #- POSTGRES_USER=postgres
       - POSTGRES_PASSWORD
-      - PGDATA=/var/lib/postgresql/data/pgdata
+      #- PGDATA=/var/lib/postgresql/data/pgdata
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
-      - ./dbdata:/var/lib/postgresql/data
-      - /etc/passwd:/etc/passwd:ro
+      - ./data:/var/lib/postgresql/data
+      #- ./dbdata:/var/lib/postgresql/data
+      #- pgdata:/var/lib/postgresql/data
+      #- /etc/passwd:/etc/passwd:ro
 
   api:
     healthcheck:
@@ -97,3 +100,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
     command: /entrypoints/autoheal_entrypoint.sh
+
+volumes:
+  pgdata:
