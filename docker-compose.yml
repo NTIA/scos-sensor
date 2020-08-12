@@ -3,7 +3,8 @@ version: '3'
 services:
   db:
     #user: ${POSTGRES_USER}
-    image: postgres:12
+    image: postgres:12-alpine
+    #image: postgres:12
     restart: always
     environment:
       - POSTGRES_PASSWORD
