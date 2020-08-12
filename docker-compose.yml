@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    user: ${POSTGRES_USER}
+    #user: ${POSTGRES_USER}
     image: postgres:12
     restart: always
     environment:
