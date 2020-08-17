@@ -10,6 +10,7 @@ set -e # exit on error
 cd $REPO_ROOT
 docker-compose pull
 # docker-compose run api /src/manage.py createsuperuser
+export PASSPHRASE="$(python3 scripts/generate_passphrase.py 64)"
 docker-compose up -d --no-build
 touch .deployed
 touch .dockerhub

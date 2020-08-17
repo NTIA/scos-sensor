@@ -1110,8 +1110,8 @@
                         "test_single_frequency_iq_action",
                         "test_single_frequency_m4s_action",
                         "admin_logger",
-                        "monitor_radio",
-                        "sync_gps"
+                        "test_monitor_radio",
+                        "test_sync_gps"
                     ]
                 },
                 "priority": {

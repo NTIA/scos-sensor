@@ -1,9 +1,17 @@
+from django.conf import settings
 from django.db import models
 from jsonfield import JSONField
 
 from .task_result import TaskResult
 
 from django.db.models.signals import pre_delete
+from django.db.models.fields.files import FileField
+from .encrypted_storage import EncryptedStorage
+from django.core.files.storage import FileSystemStorage
+
+
+def select_storage():
+    return EncryptedStorage() if settings.ENCRYPT_DATA_FILES else FileSystemStorage()
 
 
 class Acquisition(models.Model):
@@ -28,7 +36,8 @@ class Acquisition(models.Model):
         default=1, help_text="The id of the recording relative to the task"
     )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
-    data = models.FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)
+    data = FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True, storage=select_storage)
+
 
     class Meta:
         db_table = "acquisitions"

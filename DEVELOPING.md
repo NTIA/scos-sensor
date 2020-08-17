@@ -42,7 +42,8 @@ The following describes the steps to setup a virtual environment using venv.
 1. Install required system packages: `sudo apt install python3-gpg python3-venv`
 2. Create virtual environment: `python3 -m venv --system-site-packages ./venv`
 3. Activate virtual environment (repeat when using a new terminal): `source ./venv/bin/activate`
-4. Install dependencies: `python3 -m pip install -r requirements-dev.txt`
+4. Upgrade pip using `python3 -m pip install --upgrade pip`
+5. Install dependencies: `python3 -m pip install -r requirements-dev.txt`
 
 The following commands can be used for testing.
 

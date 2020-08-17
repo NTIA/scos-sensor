@@ -8,6 +8,7 @@
 set -e # exit on error
 
 cd $REPO_ROOT
+export PASSPHRASE="$(python3 scripts/generate_passphrase.py 64)"
 docker-compose up -d
 touch .deployed
 touch .github

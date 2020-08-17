@@ -89,18 +89,20 @@ INTERNAL_IPS = ["127.0.0.1"]
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
+    PASSPHRASE = "changeme"
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
+    PASSPHRASE = env.str("PASSPHRASE")
     DEBUG = env.bool("DEBUG", default=False)
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
-
+ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -196,6 +198,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.request"
             ],
             "builtins": ["sensor.templatetags.sensor_tags"],
         },
