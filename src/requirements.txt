@@ -1,7 +1,7 @@
 Django~=3.1
 Pygments==2.4.2
 Markdown==3.1.1
-scos_actions @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos_actions@master#egg=scos_actions
+scos_actions @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos_actions@optimize_memory#egg=scos_actions
 scos_usrp @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos_usrp@generic_actions#egg=scos_usrp
 coreapi==2.3.3
 django-debug-toolbar==2.2

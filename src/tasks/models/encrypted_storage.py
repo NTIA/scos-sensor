@@ -19,7 +19,7 @@ class EncryptedStorage(FileSystemStorage):
         unencrypted = None
         with FileSystemStorage._open(self, name, mode=mode) as encrypted:
             try:
-                unencrypted, result, verify_result = gpg.Context().decrypt(encrypted)
+                unencrypted, result, verify_result = gpg.Context().decrypt(encrypted, passphrase=PASSPHRASE)
             except gpg.errors.GPGMEError as e:
                 unencrypted = None
                 logger.error(e)
