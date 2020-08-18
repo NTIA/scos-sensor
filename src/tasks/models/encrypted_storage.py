@@ -3,9 +3,10 @@ import gpg
 import io
 import logging
 from django.core.files.base import ContentFile
+from django.conf import settings
 logger = logging.getLogger(__name__)
 
-PASSPHRASE = "changeme"
+PASSPHRASE = settings.PASSPHRASE
 
 
 class EncryptedStorage(FileSystemStorage):
