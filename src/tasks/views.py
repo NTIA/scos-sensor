@@ -23,6 +23,9 @@ from .models.task_result import TaskResult
 from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers.task import TaskSerializer
 from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSerializer
+import gpg
+
+PASSPHRASE = settings.PASSPHRASE
 
 logger = logging.getLogger(__name__)
 
@@ -223,8 +226,9 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
     multirecording = len(acquisitions) > 1
 
     for acq in acquisitions:
-        with tempfile.NamedTemporaryFile() as tmpdata:
-            tmpdata.write(acq.data.read())
+        with tempfile.NamedTemporaryFile(delete=True) as tmpdata:
+            gpg.Context().decrypt(acq.data.read(), sink=tmpdata, passphrase=PASSPHRASE)
+            #tmpdata.write(acq.data.read())
             tmpdata.seek(0)  # move fd ptr to start of data for reading
             name = schedule_entry_name + "_" + str(acq.task_result.task_id)
             if multirecording:
