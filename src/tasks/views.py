@@ -16,7 +16,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from schedule.models import ScheduleEntry
 from scheduler import scheduler
-from sensor import settings
+from django.conf import settings
 
 from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
@@ -227,8 +227,10 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
 
     for acq in acquisitions:
         with tempfile.NamedTemporaryFile(delete=True) as tmpdata:
-            gpg.Context().decrypt(acq.data.read(), sink=tmpdata, passphrase=PASSPHRASE)
-            #tmpdata.write(acq.data.read())
+            if acq.data_encrypted:
+                gpg.Context().decrypt(acq.data.read(), sink=tmpdata, passphrase=PASSPHRASE)
+            else:
+                tmpdata.write(acq.data.read())
             tmpdata.seek(0)  # move fd ptr to start of data for reading
             name = schedule_entry_name + "_" + str(acq.task_result.task_id)
             if multirecording:
