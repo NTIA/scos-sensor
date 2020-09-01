@@ -9,14 +9,13 @@ id -u postgres > /dev/null
 if [ $? -ne 0 ]
 then
   set -e # exit on error
-  useradd -s /usr/sbin/nologin postgres
+  # create user for postgres alpine container
+  groupadd -g 70 postgres
+  useradd -s /usr/sbin/nologin -u 70 -g 70 postgres
 fi
 
 set -e # exit on error
 cd $REPO_ROOT
-
-chown postgres:postgres ./dbdata
-export POSTGRES_USER=$(id -u postgres):$(id -g postgres)
 
 docker-compose up -d
 touch .deployed
