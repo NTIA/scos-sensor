@@ -51,8 +51,6 @@ SENSOR_TYPE = env("SENSOR_TYPE", default="USRP")
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
-SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
-
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
 
@@ -72,10 +70,10 @@ if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
-# try:
-#     os.remove(SDR_HEALTHCHECK_FILE)
-# except OSError:
-#     pass
+try:
+    os.remove(SDR_HEALTHCHECK_FILE)
+except OSError:
+    pass
 
 # As defined in SigMF
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
