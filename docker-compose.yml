@@ -58,6 +58,8 @@ services:
   nginx:
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
+    depends_on:
+      - api
     ports:
       - '80:80'
       - '443:443'

@@ -44,3 +44,5 @@ ARG DEBUG
 ARG DOMAINS
 ARG IPS
 ARG SECRET_KEY
+
+RUN python3 manage.py collectstatic
