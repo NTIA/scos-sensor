@@ -89,11 +89,16 @@ else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
     DEBUG = env.bool("DEBUG", default=False)
-    ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
+    ALLOWED_HOSTS = env.str("DOMAINS").split() + [FQDN] + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
+
+SESSION_COOKIE_AGE = 900 # seconds
+SESSION_EXPIRE_SECONDS = 900 # seconds
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = f"https://{FQDN}/api/auth/logout/?next=/api/v1/"
 
 # Application definition
 
@@ -170,6 +175,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django_session_timeout.middleware.SessionTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
