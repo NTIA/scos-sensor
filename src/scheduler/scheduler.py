@@ -7,6 +7,8 @@ from pathlib import Path
 
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
+from oauthlib.oauth2 import LegacyApplicationClient
+from requests_oauthlib import OAuth2Session
 
 from schedule.models import ScheduleEntry
 from sensor import settings
@@ -14,6 +16,7 @@ from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
+from authentication import oauth
 
 from . import utils
 
@@ -164,11 +167,14 @@ class Scheduler(threading.Thread):
         if self.entry.callback_url:
             try:
                 logger.debug("Trying callback")
+                response = oauth.get_access_token()
+                logger.debug(response)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
                 token = self.entry.owner.auth_token
                 headers = {"Authorization": "Token " + str(token)}
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
+                logger.debug(headers)
                 requests_futures_session.post(
                     self.entry.callback_url,
                     json=result_json,

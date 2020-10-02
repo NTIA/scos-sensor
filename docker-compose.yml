@@ -39,10 +39,15 @@ services:
       - DOCKER_TAG
       - GIT_BRANCH
       - IN_DOCKER=1
-      - MOCK_RADIO
-      - MOCK_RADIO_RANDOM
+      - MOCK_RADIO=1
+      - MOCK_RADIO_RANDOM=1
       - CALLBACK_SSL_VERIFICATION
       - MAX_TASK_RESULTS
+      - CLIENT_ID
+      - CLIENT_SECRET
+      - OAUTH_TOKEN_URL
+      - OAUTH_CLIENT_CERT
+      - OAUTH_VERIFY_CERT
     expose:
       - '8000'
     volumes:
