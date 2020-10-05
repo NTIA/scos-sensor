@@ -1,11 +1,12 @@
+# Developing in SCOS-Sensor
+
 This document dives into the process of developing with this codebase. It
 starts with the basics of running the sensor code with local modifications,
 Lastly, it talks about the concept of "actions" and how to program a custom
 action.
 
 
-Running the Sensor
-==================
+## Running the Sensor
 
 The main README's Quickstart provides guidance on running the sensor in its
 stock configuration. The following techniques can be used to see local
@@ -13,8 +14,7 @@ modifications. Sections are in order, so "Running Development Server" assumes
 you've done the setup setups in "Running Tests", etc.
 
 
-Running Tests
--------------
+### Running Tests
 
 `scos-sensor` depends on python3.7+.
 
@@ -47,8 +47,64 @@ $ tox --recreate  # if you change `requirements.txt`
 $ tox -e coverage # check where test coverage lacks
 ```
 
-Committing
-----------
+### Running Production Server with Local Changes
+
+The Docker compose file and application code looks for information from the
+environment when run in production mode, so it's necessary to source the
+following file in each shell that you intend to launch the sensor from. (HINT:
+it can be useful to add the `source` command to a post-activate file in
+whatever virtual environment you're using).
+
+```bash
+$ cp env.template env     # modify if necessary, defaults are okay for testing
+$ source ./env
+```
+
+Then, build the API docker image locally, which will satisfy the
+`smsntia/scos-sensor` and `smsntia/autoheal` images in the Docker compose file
+and bring up the sensor.
+
+```bash
+$ docker-compose down
+$ docker-compose build
+$ docker-compose up -d
+$ docker-compose logs --follow api
+```
+
+
+### Running Development Server (Not Recommended)
+
+Running the sensor API outside of Docker is possible but not recommended, since
+Django is being asked to run without several security features it expects. See
+[Common Issues](#common_issues) for some hints when running the sensor in this
+way. The following steps assume you've already setup some kind of virtual
+environment and installed python dev requirements from [Running
+Tests](#running_tests).
+
+```bash
+$ docker-compose up -d db
+$ cd src
+$ ./manage.py makemigrations
+$ ./manage.py migrate
+$ ./manage.py createsuperuser
+$ ./manage.py runserver
+```
+
+### Common Issues:
+
+- The development server serves on `localhost:8000`, not `:80`
+- If you get a Forbidden (403) error, close any tabs and clear any cache and
+  cookies related to SCOS Sensor and try again
+- If you're using a virtual environment and your SDR driver is installed
+  outside of it, you may need to allow access to system sitepackages. For
+  example, if you're using a virtualenv called `scos-sensor`, you can remove
+  the following text file: `rm -f
+  ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`, and
+  thereafter use the `ignore-installed` flag to pip: `pip install -I -r
+  requirements.txt`. This should let the devserver fall back to system
+  sitepackages for the SDR driver only.
+
+## Committing
 
 Besides running the test suite and ensuring that all tests are passing, we also
 expect all python code that's checked in to have been run through an
@@ -81,61 +137,27 @@ autoformatted.
 $ pre-commit install
 ```
 
-Running Production Server with Local Changes
---------------------------------------------
+## Actions and Hardware Support
 
-The Docker compose file and application code looks for information from the
-environment when run in production mode, so it's necessary to source the
-following file in each shell that you intend to launch the sensor from. (HINT:
-it can be useful to add the `source` command to a post-activate file in
-whatever virtual environment you're using).
+Actions are designed to be discovered programmatically in installed packages.
+Different types of hardware will each have their own repository which can be
+installed as a package into scos-sensor. This allows for actions that are
+specific to the hardware being used. Common action classes can still be
+re-used by different types hardware through the scos-actions repository.
+However, instances of these classes, known as actions, have different
+parameters that are specific to the hardware being used. Also, specific
+action classes can be created for specific hardware as needed.
 
-```bash
-$ cp env.template env     # modify if necessary, defaults are okay for testing
-$ source ./env
-```
+If any Python package begins with "scos_", and contains a dictionary of
+actions at the Python path <package_name>.discover.actions, these actions
+will automatically be available for scheduling.
 
-Then, build the API docker image locally, which will satisfy the
-`smsntia/scos-sensor` and `smsntia/autoheal` images in the Docker compose file
-and bring up the sensor.
+The [scos-actions](https://github.com/NTIA/scos_actions) repository is the base
+repository for actions and hardware support. It contains the action classes
+that can be re-used with different parameters and different hardware. It also
+contains the hardware interfaces. See the
+[scos-actions](https://github.com/NTIA/scos_actions) repository for more details.
 
-```bash
-$ docker-compose down
-$ docker-compose build
-$ docker-compose up -d
-$ docker-compose logs --follow api
-```
-
-
-Running Development Server (Not Recommended)
---------------------------------------------
-
-Running the sensor API outside of Docker is possible but not recommended, since
-Django is being asked to run without several security features it expects. See
-[Common Issues](#common_issues) for some hints when running the sensor in this
-way. The following steps assume you've already setup some kind of virtual
-environment and installed python dev requirements from [Running
-Tests](#running_tests).
-
-```bash
-$ docker-compose up -d db
-$ cd src
-$ ./manage.py makemigrations
-$ ./manage.py migrate
-$ ./manage.py createsuperuser
-$ ./manage.py runserver
-```
-
-### Common Issues:
-- The development server serves on `localhost:8000`, not `:80`
-- If you get a Forbidden (403) error, close any tabs and clear any cache and
-  cookies related to SCOS Sensor and try again
-- If you're using a virtual environment and your SDR driver is installed
-  outside of it, you may need to allow access to system sitepackages. For
-  example, if you're using a virtualenv called `scos-sensor`, you can remove
-  the following text file: `rm -f
-  ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`, and
-  thereafter use the `ignore-installed` flag to pip: `pip install -I -r
-  requirements.txt`. This should let the devserver fall back to system
-  sitepackages for the SDR driver only.
-
+The [scos-usrp](https://github.com/NTIA/scos_usrp) repository contains the USRP
+hardware support and the USRP specific actions which use the base action classes
+from scos-actions.

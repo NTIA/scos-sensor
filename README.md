@@ -82,16 +82,13 @@ tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
 We have tried to remove the most common hurdles to remotely deploying a sensor
 while maintaining flexibility in two key areas. First, the API itself is
 hardware agnostic, and the implementation assumes different hardware will be
-used depending on sensing requirements (see [Supporting a Different
-SDR](DEVELOPING.md#supporting-a-different-sdr)). Second, we introduce the
-high-level concept of "*actions*" (see [Writing Custom
-Actions](DEVELOPING.md#writing-custom-actions)), which gives the sensor owner
-control over what the sensor can be tasked to do.
+used depending on sensing requirements. Second, we introduce the
+high-level concept of "*actions*" which gives the sensor owner
+control over what the sensor can be tasked to do. For more information
+see [Actions and Hardware Support](DEVELOPING.md#Actions-and-Hardware-Support).
 
-We have many of our design and development discussions right here on GitHub. If
-you find a bug or have a use-case that we don't currently support, feel free to
+If you find a bug or have a use-case that we don't currently support, feel free to
 open an issue.
-
 
 Quickstart
 ----------
@@ -150,28 +147,14 @@ Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 ![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
 
-Adding Actions
---------------
-
-This repository contains a basic logger action. Measurement and GPS actions 
-are exposed to scos-sensor in installed python packages. If any python
-package begins with "scos_", and contains <package_name>.discover.actions,
-these actions will automatically be available for scheduling.
-
-The [scos_actions](https://github.com/NTIA/scos_actions) repository is the base repository for actions, and 
-contains actions that can be re-used with different parameters. See
-the [scos_actions](https://github.com/NTIA/scos_actions) repository for more details.
-
-The [scos_usrp](https://github.com/NTIA/scos_usrp) repository contains USRP specific actions.
-
-
 Architecture
 ------------
 
 `scos-sensor` uses a open source software stack that should be comfortable for
 developers familiar with Python.
 
- - Persistent data is stored on disk in a relational database.
+ - Persistent metadata is stored on disk in a relational database, and measurement data
+   is stored in files.
  - A *scheduler* thread running in a [Gunicorn] worker process periodically reads
    the *schedule* from the database and performs the associated *actions*.
  - A website and JSON RESTful API using [Django REST framework] is served over
