@@ -2,6 +2,7 @@
 
 import logging
 import threading
+import json
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -167,21 +168,27 @@ class Scheduler(threading.Thread):
         if self.entry.callback_url:
             try:
                 logger.debug("Trying callback")
-                response = oauth.get_access_token()
-                logger.debug(response)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
-                token = self.entry.owner.auth_token
-                headers = {"Authorization": "Token " + str(token)}
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
-                logger.debug(headers)
-                requests_futures_session.post(
-                    self.entry.callback_url,
-                    json=result_json,
-                    background_callback=self._callback_response_handler,
-                    headers=headers,
-                    verify=verify_ssl,
-                )
+                logger.debug(settings.CALLBACK_AUTHENTICATION)
+                if settings.CALLBACK_AUTHENTICATION == "OAUTH":
+                    client = oauth.get_oauth_client()
+                    headers = {"Content-Type": "application/json"}
+                    logger.debug("headers: " + str(headers))
+                    logger.debug("result_json: " + str(result_json))
+                    response = client.post(self.entry.callback_url, data=json.dumps(result_json), headers=headers, verify=False)
+                    logger.debug(response)
+                else:
+                    token = self.entry.owner.auth_token
+                    headers = {"Authorization": "Token " + str(token)}
+                    requests_futures_session.post(
+                        self.entry.callback_url,
+                        json=result_json,
+                        background_callback=self._callback_response_handler,
+                        headers=headers,
+                        verify=verify_ssl,
+                    )
             except Exception as err:
                 logger.error(str(err))
 

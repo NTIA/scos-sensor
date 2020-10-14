@@ -328,12 +328,14 @@ if SENTRY_DSN:
 
     RAVEN_CONFIG = {"dsn": SENTRY_DSN, "release": raven.fetch_git_sha(REPO_ROOT)}
 
-CLIENT_ID = env("CLIENT_ID", default=None)
-CLIENT_SECRET = env("CLIENT_SECRET", default=None)
+# OAuth Password Flow Authentication
+CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
+CLIENT_ID = env("CLIENT_ID", default="")
+CLIENT_SECRET = env("CLIENT_SECRET", default="")
 USER_NAME = CLIENT_ID
 PASSWORD = CLIENT_SECRET
 
-OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default=None)
+OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
 CERTS_DIR = path.join(CONFIG_DIR, "certs")
 OAUTH_PATH_TO_CLIENT_CERT = path.join(CERTS_DIR, env("OAUTH_CLIENT_CERT", default=""))
 OAUTH_PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, env("OAUTH_VERIFY_CERT", default=""))

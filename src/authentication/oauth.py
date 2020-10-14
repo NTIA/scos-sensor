@@ -23,9 +23,24 @@ def get_access_token():
 
         oauth = OAuth2Session(client=LegacyApplicationClient(client_id=settings.CLIENT_ID))
         oauth.cert = settings.OAUTH_PATH_TO_CLIENT_CERT
-        response = oauth.fetch_token(token_url=settings.OAUTH_TOKEN_URL, username=settings.USER_NAME, password=settings.PASSWORD, client_id=settings.CLIENT_ID,
-                                     client_secret=settings.CLIENT_SECRET, verify=False, cert=settings.OAUTH_PATH_TO_CLIENT_CERT)
-        logger.debug(response)
-        return response
+        token = oauth.fetch_token(
+            token_url=settings.OAUTH_TOKEN_URL,
+            username=settings.USER_NAME, password=settings.PASSWORD,
+            client_id=settings.CLIENT_ID, client_secret=settings.CLIENT_SECRET,
+            verify=False
+        )
+        oauth.close()
+        logger.debug("Response from oauth.fetch_token: " + str(token))
+        return token
+    except Exception:
+        raise
+
+def get_oauth_client():
+    """Returns Location object JSON if set or None and logs an error."""
+    try:
+        token = get_access_token()
+        client = OAuth2Session(settings.CLIENT_ID, token=token)
+        client.cert = settings.OAUTH_PATH_TO_CLIENT_CERT
+        return client
     except Exception:
         raise
