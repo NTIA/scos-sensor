@@ -170,15 +170,21 @@ class Scheduler(threading.Thread):
                 logger.debug("Trying callback")
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
-                verify_ssl = settings.CALLBACK_SSL_VERIFICATION
+                if settings.CALLBACK_SSL_VERIFICATION:
+                    verify_ssl = settings.OAUTH_PATH_TO_VERIFY_CERT
+                else:
+                    verify_ssl = settings.CALLBACK_SSL_VERIFICATION
                 logger.debug(settings.CALLBACK_AUTHENTICATION)
                 if settings.CALLBACK_AUTHENTICATION == "OAUTH":
                     client = oauth.get_oauth_client()
                     headers = {"Content-Type": "application/json"}
-                    logger.debug("headers: " + str(headers))
-                    logger.debug("result_json: " + str(result_json))
-                    response = client.post(self.entry.callback_url, data=json.dumps(result_json), headers=headers, verify=False)
-                    logger.debug(response)
+                    response = client.post(
+                        self.entry.callback_url,
+                        data=json.dumps(result_json),
+                        headers=headers,
+                        verify=verify_ssl,
+                    )
+                    self._callback_response_handler(client, response)
                 else:
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
