@@ -337,5 +337,7 @@ PASSWORD = CLIENT_SECRET
 
 OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
 CERTS_DIR = path.join(CONFIG_DIR, "certs")
+# Sensor certificate with private key used as client cert
 OAUTH_PATH_TO_CLIENT_CERT = path.join(CERTS_DIR, env("OAUTH_CLIENT_CERT", default=""))
+# Authserver and Scos-manager server certificate used to verify ssl like truststore if CALLBACK_SSL_VERIFICATION=true
 OAUTH_PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, env("OAUTH_VERIFY_CERT", default=""))
