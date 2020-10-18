@@ -155,8 +155,7 @@ will automatically be available for scheduling.
 The [scos-actions](https://github.com/NTIA/scos_actions) repository is the base
 repository for actions and hardware support. It contains the action classes
 that can be re-used with different parameters and different hardware. It also
-contains the hardware interfaces. See the
-[scos-actions](https://github.com/NTIA/scos_actions) repository for more details.
+contains the hardware interfaces.
 
 The [scos-usrp](https://github.com/NTIA/scos_usrp) repository contains the USRP
 hardware support and the USRP specific actions which use the base action classes
