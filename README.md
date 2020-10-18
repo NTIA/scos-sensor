@@ -3,10 +3,9 @@ NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![A
 
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
-Occupancy Sensing][ieee-link] (SCOS) sensor. It is a platform for operating a
-sensor, such as a software-defined radio (SDR), over a network. The goal is to
-provide a robust, flexible, and secure starting point for remote spectrum
-monitoring.
+Occupancy Sensing][ieee-link] (SCOS) sensor. It is a platform for operating an RF
+sensor over a network. The goal is to provide a robust, flexible, and secure starting
+point for remote spectrum monitoring.
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
 [Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
@@ -63,9 +62,7 @@ When a *task* acquires data, that data and a significant amount of metadata are
 stored in a local database. The full metadata can be read directly through the
 self-hosted website or retrieved in plain text via a single API call. Our
 metadata and data format is an extension of, and compatible with, the
-[SigMF](https://github.com/gnuradio/sigmf) specification. The [SCOS Data
-Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec) describes
-the `scos` namespace.
+[SigMF](https://github.com/gnuradio/sigmf) specification - see [sigmf-ns-ntia](https://github.com/NTIA/sigmf-ns-ntia) .
 
 When deploying equipment remotely, the robustness and security of software
 becomes a prime concern. `scos-sensor` sits on top of a popular open-source
