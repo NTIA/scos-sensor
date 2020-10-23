@@ -37,13 +37,14 @@ for cert in certs:
     else:
         raise Exception(f"not checking for type = {type(cert)}")
 
-BAD_KEY = None
+BAD_PRIVATE_KEY = None
 with open("authentication/tests/certs/test_bad_private_key.pem", "rb") as pem_file:
     certs = pem.parse(pem_file.read())
     for cert in certs:
         byte_data = cert.as_bytes()
         if type(cert) in [pem.RSAPrivateKey, pem.PrivateKey]:
-            BAD_KEY = cert
+            BAD_PRIVATE_KEY = cert
+
 
 one_min = timedelta(minutes=1)
 one_day = timedelta(days=1)
@@ -112,7 +113,17 @@ def test_token_expired_1_day_forbidden(settings, live_server):
 def test_bad_private_key_forbidden(settings, live_server):
     settings.JWT_PUBLIC_KEY_FILE = TEST_JWT_PUBLIC_KEY_FILE
     token_payload = get_token_payload()
-    encoded = jwt.encode(token_payload, str(BAD_KEY), algorithm='RS256')
+    encoded = jwt.encode(token_payload, str(BAD_PRIVATE_KEY), algorithm='RS256')
+    utf8_bytes = encoded.decode("utf-8")
+    client = RequestsClient()
+    response = client.get(f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"})
+    assert response.status_code == 403
+
+@pytest.mark.django_db
+def test_bad_public_key_forbidden(settings, live_server):
+    settings.JWT_PUBLIC_KEY_FILE = "authentication/tests/certs/test_bad_pubkey.pem"
+    token_payload = get_token_payload()
+    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm='RS256')
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"})
