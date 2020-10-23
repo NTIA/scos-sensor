@@ -1,0 +1,35 @@
+{
+    "user_name": "sensor01",
+    "scope": [
+        "read",
+        "write"
+    ],
+    "exp": 1601494344,
+    "userDetails": {
+        "id": null,
+        "uid": "",
+        "altSecurityIdenties": null,
+        "email": "sensor01",
+        "firstname": "sensor01",
+        "lastname": "",
+        "cn": "sensor01",
+        "lastlogin": 1583360759668,
+        "enabled": true,
+        "authorities": [
+            {
+                "authority": "ROLE_MANAGER"
+            }
+        ],
+        "password": null,
+        "username": "sensor01",
+        "dn": "cn=sensor01,ou=OU1,ou=OU2,ou=OU3,dc=DC1,dc=DC2",
+        "accountNonLocked": true,
+        "accountnullxpired": true,
+        "credentialsnullxpired": true
+    },
+    "authorities": [
+        "ROLE_MANAGER"
+    ],
+    "jti": "f25b0d47-b3b2-4e85-848a-9b2aa3376664",
+    "client_id": "sensor01"
+}

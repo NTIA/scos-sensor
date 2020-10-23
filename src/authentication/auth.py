@@ -52,8 +52,8 @@ class OAuthJWTAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token is expired!")
         except InvalidSignatureError:
             raise exceptions.AuthenticationFailed("Unable to verify token!")
-        except:
-            raise exceptions.AuthenticationFailed("Unable to decode token!")
+        except Exception as error:
+            raise exceptions.AuthenticationFailed("Unable to decode token! {error}")
         jwt_username = decoded_key["user_name"]
         user_model =  get_user_model()
         user = None

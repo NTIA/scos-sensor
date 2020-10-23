@@ -13,8 +13,8 @@ import secrets
 from sensor import V1
 
 
-TEST_JWT_PUBLIC_KEY_FILE = "authentication/tests/certs/sensor01_public_key.pem"
-TEST_JWT_PRIVATE_KEY_FILE = "authentication/tests/certs/sensor01.pem"
+TEST_JWT_PUBLIC_KEY_FILE = "authentication/tests/certs/sensor01_pubkey.pem"
+TEST_JWT_PRIVATE_KEY_FILE = "authentication/tests/certs/sensor01_private.pem"
 PRIVATE_KEY = None
 PUBLIC_KEY = None
 jwt_content_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jwt_content_example.json")
@@ -38,7 +38,7 @@ for cert in certs:
         raise Exception(f"not checking for type = {type(cert)}")
 
 BAD_KEY = None
-with open("authentication/tests/certs/sensor01_client.pem", "rb") as pem_file:
+with open("authentication/tests/certs/test_bad_private_key.pem", "rb") as pem_file:
     certs = pem.parse(pem_file.read())
     for cert in certs:
         byte_data = cert.as_bytes()
