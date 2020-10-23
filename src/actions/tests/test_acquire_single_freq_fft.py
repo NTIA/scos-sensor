@@ -21,8 +21,8 @@ with open(SCHEMA_PATH, "r") as f:
     schema = json.load(f)
 
 
-def test_detector(user_client, test_scheduler):
-    entry_name = simulate_frequency_fft_acquisitions(user_client)
+def test_detector(admin_client, test_scheduler):
+    entry_name = simulate_frequency_fft_acquisitions(admin_client)
     tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
     acquisition = Acquisition.objects.get(task_result=tr)
     assert sigmf_validate(acquisition.metadata)
@@ -31,8 +31,8 @@ def test_detector(user_client, test_scheduler):
     os.remove(acquisition.data.path)
 
 
-def test_data_file_created(user_client, test_scheduler):
-    entry_name = simulate_frequency_fft_acquisitions(user_client)
+def test_data_file_created(admin_client, test_scheduler):
+    entry_name = simulate_frequency_fft_acquisitions(admin_client)
     tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
     acquisition = Acquisition.objects.get(task_result=tr)
     assert acquisition.data
@@ -40,16 +40,16 @@ def test_data_file_created(user_client, test_scheduler):
     os.remove(acquisition.data.path)
 
 
-def test_metadata_single_acquisition(user_client, test_scheduler):
-    entry_name = simulate_frequency_fft_acquisitions(user_client)
+def test_metadata_single_acquisition(admin_client, test_scheduler):
+    entry_name = simulate_frequency_fft_acquisitions(admin_client)
     tr = TaskResult.objects.get(schedule_entry__name=entry_name, task_id=1)
     acquisition = Acquisition.objects.get(task_result=tr)
     assert sigmf_validate(acquisition.metadata)
     check_metadata_fields(acquisition, entry_name, SINGLE_FREQUENCY_FFT_ACQUISITION)
 
 
-def test_metadata_multiple_acquisition(user_client, test_scheduler):
-    entry_name = simulate_frequency_fft_acquisitions(user_client, n=2)
+def test_metadata_multiple_acquisition(admin_client, test_scheduler):
+    entry_name = simulate_frequency_fft_acquisitions(admin_client, n=2)
     task_results = TaskResult.objects.filter(schedule_entry__name=entry_name)
     for task_result in task_results:
         acquisition = Acquisition.objects.get(task_result=task_result)

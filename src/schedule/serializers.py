@@ -141,7 +141,6 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             "relative_stop",
             "interval",
             "is_active",
-            "is_private",
             "callback_url",
             "next_task_time",
             "next_task_id",
@@ -161,7 +160,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 "help_text": "The name of the user who owns the entry",
             },
         }
-        read_only_fields = ("next_task_time", "is_private")
+        read_only_fields = ("next_task_time",)
         write_only_fields = ("relative_stop", "validate_only")
         # FIXME: This is required by drf_yasg, but may not be required for
         #        built-in DRF 3.10+ OpenAPI generation

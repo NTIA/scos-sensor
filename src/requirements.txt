@@ -1,4 +1,4 @@
-Django==2.2.10
+Django==2.2.13
 Pygments==2.4.2
 Markdown==3.1.1
 -e git+https://github.com/NTIA/SigMF.git@multi-recording-archive#egg=SigMF
@@ -14,6 +14,7 @@ gunicorn==19.9.0
 jsonfield==2.0.2
 numpy>=1.16.4
 psycopg2-binary==2.8.5
+pyjwt~=1.7.1
 python-dateutil==2.8.1
 raven==6.10.0
 requests-futures==0.9.9

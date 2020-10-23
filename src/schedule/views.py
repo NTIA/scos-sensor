@@ -4,7 +4,6 @@ from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Request, ScheduleEntry
-from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers import AdminScheduleEntrySerializer, ScheduleEntrySerializer
 
 
@@ -32,9 +31,7 @@ class ScheduleEntryViewSet(ModelViewSet):
     """
 
     queryset = ScheduleEntry.objects.all()
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly
-    ]
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     lookup_fields = ("schedule_entry__name", "task_id")
     ordering_fields = ("priority", "start", "next_task_time", "created", "modified")
@@ -65,10 +62,7 @@ class ScheduleEntryViewSet(ModelViewSet):
         # checks, so we need to filter our queryset based on `is_private` and
         # request user.
         base_queryset = self.filter_queryset(self.queryset)
-        if self.request.user.is_staff:
-            return base_queryset.all()
-        else:
-            return base_queryset.filter(is_private=False)
+        return base_queryset.all()
 
     def get_serializer_class(self):
         """Modify the base serializer based on user and request."""

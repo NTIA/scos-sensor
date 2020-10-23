@@ -5,6 +5,7 @@ from schedule.serializers import ISOMillisecondDateTimeFormatField
 from sensor import V1
 
 from .models import User
+from .auth import token_auth_enabled
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,8 +38,6 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         """Filter private schedule entries if requester is not an admin."""
         request = self.context["request"]
         entries = obj.schedule_entries.get_queryset()
-        if not request.user.is_staff:
-            entries = entries.filter(is_private=False)
 
         urls = []
         for entry in entries:
@@ -70,7 +69,10 @@ class UserDetailsSerializer(UserProfileSerializer):
         read_only_fields = UserProfileSerializer.Meta.read_only_fields + ("auth_token",)
 
     def get_auth_token(self, obj):
-        return obj.auth_token.key
+        if token_auth_enabled:
+            return obj.auth_token.key
+        else:
+            return "rest_framework.authentication.TokenAuthentication is not enabled"
 
     def get_has_usable_password(self, obj):
         return obj.has_usable_password()

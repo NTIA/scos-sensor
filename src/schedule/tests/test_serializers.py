@@ -247,9 +247,9 @@ def test_invalid_admin_entries(entry_json):
 #
 
 
-def test_serialized_fields(user_client):
+def test_serialized_fields(admin_client):
     """Certain fields on the schedule entry model should be serialized."""
-    rjson = post_schedule(user_client, {"name": "test", "action": "logger"})
+    rjson = post_schedule(admin_client, {"name": "test", "action": "logger"})
 
     # nullable fields
     assert "interval" in rjson
@@ -268,15 +268,14 @@ def test_serialized_fields(user_client):
     assert parse_datetime_str(rjson["next_task_time"])
     # booleans
     assert rjson["is_active"] in {True, False}
-    assert rjson["is_private"] in {True, False}
     # links
     assert rjson["self"]
     assert rjson["owner"]
     assert rjson["task_results"]
 
 
-def test_non_serialized_fields(user_client):
+def test_non_serialized_fields(admin_client):
     """Certain fields on the schedule entry model should not be serialized."""
-    rjson = post_schedule(user_client, {"name": "test", "action": "logger"})
+    rjson = post_schedule(admin_client, {"name": "test", "action": "logger"})
 
     assert "relative_stop" not in rjson

@@ -74,6 +74,7 @@ services:
       - ./nginx/conf.template:/etc/nginx/nginx.conf.template:ro
       - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
       - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
+      - ${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
 

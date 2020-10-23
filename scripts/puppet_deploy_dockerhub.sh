@@ -19,6 +19,7 @@ cd $REPO_ROOT
 
 docker-compose pull
 # docker-compose run api /src/manage.py createsuperuser
+rm -rf src/authentication/tests/certs # make sure test certs are not used in production
 docker-compose up -d --no-build
 touch .deployed
 touch .dockerhub

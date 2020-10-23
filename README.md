@@ -1,5 +1,4 @@
-NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
-====================
+# NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
 
 `scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
 reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
@@ -17,11 +16,11 @@ monitoring.
 [api-docs-badge]: https://img.shields.io/badge/docs-available-brightgreen.svg
 
 
-Table of Contents
------------------
+## Table of Contents
 
 - [Introduction](#introduction)
 - [Quickstart](#quickstart)
+- [Authentication](#authentication)
 - [Browsable API](#browsable-api)
 - [Adding Actions](#adding-actions)
 - [Architecture](#architecture)
@@ -30,8 +29,7 @@ Table of Contents
 - [License](#license)
 
 
-Introduction
-------------
+## Introduction
 
 **Note**: It may help to read the [Glossary](#glossary) first.
 
@@ -72,12 +70,15 @@ becomes a prime concern. `scos-sensor` sits on top of a popular open-source
 framework (see [Architecture](#architecture)), which provides out-of-the-box
 protection against cross site scripting (XSS), cross site request forgery
 (CSRF), SQL injection, and clickjacking attacks, and also enforces SSL/HTTPS
-(traffic encryption), host header validation, and user session security. In
-addition to these, we have implemented an unprivileged *user* type so that the
-sensor owner can allow access to other users and API consumers while
-maintaining ultimate control. To minimize the chance of regressions while
-developing for the sensor, we have written almost 200 unit and integration
-tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
+(traffic encryption), host header validation, and user session security.
+'scos-sensor supports authentication using JWT tokens from an OAuth2
+authorization server. Although not enabled by default, Django Rest Framework
+token authentication is also supported. `scos-sensor` requires a privileged
+user or service account in order to acces the system. For more information,
+see [Authentication and Permissions](#Authentication and Permissions). To
+minimize the chance of regressions while developing for the sensor, we have
+written almost 200 unit and integration tests. See
+[Developing](DEVELOPING.md) to learn how to run the test suite.
 
 We have tried to remove the most common hurdles to remotely deploying a sensor
 while maintaining flexibility in two key areas. First, the API itself is
@@ -93,8 +94,7 @@ you find a bug or have a use-case that we don't currently support, feel free to
 open an issue.
 
 
-Quickstart
-----------
+## Quickstart
 
 This section describes how to spin up a production-grade sensor in just a few commands.
 
@@ -128,8 +128,46 @@ $ docker-compose exec api /src/manage.py createsuperuser  # create admin user
 $ docker-compose logs --follow api                        # reattach terminal
 ```
 
-Browsable API
--------------
+## Authentication and Permissions
+Two different types of authentication are available. 
+
+### OAuth2 JWT Authentication
+This is the default authentication. It will expect a JWT bearer token in the
+Authorization header. The token will be verified using the JWT_PUBLIC_KEY_FILE
+setting. The expiration time will be checked. Only authorizes users who have
+an authority matching the REQUIRED_ROLE setting.
+
+The token is expected to come from an OAuth2 authorization server. OAuth2 supports
+different types of authorization flows. For more information, see
+https://tools.ietf.org/html/rfc6749.
+
+### Django Rest Framework Token Authentication
+To enable Django Rest Framework Authentication, uncomment 
+"rest_framework.authentication.TokenAuthentication" in settings
+in REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]. You can
+also optionally comment out "authentication.auth.OAuthJWTAuthentication"
+to disable OAuth JWT authentication. To update openapi.json, in
+settings, uncomment "token" in SWAGGER_SETTINGS["SECURITY_DEFINITIONS"].
+Comment out "oAuth2JWT" if OAuth JWT authentication was commented out
+in REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]. Then run unit
+tests to regenerate openapi.json.
+
+A token is automatically created for each user. Django Rest Framework Token
+Authentication will check that the token in the Authorization header
+("Token " + <token>) matches a user's token.
+
+### Client Certificate
+In addition to a token, a valid client certificate is required. It is recommended
+to create your own certificate authority for testing. For production, it is
+recommended to get a certificate from an existing, trusted certificate authority.
+You can use scripts/create_certificates.py to create a certificate authority,
+server certificate, and client certificate.
+
+### Permissions
+The API requires the user to either have an authority in the JWT token
+matching the the REQUIRED_ROLE setting or that the user be a superuser.
+
+## Browsable API
 
 Opening the URL to your sensor (`localhost` if you followed the Quickstart) in
 a browser, you will see a frontend to the API that allows you to do anything
@@ -150,8 +188,7 @@ Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 ![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
 
-Adding Actions
---------------
+## Adding Actions
 
 To expose a new action to the API, check out the available [action
 classes](src/actions). An _action class_ is a parameterized implementation of
@@ -162,8 +199,7 @@ If no existing action class meets your needs, see [Writing Custom
 Actions](DEVELOPING.md#writing-custom-actions).
 
 
-Architecture
-------------
+## Architecture
 
 `scos-sensor` uses a open source software stack that should be comfortable for
 developers familiar with Python.
@@ -183,8 +219,7 @@ developers familiar with Python.
 [Django REST framework]: http://www.django-rest-framework.org/
 
 
-Glossary
---------
+## Glossary
 
 In this section, we'll go over the high-level concepts used by `scos-sensor`.
 
@@ -257,14 +292,12 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
    acquisitions) are not visible to users.
 
 
-References
-----------
+## References
 
  - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
  - [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
 
 
-License
--------
+## License
 
 See [LICENSE](LICENSE.md).

@@ -16,7 +16,7 @@ fi
 
 set -e # exit on error
 cd $REPO_ROOT
-
+rm -rf src/authentication/tests/certs # make sure test certs are not used in production
 docker-compose up -d
 touch .deployed
 touch .github

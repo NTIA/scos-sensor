@@ -8,19 +8,17 @@ from sensor import V1
 
 EMPTY_SCHEDULE_RESPONSE = []
 
-TEST_SCHEDULE_ENTRY = {"name": "test", "action": "logger", "is_private": False}
+TEST_SCHEDULE_ENTRY = {"name": "test", "action": "logger"}
 
 TEST_ALTERNATE_SCHEDULE_ENTRY = {
     "name": "test_alternate",
     "action": "logger",
-    "is_private": False,
     "priority": 5,
 }
 
 TEST_PRIVATE_SCHEDULE_ENTRY = {
     "name": "test_private",
     "action": "logger",
-    "is_private": True,
 }
 
 
