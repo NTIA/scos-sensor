@@ -246,7 +246,7 @@ SWAGGER_SETTINGS = {
         #         "general purpose API access. "
         #         'Example cURL call: `curl -kLsS -H "Authorization: Token'
         #         ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
-        #         "https://greyhound5.sms.internal/api/v1`"
+        #         "https://localhost/api/v1`"
         #     ),
         #     "name": "Token",
         #     "in": "header",

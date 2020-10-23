@@ -276,7 +276,7 @@ def test_user_cannot_view_user_detail(settings, live_server):
     assert response.status_code == 200
 
     sensor02_token_payload = get_token_payload(authorities=["ROLE_USER"])
-    sensor02_token_payload["user_name"] = "sensor02.sms.internal"
+    sensor02_token_payload["user_name"] = "sensor02"
     encoded = jwt.encode(sensor02_token_payload, str(PRIVATE_KEY), algorithm='RS256')
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
@@ -341,7 +341,7 @@ def test_admin_can_view_other_user_detail(settings, live_server):
     assert response.status_code == 200
 
     sensor02_token_payload = get_token_payload(authorities=["ROLE_MANAGER"])
-    sensor02_token_payload["user_name"] = "sensor02.sms.internal"
+    sensor02_token_payload["user_name"] = "sensor02"
     encoded = jwt.encode(sensor02_token_payload, str(PRIVATE_KEY), algorithm='RS256')
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
