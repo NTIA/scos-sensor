@@ -25,20 +25,24 @@ class OAuthJWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         auth_header = get_authorization_header(request)
         if not auth_header:
+            logger.debug("no auth header")
             return None
-        
         auth_header = auth_header.split()
         if auth_header[0].decode().lower() != "bearer":
+            logger.debug("no JWT bearer token")
             return None # attempt other configured authentication methods
         token = auth_header[1]
-
         # get JWT public key
         public_key = ""
-        with open(settings.JWT_PUBLIC_KEY_FILE) as public_key_file:
-            public_key = public_key_file.read()
+        try:
+            with open(settings.JWT_PUBLIC_KEY_FILE) as public_key_file:
+                public_key = public_key_file.read()
+        except Exception as e:
+            logger.error(e)
         if not public_key:
-            raise exceptions.AuthenticationFailed("Unable to get public key to decode jwt")
-
+            error = exceptions.AuthenticationFailed("Unable to get public key to decode jwt")
+            logger.error(error)
+            raise error
         try:
             # decode JWT token
             # verifies jwt signature using RS256 algorithm and public key
@@ -48,12 +52,15 @@ class OAuthJWTAuthentication(authentication.BaseAuthentication):
                 'require': ['exp'],
                 'verify_exp': True
                 })
-        except ExpiredSignatureError:
+        except ExpiredSignatureError as e:
+            logger.error(e)
             raise exceptions.AuthenticationFailed("Token is expired!")
-        except InvalidSignatureError:
+        except InvalidSignatureError as e:
+            logger.error(e)
             raise exceptions.AuthenticationFailed("Unable to verify token!")
-        except Exception as error:
-            raise exceptions.AuthenticationFailed("Unable to decode token! {error}")
+        except Exception as e:
+            logger.error(e)
+            raise exceptions.AuthenticationFailed("Unable to decode token! {e}")
         jwt_username = decoded_key["user_name"]
         user_model =  get_user_model()
         user = None
