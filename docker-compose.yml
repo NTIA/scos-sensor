@@ -43,6 +43,7 @@ services:
       - MOCK_RADIO_RANDOM
       - CALLBACK_SSL_VERIFICATION
       - MAX_TASK_RESULTS
+      - JWT_PUBLIC_KEY_FILE
     expose:
       - '8000'
     volumes:
