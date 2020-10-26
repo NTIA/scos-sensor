@@ -135,27 +135,61 @@ def main():
         key_passphrase = None
     settings = configparser.ConfigParser()
     settings.read(ini_path)
-    ca_private_key_save_path = settings[ini_section]["ca_private_key_save_path"]
-    if not os.path.isabs(ca_private_key_save_path):
-        ca_private_key_save_path = os.path.join(os.getcwd(), ca_private_key_save_path)
-    ca_common_name = settings[ini_section]["CA_COMMON_NAME"]
+    ca_private_key_save_path = None
+    ca_common_name = None
+    if "ca_private_key_save_path" in settings[ini_section]:
+        ca_private_key_save_path = settings[ini_section]["ca_private_key_save_path"]
+        if not os.path.isabs(ca_private_key_save_path):
+            ca_private_key_save_path = os.path.join(os.getcwd(), ca_private_key_save_path)
+    if "CA_COMMON_NAME" in settings[ini_section]:
+        ca_common_name = settings[ini_section]["CA_COMMON_NAME"]
+    if "ca_private_key_path" in settings[ini_section]:
+        existing_ca_private_key_path = settings[ini_section]["ca_private_key_path"]
+        if not os.path.isabs(existing_ca_private_key_path):
+            existing_ca_private_key_path = os.path.join(os.getcwd(), existing_ca_private_key_path)
+    else:
+        existing_ca_private_key_path = None
+    if "ca_certificate_path" in settings[ini_section]:
+        existing_ca_cert_path = settings[ini_section]["ca_certificate_path"]
+        if not os.path.isabs(existing_ca_cert_path):
+            existing_ca_cert_path = os.path.join(os.getcwd(), existing_ca_cert_path)
+    else:
+        existing_ca_cert_path = None
+    if (existing_ca_private_key_path and not existing_ca_cert_path) or (not existing_ca_private_key_path and existing_ca_cert_path):
+        print("ca_private_key_path and ca_certificate_path both must be specified in ini file to use existing certificate authority!")
+        sys.exit(1)
+    existing_ca_cert = None
+    existing_ca_private_key = None
+    if existing_ca_cert_path and existing_ca_private_key_path:
+        with open(existing_ca_cert_path, 'rb') as ca_file: 
+            existing_ca_cert = x509.load_pem_x509_certificate(ca_file.read())
+        with open(existing_ca_private_key_path, 'rb') as ca_key:
+            existing_ca_private_key = serialization.load_pem_private_key(ca_key.read(), password=None)
 
-    # create a ca private key
-    ca_private_key = gen_private_key(passphrase=key_passphrase, save_path=ca_private_key_save_path)
+    if not existing_ca_cert and not existing_ca_private_key:
+        if not ca_private_key_save_path:
+            raise Exception("Must specify ca_private_key_save_path in ini file when not using existing certificate authority!")
+        if not ca_common_name:
+            raise Exception("Must specify CA_COMMON_NAME in ini file when not using existing certificate authority!")
+        # create a ca private key
+        ca_private_key = gen_private_key(passphrase=key_passphrase, save_path=ca_private_key_save_path)
 
-    # create ca public key
-    ca_public_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/scostestca.crt")
-    ca_public_key = gen_public_key(
-        country=settings[ini_section]["COUNTRY_NAME"],
-        state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
-        locality=settings[ini_section]["LOCALITY_NAME"],
-        organization=settings[ini_section]["ORGANIZATION_NAME"],
-        common_name=ca_common_name,
-        private_key=ca_private_key,
-        save_path=ca_public_key_path,
-        sans=[x509.SubjectAlternativeName([x509.DNSName(u"localhost"), x509.IPAddress(ipaddress.IPv4Address("127.0.0.1"))])],
-        ca=True
-    )
+        # create ca public key
+        ca_public_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/scostestca.crt")
+        ca_public_key = gen_public_key(
+            country=settings[ini_section]["COUNTRY_NAME"],
+            state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
+            locality=settings[ini_section]["LOCALITY_NAME"],
+            organization=settings[ini_section]["ORGANIZATION_NAME"],
+            common_name=ca_common_name,
+            private_key=ca_private_key,
+            save_path=ca_public_key_path,
+            sans=[x509.SubjectAlternativeName([x509.DNSName(u"localhost"), x509.IPAddress(ipaddress.IPv4Address("127.0.0.1"))])],
+            ca=True
+        )
+    else:
+        ca_private_key = existing_ca_private_key
+        ca_public_key = existing_ca_cert
 
     # generate server private key
     server_private_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_private.pem")
