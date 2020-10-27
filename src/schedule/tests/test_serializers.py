@@ -121,7 +121,7 @@ def test_valid_user_entries(entry_json, user):
         # Explicit validate_only is valid
         {"name": "test", "action": "logger", "validate_only": False},
         # Admin can create private entries
-        {"name": "test", "action": "logger", "is_private": True},
+        {"name": "test", "action": "logger"},
     ],
 )
 def test_valid_admin_entries(entry_json, user):
