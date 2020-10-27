@@ -1,6 +1,6 @@
 import pytest
 
-from schedule.serializers import AdminScheduleEntrySerializer, ScheduleEntrySerializer
+from schedule.serializers import ScheduleEntrySerializer
 from sensor.utils import parse_datetime_str
 
 from .utils import post_schedule
@@ -125,7 +125,7 @@ def test_valid_user_entries(entry_json, user):
     ],
 )
 def test_valid_admin_entries(entry_json, user):
-    serializer = AdminScheduleEntrySerializer(data=entry_json)
+    serializer = ScheduleEntrySerializer(data=entry_json)
     assert serializer.is_valid()
     serializer.save(owner=user)  # if input is valid, model should accept it
 
@@ -141,8 +141,6 @@ def test_valid_admin_entries(entry_json, user):
         {"name": "test"},
         # non-integer priority
         {"name": "test", "action": "logger", "priority": 3.14},
-        # priority less than min (for normal user)
-        {"name": "test", "action": "logger", "priority": -1},
         # priority greater than max (19)
         {"name": "test", "action": "logger", "priority": 20},
         # non-integer interval
@@ -238,7 +236,7 @@ def test_invalid_user_entries(entry_json):
     ],
 )
 def test_invalid_admin_entries(entry_json):
-    serializer = AdminScheduleEntrySerializer(data=entry_json)
+    serializer = ScheduleEntrySerializer(data=entry_json)
     assert not serializer.is_valid()
 
 

@@ -13,9 +13,7 @@ logger = logging.getLogger(__name__)
 class SyncGps(Action):
     """Query the GPS and syncronize time and location."""
 
-    def __init__(self, admin_only=True):
-        super(SyncGps, self).__init__(admin_only=admin_only)
-
+    def __init__(self):
         self.gps = gps_iface
 
     def __call__(self, name, tid):

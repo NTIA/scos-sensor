@@ -4,7 +4,7 @@ from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Request, ScheduleEntry
-from .serializers import AdminScheduleEntrySerializer, ScheduleEntrySerializer
+from .serializers import ScheduleEntrySerializer
 
 
 class ScheduleEntryViewSet(ModelViewSet):
@@ -69,10 +69,7 @@ class ScheduleEntryViewSet(ModelViewSet):
 
         updating = self.action in {"update", "partial_update"}
 
-        if self.request.user.is_staff:
-            SerializerBaseClass = AdminScheduleEntrySerializer
-        else:
-            SerializerBaseClass = ScheduleEntrySerializer
+        SerializerBaseClass = ScheduleEntrySerializer
 
         ro_fields = SerializerBaseClass.Meta.read_only_fields
 

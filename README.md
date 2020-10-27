@@ -20,7 +20,7 @@ monitoring.
 
 - [Introduction](#introduction)
 - [Quickstart](#quickstart)
-- [Authentication](#authentication)
+- [Authentication and Permissions](#Authentication and Permissions)
 - [Browsable API](#browsable-api)
 - [Adding Actions](#adding-actions)
 - [Architecture](#architecture)
@@ -160,8 +160,34 @@ Authentication will check that the token in the Authorization header
 In addition to a token, a valid client certificate is required. It is recommended
 to create your own certificate authority for testing. For production, it is
 recommended to get a certificate from an existing, trusted certificate authority.
-You can use scripts/create_certificates.py to create a certificate authority,
-server certificate, and client certificate.
+For testing, you can use the certificates and keys in 
+src/authentication/tests/certs or you can use scripts/create_certificates.py to
+create a certificate authority, server certificate, and client certificate.
+This script can also be used with an existing certificate authority. Here are
+the instructions to use create_certificates with an existing certificate
+authority.
+1. Configure create_certificates.py script: in create_certificates.ini, set
+ca_private_key_path and ca_certificate_path to the path of your certificate
+authority private key and certificate. Configure the remaining parameters
+as desired. The san parameters will need to be set to the appropriate IP
+addresses and DNS names.
+2. Run the create_certificate.py script. The following certificates will be
+generated:
+-sensor01_private.pem
+-sensor01_certificate.pem
+-sensor01_client_private.pem
+-sensor01_client.pem
+3. Copy sensor01_private and sensor01_certficate to the computer where the
+scos-sensor will run. Also copy the certficate authority certificate used
+to generate the certificates. Make sure the paths are consistent between
+copied location and SSL_CERT_PATH, SSL_KEY_PATH, SSL_CA_PATH environment 
+variables (set in env file).
+4. Copy the JWT public key to the computer where scos-sensor will run.
+In the env file, set JWT_PUBLIC_KEY_FILE to the path of the JWT public
+key file. It is recommended to put the JWT_PUBLIC_KEY_FILE somewhere
+in scos-sensor/src to ensure it is copied into the docker container.
+5. Run scos-sensor. Use sensor01_client_private.pem and sensor01_client
+when connected to the API.
 
 ### Permissions
 The API requires the user to either have an authority in the JWT token
@@ -284,12 +310,6 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
    (`success` or `failure`), and a freeform *detail* string. A `TaskResult`
    JSON object is also POSTed to a schedule entry's `callback_url`, if
    provided.
-
- - *user*: An unprivileged account type which can create schedule entries and
-   view, modify, and delete things they own, but which cannot modify or delete
-   things they don't own. Actions marked `admin_only` are not schedulable, and
-   schedule entries marked private by an admin (along with their results and
-   acquisitions) are not visible to users.
 
 
 ## References

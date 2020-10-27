@@ -95,7 +95,7 @@ else:
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 
-JWT_PUBLIC_KEY_FILE = env.str("JWT_PUBLIC_KEY_FILE", default=os.path.join(BASE_DIR, "authentication", "tests", "certs", "sensor01_pubkey.pem"))
+JWT_PUBLIC_KEY_FILE = env.str("JWT_PUBLIC_KEY_FILE", default="")
 
 # Application definition
 
