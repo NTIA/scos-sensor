@@ -176,6 +176,8 @@ def main():
 
         # create ca public key
         ca_public_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/scostestca.crt")
+        ca_san_dns = settings[ini_section]["ca_san_dns"]
+        ca_san_ip = settings[ini_section]["ca_san_ip"]
         ca_public_key = gen_public_key(
             country=settings[ini_section]["COUNTRY_NAME"],
             state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
@@ -184,7 +186,7 @@ def main():
             common_name=ca_common_name,
             private_key=ca_private_key,
             save_path=ca_public_key_path,
-            sans=[x509.SubjectAlternativeName([x509.DNSName(u"localhost"), x509.IPAddress(ipaddress.IPv4Address("127.0.0.1"))])],
+            sans=[x509.SubjectAlternativeName([x509.DNSName(ca_san_dns), x509.IPAddress(ipaddress.IPv4Address(ca_san_ip))])],
             ca=True
         )
     else:
@@ -201,12 +203,15 @@ def main():
         state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
         locality=settings[ini_section]["LOCALITY_NAME"],
         organization=settings[ini_section]["ORGANIZATION_NAME"],
-        common_name=settings[ini_section]["COMMON_NAME"],
+        common_name=settings[ini_section]["SERVER_COMMON_NAME"],
         private_key=server_private_key
     )
     # sign
     server_cert_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_certificate.pem")
-    sign_csr(server_csr, ca_public_key, ca_private_key, save_path=server_cert_path, sans=[x509.SubjectAlternativeName([x509.DNSName(u"localhost"), x509.IPAddress(ipaddress.IPv4Address("127.0.0.1"))])])
+    server_san_dns = settings[ini_section]["server_san_dns"]
+    server_san_ip = settings[ini_section]["server_san_ip"]
+    sign_csr(server_csr, ca_public_key, ca_private_key, save_path=server_cert_path,
+        sans=[x509.SubjectAlternativeName([x509.DNSName(server_san_dns), x509.IPAddress(ipaddress.IPv4Address(server_san_ip))])])
 
     # generate client private key
     client_private_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_client_private.pem")
@@ -218,12 +223,15 @@ def main():
         state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
         locality=settings[ini_section]["LOCALITY_NAME"],
         organization=settings[ini_section]["ORGANIZATION_NAME"],
-        common_name=settings[ini_section]["COMMON_NAME"],
+        common_name=settings[ini_section]["CLIENT_COMMON_NAME"],
         private_key=client_private_key,
     )
     # sign
     client_cert_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_client.pem")
-    sign_csr(client_csr, ca_public_key, ca_private_key, save_path=client_cert_path, sans=[x509.SubjectAlternativeName([x509.DNSName(u"localhost"), x509.IPAddress(ipaddress.IPv4Address("127.0.0.1"))])])
+    client_san_dns = settings[ini_section]["client_san_dns"]
+    client_san_ip = settings[ini_section]["client_san_ip"]
+    sign_csr(client_csr, ca_public_key, ca_private_key, save_path=client_cert_path,
+        sans=[x509.SubjectAlternativeName([x509.DNSName(client_san_dns), x509.IPAddress(ipaddress.IPv4Address(client_san_ip))])])
 
 if __name__ == "__main__":
     main()
