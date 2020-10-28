@@ -47,7 +47,6 @@ RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
 MOCK_RADIO = env.bool("MOCK_RADIO", default=False) or RUNNING_DEMO or RUNNING_TESTS
 MOCK_RADIO_RANDOM = env.bool("MOCK_RADIO_RANDOM", default=False)
-SENSOR_TYPE = env("SENSOR_TYPE", default="USRP")
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
@@ -61,6 +60,7 @@ OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
 
 # JSON configs
+# TODO remove calibration files, add instructions to set these in scos-usrp
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):

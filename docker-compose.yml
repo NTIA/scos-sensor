@@ -46,7 +46,6 @@ services:
       - MOCK_RADIO_RANDOM
       - POSTGRES_PASSWORD
       - SECRET_KEY
-      #- SENSOR_TYPE=USRP
     expose:
       - '8000'
     volumes:
