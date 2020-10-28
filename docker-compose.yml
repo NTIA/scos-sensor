@@ -33,7 +33,7 @@ services:
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
       - CALLBACK_SSL_VERIFICATION
-      - DEBUG=true
+      - DEBUG
       - DOCKER_TAG
       - DOMAINS
       - FQDN
