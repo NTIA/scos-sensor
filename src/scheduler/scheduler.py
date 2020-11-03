@@ -8,8 +8,6 @@ from pathlib import Path
 
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
-from oauthlib.oauth2 import LegacyApplicationClient
-from requests_oauthlib import OAuth2Session
 
 from schedule.models import ScheduleEntry
 from sensor import settings
@@ -171,7 +169,7 @@ class Scheduler(threading.Thread):
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
                 if settings.CALLBACK_SSL_VERIFICATION:
-                    verify_ssl = settings.OAUTH_PATH_TO_VERIFY_CERT
+                    verify_ssl = settings.PATH_TO_VERIFY_CERT
                 else:
                     verify_ssl = settings.CALLBACK_SSL_VERIFICATION
                 logger.debug(settings.CALLBACK_AUTHENTICATION)
