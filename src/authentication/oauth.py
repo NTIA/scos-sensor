@@ -18,10 +18,11 @@ def get_oauth_token():
         logger.debug(settings.OAUTH_TOKEN_URL)
         logger.debug(settings.PATH_TO_CLIENT_CERT)
         logger.debug(settings.PATH_TO_VERIFY_CERT)
+        verify_ssl = settings.CALLBACK_SSL_VERIFICATION
         if settings.CALLBACK_SSL_VERIFICATION:
-            verify_ssl = settings.PATH_TO_VERIFY_CERT
-        else:
-            verify_ssl = settings.CALLBACK_SSL_VERIFICATION
+            if settings.PATH_TO_VERIFY_CERT != "":
+                verify_ssl = settings.PATH_TO_VERIFY_CERT
+
         logger.debug(verify_ssl)
         oauth = OAuth2Session(client=LegacyApplicationClient(client_id=settings.CLIENT_ID))
         oauth.cert = settings.PATH_TO_CLIENT_CERT
