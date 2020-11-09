@@ -44,6 +44,12 @@ services:
       - CALLBACK_SSL_VERIFICATION
       - MAX_TASK_RESULTS
       - JWT_PUBLIC_KEY_FILE
+      - CALLBACK_AUTHENTICATION
+      - CLIENT_ID
+      - CLIENT_SECRET
+      - OAUTH_TOKEN_URL
+      - PATH_TO_CLIENT_CERT
+      - PATH_TO_VERIFY_CERT
     expose:
       - '8000'
     volumes:
