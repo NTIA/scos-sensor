@@ -2,6 +2,7 @@
 
 import logging
 import threading
+import json
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
+from authentication import oauth
 
 from . import utils
 
@@ -166,16 +168,31 @@ class Scheduler(threading.Thread):
                 logger.debug("Trying callback")
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
-                token = self.entry.owner.auth_token
-                headers = {"Authorization": "Token " + str(token)}
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
-                requests_futures_session.post(
-                    self.entry.callback_url,
-                    json=result_json,
-                    background_callback=self._callback_response_handler,
-                    headers=headers,
-                    verify=verify_ssl,
-                )
+                if settings.CALLBACK_SSL_VERIFICATION:
+                    if settings.PATH_TO_VERIFY_CERT != "":
+                        verify_ssl = settings.PATH_TO_VERIFY_CERT
+                logger.debug(settings.CALLBACK_AUTHENTICATION)
+                if settings.CALLBACK_AUTHENTICATION == "OAUTH":
+                    client = oauth.get_oauth_client()
+                    headers = {"Content-Type": "application/json"}
+                    response = client.post(
+                        self.entry.callback_url,
+                        data=json.dumps(result_json),
+                        headers=headers,
+                        verify=verify_ssl,
+                    )
+                    self._callback_response_handler(client, response)
+                else:
+                    token = self.entry.owner.auth_token
+                    headers = {"Authorization": "Token " + str(token)}
+                    requests_futures_session.post(
+                        self.entry.callback_url,
+                        json=result_json,
+                        background_callback=self._callback_response_handler,
+                        headers=headers,
+                        verify=verify_ssl,
+                    )
             except Exception as err:
                 logger.error(str(err))
 

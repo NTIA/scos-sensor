@@ -311,6 +311,7 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "loggers": {
         "actions": {"handlers": ["console"], "level": LOGLEVEL},
+        "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "hardware": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
@@ -326,3 +327,21 @@ if SENTRY_DSN:
     import raven
 
     RAVEN_CONFIG = {"dsn": SENTRY_DSN, "release": raven.fetch_git_sha(REPO_ROOT)}
+
+# OAuth Password Flow Authentication
+CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
+CLIENT_ID = env("CLIENT_ID", default="")
+CLIENT_SECRET = env("CLIENT_SECRET", default="")
+USER_NAME = CLIENT_ID
+PASSWORD = CLIENT_SECRET
+
+OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
+CERTS_DIR = path.join(CONFIG_DIR, "certs")
+# Sensor certificate with private key used as client cert
+PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")
+if PATH_TO_CLIENT_CERT != "":
+    PATH_TO_CLIENT_CERT = path.join(CERTS_DIR, PATH_TO_CLIENT_CERT)
+# Trusted Certificate Authority certificate to verify authserver and callback URL server certificate
+PATH_TO_VERIFY_CERT = env("PATH_TO_VERIFY_CERT", default="")
+if PATH_TO_VERIFY_CERT != "":
+    PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, PATH_TO_VERIFY_CERT)
