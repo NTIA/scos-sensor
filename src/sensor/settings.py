@@ -44,7 +44,7 @@ RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
 MOCK_RADIO = env.bool("MOCK_RADIO", default=False) or RUNNING_DEMO or RUNNING_TESTS
 MOCK_RADIO_RANDOM = env.bool("MOCK_RADIO_RANDOM", default=False)
-CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
+
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
@@ -95,7 +95,7 @@ else:
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 
-JWT_PUBLIC_KEY_FILE = env.str("JWT_PUBLIC_KEY_FILE", default="")
+
 
 # Application definition
 
@@ -312,7 +312,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "authentication.User"
-REQUIRED_ROLE = 'ROLE_MANAGER'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -350,6 +349,7 @@ if SENTRY_DSN:
 
     RAVEN_CONFIG = {"dsn": SENTRY_DSN, "release": raven.fetch_git_sha(REPO_ROOT)}
 
+CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # OAuth Password Flow Authentication
 CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
 CLIENT_ID = env("CLIENT_ID", default="")
@@ -367,3 +367,9 @@ if PATH_TO_CLIENT_CERT != "":
 PATH_TO_VERIFY_CERT = env("PATH_TO_VERIFY_CERT", default="")
 if PATH_TO_VERIFY_CERT != "":
     PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, PATH_TO_VERIFY_CERT)
+# Public key to verify JWT token
+PATH_TO_JWT_PUBLIC_KEY = env.str("PATH_TO_JWT_PUBLIC_KEY", default="")
+if PATH_TO_JWT_PUBLIC_KEY != "":
+    PATH_TO_JWT_PUBLIC_KEY = path.join(CERTS_DIR, PATH_TO_JWT_PUBLIC_KEY)
+# Required role from JWT token to access API
+REQUIRED_ROLE = 'ROLE_MANAGER'

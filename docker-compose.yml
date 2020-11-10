@@ -43,7 +43,7 @@ services:
       - MOCK_RADIO_RANDOM
       - CALLBACK_SSL_VERIFICATION
       - MAX_TASK_RESULTS
-      - JWT_PUBLIC_KEY_FILE
+      - PATH_TO_JWT_PUBLIC_KEY
       - CALLBACK_AUTHENTICATION
       - CLIENT_ID
       - CLIENT_SECRET
@@ -79,9 +79,9 @@ services:
       dockerfile: docker/Dockerfile-nginx
     volumes:
       - ./nginx/conf.template:/etc/nginx/nginx.conf.template:ro
-      - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
-      - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
-      - ${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
+      - ./configs/certs/${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
+      - ./configs/certs/${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
+      - ./configs/certs/${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
 

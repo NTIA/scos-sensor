@@ -30,13 +30,14 @@ def gen_private_key(passphrase, save_path=None):
             ))
     return key
 
-def gen_public_key(country, state, locality, organization, common_name, private_key, save_path=None, sans=[], ca=False):
+def gen_public_key(country, state, locality, organization, organizational_unit, common_name, private_key, save_path=None, sans=[], ca=False):
     public_key = private_key.public_key()
     subject = issuer = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, country),
         x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, state),
         x509.NameAttribute(NameOID.LOCALITY_NAME, locality),
         x509.NameAttribute(NameOID.ORGANIZATION_NAME, organization),
+        x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, organizational_unit),
         x509.NameAttribute(NameOID.COMMON_NAME, common_name),
     ])
     cert = (
@@ -64,7 +65,7 @@ def gen_public_key(country, state, locality, organization, common_name, private_
             public_key_file.write(cert.public_bytes(serialization.Encoding.PEM))
     return cert
 
-def gen_csr(country, state, locality, organization, common_name, private_key, save_path=None):
+def gen_csr(country, state, locality, organization, organizational_unit, common_name, private_key, save_path=None):
     subject = x509.Name(
         [
             x509.NameAttribute(NameOID.COUNTRY_NAME, country),
@@ -73,6 +74,7 @@ def gen_csr(country, state, locality, organization, common_name, private_key, sa
             ),
             x509.NameAttribute(NameOID.LOCALITY_NAME, locality),
             x509.NameAttribute(NameOID.ORGANIZATION_NAME, organization),
+            x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, organizational_unit),
             x509.NameAttribute(NameOID.COMMON_NAME, common_name),
         ]
     )
@@ -183,6 +185,7 @@ def main():
             state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
             locality=settings[ini_section]["LOCALITY_NAME"],
             organization=settings[ini_section]["ORGANIZATION_NAME"],
+            organizational_unit=settings[ini_section]["ORGANIZATIONAL_UNIT_NAME"],
             common_name=ca_common_name,
             private_key=ca_private_key,
             save_path=ca_public_key_path,
@@ -203,6 +206,7 @@ def main():
         state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
         locality=settings[ini_section]["LOCALITY_NAME"],
         organization=settings[ini_section]["ORGANIZATION_NAME"],
+        organizational_unit=settings[ini_section]["ORGANIZATIONAL_UNIT_NAME"],
         common_name=settings[ini_section]["SERVER_COMMON_NAME"],
         private_key=server_private_key
     )
@@ -223,6 +227,7 @@ def main():
         state=settings[ini_section]["STATE_OR_PROVINCE_NAME"],
         locality=settings[ini_section]["LOCALITY_NAME"],
         organization=settings[ini_section]["ORGANIZATION_NAME"],
+        organizational_unit=settings[ini_section]["ORGANIZATIONAL_UNIT_NAME"],
         common_name=settings[ini_section]["CLIENT_COMMON_NAME"],
         private_key=client_private_key,
     )

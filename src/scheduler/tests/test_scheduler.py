@@ -5,6 +5,8 @@ import pytest
 import requests_mock
 
 from scheduler.scheduler import Scheduler, minimum_duration
+from django import conf
+import base64
 
 from .utils import (
     BAD_ACTION_STR,
@@ -310,43 +312,71 @@ def test_minimum_duration_non_blocking():
     one_ms = 0.001
     assert (stop - start) <= one_ms
 
+def verify_request(request_history, status="success", detail=None):
+    request_json = None
+    if conf.settings.CALLBACK_AUTHENTICATION == "OAUTH":
+        oauth_history = request_history[0]
+        assert oauth_history.verify == conf.settings.PATH_TO_VERIFY_CERT
+        assert oauth_history.text == f"grant_type=password&username={conf.settings.USER_NAME}&password={conf.settings.PASSWORD}"
+        assert oauth_history.cert == conf.settings.PATH_TO_CLIENT_CERT
+        auth_header = oauth_history.headers.get("Authorization")
+        auth_header = auth_header.replace("Basic ", "")
+        auth_header_decoded = base64.b64decode(auth_header).decode("utf-8")
+        assert auth_header_decoded == f"{conf.settings.CLIENT_ID}:{conf.settings.CLIENT_SECRET}"
+        request_json = request_history[1].json()
+    else:
+        request_json = request_history[0].json()
+    assert request_json["status"] == status
+    assert request_json["task_id"] == 1
+    assert request_json["self"]
+    assert request_json["started"]
+    assert request_json["finished"]
+    assert request_json["duration"]
+    if detail != None:
+        assert request_json["detail"] == detail
 
 @pytest.mark.django_db
-def test_failure_posted_to_callback_url(test_scheduler):
+def test_failure_posted_to_callback_url(test_scheduler, settings):
     """If an entry has callback_url defined, scheduler should POST to it."""
+    oauth_token_url = "https://auth/mock"
+    callback_url = "https://results"
+    settings.OAUTH_TOKEN_URL = oauth_token_url
     cb_flag = threading.Event()
 
     def cb_request_handler(sess, resp):
         cb_flag.set()
 
     cb = create_bad_action()
-    create_entry("t", 10, None, None, None, cb.__name__, "mock://cburl")
+    schedule_entry = create_entry("t", 10, None, None, None, cb.__name__, callback_url)
+    token = schedule_entry.owner.auth_token
     s = test_scheduler
     advance_testclock(s.timefn, 1)
     s._callback_response_handler = cb_request_handler
 
     assert not cb_flag.is_set()
 
-    request_json = None
+    request_history = None
     with requests_mock.Mocker() as m:
-        m.post("mock://cburl")  # register url for posting
+        # register mock url for posting
+        if settings.CALLBACK_AUTHENTICATION == "OAUTH":
+            m.post(callback_url, request_headers={"Authorization": "Bearer " + "test_access_token"})  
+        else:
+            m.post(callback_url, request_headers={"Authorization": "Token " + str(token)})
+        m.post(oauth_token_url, json={"access_token": "test_access_token"})
         s.run(blocking=False)
         time.sleep(0.1)  # let requests thread run
-        request_json = m.request_history[0].json()
+        request_history = m.request_history
 
     assert cb_flag.is_set()
-    assert request_json["status"] == "failure"
-    assert request_json["task_id"] == 1
-    assert request_json["self"]
-    assert request_json["detail"] == BAD_ACTION_STR
-    assert request_json["started"]
-    assert request_json["finished"]
-    assert request_json["duration"]
+    verify_request(request_history, status="failure", detail=BAD_ACTION_STR)
 
 
 @pytest.mark.django_db
-def test_success_posted_to_callback_url(test_scheduler):
+def test_success_posted_to_callback_url(test_scheduler, settings):
     """If an entry has callback_url defined, scheduler should POST to it."""
+    oauth_token_url = "https://auth/mock"
+    callback_url = "https://results"
+    settings.OAUTH_TOKEN_URL = oauth_token_url
     cb_flag = threading.Event()
 
     def cb_request_handler(sess, resp):
@@ -354,43 +384,7 @@ def test_success_posted_to_callback_url(test_scheduler):
 
     cb, action_flag = create_action()
     # less priority to force run after bad_entry fails
-    create_entry("t", 20, None, None, None, cb.__name__, "mock://cburl")
-    s = test_scheduler
-    advance_testclock(s.timefn, 1)
-    s._callback_response_handler = cb_request_handler
-
-    assert not action_flag.is_set()
-
-    request_json = None
-    with requests_mock.Mocker() as m:
-        m.post("mock://cburl")  # register mock url for posting
-        s.run(blocking=False)
-        time.sleep(0.1)  # let requests thread run
-        request_json = m.request_history[0].json()
-
-    assert cb_flag.is_set()
-    assert action_flag.is_set()
-    assert request_json["status"] == "success"
-    assert request_json["task_id"] == 1
-    assert request_json["self"]
-    assert request_json["started"]
-    assert request_json["finished"]
-    assert request_json["duration"]
-
-
-@pytest.mark.django_db
-def test_success_posted_to_secure_callback_url(test_scheduler):
-    """If an entry has callback_url defined, scheduler should POST to it."""
-    cb_flag = threading.Event()
-
-    def cb_request_handler(sess, resp):
-        cb_flag.set()
-
-    cb, action_flag = create_action()
-    # less priority to force run after bad_entry fails
-    schedule_entry = create_entry(
-        "t", 20, None, None, None, cb.__name__, "mock://cburl"
-    )
+    schedule_entry = create_entry("t", 20, None, None, None, cb.__name__, callback_url)
     token = schedule_entry.owner.auth_token
     s = test_scheduler
     advance_testclock(s.timefn, 1)
@@ -398,23 +392,22 @@ def test_success_posted_to_secure_callback_url(test_scheduler):
 
     assert not action_flag.is_set()
 
-    request_json = None
+    request_history = None
     with requests_mock.Mocker() as m:
-        m.post(
-            "mock://cburl", request_headers={"Authorization": "Token " + str(token)}
-        )  # register mock url for posting
+        # register mock url for posting
+        if settings.CALLBACK_AUTHENTICATION == "OAUTH":
+            m.post(callback_url, request_headers={"Authorization": "Bearer " + "test_access_token"})  
+        else:
+            m.post(callback_url, request_headers={"Authorization": "Token " + str(token)})
+        m.post(oauth_token_url, json={"access_token": "test_access_token"})
         s.run(blocking=False)
         time.sleep(0.1)  # let requests thread run
-        request_json = m.request_history[0].json()
+        request_history = m.request_history
+        #request_json = m.request_history[0].json()
 
     assert cb_flag.is_set()
     assert action_flag.is_set()
-    assert request_json["status"] == "success"
-    assert request_json["task_id"] == 1
-    assert request_json["self"]
-    assert request_json["started"]
-    assert request_json["finished"]
-    assert request_json["duration"]
+    verify_request(request_history)
 
 
 @pytest.mark.django_db

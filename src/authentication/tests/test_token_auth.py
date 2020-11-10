@@ -10,7 +10,7 @@ pytestmark = pytest.mark.skipif(not token_auth_enabled, reason="Token authentica
 def test_no_token_unauthorized(settings, live_server):
     client = RequestsClient()
     response = client.get(f"{live_server.url}")
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 def test_token_user_unauthorized(settings, live_server, user):
     client = RequestsClient()
@@ -29,7 +29,7 @@ def test_bad_token_forbidden(settings, live_server):
     token = secrets.token_hex(20)
     response = client.get(f"{live_server.url}", headers={"Authorization": f"Token {token}"})
     print(f"headers: {response.request.headers}")
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 def test_urls_unauthorized(live_server, user):
     client = RequestsClient()

@@ -35,7 +35,7 @@ class OAuthJWTAuthentication(authentication.BaseAuthentication):
         # get JWT public key
         public_key = ""
         try:
-            with open(settings.JWT_PUBLIC_KEY_FILE) as public_key_file:
+            with open(settings.PATH_TO_JWT_PUBLIC_KEY) as public_key_file:
                 public_key = public_key_file.read()
         except Exception as e:
             logger.error(e)
