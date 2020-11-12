@@ -11,6 +11,7 @@ from authentication.models import User
 import secrets
 from django import conf
 from authentication.auth import oauth_jwt_authentication_enabled
+import base64
 
 from sensor import V1
 
@@ -379,3 +380,39 @@ def test_token_hidden(settings, live_server):
     assert response.status_code == 200
     print(f"user detail response = {response.json()}")
     assert response.json()["auth_token"] == "rest_framework.authentication.TokenAuthentication is not enabled"
+
+@pytest.mark.django_db
+def test_change_token_role_bad_signature(settings, live_server):
+    """Make sure token modified after it was signed is rejected"""
+    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+    token_payload = get_token_payload(authorities=["ROLE_USER"])
+    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm='RS256')
+    utf8_bytes = encoded.decode("utf-8")
+    first_period = utf8_bytes.find(".")
+    second_period = utf8_bytes.find(".", first_period+1)
+    payload = utf8_bytes[first_period+1:second_period]
+    payload_bytes = payload.encode("utf-8")
+    # must be multiple of 4 for b64decode
+    for i in range(len(payload_bytes) % 4): 
+        payload_bytes = payload_bytes + b'='
+    decoded = base64.b64decode(payload_bytes)
+    payload_str = decoded.decode("utf-8")
+    payload_data = json.loads(payload_str)
+    payload_data["user_name"] = "sensor013"
+    payload_data["authorities"] = ["ROLE_MANAGER"]
+    payload_data["userDetails"]["authorities"] = [{"authority":  "ROLE_MANAGER"}]
+    payload_str = json.dumps(payload_data)
+    encoded = base64.b64encode(payload_str.encode("utf-8"))
+    modified_payload = encoded.decode("utf-8")
+    # remove padding
+    if modified_payload.endswith("="):
+        last_padded_index = len(modified_payload)-1
+        for i in range(len(modified_payload)-1, -1, -1):
+            if modified_payload[i] != "=":
+                last_padded_index = i
+                break
+        modified_payload = modified_payload[:last_padded_index + 1]
+    modified_token = utf8_bytes[:first_period] + "." + modified_payload + "." + utf8_bytes[second_period+1:]
+    client = RequestsClient()
+    response = client.get(f"{live_server.url}", headers={"Authorization": f"Bearer {modified_token}"})
+    assert response.status_code == 403
