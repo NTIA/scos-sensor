@@ -1,3 +1,6 @@
+"""
+Use to create CA, server, and client certs for testing.
+"""
 import datetime
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
@@ -13,6 +16,8 @@ from cryptography.x509 import NameOID
 # https://cryptography.io/en/latest/x509/tutorial/#creating-a-self-signed-certificate
 # https://realpython.com/python-https/
 
+CERTS_DIR = "configs/certs"
+
 
 def gen_private_key(passphrase, save_path=None):
     key = rsa.generate_private_key(public_exponent=65537, key_size=4096)
@@ -22,7 +27,7 @@ def gen_private_key(passphrase, save_path=None):
             encryption_algorithm=serialization.NoEncryption()
         else:
             encryption_algorithm=serialization.BestAvailableEncryption(bytes(passphrase, "utf-8"))
-        with open(save_path, "wb") as private_key_file:
+        with open(save_path, "w+b") as private_key_file:
             private_key_file.write(key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -141,6 +146,7 @@ def main():
     ca_common_name = None
     if "ca_private_key_save_path" in settings[ini_section]:
         ca_private_key_save_path = settings[ini_section]["ca_private_key_save_path"]
+        ca_private_key_save_path = os.path.join(CERTS_DIR, ca_private_key_save_path)
         if not os.path.isabs(ca_private_key_save_path):
             ca_private_key_save_path = os.path.join(os.getcwd(), ca_private_key_save_path)
     if "CA_COMMON_NAME" in settings[ini_section]:
@@ -177,7 +183,7 @@ def main():
         ca_private_key = gen_private_key(passphrase=key_passphrase, save_path=ca_private_key_save_path)
 
         # create ca public key
-        ca_public_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/scostestca.crt")
+        ca_public_key_path = os.path.join(CERTS_DIR, "scostestca.crt")
         ca_san_dns = settings[ini_section]["ca_san_dns"]
         ca_san_ip = settings[ini_section]["ca_san_ip"]
         ca_public_key = gen_public_key(
@@ -197,7 +203,7 @@ def main():
         ca_public_key = existing_ca_cert
 
     # generate server private key
-    server_private_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_private.pem")
+    server_private_key_path = os.path.join(CERTS_DIR, "sensor01_private.pem")
     server_private_key = gen_private_key(passphrase=key_passphrase, save_path=server_private_key_path)
 
     # generate csr
@@ -211,14 +217,14 @@ def main():
         private_key=server_private_key
     )
     # sign
-    server_cert_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_certificate.pem")
+    server_cert_path = os.path.join(CERTS_DIR, "sensor01_certificate.pem")
     server_san_dns = settings[ini_section]["server_san_dns"]
     server_san_ip = settings[ini_section]["server_san_ip"]
     sign_csr(server_csr, ca_public_key, ca_private_key, save_path=server_cert_path,
         sans=[x509.SubjectAlternativeName([x509.DNSName(server_san_dns), x509.IPAddress(ipaddress.IPv4Address(server_san_ip))])])
 
     # generate client private key
-    client_private_key_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_client_private.pem")
+    client_private_key_path = os.path.join(CERTS_DIR, "sensor01_client_private.pem")
     client_private_key = gen_private_key(passphrase=key_passphrase, save_path=client_private_key_path)
 
     # generate csr
@@ -232,7 +238,7 @@ def main():
         private_key=client_private_key,
     )
     # sign
-    client_cert_path = os.path.join(os.getcwd(), "src/authentication/tests/certs/sensor01_client.pem")
+    client_cert_path = os.path.join(CERTS_DIR, "sensor01_client.pem")
     client_san_dns = settings[ini_section]["client_san_dns"]
     client_san_ip = settings[ini_section]["client_san_ip"]
     sign_csr(client_csr, ca_public_key, ca_private_key, save_path=client_cert_path,
