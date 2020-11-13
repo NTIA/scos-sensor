@@ -259,13 +259,13 @@ will run. If you are using client certificates, also copy the CA certificate use
 generate the certificates. Make sure the certificates are somewhere in configs/certs,
 and that SSL_CERT_PATH and SSL_KEY_PATH (in the environment file) are set to the paths
 of the certificates relative to configs/certs. If you are using client certificates,
-set SSL_CA_PATH to the path of the CA certificate relative to configs/certs.  
+set SSL_CA_PATH to the path of the CA certificate relative to configs/certs.
 4. Run scos-sensor. If you are using client certificates, use
 sensor01_client_private.pem and sensor01_client to connect to the API.
 
 The create_certificates.py script can also generate a new CA and use it for generating
 the certificates. To run create_certificates.py this way, comment out
-ca_private_key_path and ca_certificate_path in create_certificates.ini, make sure 
+ca_private_key_path and ca_certificate_path in create_certificates.ini, make sure
 ca_private_key_save_path and the other parameters are set as desired, then repeat steps
 2-4 above. The CA private key file (saved to ca_private_key_save_path) and the CA
 public key (scostestca.crt) will be generated in addition to the files listed in step
@@ -299,7 +299,7 @@ authentication.
 - CALLBACK_AUTHENTICATION - set to OAUTH.
 - CLIENT_ID - client ID used to authorize the client (the sensor) against the
 authorization server.
-- CLIENT_SECRET - client secret used to authorize the client (the sensor) against the 
+- CLIENT_SECRET - client secret used to authorize the client (the sensor) against the
 authorization server.
 - OAUTH_TOKEN_URL - URL to get the access token.
 - PATH_TO_CLIENT_CERT - client certificate used to authenticate against the authorization

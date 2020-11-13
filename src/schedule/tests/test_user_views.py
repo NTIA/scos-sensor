@@ -17,8 +17,14 @@ def test_user_cannot_view_schedule_entry_list(user_client):
     rjson = validate_response(response, status.HTTP_403_FORBIDDEN)
     assert rjson != EMPTY_SCHEDULE_RESPONSE
 
+
 def test_user_cannot_post_schedule(user_client):
-    post_schedule(user_client, TEST_PRIVATE_SCHEDULE_ENTRY, expected_status=status.HTTP_403_FORBIDDEN)
+    post_schedule(
+        user_client,
+        TEST_PRIVATE_SCHEDULE_ENTRY,
+        expected_status=status.HTTP_403_FORBIDDEN,
+    )
+
 
 def test_user_cannot_view_schedule_entry_detail(user_client, admin_client):
     admin_rjson = post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
@@ -29,6 +35,3 @@ def test_user_cannot_view_schedule_entry_detail(user_client, admin_client):
     response = user_client.get(admin_url)
     rjson = validate_response(response, status.HTTP_403_FORBIDDEN)
     assert rjson != EMPTY_SCHEDULE_RESPONSE
-
-
-

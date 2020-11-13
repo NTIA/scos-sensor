@@ -1,8 +1,11 @@
+import os
+
 import pytest
 from rest_framework import status
-from conftest import user_client
 
+from conftest import user_client
 from sensor.tests.utils import HTTPS_KWARG, validate_response
+from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import (
     create_task_results,
     get_result_list,
@@ -10,10 +13,6 @@ from tasks.tests.utils import (
     reverse_result_list,
     simulate_frequency_fft_acquisitions,
 )
-
-from tasks.models import Acquisition, TaskResult
-
-import os
 
 
 def test_non_existent_entry(admin_client):
@@ -24,11 +23,12 @@ def test_non_existent_entry(admin_client):
 @pytest.mark.django_db
 def test_single_result_response(admin_client):
     entry_name = create_task_results(1, admin_client)
-    result, = get_result_list(admin_client, entry_name)
+    (result,) = get_result_list(admin_client, entry_name)
     task_id = 1
     expected_url = reverse_result_detail(entry_name, task_id)
     assert result["self"] == expected_url
     assert result["task_id"] == task_id
+
 
 @pytest.mark.django_db
 def test_user_cannot_view_result_list(admin_client, user_client):
@@ -64,6 +64,7 @@ def test_delete_list(admin_client):
     url = reverse_result_list(entry_name)
     response = admin_client.delete(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_204_NO_CONTENT)
+
 
 @pytest.mark.django_db
 def test_user_cannot_delete_list(admin_client, user_client):

@@ -1,5 +1,7 @@
 from rest_framework import permissions
-from .auth import oauth_jwt_authentication_enabled, jwt_request_has_required_role
+
+from .auth import jwt_request_has_required_role, oauth_jwt_authentication_enabled
+
 
 class RequiredJWTRolePermissionOrIsSuperuser(permissions.BasePermission):
     message = "User missing required role"

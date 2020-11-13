@@ -1,11 +1,11 @@
 import logging
 
+from django.conf import settings
 from oauthlib.oauth2 import LegacyApplicationClient
 from requests_oauthlib import OAuth2Session
 
-from django.conf import settings
-
 logger = logging.getLogger(__name__)
+
 
 def get_oauth_token():
     """Returns OAuth access token."""
@@ -24,19 +24,24 @@ def get_oauth_token():
                 verify_ssl = settings.PATH_TO_VERIFY_CERT
 
         logger.debug(verify_ssl)
-        oauth = OAuth2Session(client=LegacyApplicationClient(client_id=settings.CLIENT_ID))
+        oauth = OAuth2Session(
+            client=LegacyApplicationClient(client_id=settings.CLIENT_ID)
+        )
         oauth.cert = settings.PATH_TO_CLIENT_CERT
         token = oauth.fetch_token(
             token_url=settings.OAUTH_TOKEN_URL,
-            username=settings.USER_NAME, password=settings.PASSWORD,
-            client_id=settings.CLIENT_ID, client_secret=settings.CLIENT_SECRET,
-            verify=verify_ssl
+            username=settings.USER_NAME,
+            password=settings.PASSWORD,
+            client_id=settings.CLIENT_ID,
+            client_secret=settings.CLIENT_SECRET,
+            verify=verify_ssl,
         )
         oauth.close()
         logger.debug("Response from oauth.fetch_token: " + str(token))
         return token
     except Exception:
         raise
+
 
 def get_oauth_client():
     """Returns Authorized OAuth Client (with authentication header token)."""

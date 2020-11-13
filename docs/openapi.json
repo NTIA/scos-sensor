@@ -155,7 +155,7 @@
                                 "results": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/definitions/AdminScheduleEntry"
+                                        "$ref": "#/definitions/ScheduleEntry"
                                     }
                                 }
                             }
@@ -175,7 +175,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 ],
@@ -183,7 +183,7 @@
                     "201": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -202,7 +202,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -219,7 +219,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 ],
@@ -227,7 +227,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -244,7 +244,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 ],
@@ -252,7 +252,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -1612,7 +1612,7 @@
         }
     },
     "definitions": {
-        "AdminScheduleEntry": {
+        "ScheduleEntry": {
             "required": [
                 "name",
                 "action"
@@ -1661,6 +1661,7 @@
                         "acquire_m4s_700MHz_Verizon_DL",
                         "acquire_m4s_700MHz_Verizon_UL",
                         "logger",
+                        "monitor_usrp",
                         "survey_700MHz_band_10dB_1000ms_iq",
                         "survey_700MHz_band_10dB_80ms_iq",
                         "survey_700MHz_band_20dB_1000ms_iq",
@@ -1668,12 +1669,10 @@
                         "survey_700MHz_band_40dB_1000ms_iq",
                         "survey_700MHz_band_40dB_80ms_iq",
                         "survey_700MHz_band_iq",
+                        "sync_gps",
                         "mock_acquire_single_frequency_fft",
                         "mock_multirec_acquire",
-                        "mock_time_domain_iq_acquire",
-                        "admin_logger",
-                        "monitor_usrp",
-                        "sync_gps"
+                        "mock_time_domain_iq_acquire"
                     ]
                 },
                 "priority": {

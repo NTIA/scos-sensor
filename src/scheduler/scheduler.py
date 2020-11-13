@@ -1,21 +1,21 @@
 """Queue and run tasks."""
 
+import json
 import logging
 import threading
-import json
 from contextlib import contextmanager
 from pathlib import Path
 
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
 
+from authentication import oauth
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
-from authentication import oauth
 
 from . import utils
 

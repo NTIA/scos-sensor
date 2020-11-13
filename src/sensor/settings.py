@@ -96,7 +96,6 @@ SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 
 
-
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -205,14 +204,14 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        #"rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
         "authentication.auth.OAuthJWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser"
-        ),
+        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser",
+    ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
@@ -260,11 +259,7 @@ SWAGGER_SETTINGS = {
                 "Only authorizes users who have an authority matching the REQUIRED_ROLE setting."
                 "For more information, see https://tools.ietf.org/html/rfc6749#section-4.3."
             ),
-            "flows": {
-                "password": {
-                    "scopes": {} # scopes are not used
-                }
-            }
+            "flows": {"password": {"scopes": {}}},  # scopes are not used
         }
     },
     "APIS_SORTER": "alpha",
@@ -372,4 +367,4 @@ PATH_TO_JWT_PUBLIC_KEY = env.str("PATH_TO_JWT_PUBLIC_KEY", default="")
 if PATH_TO_JWT_PUBLIC_KEY != "":
     PATH_TO_JWT_PUBLIC_KEY = path.join(CERTS_DIR, PATH_TO_JWT_PUBLIC_KEY)
 # Required role from JWT token to access API
-REQUIRED_ROLE = 'ROLE_MANAGER'
+REQUIRED_ROLE = "ROLE_MANAGER"

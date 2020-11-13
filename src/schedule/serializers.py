@@ -236,4 +236,3 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             if field in data:
                 filtered_data[field] = data[field]
         return filtered_data
-

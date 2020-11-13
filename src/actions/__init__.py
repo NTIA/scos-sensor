@@ -17,9 +17,6 @@ logger = logging.getLogger(__name__)
 # Actions initialized here are made available through the API
 registered_actions = {
     "logger": logger_action.Logger(),
-    "admin_logger": logger_action.Logger(
-        loglvl=logger_action.LOGLVL_ERROR
-    ),
     "monitor_usrp": UsrpMonitor(),
     "sync_gps": SyncGps(),
 }

@@ -4,8 +4,8 @@ from rest_framework.reverse import reverse
 from schedule.serializers import ISOMillisecondDateTimeFormatField
 from sensor import V1
 
-from .models import User
 from .auth import token_auth_enabled
+from .models import User
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):

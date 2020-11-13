@@ -2,8 +2,6 @@ import logging
 import tempfile
 from functools import partial
 
-import sigmf.archive
-import sigmf.sigmffile
 from django.http import FileResponse, Http404
 from rest_framework import filters, status
 from rest_framework.decorators import action, api_view
@@ -14,6 +12,8 @@ from rest_framework.reverse import reverse
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import GenericViewSet
 
+import sigmf.archive
+import sigmf.sigmffile
 from schedule.models import ScheduleEntry
 from scheduler import scheduler
 from sensor import settings

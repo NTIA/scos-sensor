@@ -1,17 +1,16 @@
-from rest_framework import status
-from conftest import user_client
+import os
 
+from rest_framework import status
+
+from conftest import user_client
 from sensor.tests.utils import HTTPS_KWARG, validate_response
+from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import (
     create_task_results,
     reverse_result_detail,
     simulate_frequency_fft_acquisitions,
     update_result_detail,
 )
-
-from tasks.models import Acquisition, TaskResult
-
-import os
 
 
 def test_admin_can_create_acquisition(admin_client, test_scheduler):
@@ -36,6 +35,7 @@ def test_admin_can_view_others_result_details(admin_client, alt_admin_client):
     url = reverse_result_detail(entry_name, 1)
     response = alt_admin_client.get(url, **HTTPS_KWARG)
     validate_response(response, status.HTTP_200_OK)
+
 
 def test_user_cannot_view_result_details(admin_client, user_client):
     """A user should be able to view results created by others."""
@@ -133,18 +133,15 @@ def test_admin_can_delete_others_results(
 
     validate_response(admin_delete_alt_admin_response, status.HTTP_204_NO_CONTENT)
 
-def test_user_cannot_delete_others_results(
-    admin_client, user_client, test_scheduler
-):
+
+def test_user_cannot_delete_others_results(admin_client, user_client, test_scheduler):
     # alt admin private schedule entry
     admin_entry_name = simulate_frequency_fft_acquisitions(
         admin_client, name="alt_admin_single_acq"
     )
     admin_result_url = reverse_result_detail(admin_entry_name, 1)
 
-    user_delete_admin_response = user_client.delete(
-        admin_result_url, **HTTPS_KWARG
-    )
+    user_delete_admin_response = user_client.delete(admin_result_url, **HTTPS_KWARG)
 
     validate_response(user_delete_admin_response, status.HTTP_403_FORBIDDEN)
 

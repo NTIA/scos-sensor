@@ -2,10 +2,12 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from schedule.tests.utils import (
-    EMPTY_SCHEDULE_RESPONSE, TEST_ALTERNATE_SCHEDULE_ENTRY,
+    EMPTY_SCHEDULE_RESPONSE,
+    TEST_ALTERNATE_SCHEDULE_ENTRY,
     TEST_PRIVATE_SCHEDULE_ENTRY,
     TEST_SCHEDULE_ENTRY,
-    post_schedule, reverse_detail_url,
+    post_schedule,
+    reverse_detail_url,
     update_schedule,
 )
 from sensor import V1
@@ -55,7 +57,7 @@ def test_admin_can_modify_all_entries(admin_client, alt_admin_client):
     admin_adjust_alt_admin_response = update_schedule(
         admin_client, alt_admin_entry_name, TEST_SCHEDULE_ENTRY
     )
-    
+
     validate_response(admin_adjust_alt_admin_response, status.HTTP_200_OK)
 
 
@@ -71,6 +73,7 @@ def test_admin_can_use_negative_priority(admin_client):
 
     assert rjson["priority"] == -20
     validate_response(admin_user_respose, status.HTTP_200_OK)
+
 
 def test_admin_can_delete_their_entry(admin_client):
     rjson = post_schedule(admin_client, TEST_SCHEDULE_ENTRY)
@@ -97,8 +100,6 @@ def test_admin_can_modify_their_entry(admin_client):
     validate_response(user_adjust_response, status.HTTP_200_OK)
     assert rjson["priority"] == 10
     assert user_adjust_response.data["priority"] == 5
-
-
 
 
 def test_validate_only_does_not_modify_schedule_with_good_entry(admin_client):

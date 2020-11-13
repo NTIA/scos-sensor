@@ -3,14 +3,14 @@ import os
 from os import path
 
 from django.conf import settings
-from sigmf.validate import validate as sigmf_validate
 
 from actions.tests.utils import check_metadata_fields
+from sigmf.validate import validate as sigmf_validate
 from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import (
-    simulate_frequency_fft_acquisitions,
     MULTIPLE_FREQUENCY_FFT_ACQUISITIONS,
     SINGLE_FREQUENCY_FFT_ACQUISITION,
+    simulate_frequency_fft_acquisitions,
 )
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
