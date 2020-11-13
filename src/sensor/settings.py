@@ -204,8 +204,6 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        # "rest_framework.authentication.TokenAuthentication",
-        "authentication.auth.OAuthJWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
@@ -227,30 +225,30 @@ REST_FRAMEWORK = {
     "URL_FIELD_NAME": "self",  # RFC 42867
 }
 
+AUTHENTICATION = env("AUTHENTICATION", default="")
+if AUTHENTICATION == "JWT":
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "authentication.auth.OAuthJWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    )
+else:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    )
+
 
 # https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
-        # "token": {
-        #     "type": "apiKey",
-        #     "description": (
-        #         "Tokens are automatically generated for all users. You can "
-        #         "view yours by going to your User Details view in the "
-        #         "browsable API at `/api/v1/users/me` and looking for the "
-        #         "`auth_token` key. Non-admin user accounts do not initially "
-        #         "have a password and so can not log in to the browsable API. "
-        #         "To set a password for a user (for testing purposes), an "
-        #         "admin can do that in the Sensor Configuration Portal, but "
-        #         "only the account's token should be stored and used for "
-        #         "general purpose API access. "
-        #         'Example cURL call: `curl -kLsS -H "Authorization: Token'
-        #         ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
-        #         "https://localhost/api/v1`"
-        #     ),
-        #     "name": "Token",
-        #     "in": "header",
-        # }
-        "oAuth2JWT": {
+    },
+    "APIS_SORTER": "alpha",
+    "OPERATIONS_SORTER": "method",
+    "VALIDATOR_URL": None,
+}
+
+if AUTHENTICATION == "JWT":
+    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["oAuth2JWT"] = {
             "type": "oauth2",
             "description": (
                 "OAuth2 authentication using resource owner password flow."
@@ -261,11 +259,26 @@ SWAGGER_SETTINGS = {
             ),
             "flows": {"password": {"scopes": {}}},  # scopes are not used
         }
-    },
-    "APIS_SORTER": "alpha",
-    "OPERATIONS_SORTER": "method",
-    "VALIDATOR_URL": None,
-}
+else:
+    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["token"] = {
+            "type": "apiKey",
+            "description": (
+                "Tokens are automatically generated for all users. You can "
+                "view yours by going to your User Details view in the "
+                "browsable API at `/api/v1/users/me` and looking for the "
+                "`auth_token` key. New user accounts do not initially "
+                "have a password and so can not log in to the browsable API. "
+                "To set a password for a user (for testing purposes), an "
+                "admin can do that in the Sensor Configuration Portal, but "
+                "only the account's token should be stored and used for "
+                "general purpose API access. "
+                'Example cURL call: `curl -kLsS -H "Authorization: Token'
+                ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
+                "https://localhost/api/v1`"
+            ),
+            "name": "Token",
+            "in": "header",
+        }
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases

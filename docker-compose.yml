@@ -27,6 +27,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile-api
     environment:
+      - AUTHENTICATION
       - DEBUG=true
       - DOMAINS
       - IPS
@@ -65,6 +66,8 @@ services:
   nginx:
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
+    depends_on:
+      - api
     ports:
       - '80:80'
       - '443:443'
