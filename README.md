@@ -331,8 +331,7 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
 
  - *admin*: A user account that has full control over the sensor and can create
    schedule entries and view, modify, or delete any other user's schedule entries or
-   acquisitions. Admins can create non-privileged *user* accounts. Admins can mark a
-   schedule entry as private from unprivileged users.
+   acquisitions. Admins can create non-privileged *user* accounts.
 
  - *capability*: Available actions, installation specifications (e.g., mobile or
    stationary), and operational ranges of hardware components (e.g., frequency range of
