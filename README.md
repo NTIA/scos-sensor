@@ -277,11 +277,13 @@ or disabled using `CALLBACK_SSL_VERIFICATION` in the environment file.
 #### Token
 A simple form of token authentication is supported for the callback URL. The sensor
 will send the user's (user who created the schedule) token in the authorization header
-in the callback URL. This method of authentication for the callback URL is enabled by
-default. To verify it is enabled, set `CALLBACK_AUTHENTICATION` to `TOKEN` in the
-environment file (this will be enabled if `CALLBACK_AUTHENTICATION` set to anything
-other than `OAUTH`). `PATH_TO_VERIFY_CERT`, in the environment file, can used to set a
-CA certificate to verify the callback URL server SSL certificate. If this is unset and
+("Token " + <token>) when posting results to callback URL. The server can then verify
+the token against what it originally sent to the sensor when creating the schedule.
+This method of authentication for the callback URL is enabled by default. To verify it
+is enabled, set `CALLBACK_AUTHENTICATION` to `TOKEN` in the environment file (this will
+be enabled if `CALLBACK_AUTHENTICATION` set to anything other than `OAUTH`).
+`PATH_TO_VERIFY_CERT`, in the environment file, can used to set a CA certificate to
+verify the callback URL server SSL certificate. If this is unset and
 `CALLBACK_SSL_VERIFICATION` is set to true, [standard trusted CAs](
     https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
 used.
