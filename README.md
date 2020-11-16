@@ -368,7 +368,7 @@ In this section, we'll go over the high-level concepts used by `scos-sensor`.
    after the action function returns, and includes metadata such as when the task
    *started*, when it *finished*, its *duration*, the *result* (`success` or
    `failure`), and a freeform *detail* string. A `TaskResult` JSON object is also
-   POSTed to a schedule entry's `callback_url`, ifprovided.
+   POSTed to a schedule entry's `callback_url`, if provided.
 
 
 ## References
