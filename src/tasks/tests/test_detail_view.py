@@ -2,7 +2,6 @@ import os
 
 from rest_framework import status
 
-from conftest import user_client
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import (

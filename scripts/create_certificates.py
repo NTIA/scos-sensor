@@ -167,7 +167,7 @@ def main():
     if len(sys.argv) < 4:
         print(
             "Usage: python create_certificates.py <ini_path> <ini_section> <key_passphrase>\n"
-            + "Creates localhost certifice authority, server certificate, and client certificate "
+            + "Creates certifice authority, server certificate, and client certificate "
             + "for testing.\n"
             + 'If key_passphrase="None", private keys will not be encrypted.'
         )

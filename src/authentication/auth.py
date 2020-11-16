@@ -72,7 +72,7 @@ class OAuthJWTAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Unable to verify token!")
         except Exception as e:
             logger.error(e)
-            raise exceptions.AuthenticationFailed("Unable to decode token! {e}")
+            raise exceptions.AuthenticationFailed(f"Unable to decode token! {e}")
         jwt_username = decoded_key["user_name"]
         user_model = get_user_model()
         user = None

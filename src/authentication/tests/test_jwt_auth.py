@@ -479,7 +479,6 @@ def test_admin_can_view_other_user_detail(settings, live_server):
     sensor01_user = User.objects.get(username=sensor01_token_payload["user_name"])
     kws = {"pk": sensor01_user.pk}
     kws.update(V1)
-    print(f"kws = {kws}")
     user_detail = reverse("user-detail", kwargs=kws)
     response = client.get(
         f"{live_server.url}{user_detail}",
@@ -511,7 +510,6 @@ def test_token_hidden(settings, live_server):
         headers={"Authorization": f"Bearer {utf8_bytes}"},
     )
     assert response.status_code == 200
-    print(f"user detail response = {response.json()}")
     assert (
         response.json()["auth_token"]
         == "rest_framework.authentication.TokenAuthentication is not enabled"
