@@ -35,6 +35,8 @@ class OAuthJWTAuthentication(authentication.BaseAuthentication):
             logger.debug("no auth header")
             return None
         auth_header = auth_header.split()
+        if len(auth_header) != 2:
+            return None
         if auth_header[0].decode().lower() != "bearer":
             logger.debug("no JWT bearer token")
             return None  # attempt other configured authentication methods

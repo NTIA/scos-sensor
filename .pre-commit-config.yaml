@@ -1,4 +1,4 @@
-exclude: src/static/*|LICENSE.md|*.pem|*.crt
+exclude: src/static/*|LICENSE.md|.+\.pem|.+\.crt
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.2.3

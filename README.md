@@ -188,7 +188,7 @@ external authorization server or using Djnago Rest Framework Token Authenticatio
 
 #### Django Rest Framework Token Authentication
 This is the default authentication method. To enable Django Rest Framework
-Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file 
+Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
 (this will be enabled if `AUTHENTICATION` set to anything other
 than `JWT`).
 
