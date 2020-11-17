@@ -16,10 +16,7 @@ TEST_ALTERNATE_SCHEDULE_ENTRY = {
     "priority": 5,
 }
 
-TEST_PRIVATE_SCHEDULE_ENTRY = {
-    "name": "test_private",
-    "action": "logger",
-}
+TEST_PRIVATE_SCHEDULE_ENTRY = {"name": "test_private", "action": "logger"}
 
 
 def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):

@@ -12,9 +12,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ("schedule", "0001_initial"),
-    ]
+    dependencies = [("schedule", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
