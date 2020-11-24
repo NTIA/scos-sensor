@@ -5,16 +5,14 @@ from os import path
 from django.conf import settings
 from sigmf.validate import validate as sigmf_validate
 
-
 from actions.tests.utils import check_metadata_fields
 from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import (
-    simulate_multirec_acquisition,
-    SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION,
-    simulate_timedomain_iq_acquisition,
     SINGLE_TIMEDOMAIN_IQ_ACQUISITION,
+    SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION,
+    simulate_multirec_acquisition,
+    simulate_timedomain_iq_acquisition,
 )
-
 
 SCHEMA_DIR = path.join(settings.REPO_ROOT, "schemas")
 SCHEMA_FNAME = "scos_transfer_spec_schema.json"

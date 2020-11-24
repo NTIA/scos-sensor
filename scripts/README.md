@@ -1,6 +1,6 @@
 # Scripts
 
-## data_download.sh 
+## data_download.sh
 
 1. ssh into the sensor using a known user account: `ssh [username]@[sensor IP]`
 1. Note/copy password from `.admin_password` file: `cat /opt/scos-sensor/.admin_password`

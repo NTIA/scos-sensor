@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+
 from authentication.models import User
 
 
