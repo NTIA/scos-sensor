@@ -20,8 +20,7 @@ class Logger(Action):
 
     """
 
-    def __init__(self, loglvl=LOGLVL_INFO, admin_only=False):
-        super(Logger, self).__init__(admin_only=admin_only)
+    def __init__(self, loglvl=LOGLVL_INFO):
         self.loglvl = loglvl
 
     def __call__(self, name, tid):
