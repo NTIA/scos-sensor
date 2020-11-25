@@ -14,9 +14,7 @@ logger = logging.getLogger(__name__)
 class UsrpMonitor(Action):
     """Monitor USRP connection and restart container if unreachable."""
 
-    def __init__(self, admin_only=True):
-        super(UsrpMonitor, self).__init__(admin_only=admin_only)
-
+    def __init__(self):
         self.usrp = usrp_iface
 
     def __call__(self, name, tid):

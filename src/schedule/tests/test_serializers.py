@@ -1,6 +1,6 @@
 import pytest
 
-from schedule.serializers import AdminScheduleEntrySerializer, ScheduleEntrySerializer
+from schedule.serializers import ScheduleEntrySerializer
 from sensor.utils import parse_datetime_str
 
 from .utils import post_schedule
@@ -121,11 +121,11 @@ def test_valid_user_entries(entry_json, user):
         # Explicit validate_only is valid
         {"name": "test", "action": "logger", "validate_only": False},
         # Admin can create private entries
-        {"name": "test", "action": "logger", "is_private": True},
+        {"name": "test", "action": "logger"},
     ],
 )
 def test_valid_admin_entries(entry_json, user):
-    serializer = AdminScheduleEntrySerializer(data=entry_json)
+    serializer = ScheduleEntrySerializer(data=entry_json)
     assert serializer.is_valid()
     serializer.save(owner=user)  # if input is valid, model should accept it
 
@@ -141,8 +141,6 @@ def test_valid_admin_entries(entry_json, user):
         {"name": "test"},
         # non-integer priority
         {"name": "test", "action": "logger", "priority": 3.14},
-        # priority less than min (for normal user)
-        {"name": "test", "action": "logger", "priority": -1},
         # priority greater than max (19)
         {"name": "test", "action": "logger", "priority": 20},
         # non-integer interval
@@ -238,7 +236,7 @@ def test_invalid_user_entries(entry_json):
     ],
 )
 def test_invalid_admin_entries(entry_json):
-    serializer = AdminScheduleEntrySerializer(data=entry_json)
+    serializer = ScheduleEntrySerializer(data=entry_json)
     assert not serializer.is_valid()
 
 
@@ -247,9 +245,9 @@ def test_invalid_admin_entries(entry_json):
 #
 
 
-def test_serialized_fields(user_client):
+def test_serialized_fields(admin_client):
     """Certain fields on the schedule entry model should be serialized."""
-    rjson = post_schedule(user_client, {"name": "test", "action": "logger"})
+    rjson = post_schedule(admin_client, {"name": "test", "action": "logger"})
 
     # nullable fields
     assert "interval" in rjson
@@ -268,15 +266,14 @@ def test_serialized_fields(user_client):
     assert parse_datetime_str(rjson["next_task_time"])
     # booleans
     assert rjson["is_active"] in {True, False}
-    assert rjson["is_private"] in {True, False}
     # links
     assert rjson["self"]
     assert rjson["owner"]
     assert rjson["task_results"]
 
 
-def test_non_serialized_fields(user_client):
+def test_non_serialized_fields(admin_client):
     """Certain fields on the schedule entry model should not be serialized."""
-    rjson = post_schedule(user_client, {"name": "test", "action": "logger"})
+    rjson = post_schedule(admin_client, {"name": "test", "action": "logger"})
 
     assert "relative_stop" not in rjson

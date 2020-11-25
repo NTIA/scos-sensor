@@ -53,13 +53,11 @@ SINGLE_TIMEDOMAIN_IQ_ACQUISITION = {
 }
 
 
-def simulate_acquisitions(client, schedule_entry, n=1, is_private=False, name=None):
+def simulate_acquisitions(client, schedule_entry, n=1, name=None):
     assert 0 < n <= 10
 
     if n > 1:
         schedule_entry["relative_stop"] = n + 1
-
-    schedule_entry["is_private"] = is_private
 
     if name is not None:
         schedule_entry["name"] = name
@@ -70,30 +68,26 @@ def simulate_acquisitions(client, schedule_entry, n=1, is_private=False, name=No
     return entry["name"]
 
 
-def simulate_frequency_fft_acquisitions(client, n=1, is_private=False, name=None):
+def simulate_frequency_fft_acquisitions(client, n=1, name=None):
     if n == 1:
         schedule_entry = SINGLE_FREQUENCY_FFT_ACQUISITION.copy()
     else:
         schedule_entry = MULTIPLE_FREQUENCY_FFT_ACQUISITIONS.copy()
 
-    return simulate_acquisitions(client, schedule_entry, n, is_private, name)
+    return simulate_acquisitions(client, schedule_entry, n, name)
 
 
-def simulate_multirec_acquisition(client, is_private=False, name=None):
+def simulate_multirec_acquisition(client, name=None):
     schedule_entry = SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION.copy()
-    return simulate_acquisitions(
-        client, schedule_entry, n=1, is_private=is_private, name=name
-    )
+    return simulate_acquisitions(client, schedule_entry, n=1, name=name)
 
 
-def simulate_timedomain_iq_acquisition(client, is_private=False, name=None):
+def simulate_timedomain_iq_acquisition(client, name=None):
     schedule_entry = SINGLE_TIMEDOMAIN_IQ_ACQUISITION.copy()
-    return simulate_acquisitions(
-        client, schedule_entry, n=1, is_private=is_private, name=name
-    )
+    return simulate_acquisitions(client, schedule_entry, n=1, name=name)
 
 
-def create_task_results(n, user_client, entry_name=None):
+def create_task_results(n, admin_client, entry_name=None):
     # We need an entry in the schedule to create TRs for
     try:
         entry = ScheduleEntry.objects.get(name=entry_name)
@@ -102,7 +96,7 @@ def create_task_results(n, user_client, entry_name=None):
         if entry_name is not None:
             test_entry["name"] = entry_name
 
-        rjson = post_schedule(user_client, test_entry)
+        rjson = post_schedule(admin_client, test_entry)
         entry_name = rjson["name"]
         entry = ScheduleEntry.objects.get(name=entry_name)
 

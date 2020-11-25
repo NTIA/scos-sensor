@@ -171,9 +171,7 @@ At a lower level, they are simply python classes with a special method
 
 Start by looking at the [Action base class](src/actions/base.py). It includes
 some logic to parse a description and summary out of the action class's
-docstring, and a `__call__` method that must be overridden. If you pass
-`admin_only=True` to this base class, the API will not make it or any data it
-created available to non-admin users.
+docstring, and a `__call__` method that must be overridden.
 
 The [logger action](src/actions/logger.py) is a very simple example action that
 logs the name of the schedule entry and task id that is running it, but it's a

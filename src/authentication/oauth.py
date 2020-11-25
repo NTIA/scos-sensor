@@ -1,9 +1,8 @@
 import logging
 
+from django.conf import settings
 from oauthlib.oauth2 import LegacyApplicationClient
 from requests_oauthlib import OAuth2Session
-
-from sensor import settings
 
 logger = logging.getLogger(__name__)
 

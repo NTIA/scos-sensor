@@ -14,9 +14,6 @@ logger = logging.getLogger(__name__)
 def get_actions(include_admin_actions=False):
     serialized_actions = []
     for action in actions.by_name:
-        if actions.by_name[action].admin_only and not include_admin_actions:
-            continue
-
         serialized_actions.append(
             {
                 "name": action,
