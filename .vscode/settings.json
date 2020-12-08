@@ -1,4 +1,9 @@
 {
     "python.pythonPath": "${workspaceFolder}/venv/bin/python3",
-    "python.envFile": "${workspaceFolder}/env"
+    "python.envFile": "${workspaceFolder}/env",
+    "[markdown]": {
+        "editor.rulers": [
+            88
+        ]
+      }
 }
