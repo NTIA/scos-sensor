@@ -1,6 +1,5 @@
 # NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
 
-
 `scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.22.3
 Spectrum Characterization and Occupancy Sensing](ieee-link) (SCOS) sensor developed by
 [NTIA/ITS]. `scos-sensor` defines a RESTful application programming interface (API),
@@ -13,7 +12,6 @@ resultant data.
 [travis-badge]: https://travis-ci.org/NTIA/scos-sensor.svg?branch=master
 [api-docs-link]: https://ntia.github.io/scos-sensor/
 [api-docs-badge]: https://img.shields.io/badge/docs-available-brightgreen.svg
-
 
 ## 1. Table of Contents
 
@@ -46,7 +44,6 @@ functionality
 - Easy-to-deploy with provisioned and configured OS
 - Quality assurance of software via automated testing prior to release
 
-
 Sensor control is accomplished through a RESTful API. The API is designed to be rich
 enough that multiple heterogeneous sensors can be automated effectively while being
 simple enough to still be useful for single-sensor deployments. For example, by
@@ -77,7 +74,6 @@ requirements. Second, we introduce the high-level concept of "actions" which giv
 sensor owner control over what the sensor can be tasked to do. For more information see
 [Actions and Hardware Support](#8-actions-and-hardware-support).
 
-
 ## 3. Glossary
 
 This section provides an overview of high-level concepts used by `scos-sensor`.
@@ -98,7 +94,7 @@ the API, while data is retrievable in an easy-to-use archive format with its ass
 metadata.
 
 - *admin*: A user account that has full control over the sensor and can create schedule
-entries and view, modify, or delete any other user's schedule entries or acquisitions. 
+entries and view, modify, or delete any other user's schedule entries or acquisitions.
 
 - *capability*: Available actions, installation specifications (e.g., mobile or
 stationary), and operational ranges of hardware components (e.g., frequency range of
@@ -168,7 +164,6 @@ is stored in files on disk.
 [NGINX], a high-performance web server. These provide easy administration over the
 sensor.
 
-
 ![SCOS Sensor Architecture Diagram](/docs/img/architecture_diagram.png?raw=true)
 
 A functioning scos-sensor utilizes software from at least three different GitHub
@@ -190,7 +185,6 @@ provide additional signal analyzer specific actions.
 [Gunicorn]: http://gunicorn.org/
 [NGINX]: https://www.nginx.com/
 [Django REST framework]: http://www.django-rest-framework.org/
-
 
 ## 5. Overview of scos-sensor Repo Structure
 
@@ -237,10 +231,10 @@ tested, but we do not prepare pre-built Docker containers for them at this time.
 
 2) Clone the repository.
 
-```bash
-$ git clone https://github.com/NTIA/scos-sensor.git
-$ cd scos-sensor
-```
+    ```bash
+    git clone https://github.com/NTIA/scos-sensor.git
+    cd scos-sensor
+    ```
 
 3) Copy the environment template file and *modify* the copy if necessary, then source
 it. The settings in this file are set for running in a development environment on your
@@ -250,16 +244,16 @@ encouraged to change the default `ADMIN_EMAIL` and `ADMIN_PASSWORD` before runni
 scos-sensor. Finally, source the file before running scos-sensor to load the settings
 into your environment.
 
-```bash
-$ cp env.template env
-$ source ./env
-```
+    ```bash
+    cp env.template env
+    source ./env
+    ```
 
 4) Run a Dockerized stack.
 
 ```bash
-$ docker-compose up -d --build  # start in background
-$ docker-compose logs --follow api  # reattach terminal
+docker-compose up -d --build  # start in background
+docker-compose logs --follow api  # reattach terminal
 
 ```
 
@@ -303,6 +297,7 @@ scos-sensor repository with a valid certificate in production.
 certificate in production.
 
 ### Sensor Definition File
+
 This file contains information on the sensor and components being used. It is used in
 the SigMF metadata to identify the hardware used for the measurement. It should follow
 the [sigmf-ns-ntia Sensor Object format](
@@ -340,6 +335,7 @@ using.
 ```
 
 ## 8. Actions and Hardware Support
+
 "Actions" are one of the main concepts used by scos-sensor. At a high level, they are
 the things that the sensor owner wants the sensor to be able to do. At a lower level,
 they are simply Python classes with a special method `__call__`. Actions are designed
@@ -377,11 +373,13 @@ https://github.com/NTIA/scos-actions/tree/PublicRelease#5-development).
 ## 9. Development
 
 ### Running the Sensor in Development
+
 The following techniques can be used to make local modifications. Sections are in
 order, so "Running Tests" assumes you've done the setup steps in “Requirements and
 Configuration”.
 
 #### Requirements and Configuration
+
 It is highly recommended that you first initialize a virtual development environment
 using a tool such a conda or venv. The following commands create a virtual environment
 using venv and install the required dependencies for development and testing.
@@ -394,6 +392,7 @@ python3 -m pip install -r src/requirements-dev.txt
 ```
 
 #### Running Tests
+
 Ideally, you should add a test that covers any new feature that you add. If you've done
 that, then running the included test suite is the easiest way to check that everything
 is working. In any case, all tests should be run after making any local modifications
@@ -413,52 +412,54 @@ recommend you initialize a virtual development environment using a tool such a `
 or `venv` first.
 
 ```bash
-$ cd src
-$ pytest          # faster, but less thorough
-$ tox             # tests code in clean virtualenv
-$ tox --recreate  # if you change `requirements.txt`
-$ tox -e coverage # check where test coverage lacks
+cd src
+pytest          # faster, but less thorough
+tox             # tests code in clean virtualenv
+tox --recreate  # if you change `requirements.txt`
+tox -e coverage # check where test coverage lacks
 ```
 
 #### Running Docker with Local Changes
+
 The docker-compose file and application code look for information from the environment
 when run, so it's necessary to source the following file in each shell that you intend
 to launch the sensor from. (HINT: it can be useful to add the `source` command to a
 post-activate file in whatever virtual environment you're using).
 
 ```bash
-$ cp env.template env     # modify if necessary, defaults are okay for testing
-$ source ./env
+cp env.template env     # modify if necessary, defaults are okay for testing
+source ./env
 ```
 
 Then, build the API docker image locally, which will satisfy the `smsntia/scos-sensor`
 and `smsntia/autoheal` images in the Docker compose file and bring up the sensor.
 
 ```bash
-$ docker-compose down
-$ docker-compose build
-$ docker-compose up -d
-$ docker-compose logs --follow api
+docker-compose down
+docker-compose build
+docker-compose up -d
+docker-compose logs --follow api
 ```
 
 #### Running Development Server (Not Recommended)
+
 Running the sensor API outside of Docker is possible but not recommended, since Django
 is being asked to run without several security features it expects. See
 [Common Issues](#common-issues) for some hints when running the sensor in this way. The
 following steps assume you've already set up some kind of virtual environment and
 installed python dev requirements from [Requirements and Configuration](
-#requirements-and-configuration).
+    #requirements-and-configuration).
 
 ```bash
-$ docker-compose up -d db
-$ cd src
-$ ./manage.py makemigrations
-$ ./manage.py migrate
-$ ./manage.py createsuperuser
-$ ./manage.py runserver
+docker-compose up -d db
+cd src
+./manage.py makemigrations
+./manage.py migrate
+./manage.py createsuperuser
+./manage.py runserver
 ```
 
-##### Common Issues:
+##### Common Issues
 
 - The development server serves on localhost:8000, not :80
 - If you get a Forbidden (403) error, close any tabs and clear any cache and cookies
@@ -497,7 +498,7 @@ this project's git pre-commit hooks. Simply type the following *once*, and each 
 you make a commit, it will be appropriately autoformatted.
 
 ```bash
-$ pre-commit install
+pre-commit install
 ```
 
 You can manually run the pre-commit hooks using the following command.
@@ -508,15 +509,15 @@ pre-commit run --all-files
 
 ## 9. References
 
- - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
- - [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
- - [SCOS Actions](https://github.com/NTIA/scos-actions)
- - [SOCS USRP](https://github.com/NTIA/scos-usrp)
-
+- [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
+- [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
+- [SCOS Actions](https://github.com/NTIA/scos-actions)
+- [SOCS USRP](https://github.com/NTIA/scos-usrp)
 
 ## 10. License
 
 See [LICENSE](LICENSE.md).
 
 ## 11. Contact
+
 For technical questions about scos-sensor, contact Justin Haze, <jhaze@ntia.gov>
