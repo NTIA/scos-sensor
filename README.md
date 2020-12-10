@@ -512,7 +512,7 @@ pre-commit run --all-files
 - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
 - [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
 - [SCOS Actions](https://github.com/NTIA/scos-actions)
-- [SOCS USRP](https://github.com/NTIA/scos-usrp)
+- [SCOS USRP](https://github.com/NTIA/scos-usrp)
 
 ## 10. License
 
