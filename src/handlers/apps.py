@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.apps import AppConfig
 import logging
+
+from django.apps import AppConfig
 from scos_actions.actions.interfaces.signals import (
     location_action_completed,
     measurement_action_completed,
-    monitor_action_completed
+    monitor_action_completed,
 )
 
 logger = logging.getLogger(__name__)

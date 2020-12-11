@@ -1,4 +1,7 @@
-# NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
+# NTIA/ITS SCOS Sensor
+
+[![Travis CI Build Status][travis-badge]][travis-link]
+[![API Docs Build Status][api-docs-badge]][api-docs-link]
 
 `scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.22.3
 Spectrum Characterization and Occupancy Sensing](ieee-link) (SCOS) sensor developed by
@@ -38,9 +41,9 @@ resultant data.
 - Discoverable sensor capabilities
 - Task scheduling using start/stop times, interval, and/or priority
 - Standardized metadata/data format that supports cooperative sensing and open data
-initiatives
+  initiatives
 - Security controls that prevent unauthorized users from accessing internal sensor
-functionality
+  functionality
 - Easy-to-deploy with provisioned and configured OS
 - Quality assurance of software via automated testing prior to release
 
@@ -79,71 +82,72 @@ sensor owner control over what the sensor can be tasked to do. For more informat
 This section provides an overview of high-level concepts used by `scos-sensor`.
 
 - *action*: A function that the sensor owner implements and exposes to the API. Actions
-are the things that the sensor owner wants the sensor to be able to *do*. Since actions
-block the scheduler while they run, they have exclusive access to the sensor's
-resources (like the signal analyzer). Currently, there are several logical groupings of
-actions, such as those that create acquisitions, or admin-only actions that handle
-administrative tasks. However, actions can theoretically do anything a sensor owner can
-implement. Some less common (but perfectly acceptable) ideas for actions might be to
-rotate an antenna, or start streaming data over a socket and only return when the
-recipient closes the connection.
+  are the things that the sensor owner wants the sensor to be able to *do*. Since
+  actions block the scheduler while they run, they have exclusive access to the
+  sensor's resources (like the signal analyzer). Currently, there are several logical
+  groupings of actions, such as those that create acquisitions, or admin-only actions
+  that handle administrative tasks. However, actions can theoretically do anything a
+  sensor owner can implement. Some less common (but perfectly acceptable) ideas for
+  actions might be to rotate an antenna, or start streaming data over a socket and only
+  return when the recipient closes the connection.
 
 - *acquisition*: The combination of data and metadata created by an action (though an
-action does not have to create an acquisition). Metadata is accessible directly though
-the API, while data is retrievable in an easy-to-use archive format with its associated
-metadata.
+  action does not have to create an acquisition). Metadata is accessible directly
+  though the API, while data is retrievable in an easy-to-use archive format with its
+  associated metadata.
 
 - *admin*: A user account that has full control over the sensor and can create schedule
-entries and view, modify, or delete any other user's schedule entries or acquisitions.
+  entries and view, modify, or delete any other user's schedule entries or
+  acquisitions.
 
 - *capability*: Available actions, installation specifications (e.g., mobile or
-stationary), and operational ranges of hardware components (e.g., frequency range of
-signal analyzer). These values are generally hard-coded by the sensor owner and rarely
-change.
+  stationary), and operational ranges of hardware components (e.g., frequency range of
+  signal analyzer). These values are generally hard-coded by the sensor owner and
+  rarely change.
 
 - *plugin*: A Python package with actions designed to be integrated into scos-sensor.
 
 - *schedule*: The collection of all schedule entries (active and inactive) on the
-sensor.
+  sensor.
 
 - *scheduler*: A thread responsible for executing the schedule. The scheduler reads the
-schedule at most once a second and consumes all past and present times for each active
-schedule entry until the schedule is exhausted. The latest task per schedule entry is
-then added to a priority queue, and the scheduler executes the associated actions and
-stores/POSTs task results. The scheduler operates in a simple blocking fashion, which
-significantly simplifies resource deconfliction. When executing the task queue, the
-scheduler makes a best effort to run each task at its designated time, but the
-scheduler will not cancel a running task to start another task, even one of higher
-priority.
+  schedule at most once a second and consumes all past and present times for each
+  active schedule entry until the schedule is exhausted. The latest task per schedule
+  entry is then added to a priority queue, and the scheduler executes the associated
+  actions and stores/POSTs task results. The scheduler operates in a simple blocking
+  fashion, which significantly simplifies resource deconfliction. When executing the
+  task queue, the scheduler makes a best effort to run each task at its designated
+  time, but the scheduler will not cancel a running task to start another task, even
+  one of higher priority.
 
 - *schedule entry*: Describes a range of scheduler tasks. A schedule entry is at
-minimum a human readable name and an associated action. Combining different values of
-*start*, *stop*, *interval*, and *priority* allows for flexible task scheduling. If no
-start time is given, the first task is scheduled as soon as possible. If no stop time
-is given, tasks continue to be scheduled until the schedule entry is manually
-deactivated. Leaving the interval undefined results in a "one-shot" entry, where the
-scheduler deactivates the entry after a single task is scheduled. One-shot entries can
-be used with a future start time. If two tasks are scheduled to run at the same time,
-they will be run in order of *priority*. If two tasks are scheduled to run at the same
-time and have the same *priority*, execution order is implementation-dependent
-(undefined).
+  minimum a human readable name and an associated action. Combining different values of
+  *start*, *stop*, *interval*, and *priority* allows for flexible task scheduling. If
+  no start time is given, the first task is scheduled as soon as possible. If no stop
+  time is given, tasks continue to be scheduled until the schedule entry is manually
+  deactivated. Leaving the interval undefined results in a "one-shot" entry, where the
+  scheduler deactivates the entry after a single task is scheduled. One-shot entries
+  can be used with a future start time. If two tasks are scheduled to run at the same
+  time, they will be run in order of *priority*. If two tasks are scheduled to run at
+  the same time and have the same *priority*, execution order is
+  implementation-dependent (undefined).
 
 - *signal*: Django notifications library used to allow scos-sensor to receive
-notifications and results upon action completion.
+  notifications and results upon action completion.
 
 - *task*: A representation of an action to be run at a specific time. When a *task*
-acquires data, that data is stored on disk, and a significant amount of metadata is
-stored in a local database. The full metadata can be read directly through the
-self-hosted website or retrieved in plain text via a single API call. Our metadata and
-data format is an extension of, and compatible with, the [SigMF](
-https://github.com/gnuradio/sigmf) specification - see [sigmf-ns-ntia](
-https://github.com/NTIA/sigmf-ns-ntia).
+  acquires data, that data is stored on disk, and a significant amount of metadata is
+  stored in a local database. The full metadata can be read directly through the
+  self-hosted website or retrieved in plain text via a single API call. Our metadata
+  and data format is an extension of, and compatible with, the [SigMF](
+  https://github.com/gnuradio/sigmf) specification - see [sigmf-ns-ntia](
+  https://github.com/NTIA/sigmf-ns-ntia).
 
 - *task result*: A record of the outcome of a task. A result is recorded for each task
-after the action function returns, and includes metadata such as when the task
-*started*, when it *finished*, its *duration*, the *result* (`success` or `failure`),
-and a freeform *detail* string. A `TaskResult` JSON object is also POSTed to a schedule
-entry's `callback_url`, if provided.
+  after the action function returns, and includes metadata such as when the task
+  *started*, when it *finished*, its *duration*, the *result* (`success` or `failure`),
+  and a freeform *detail* string. A `TaskResult` JSON object is also POSTed to a
+  schedule entry's `callback_url`, if provided.
 
 ## 3. Architecture
 
@@ -157,12 +161,12 @@ SSL/HTTPS (traffic encryption), host header validation, and user session securit
 developers familiar with Python.
 
 - Persistent metadata is stored on disk in a relational database, and measurement data
-is stored in files on disk.
+  is stored in files on disk.
 - A *scheduler* thread running in a [Gunicorn] worker process periodically reads the
-*schedule* from the database and performs the associated *actions*.
+  *schedule* from the database and performs the associated *actions*.
 - A website and JSON RESTful API using [Django REST framework] is served over HTTPS via
-[NGINX], a high-performance web server. These provide easy administration over the
-sensor.
+  [NGINX], a high-performance web server. These provide easy administration over the
+  sensor.
 
 ![SCOS Sensor Architecture Diagram](/docs/img/architecture_diagram.png?raw=true)
 
@@ -191,7 +195,7 @@ provide additional signal analyzer specific actions.
 - configs: This folder is used to store the sensor_definition.json file.
 - docker: Contains the docker files used by scos-sensor.
 - docs: Documentation including the [documentation hosted on GitHub pages](
-https://ntia.github.io/scos-sensor/) generated from the OpenAPI specification.
+  https://ntia.github.io/scos-sensor/) generated from the OpenAPI specification.
 - entrypoints: Docker entrypoint scripts which are executed when starting a container.
 - gunicorn: Gunicorn configuration file.
 - nginx: Nginx configuration template and SSL certificates.
@@ -206,7 +210,7 @@ https://ntia.github.io/scos-sensor/) generated from the OpenAPI specification.
   - scheduler: Scheduler responsible for executing actions.
   - sensor: Core app which contains the settings, generates the API root endpoint.
   - static: Django will collect static files (JavaScript, CSS, …) from all apps to this
-  location.
+    location.
   - status: Status endpoint.
   - tasks: Tasks endpoint used to display upcoming and completed tasks.
   - templates: HTML templates used by the browsable API.
@@ -215,9 +219,9 @@ https://ntia.github.io/scos-sensor/) generated from the OpenAPI specification.
   - requirements.txt and requirements-dev.txt: Python dependencies.
   - tox.ini: Used to configure tox.
 - docker-compose.yml: Used by docker-compose to create services from containers. This
-is needed to run scos-sensor.
+  is needed to run scos-sensor.
 - env.template: Template file for setting environment variables used to configure
-scos-sensor.
+  scos-sensor.
 
 ## 5. Quickstart
 
@@ -231,10 +235,10 @@ tested, but we do not prepare pre-built Docker containers for them at this time.
 
 2) Clone the repository.
 
-    ```bash
-    git clone https://github.com/NTIA/scos-sensor.git
-    cd scos-sensor
-    ```
+```bash
+git clone https://github.com/NTIA/scos-sensor.git
+cd scos-sensor
+```
 
 3) Copy the environment template file and *modify* the copy if necessary, then source
 it. The settings in this file are set for running in a development environment on your
@@ -244,10 +248,10 @@ encouraged to change the default `ADMIN_EMAIL` and `ADMIN_PASSWORD` before runni
 scos-sensor. Finally, source the file before running scos-sensor to load the settings
 into your environment.
 
-    ```bash
-    cp env.template env
-    source ./env
-    ```
+```bash
+cp env.template env
+source ./env
+```
 
 4) Run a Dockerized stack.
 
@@ -273,28 +277,28 @@ settings in the environment file:
 - ADMIN_PASSWORD: Password used to generate admin user. Change in production.
 - BASE_IMAGE: Base docker image used to build the API container.
 - CALLBACK_SSL_VERIFICATION: Set to “true” in production environment. If false, the SSL
-certificate validation will be ignored when posting results to the callback URL.
+  certificate validation will be ignored when posting results to the callback URL.
 - DEBUG: Django debug mode. Set to False in production.
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
-https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
+  https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
 - GIT_BRANCH: Current branch of scos-sensor being used.
 - GUNICORN_LOG_LEVEL: Log level for Gunicorn log messages.
 - IPS: A space separated list of IP addresses. Used to generate [ALLOWED_HOSTS](
-https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
+  https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
 - FQDN: The server’s fully qualified domain name.
 - MAX_TASK_RESULTS: The maximum number of task results to keep before overwriting old
-results. Defaults to 100,000.
+  results. Defaults to 100,000.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
-Change in production.
+  Change in production.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
-unpredictable value. See
-<https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>.
+  unpredictable value. See
+  <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>.
 - SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
-scos-sensor repository with a valid certificate in production.
+  scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
-certificate in production.
+  certificate in production.
 
 ### Sensor Definition File
 
@@ -463,14 +467,14 @@ cd src
 
 - The development server serves on localhost:8000, not :80
 - If you get a Forbidden (403) error, close any tabs and clear any cache and cookies
-related to SCOS Sensor and try again
+  related to SCOS Sensor and try again
 - If you're using a virtual environment and your signal analyzer driver is installed
-outside of it, you may need to allow access to system sitepackages. For example, if
-you're using a virtualenv called `scos-sensor`, you can remove the following text file:
-`rm -f ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`, and
-thereafter use the ignore-installed flag to pip: pip install -I -r requirements.txt.
-This should let the devserver fall back to system sitepackages for the signal analyzer
-driver only.
+  outside of it, you may need to allow access to system sitepackages. For example, if
+  you're using a virtualenv called `scos-sensor`, you can remove the following text
+  file: `rm -f ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`,
+  and thereafter use the ignore-installed flag to pip: `pip install -I -r
+  requirements.txt.` This should let the devserver fall back to system sitepackages for
+  the signal analyzer driver only.
 
 ### Committing
 

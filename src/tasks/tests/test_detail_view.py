@@ -1,16 +1,15 @@
+import os
+
 from rest_framework import status
 
 from sensor.tests.utils import HTTPS_KWARG, validate_response
+from tasks.models import Acquisition, TaskResult
 from tasks.tests.utils import (
     create_task_results,
     reverse_result_detail,
     simulate_frequency_fft_acquisitions,
     update_result_detail,
 )
-
-from tasks.models import Acquisition, TaskResult
-
-import os
 
 
 def test_user_can_create_nonprivate_acquisition(user_client, test_scheduler):

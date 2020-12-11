@@ -2,7 +2,6 @@ from datetime import datetime
 
 import numpy as np
 
-
 from .settings import DATETIME_FORMAT
 
 

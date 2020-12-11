@@ -1,5 +1,5 @@
-from sensor.settings import SENSOR_DEFINITION_FILE
 from sensor import settings
+from sensor.settings import SENSOR_DEFINITION_FILE
 
 capabilities = {}
 

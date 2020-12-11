@@ -1,6 +1,7 @@
 """A simple example action that logs a message."""
 
 import logging
+
 from scos_actions.actions.interfaces.action import Action
 
 logger = logging.getLogger(__name__)

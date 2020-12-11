@@ -88,7 +88,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
-    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8" # TODO not sure why this is set here
+    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"  # TODO not sure why this is set here
     DEBUG = True
     ALLOWED_HOSTS = []
 else:

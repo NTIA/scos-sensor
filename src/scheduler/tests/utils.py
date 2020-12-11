@@ -5,7 +5,7 @@ from itertools import chain, count, islice
 
 import actions
 from authentication.models import User
-from schedule.models import ScheduleEntry, Request
+from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
 from sensor import V1
 

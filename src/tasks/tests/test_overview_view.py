@@ -22,7 +22,7 @@ def test_admin_empty_overview_response(admin_client):
 
 def test_user_get_overview(user_client):
     create_task_results(2, user_client)
-    overview, = get_results_overview(user_client)
+    (overview,) = get_results_overview(user_client)
     assert overview["task_results_available"] == 2
     assert overview["archive"] is None  # indicates no acquisition data available
     assert overview["task_results"]  # is non-empty string
@@ -31,7 +31,7 @@ def test_user_get_overview(user_client):
 
 def test_admin_get_overview(admin_client):
     create_task_results(2, admin_client)
-    overview, = get_results_overview(admin_client)
+    (overview,) = get_results_overview(admin_client)
     assert overview["task_results_available"] == 2
     assert overview["archive"] is None  # indicates no acquisition data available
     assert overview["task_results"]  # is non-empty string
@@ -45,7 +45,7 @@ def test_overview_for_private_entry_is_private(
     overview = get_results_overview(user_client)
     assert overview == []
 
-    overview, = get_results_overview(admin_client)
+    (overview,) = get_results_overview(admin_client)
     assert overview["task_results_available"] == 1
     assert overview["task_results"]  # is non-empty string
     assert overview["schedule_entry"]  # is non-empty string

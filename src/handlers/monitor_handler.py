@@ -1,9 +1,11 @@
-from sensor import settings
-from pathlib import Path
 import logging
 import os
+from pathlib import Path
+
+from sensor import settings
 
 logger = logging.getLogger(__name__)
+
 
 def monitor_action_completed_callback(sender, **kwargs):
     healthy = kwargs["radio_healthy"]
