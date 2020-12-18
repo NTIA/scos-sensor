@@ -204,11 +204,11 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser",
+        "authentication.permissions.JWTRoleOrIsSuperuser",
     ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
@@ -229,7 +229,7 @@ AUTHENTICATION = env("AUTHENTICATION", default="")
 if AUTHENTICATION == "JWT":
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
         "authentication.auth.OAuthJWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        "authentication.auth.OAuthSessionAuthentication",
     )
 else:
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
@@ -365,6 +365,7 @@ USER_NAME = CLIENT_ID
 PASSWORD = CLIENT_SECRET
 
 OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
+OAUTH_AUTHORIZATION_URL = env("OAUTH_AUTHORIZATION_URL", default="")
 CERTS_DIR = path.join(CONFIG_DIR, "certs")
 # Sensor certificate with private key used as client cert
 PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")

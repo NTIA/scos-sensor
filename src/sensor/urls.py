@@ -23,6 +23,8 @@ from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
+from authentication.views import oauth_login_callback, oauth_login_view
+
 from . import settings
 from .views import api_v1_root, schema_view
 
@@ -58,6 +60,8 @@ urlpatterns = [
     path("api/", RedirectView.as_view(url="/api/{}/".format(DEFAULT_API_VERSION))),
     re_path(API_PREFIX, include(api_urlpatterns)),
     path("api/auth/", include("rest_framework.urls")),
+    path("login/", oauth_login_view, name="login"),
+    path("login/oauth2/code/sensor01.sms.internal", oauth_login_callback),
 ]
 
 if settings.DEBUG:

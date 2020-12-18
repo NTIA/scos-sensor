@@ -19,6 +19,6 @@
     {% endif %}
     {% optional_logout request user %}
   {% else %}
-    {% optional_login request %}
+    <li><a href={% url 'login' %}>Log in</a></li>
   {% endif %}
 {% endblock %}
