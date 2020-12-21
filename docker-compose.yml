@@ -55,6 +55,7 @@ services:
       - '8000'
     volumes:
       - ${REPO_ROOT}:/opt/scos-sensor
+      - ./drivers:/opt/scos-sensor/drivers
     cap_add:
       - SYS_PTRACE
     devices:
