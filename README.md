@@ -21,7 +21,7 @@ resultant data.
 - [Introduction](#introduction)
 - [Glossary](#glossary)
 - [Architecture](#architecture)
-- [Overview of Repo Structure](#overview-of-repo-structure)
+- [Overview of scos-sensor Repo Structure](#Overview-of-scos-sensor-Repo-Structure)
 - [Quickstart](#quickstart)
 - [Configuration](#configuration)
 - [Actions and Hardware Support](#actions-and-hardware-support)
