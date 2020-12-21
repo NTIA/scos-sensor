@@ -18,19 +18,19 @@ resultant data.
 
 ## Table of Contents
 
-- [Introduction](#1-introduction)
-- [Glossary](#2-glossary)
-- [Architecture](#3-architecture)
-- [Overview of Repo Structure](#4-overview-of-repo-structure)
-- [Quickstart](#5-quickstart)
-- [Configuration](#6-configuration)
-- [Actions and Hardware Support](#7-actions-and-hardware-support)
-- [Development](#8-development)
-- [References](#9-references)
-- [License](#10-license)
-- [Contact](#11-contact)
+- [Introduction](#introduction)
+- [Glossary](#glossary)
+- [Architecture](#architecture)
+- [Overview of Repo Structure](#overview-of-repo-structure)
+- [Quickstart](#quickstart)
+- [Configuration](#configuration)
+- [Actions and Hardware Support](#actions-and-hardware-support)
+- [Development](#development)
+- [References](#references)
+- [License](#license)
+- [Contact](#contact)
 
-## 1. Introduction
+## Introduction
 
 `scos-sensor` was designed by NTIA/ITS with the following goals in mind:
 
@@ -75,9 +75,9 @@ maintaining flexibility in two key areas. First, the API itself is hardware agno
 and the implementation assumes different hardware will be used depending on sensing
 requirements. Second, we introduce the high-level concept of "actions" which gives the
 sensor owner control over what the sensor can be tasked to do. For more information see
-[Actions and Hardware Support](#8-actions-and-hardware-support).
+[Actions and Hardware Support](#actions-and-hardware-support).
 
-## 2. Glossary
+## Glossary
 
 This section provides an overview of high-level concepts used by `scos-sensor`.
 
@@ -149,7 +149,7 @@ This section provides an overview of high-level concepts used by `scos-sensor`.
   and a freeform *detail* string. A `TaskResult` JSON object is also POSTed to a
   schedule entry's `callback_url`, if provided.
 
-## 3. Architecture
+## Architecture
 
 When deploying equipment remotely, the robustness and security of software is a prime
 concern. `scos-sensor` sits on top of a popular open-source framework,
@@ -190,7 +190,7 @@ provide additional signal analyzer specific actions.
 [NGINX]: https://www.nginx.com/
 [Django REST framework]: http://www.django-rest-framework.org/
 
-## 4. Overview of scos-sensor Repo Structure
+## Overview of scos-sensor Repo Structure
 
 - configs: This folder is used to store the sensor_definition.json file.
 - docker: Contains the docker files used by scos-sensor.
@@ -223,7 +223,7 @@ provide additional signal analyzer specific actions.
 - env.template: Template file for setting environment variables used to configure
   scos-sensor.
 
-## 5. Quickstart
+## Quickstart
 
 This section describes how to spin up a production-grade sensor in just a few commands.
 
@@ -243,7 +243,7 @@ cd scos-sensor
 3) Copy the environment template file and *modify* the copy if necessary, then source
 it. The settings in this file are set for running in a development environment on your
 local system. For running in a production environment, many of the settings will need
-to be modified. See [Configuration](#7-configuration) section. Also, you are strongly
+to be modified. See [Configuration](#configuration) section. Also, you are strongly
 encouraged to change the default `ADMIN_EMAIL` and `ADMIN_PASSWORD` before running
 scos-sensor. Finally, source the file before running scos-sensor to load the settings
 into your environment.
@@ -261,14 +261,14 @@ docker-compose logs --follow api  # reattach terminal
 
 ```
 
-## 6. Configuration
+## Configuration
 
 When running in a production environment or on a remote system, various settings will
 need to be configured.
 
 ### Environment File
 
-As explained in the [Quickstart](#6-quickstart) section, before running scos-sensor, an
+As explained in the [Quickstart](#quickstart) section, before running scos-sensor, an
 environment (env) file is created from the env.template file. These settings can either
 be set in the environment file or set directly in docker-compose.yml. Here are the
 settings in the environment file:
@@ -338,7 +338,7 @@ using.
 }
 ```
 
-## 7. Actions and Hardware Support
+## Actions and Hardware Support
 
 "Actions" are one of the main concepts used by scos-sensor. At a high level, they are
 the things that the sensor owner wants the sensor to be able to do. At a lower level,
@@ -372,9 +372,9 @@ It can also be used as an example of a plugin which adds new hardware support an
 re-uses the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
-https://github.com/NTIA/scos-actions/tree/PublicRelease#5-development).
+https://github.com/NTIA/scos-actions/tree/PublicRelease#development).
 
-## 8. Development
+## Development
 
 ### Running the Sensor in Development
 
@@ -511,17 +511,17 @@ You can manually run the pre-commit hooks using the following command.
 pre-commit run --all-files
 ```
 
-## 9. References
+## References
 
 - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
 - [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
 - [SCOS Actions](https://github.com/NTIA/scos-actions)
 - [SCOS USRP](https://github.com/NTIA/scos-usrp)
 
-## 10. License
+## License
 
 See [LICENSE](LICENSE.md).
 
-## 11. Contact
+## Contact
 
 For technical questions about scos-sensor, contact Justin Haze, <jhaze@ntia.gov>
