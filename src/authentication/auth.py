@@ -15,7 +15,7 @@ token_auth_enabled = (
     in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
 )
 oauth_jwt_authentication_enabled = (
-    "authentication.auth.OAuthJWTAuthentication"
+    "authentication.auth.OAuthAPIJWTAuthentication"
     in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
 )
 
@@ -82,7 +82,7 @@ def get_or_create_user_from_token(decoded_token):
     return user
 
 
-class OAuthJWTAuthentication(authentication.BaseAuthentication):
+class OAuthAPIJWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         auth_header = get_authorization_header(request)
         if not auth_header:

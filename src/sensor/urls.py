@@ -17,6 +17,7 @@ Including another URLconf
 
 """
 
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
@@ -25,7 +26,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from authentication.views import oauth_login_callback, oauth_login_view
 
-from . import settings
 from .views import api_v1_root, schema_view
 
 # Matches api/v1, api/v2, etc...
@@ -61,7 +61,11 @@ urlpatterns = [
     re_path(API_PREFIX, include(api_urlpatterns)),
     path("api/auth/", include("rest_framework.urls")),
     path("login/", oauth_login_view, name="login"),
-    path("login/oauth2/code/sensor01.sms.internal", oauth_login_callback),
+    path(
+        f"login/oauth2/code/{settings.FQDN}",
+        oauth_login_callback,
+        name="oauth_callback",
+    ),
 ]
 
 if settings.DEBUG:

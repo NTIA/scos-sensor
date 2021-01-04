@@ -203,9 +203,7 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        # "rest_framework.authentication.SessionAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": None,
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
         "authentication.permissions.JWTRoleOrIsSuperuser",
@@ -226,9 +224,9 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION = env("AUTHENTICATION", default="")
-if AUTHENTICATION == "JWT":
+if AUTHENTICATION == "OAUTH":
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "authentication.auth.OAuthJWTAuthentication",
+        "authentication.auth.OAuthAPIJWTAuthentication",
         "authentication.auth.OAuthSessionAuthentication",
     )
 else:

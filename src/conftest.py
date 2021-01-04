@@ -1,9 +1,13 @@
+import jwt
 import pytest
+from django.conf import settings
 from django.test.client import Client
 
 import actions
 import scheduler
+from authentication.auth import oauth_session_authentication_enabled
 from authentication.models import User
+from authentication.tests.test_jwt_auth import PRIVATE_KEY, get_token_payload
 
 
 @pytest.yield_fixture
@@ -49,7 +53,16 @@ def user(db):
 def user_client(db, user):
     """A Django test client logged in as a normal user"""
     client = Client()
-    client.login(username=user.username, password=user.password)
+    if oauth_session_authentication_enabled:
+        token_payload = get_token_payload(authorities=["ROLE_USER"])
+        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        utf8_bytes = encoded.decode("utf-8")
+        session = client.session
+        session["oauth_token"] = {}
+        session["oauth_token"]["access_token"] = utf8_bytes
+        session.save()
+    else:
+        client.login(username=user.username, password=user.password)
 
     return client
 
@@ -75,7 +88,34 @@ def alt_user(db):
 def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
     client = Client()
-    client.login(username=alt_user.username, password=alt_user.password)
+    if oauth_session_authentication_enabled:
+        token_payload = get_token_payload(authorities=["ROLE_USER"])
+        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        utf8_bytes = encoded.decode("utf-8")
+        session = client.session
+        session["oauth_token"] = {}
+        session["oauth_token"]["access_token"] = utf8_bytes
+        session.save()
+    else:
+        client.login(username=alt_user.username, password=alt_user.password)
+
+    return client
+
+
+@pytest.fixture
+def admin_client(db, django_user_model, admin_user):
+    """A Django test client logged in as an admin user."""
+    client = Client()
+    if oauth_session_authentication_enabled:
+        token_payload = get_token_payload()
+        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        utf8_bytes = encoded.decode("utf-8")
+        session = client.session
+        session["oauth_token"] = {}
+        session["oauth_token"]["access_token"] = utf8_bytes
+        session.save()
+    else:
+        client.login(username=admin_user.username, password="password")
 
     return client
 
@@ -109,10 +149,17 @@ def alt_admin_user(db, django_user_model, django_username_field):
 @pytest.fixture
 def alt_admin_client(db, alt_admin_user):
     """A Django test client logged in as an admin user."""
-    from django.test.client import Client
-
     client = Client()
-    client.login(username=alt_admin_user.username, password="password")
+    if oauth_session_authentication_enabled:
+        token_payload = get_token_payload()
+        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        utf8_bytes = encoded.decode("utf-8")
+        session = client.session
+        session["oauth_token"] = {}
+        session["oauth_token"]["access_token"] = utf8_bytes
+        session.save()
+    else:
+        client.login(username=alt_admin_user.username, password="password")
 
     return client
 

@@ -50,6 +50,7 @@ def oauth_login_view(request):
     https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
     """
     authserver = OAuth2Session(CLIENT_ID)
+    logger.debug("OAUTH_AUTHORIZATION_URL = " + OAUTH_AUTHORIZATION_URL)
     authorization_url, state = authserver.authorization_url(OAUTH_AUTHORIZATION_URL)
 
     # State is used to prevent CSRF, keep this for later.
@@ -68,10 +69,10 @@ def oauth_login_callback(request):
     in the redirect URL. We will use that to obtain an access token.
     https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
     """
-    logger.debug("In oauth_login_callback")
-
     authserver = OAuth2Session(CLIENT_ID, state=request.session["oauth_state"])
     authserver.cert = PATH_TO_CLIENT_CERT
+    logger.debug("OAUTH_TOKEN_URL = " + OAUTH_TOKEN_URL)
+    logger.debug("authorization_response = " + request.build_absolute_uri())
     token = authserver.fetch_token(
         OAUTH_TOKEN_URL,
         client_secret=CLIENT_SECRET,
