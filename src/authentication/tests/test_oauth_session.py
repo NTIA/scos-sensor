@@ -3,7 +3,6 @@ from decimal import DivisionByZero
 import jwt
 import oauthlib
 import pytest
-import requests
 import requests_mock
 from django.test.testcases import SimpleTestCase
 from rest_framework.reverse import reverse
@@ -76,21 +75,6 @@ def test_oauth_login_callback_bad_state():
             client.get(f"{oauth_callback_url}?code=test_code&state=some_state")
 
 
-# def auth_callback(request, context):
-#     if f"{request.scheme}://{request.hostname}{request.path}".startswith(OAUTH_AUTHORIZATION_URL):
-#         query_start_index = request.path_url.find('?')
-#         query = request.path_url[query_start_index+1:]
-#         if "response_type=code" in query:
-#             if f"client_id={CLIENT_ID}" in query:
-#                 for query_param in query.split("&"):
-#                     if query_param.startswith("state="):
-#                         equals_index = query_param.find("=")
-#                         state = query_param[equals_index+1:]
-#                         oauth_callback_url = reverse("oauth_callback")
-#                         context.headers = {"Location": f"{oauth_callback_url}?code=test_code&state={state}"}
-#     return ""
-
-
 @pytest.mark.django_db
 def test_oauth_login_authorization_flow(live_server, settings):
     settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
@@ -128,22 +112,21 @@ def test_oauth_login_authorization_flow(live_server, settings):
         response = client.get(url, allow_redirects=False)  # sensor login
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False
-        response = client.get(
+        response = client.get(  # authserver login
             response.headers["Location"], allow_redirects=False
-        )  # authserver login
+        )
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False
         assert reverse("oauth_callback") in response.headers["Location"]
-        response = client.get(
+        response = client.get(  # sensor callback
             response.headers["Location"], allow_redirects=False
-        )  # sensor callback
+        )
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False
         location = response.headers["Location"]
-        response = client.get(
+        response = client.get(  # sensor home page
             f"{live_server.url}{location}", allow_redirects=False
-        )  # sensor home page
+        )
         assert response.is_redirect == False
         assert response.is_permanent_redirect == False
         assert response.status_code == 200
-        print(response)
