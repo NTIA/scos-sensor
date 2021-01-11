@@ -19,6 +19,10 @@
     {% endif %}
     {% optional_logout request user %}
   {% else %}
-    <li><a href={% url 'login' %}>Log in</a></li>
+    {% if AUTHENTICATION == "OAUTH" %}
+      <li><a href={% url 'login' %}>Log in</a></li>
+    {% else %}
+      {% optional_login request %}
+    {% endif %}
   {% endif %}
 {% endblock %}

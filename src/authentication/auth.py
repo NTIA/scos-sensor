@@ -79,6 +79,14 @@ def get_or_create_user_from_token(decoded_token):
     except user_model.DoesNotExist:
         user = user_model.objects.create_user(username=jwt_username)
         user.save()
+    if decoded_token["authorities"]:
+        authorities = decoded_token["authorities"]
+        if settings.REQUIRED_ROLE.upper() in authorities:
+            user.is_staff = True
+            # user.is_superuser = True
+        else:
+            user.is_staff = False
+        user.save()
     return user
 
 

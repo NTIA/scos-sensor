@@ -210,7 +210,8 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.BrowsableAPIRenderer",
+        "sensor.renderer.BrowsableAPIRendererWithCustomAuth"
+        # "rest_framework.renderers.BrowsableAPIRenderer",
     ),
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_VERSION": "v1",  # this should always point to latest stable api
@@ -223,19 +224,6 @@ REST_FRAMEWORK = {
     "URL_FIELD_NAME": "self",  # RFC 42867
 }
 
-AUTHENTICATION = env("AUTHENTICATION", default="")
-if AUTHENTICATION == "OAUTH":
-    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "authentication.auth.OAuthAPIJWTAuthentication",
-        "authentication.auth.OAuthSessionAuthentication",
-    )
-else:
-    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-    )
-
-
 # https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {},
@@ -244,7 +232,12 @@ SWAGGER_SETTINGS = {
     "VALIDATOR_URL": None,
 }
 
-if AUTHENTICATION == "JWT":
+AUTHENTICATION = env("AUTHENTICATION", default="")
+if AUTHENTICATION == "OAUTH":
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "authentication.auth.OAuthAPIJWTAuthentication",
+        "authentication.auth.OAuthSessionAuthentication",
+    )
     SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["oAuth2JWT"] = {
         "type": "oauth2",
         "description": (
@@ -257,6 +250,10 @@ if AUTHENTICATION == "JWT":
         "flows": {"password": {"scopes": {}}},  # scopes are not used
     }
 else:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    )
     SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["token"] = {
         "type": "apiKey",
         "description": (

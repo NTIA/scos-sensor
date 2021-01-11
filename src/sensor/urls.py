@@ -24,6 +24,7 @@ from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
+from authentication.permissions import admin_permission
 from authentication.views import oauth_login_callback, oauth_login_view
 
 from .views import api_v1_root, schema_view
@@ -54,19 +55,33 @@ admin.site.site_header = "SCOS Sensor Configuration Portal"
 # Text to put at the top of the admin index page.
 admin.site.index_title = "SCOS Sensor Configuration Portal"
 
+# admin.site.has_permission = admin_permission
+
 urlpatterns = [
     path("", RedirectView.as_view(url="/api/")),
     path("admin/", admin.site.urls),
     path("api/", RedirectView.as_view(url="/api/{}/".format(DEFAULT_API_VERSION))),
     re_path(API_PREFIX, include(api_urlpatterns)),
-    path("api/auth/", include("rest_framework.urls")),
-    path("login/", oauth_login_view, name="login"),
-    path(
-        f"login/oauth2/code/{settings.FQDN}",
-        oauth_login_callback,
-        name="oauth_callback",
-    ),
+    # path("api/auth/", include("rest_framework.urls")),
+    # path("login/", oauth_login_view, name="login"),
+    # path(
+    #     f"login/oauth2/code/{settings.FQDN}",
+    #     oauth_login_callback,
+    #     name="oauth_callback",
+    # ),
 ]
+
+if settings.AUTHENTICATION == "OAUTH":
+    urlpatterns.append(path("login/", oauth_login_view, name="login"))
+    urlpatterns.append(
+        path(
+            f"login/oauth2/code/{settings.FQDN}",
+            oauth_login_callback,
+            name="oauth_callback",
+        )
+    )
+else:
+    urlpatterns.append(path("api/auth/", include("rest_framework.urls")))
 
 if settings.DEBUG:
     import debug_toolbar
