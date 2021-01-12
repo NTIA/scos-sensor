@@ -231,7 +231,7 @@ def test_token_role_user_required_role_accepted(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_token_mulitple_roles_accepted(settings, live_server):
+def test_token_multiple_roles_accepted(settings, live_server):
     settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
     token_payload = get_token_payload(
         authorities=["ROLE_MANAGER", "ROLE_USER", "ROLE_ITS"]

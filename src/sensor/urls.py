@@ -24,7 +24,6 @@ from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from authentication.permissions import admin_permission
 from authentication.views import oauth_login_callback, oauth_login_view
 
 from .views import api_v1_root, schema_view
@@ -54,8 +53,6 @@ admin.site.site_header = "SCOS Sensor Configuration Portal"
 
 # Text to put at the top of the admin index page.
 admin.site.index_title = "SCOS Sensor Configuration Portal"
-
-# admin.site.has_permission = admin_permission
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/api/")),
