@@ -111,7 +111,7 @@ class OAuthAPIJWTAuthentication(authentication.BaseAuthentication):
 
 class OAuthSessionAuthentication(authentication.BaseAuthentication):
     """
-    Use Django's session framework for authentication.
+    Use OAuth session for authentication.
     """
 
     def authenticate(self, request):

@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.http.response import HttpResponseRedirect
 from requests_oauthlib.oauth2_session import OAuth2Session
 from rest_framework.decorators import api_view, permission_classes
@@ -7,7 +8,6 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import AllowAny
 from rest_framework.reverse import reverse
 
-# from authentication.permissions import FromAuthServer
 from sensor import V1
 from sensor.settings import (
     CLIENT_ID,
@@ -49,10 +49,12 @@ def oauth_login_view(request):
 
     https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
     """
-    authserver = OAuth2Session(CLIENT_ID)
+    authserver = OAuth2Session(
+        CLIENT_ID, redirect_uri="https://" + settings.FQDN + reverse("oauth-callback")
+    )
     logger.debug("OAUTH_AUTHORIZATION_URL = " + OAUTH_AUTHORIZATION_URL)
     authorization_url, state = authserver.authorization_url(OAUTH_AUTHORIZATION_URL)
-
+    logger.debug("authorization_url = " + str(authorization_url))
     # State is used to prevent CSRF, keep this for later.
     request.session["oauth_state"] = state
     return HttpResponseRedirect(authorization_url)
@@ -60,7 +62,6 @@ def oauth_login_view(request):
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
-# @permission_classes([FromAuthServer])
 def oauth_login_callback(request):
     """ Step 3: Retrieving an access token.
 
@@ -69,7 +70,11 @@ def oauth_login_callback(request):
     in the redirect URL. We will use that to obtain an access token.
     https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
     """
-    authserver = OAuth2Session(CLIENT_ID, state=request.session["oauth_state"])
+    authserver = OAuth2Session(
+        CLIENT_ID,
+        state=request.session["oauth_state"],
+        redirect_uri="https://" + settings.FQDN + reverse("oauth-callback"),
+    )
     authserver.cert = PATH_TO_CLIENT_CERT
     logger.debug("OAUTH_TOKEN_URL = " + OAUTH_TOKEN_URL)
     logger.debug("authorization_response = " + request.build_absolute_uri())

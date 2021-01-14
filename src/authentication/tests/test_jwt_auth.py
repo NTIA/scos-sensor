@@ -381,7 +381,6 @@ def test_user_cannot_view_user_detail(settings, live_server):
     encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    # authenticating with "ROLE_MANAGER" creates user if does not already exist
     response = client.get(
         f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"}
     )
@@ -411,7 +410,6 @@ def test_user_cannot_view_user_detail_role_change(settings, live_server):
     encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    # authenticating with "ROLE_MANAGER" creates user if does not already exist
     response = client.get(
         f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"}
     )
@@ -440,7 +438,6 @@ def test_admin_can_view_user_detail(settings, live_server):
     encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    # authenticating with "ROLE_MANAGER" creates user if does not already exist
     response = client.get(
         f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"}
     )
@@ -464,7 +461,6 @@ def test_admin_can_view_other_user_detail(settings, live_server):
     encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    # authenticating with "ROLE_MANAGER" creates user if does not already exist
     response = client.get(
         f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"}
     )
@@ -494,7 +490,6 @@ def test_token_hidden(settings, live_server):
     encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    # authenticating with "ROLE_MANAGER" creates user if does not already exist
     response = client.get(
         f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"}
     )

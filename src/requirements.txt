@@ -5,13 +5,13 @@ Markdown==3.1.1
 coreapi==2.3.3
 django-debug-toolbar==1.11
 django-extensions==2.2.6
-django-filter==2.2.0
-djangorestframework==3.9.4
+django-filter~=2.2.0
+djangorestframework~=3.9.4
 docker-compose~=1.27.4
 drf-yasg==1.15.0
 environs==4.2.0
 gunicorn==19.9.0
-jsonfield==2.0.2
+jsonfield~=2.0.2
 numpy>=1.16.4
 psycopg2-binary==2.8.5
 pyjwt~=1.7.1

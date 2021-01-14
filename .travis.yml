@@ -28,4 +28,5 @@ before_script:
 script:
   - black --check ./src
   - tox -c ./src/tox.ini -e coverage
+  - tox -c ./src/tox.ini -e oauth
   - docker ps | grep api | grep -q healthy
