@@ -98,6 +98,10 @@ CSRF_COOKIE_SECURE = IN_DOCKER
 USE_X_FORWARDED_HOST = IN_DOCKER
 USE_X_FORWARDED_PORT = IN_DOCKER
 SESSION_COOKIE_SAMESITE = "Strict"
+SESSION_COOKIE_AGE = 900  # seconds
+SESSION_EXPIRE_SECONDS = 900  # seconds
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = "/api/auth/logout/?next=/api/v1/"
 
 # Application definition
 
@@ -174,6 +178,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django_session_timeout.middleware.SessionTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

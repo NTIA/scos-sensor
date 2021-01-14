@@ -1,0 +1,19 @@
+{% extends "rest_framework/base.html" %}
+
+{% block script %}
+{{ block.super }}
+<script type="text/javascript">
+
+var loginDuration_InMinutes = 15;
+var sTimeout = loginDuration_InMinutes * 60 * 1000;
+
+setTimeout(SessionEnd, sTimeout);
+
+function SessionEnd() {
+    //window.alert("Your session has expired due to inactivity. You will be redirected to the login page.");
+    //$('#logoutForm').submit();
+    //window.location.href = "/api/auth/logout/?next=/api/v1/";
+    window.location.replace("/api/auth/logout/?next=/api/v1/");
+}
+</script>
+{% endblock %}
