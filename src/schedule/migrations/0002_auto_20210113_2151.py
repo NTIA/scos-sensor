@@ -4,9 +4,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ("schedule", "0001_initial"),
-    ]
+    dependencies = [("schedule", "0001_initial")]
 
     operations = [
         migrations.AlterField(
@@ -135,5 +133,5 @@ class Migration(migrations.Migration):
                 help_text="[Required] The name of the action to be scheduled",
                 max_length=50,
             ),
-        ),
+        )
     ]

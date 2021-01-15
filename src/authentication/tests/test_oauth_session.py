@@ -302,11 +302,11 @@ def test_urls_unauthorized(settings, live_server, user):
     client = get_oauth_authorized_client(utf8_bytes, live_server)
 
     capabilities = reverse("capabilities", kwargs=V1)
-    response = client.get(f"{live_server.url}{capabilities}",)
+    response = client.get(f"{live_server.url}{capabilities}")
     assert response.status_code == 403
 
     schedule_list = reverse("schedule-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{schedule_list}",)
+    response = client.get(f"{live_server.url}{schedule_list}")
     assert response.status_code == 403
 
     status = reverse("status", kwargs=V1)
@@ -314,19 +314,19 @@ def test_urls_unauthorized(settings, live_server, user):
     assert response.status_code == 403
 
     task_root = reverse("task-root", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_root}",)
+    response = client.get(f"{live_server.url}{task_root}")
     assert response.status_code == 403
 
     task_results_overview = reverse("task-results-overview", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_results_overview}",)
+    response = client.get(f"{live_server.url}{task_results_overview}")
     assert response.status_code == 403
 
     upcoming_tasks = reverse("upcoming-tasks", kwargs=V1)
-    response = client.get(f"{live_server.url}{upcoming_tasks}",)
+    response = client.get(f"{live_server.url}{upcoming_tasks}")
     assert response.status_code == 403
 
     user_list = reverse("user-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{user_list}",)
+    response = client.get(f"{live_server.url}{user_list}")
     assert response.status_code == 403
 
 
@@ -339,11 +339,11 @@ def test_urls_authorized(settings, live_server, admin_user):
     client = get_oauth_authorized_client(utf8_bytes, live_server)
 
     capabilities = reverse("capabilities", kwargs=V1)
-    response = client.get(f"{live_server.url}{capabilities}",)
+    response = client.get(f"{live_server.url}{capabilities}")
     assert response.status_code == 200
 
     schedule_list = reverse("schedule-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{schedule_list}",)
+    response = client.get(f"{live_server.url}{schedule_list}")
     assert response.status_code == 200
 
     status = reverse("status", kwargs=V1)
@@ -351,19 +351,19 @@ def test_urls_authorized(settings, live_server, admin_user):
     assert response.status_code == 200
 
     task_root = reverse("task-root", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_root}",)
+    response = client.get(f"{live_server.url}{task_root}")
     assert response.status_code == 200
 
     task_results_overview = reverse("task-results-overview", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_results_overview}",)
+    response = client.get(f"{live_server.url}{task_results_overview}")
     assert response.status_code == 200
 
     upcoming_tasks = reverse("upcoming-tasks", kwargs=V1)
-    response = client.get(f"{live_server.url}{upcoming_tasks}",)
+    response = client.get(f"{live_server.url}{upcoming_tasks}")
     assert response.status_code == 200
 
     user_list = reverse("user-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{user_list}",)
+    response = client.get(f"{live_server.url}{user_list}")
     assert response.status_code == 200
 
 
@@ -410,7 +410,7 @@ def test_user_cannot_view_user_detail_role_change(settings, live_server):
     kws = {"pk": sensor01_user.pk}
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
-    response = client_new_token.get(f"{live_server.url}{user_detail}",)
+    response = client_new_token.get(f"{live_server.url}{user_detail}")
     assert response.status_code == 403
 
 
@@ -439,7 +439,7 @@ def test_admin_can_view_other_user_detail(settings, live_server):
     encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client_user1 = get_oauth_authorized_client(utf8_bytes, live_server)
-    response = client_user1.get(f"{live_server.url}",)
+    response = client_user1.get(f"{live_server.url}")
     assert response.status_code == 200
 
     sensor02_token_payload = get_token_payload(authorities=["ROLE_MANAGER"])
@@ -463,14 +463,14 @@ def test_token_hidden(settings, live_server):
     encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = get_oauth_authorized_client(utf8_bytes, live_server)
-    response = client.get(f"{live_server.url}",)
+    response = client.get(f"{live_server.url}")
     assert response.status_code == 200
 
     sensor01_user = User.objects.get(username=token_payload["user_name"])
     kws = {"pk": sensor01_user.pk}
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
-    response = client.get(f"{live_server.url}{user_detail}",)
+    response = client.get(f"{live_server.url}{user_detail}")
     assert response.status_code == 200
     assert (
         response.json()["auth_token"]
@@ -517,5 +517,5 @@ def test_change_token_role_bad_signature(settings, live_server):
         + utf8_bytes[second_period + 1 :]
     )
     client = get_oauth_authorized_client(modified_token, live_server)
-    response = client.get(f"{live_server.url}",)
+    response = client.get(f"{live_server.url}")
     assert response.status_code == 403
