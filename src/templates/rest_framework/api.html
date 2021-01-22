@@ -2,6 +2,7 @@
 
 {% block script %}
 {{ block.super }}
+{% if user.is_authenticated %}
 <script type="text/javascript">
 
 var loginDuration_InMinutes = 15;
@@ -13,7 +14,13 @@ function SessionEnd() {
     //window.alert("Your session has expired due to inactivity. You will be redirected to the login page.");
     //$('#logoutForm').submit();
     //window.location.href = "/api/auth/logout/?next=/api/v1/";
-    window.location.replace("/api/auth/logout/?next=/api/v1/");
+    {% if AUTHENTICATION == "OAUTH" %}
+        window.location.replace("{% url 'oauth-logout' %}?next=/api/v1/");
+    {% else %}
+        //window.location.replace("/api/auth/logout/?next=/api/v1/");
+        window.location.replace("{% url 'rest_framework:logout' %}?next=/api/v1/");
+    {% endif %}
 }
 </script>
+{% endif %}
 {% endblock %}

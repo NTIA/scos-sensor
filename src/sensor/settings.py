@@ -92,17 +92,6 @@ else:
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
 
-SESSION_COOKIE_SECURE = IN_DOCKER
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-CSRF_COOKIE_SECURE = IN_DOCKER
-USE_X_FORWARDED_HOST = IN_DOCKER
-USE_X_FORWARDED_PORT = IN_DOCKER
-SESSION_COOKIE_SAMESITE = "Strict"
-SESSION_COOKIE_AGE = 900  # seconds
-SESSION_EXPIRE_SECONDS = 900  # seconds
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_TIMEOUT_REDIRECT = "/api/auth/logout/?next=/api/v1/"
-
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -240,6 +229,17 @@ SWAGGER_SETTINGS = {
     "VALIDATOR_URL": None,
 }
 
+SESSION_COOKIE_SECURE = IN_DOCKER
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CSRF_COOKIE_SECURE = IN_DOCKER
+USE_X_FORWARDED_HOST = IN_DOCKER
+USE_X_FORWARDED_PORT = IN_DOCKER
+SESSION_COOKIE_SAMESITE = "Strict"
+SESSION_COOKIE_AGE = 900  # seconds
+SESSION_EXPIRE_SECONDS = 900  # seconds
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+
+
 AUTHENTICATION = env("AUTHENTICATION", default="")
 if AUTHENTICATION == "OAUTH":
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
@@ -257,6 +257,7 @@ if AUTHENTICATION == "OAUTH":
         ),
         "flows": {"password": {"scopes": {}}},  # scopes are not used
     }
+    SESSION_TIMEOUT_REDIRECT = "oauth-logout"
 else:
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
         "rest_framework.authentication.TokenAuthentication",
@@ -281,6 +282,7 @@ else:
         "name": "Token",
         "in": "header",
     }
+    SESSION_TIMEOUT_REDIRECT = "rest_framework:logout"
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
