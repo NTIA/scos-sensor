@@ -9,7 +9,7 @@
         "id": null,
         "uid": "",
         "altSecurityIdenties": null,
-        "email": "sensor01",
+        "email": "sensor01@example.com",
         "firstname": "sensor01",
         "lastname": "",
         "cn": "sensor01",

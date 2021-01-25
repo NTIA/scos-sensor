@@ -78,6 +78,7 @@ def get_or_create_user_from_token(decoded_token):
         user = user_model.objects.get(username=jwt_username)
     except user_model.DoesNotExist:
         user = user_model.objects.create_user(username=jwt_username)
+        user.email = decoded_token["userDetails"]["email"]
         user.save()
     if decoded_token["authorities"]:
         authorities = decoded_token["authorities"]
@@ -106,6 +107,7 @@ class OAuthAPIJWTAuthentication(authentication.BaseAuthentication):
         # get JWT public key
         decoded_token = decode_token(token)
         user = get_or_create_user_from_token(decoded_token)
+        logger.info("user from token: " + str(user.email))
         return (user, decoded_token)
 
 
@@ -124,10 +126,8 @@ class OAuthSessionAuthentication(authentication.BaseAuthentication):
             return None
 
         token = request.session["oauth_token"]
-        logger.debug("token = " + json.dumps(token))
         access_token = token["access_token"].encode("utf-8")
-        logger.debug("access_token = " + str(access_token))
         decoded_token = decode_token(access_token)
         user = get_or_create_user_from_token(decoded_token)
-
+        logger.info("user from token: " + str(user.email))
         return (user, decoded_token)

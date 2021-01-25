@@ -1,3 +1,7 @@
+"""
+OAuth 2 Views
+https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
+"""
 import logging
 
 from django.conf import settings
@@ -76,6 +80,7 @@ def oauth_login_callback(request):
         redirect_uri="https://" + settings.FQDN + reverse("oauth-callback"),
     )
     authserver.cert = PATH_TO_CLIENT_CERT
+    logger.debug("request oauth_login_callback from " + request.get_host())
     logger.debug("OAUTH_TOKEN_URL = " + OAUTH_TOKEN_URL)
     logger.debug("authorization_response = " + request.build_absolute_uri())
     token = authserver.fetch_token(
@@ -86,5 +91,5 @@ def oauth_login_callback(request):
     )
 
     request.session["oauth_token"] = token
-
+    del request.session["oauth_state"]  # state can only be used once
     return HttpResponseRedirect(reverse("api-root", kwargs=V1))

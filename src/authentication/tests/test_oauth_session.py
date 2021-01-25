@@ -23,7 +23,13 @@ from authentication.tests.test_jwt_auth import (
     one_min,
 )
 from sensor import V1
-from sensor.settings import CLIENT_ID, FQDN, OAUTH_AUTHORIZATION_URL, OAUTH_TOKEN_URL
+from sensor.settings import (
+    CLIENT_ID,
+    CLIENT_SECRET,
+    FQDN,
+    OAUTH_AUTHORIZATION_URL,
+    OAUTH_TOKEN_URL,
+)
 
 pytestmark = pytest.mark.skipif(
     not oauth_session_authentication_enabled,
@@ -45,37 +51,64 @@ def test_oauth_login_view(settings):
 
 
 @pytest.mark.django_db
-def test_oauth_login_callback():
+def test_oauth_login_callback(settings):
+    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+    token_payload = get_token_payload()
+    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    utf8_bytes = encoded.decode("utf-8")
     test_state = "test_state"
-    test_token = "test_access_token"
     client = APIClient()
     session = client.session
     session["oauth_state"] = test_state
     session.save()
     response = None
     with requests_mock.Mocker() as m:
-        m.post(OAUTH_TOKEN_URL, json={"access_token": test_token})
+        m.post(OAUTH_TOKEN_URL, json={"access_token": utf8_bytes})
         oauth_callback_url = reverse("oauth-callback")
         response = client.get(f"{oauth_callback_url}?code=test_code&state={test_state}")
-    assert response.wsgi_request.session["oauth_token"]["access_token"] == test_token
+    assert response.wsgi_request.session["oauth_token"]["access_token"] == utf8_bytes
     SimpleTestCase().assertRedirects(
         response, reverse("api-root", kwargs=V1), fetch_redirect_response=False
     )
+    response = client.get(reverse("api-root", kwargs=V1))
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_oauth_login_callback_bad_state():
+def test_oauth_login_callback_bad_state(settings):
+    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+    token_payload = get_token_payload()
+    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    utf8_bytes = encoded.decode("utf-8")
     test_state = "test_state"
-    test_token = "test_access_token"
     client = APIClient()
     session = client.session
     session["oauth_state"] = test_state
     session.save()
     with requests_mock.Mocker() as m:
-        m.post(OAUTH_TOKEN_URL, json={"access_token": test_token})
+        m.post(OAUTH_TOKEN_URL, json={"access_token": utf8_bytes})
         oauth_callback_url = reverse("oauth-callback")
         with pytest.raises(oauthlib.oauth2.rfc6749.errors.MismatchingStateError):
             client.get(f"{oauth_callback_url}?code=test_code&state=some_state")
+        response = client.get(reverse("api-root", kwargs=V1))
+        assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_oauth_login_callback_no_token(settings):
+    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+    test_state = "test_state"
+    client = APIClient()
+    session = client.session
+    session["oauth_state"] = test_state
+    session.save()
+    with requests_mock.Mocker() as m:
+        m.post(OAUTH_TOKEN_URL, text="")
+        oauth_callback_url = reverse("oauth-callback")
+        with pytest.raises(oauthlib.oauth2.rfc6749.errors.MissingTokenError):
+            client.get(f"{oauth_callback_url}?code=test_code&state=test_state")
+        response = client.get(reverse("api-root", kwargs=V1))
+        assert response.status_code == 403
 
 
 ################ From test_jwt_auth.py ##############################
@@ -126,10 +159,18 @@ def get_oauth_authorized_client(token, live_server):
         assert response.is_permanent_redirect == False
         location = response.headers["Location"]
         assert reverse("api-root", kwargs=V1) in location
-
+        oauth_token_url_found = False
         for item in m.request_history:
             if OAUTH_TOKEN_URL in item.url:
+                oauth_token_url_found = True
                 assert "grant_type=authorization_code&code=test_code" in item.text
+                auth_header = item.headers["Authorization"]
+                auth_method = auth_header.split()[0]
+                assert auth_method.lower() == "basic"
+                basic_auth_encode = auth_header.split()[1]
+                basic_auth_decode = base64.b64decode(basic_auth_encode)
+                assert basic_auth_decode.decode() == f"{CLIENT_ID}:{CLIENT_SECRET}"
+        assert oauth_token_url_found
         return client
 
 
