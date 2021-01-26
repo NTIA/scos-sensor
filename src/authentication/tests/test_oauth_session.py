@@ -2,6 +2,7 @@ import base64
 import json
 import secrets
 from datetime import datetime
+from unittest.mock import patch
 
 import jwt
 import oauthlib
@@ -36,6 +37,15 @@ pytestmark = pytest.mark.skipif(
     reason="OAuth JWT authentication is not enabled!",
 )
 
+AUTH_SERVER_IP = "192.168.1.100"
+
+
+@pytest.fixture(scope="module", autouse=True)
+def smtp_connection(request):
+    config = {"gethostbyname.return_value": AUTH_SERVER_IP}
+    patcher = patch("authentication.views.socket", **config)
+    patcher.start()
+
 
 @pytest.mark.django_db
 def test_oauth_login_view(settings):
@@ -65,7 +75,10 @@ def test_oauth_login_callback(settings):
     with requests_mock.Mocker() as m:
         m.post(OAUTH_TOKEN_URL, json={"access_token": utf8_bytes})
         oauth_callback_url = reverse("oauth-callback")
-        response = client.get(f"{oauth_callback_url}?code=test_code&state={test_state}")
+        response = client.get(
+            f"{oauth_callback_url}?code=test_code&state={test_state}",
+            HTTP_X_FORWARDED_FOR=AUTH_SERVER_IP,
+        )
     assert response.wsgi_request.session["oauth_token"]["access_token"] == utf8_bytes
     SimpleTestCase().assertRedirects(
         response, reverse("api-root", kwargs=V1), fetch_redirect_response=False
@@ -89,7 +102,10 @@ def test_oauth_login_callback_bad_state(settings):
         m.post(OAUTH_TOKEN_URL, json={"access_token": utf8_bytes})
         oauth_callback_url = reverse("oauth-callback")
         with pytest.raises(oauthlib.oauth2.rfc6749.errors.MismatchingStateError):
-            client.get(f"{oauth_callback_url}?code=test_code&state=some_state")
+            client.get(
+                f"{oauth_callback_url}?code=test_code&state=some_state",
+                HTTP_X_FORWARDED_FOR=AUTH_SERVER_IP,
+            )
         response = client.get(reverse("api-root", kwargs=V1))
         assert response.status_code == 403
 
@@ -106,7 +122,10 @@ def test_oauth_login_callback_no_token(settings):
         m.post(OAUTH_TOKEN_URL, text="")
         oauth_callback_url = reverse("oauth-callback")
         with pytest.raises(oauthlib.oauth2.rfc6749.errors.MissingTokenError):
-            client.get(f"{oauth_callback_url}?code=test_code&state=test_state")
+            client.get(
+                f"{oauth_callback_url}?code=test_code&state=test_state",
+                HTTP_X_FORWARDED_FOR=AUTH_SERVER_IP,
+            )
         response = client.get(reverse("api-root", kwargs=V1))
         assert response.status_code == 403
 
@@ -153,7 +172,9 @@ def get_oauth_authorized_client(token, live_server):
         assert response.is_permanent_redirect == False
         assert reverse("oauth-callback") in response.headers["Location"]
         response = client.get(  # sensor callback
-            response.headers["Location"], allow_redirects=False
+            response.headers["Location"],
+            allow_redirects=False,
+            headers={"X-Forwarded-For": AUTH_SERVER_IP},
         )
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False

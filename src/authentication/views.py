@@ -3,13 +3,17 @@ OAuth 2 Views
 https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
 """
 import logging
+import socket
+from urllib.parse import urlparse
 
 from django.conf import settings
 from django.http.response import HttpResponseRedirect
 from requests_oauthlib.oauth2_session import OAuth2Session
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from sensor import V1
@@ -74,13 +78,26 @@ def oauth_login_callback(request):
     in the redirect URL. We will use that to obtain an access token.
     https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example.html
     """
+    authorization_host = urlparse(OAUTH_AUTHORIZATION_URL).hostname
+    authorization_ip = socket.gethostbyname(authorization_host)
+    request_origin_ip = request.headers["X-Forwarded-For"]
+    if authorization_ip != request_origin_ip:
+        return Response(
+            "OAuth callback did not come from authserver",
+            status=status.HTTP_403_FORBIDDEN,
+        )
+    token_host = urlparse(OAUTH_TOKEN_URL).hostname
+    if authorization_host != token_host:
+        raise Exception(
+            "OAUTH_AUTHORIZATION_URL and OAUTH_TOKEN_URL must use the same host!"
+        )
+
     authserver = OAuth2Session(
         CLIENT_ID,
         state=request.session["oauth_state"],
         redirect_uri="https://" + settings.FQDN + reverse("oauth-callback"),
     )
     authserver.cert = PATH_TO_CLIENT_CERT
-    logger.debug("request oauth_login_callback from " + request.get_host())
     logger.debug("OAUTH_TOKEN_URL = " + OAUTH_TOKEN_URL)
     logger.debug("authorization_response = " + request.build_absolute_uri())
     token = authserver.fetch_token(
