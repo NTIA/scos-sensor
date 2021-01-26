@@ -127,7 +127,11 @@ class OAuthSessionAuthentication(authentication.BaseAuthentication):
 
         token = request.session["oauth_token"]
         access_token = token["access_token"].encode("utf-8")
-        decoded_token = decode_token(access_token)
+        try:
+            decoded_token = decode_token(access_token)
+        except exceptions.AuthenticationFailed as error:
+            del request.session["oauth_token"]
+            raise error
         user = get_or_create_user_from_token(decoded_token)
         logger.info("user from token: " + str(user.email))
         return (user, decoded_token)

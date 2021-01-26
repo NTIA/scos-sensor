@@ -37,7 +37,6 @@ def get_oauth_token():
             verify=verify_ssl,
         )
         oauth.close()
-        logger.debug("Response from oauth.fetch_token: " + str(token))
         return token
     except Exception:
         raise
