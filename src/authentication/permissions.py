@@ -22,23 +22,3 @@ class JWTRoleOrIsSuperuser(permissions.BasePermission):
         if request.user.is_superuser:
             return True
         return False
-
-
-# class FromAuthServer(permissions.BasePermission):
-#     message = "Request not from auth server"
-
-#     def has_permission(self, request, view):
-#         logger.debug("Checking FromAuthServer permission for request: " + str(request))
-#         logger.debug("request.headers = " + str(request.headers))
-#         logger.debug("request.META = " + str(request.META))
-#         if not OAUTH_AUTHORIZATION_URL:
-#             return False
-#         result = urlparse(OAUTH_AUTHORIZATION_URL)
-#         allowed_host_name = result.hostname
-#         logger.debug("allowed_host_name = " + allowed_host_name)
-#         allowed_ip = socket.gethostbyname(allowed_host_name)
-#         logger.debug("allowed_ip = " + allowed_ip)
-#         request_source_ip = request.META["REMOTE_ADDR"]
-#         logger.debug("request_source_ip = " + request_source_ip)
-#         return allowed_ip == request_source_ip
-#         #return allowed_host_name.lower() == request_host_name.lower()
