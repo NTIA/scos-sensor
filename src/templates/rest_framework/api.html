@@ -11,13 +11,9 @@ var sTimeout = loginDuration_InMinutes * 60 * 1000;
 setTimeout(SessionEnd, sTimeout);
 
 function SessionEnd() {
-    //window.alert("Your session has expired due to inactivity. You will be redirected to the login page.");
-    //$('#logoutForm').submit();
-    //window.location.href = "/api/auth/logout/?next=/api/v1/";
     {% if AUTHENTICATION == "OAUTH" %}
         window.location.replace("{% url 'oauth-logout' %}?next=/api/v1/");
     {% else %}
-        //window.location.replace("/api/auth/logout/?next=/api/v1/");
         window.location.replace("{% url 'rest_framework:logout' %}?next=/api/v1/");
     {% endif %}
 }
