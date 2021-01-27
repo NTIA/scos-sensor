@@ -20,10 +20,12 @@ from sensor import V1
 from sensor.settings import (
     CLIENT_ID,
     CLIENT_SECRET,
+    MOCK_RADIO,
     OAUTH_AUTHORIZATION_URL,
     OAUTH_TOKEN_URL,
     PATH_TO_CLIENT_CERT,
     PATH_TO_VERIFY_CERT,
+    RUNNING_TESTS,
 )
 
 from .models import User
@@ -82,10 +84,14 @@ def oauth_login_callback(request):
     authorization_ip = socket.gethostbyname(authorization_host)
     request_origin_ip = request.headers["X-Forwarded-For"]
     if authorization_ip != request_origin_ip:
-        return Response(
-            "OAuth callback did not come from authserver",
-            status=status.HTTP_403_FORBIDDEN,
-        )
+        if not RUNNING_TESTS and MOCK_RADIO:
+            # calling sensor running on local docker container does not show correct request_origin_ip
+            logger.debug("OAuth callback did not come from authserver")
+        else:
+            return Response(
+                "OAuth callback did not come from authserver",
+                status=status.HTTP_403_FORBIDDEN,
+            )
     token_host = urlparse(OAUTH_TOKEN_URL).hostname
     if authorization_host != token_host:
         raise Exception(

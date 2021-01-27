@@ -130,6 +130,30 @@ def test_oauth_login_callback_no_token(settings):
         assert response.status_code == 403
 
 
+@pytest.mark.django_db
+def test_bad_oauth_callback_ip(settings):
+    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+    token_payload = get_token_payload()
+    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    utf8_bytes = encoded.decode("utf-8")
+    test_state = "test_state"
+    client = APIClient()
+    session = client.session
+    session["oauth_state"] = test_state
+    session.save()
+    response = None
+    with requests_mock.Mocker() as m:
+        m.post(OAUTH_TOKEN_URL, json={"access_token": utf8_bytes})
+        oauth_callback_url = reverse("oauth-callback")
+        response = client.get(
+            f"{oauth_callback_url}?code=test_code&state={test_state}",
+            HTTP_X_FORWARDED_FOR="192.168.1.80",
+        )
+    assert response.status_code == 403
+    response = client.get(reverse("api-root", kwargs=V1))
+    assert response.status_code == 403
+
+
 ################ From test_jwt_auth.py ##############################
 
 
