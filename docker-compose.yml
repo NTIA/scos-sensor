@@ -49,7 +49,7 @@ services:
     expose:
       - '8000'
     volumes:
-      - ${REPO_ROOT}:/opt/scos-sensor
+      - ${REPO_ROOT}/drivers:/drivers
     cap_add:
       - SYS_PTRACE
     devices:
