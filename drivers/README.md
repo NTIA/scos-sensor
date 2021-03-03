@@ -1,3 +1,5 @@
 # SCOS Sensor Drivers Directory
 
-Some sensors/SDRs require driver files which cannot be packaged in their SCOS plugins. Those files should be placed here manually, where they can be loaded into the SCOS sensor Docker container.
+This directory is mounted as a Docker volume to `/drivers` in the SCOS sensor Docker container.
+
+Some sensors/SDRs require drivers which cannot be packaged with their respective SCOS plugins. Those drivers can be placed here manually, allowing them to be referenced from within the SCOS sensor Docker container.
