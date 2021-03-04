@@ -21,7 +21,7 @@ COPY ./src/requirements.txt /src
 ARG DOCKER_GIT_CREDENTIALS
 RUN git config --global credential.helper store && echo "${DOCKER_GIT_CREDENTIALS}" > ~/.git-credentials
 RUN python3 -m pip install --upgrade pip
-RUN pip3 install --no-cache-dir -r requirements.txt --use-deprecated=legacy-resolver
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY ./src /src
 COPY ./gunicorn /gunicorn
