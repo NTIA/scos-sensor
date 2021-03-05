@@ -56,6 +56,7 @@ server {
         proxy_set_header X-Forwarded-Host  $host;
         proxy_set_header X-Forwarded-Port  $server_port;
         proxy_redirect off;
+        proxy_set_header X-SSL-CLIENT-DN $ssl_client_s_dn;
         proxy_pass   http://wsgi-server;
     }
 
