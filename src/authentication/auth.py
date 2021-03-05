@@ -1,5 +1,5 @@
-import json
 import logging
+import re
 
 import jwt
 from django.conf import settings
@@ -34,7 +34,19 @@ def jwt_request_has_required_role(request):
     return False
 
 
-def decode_token(token):
+def get_uid_from_dn(cert_dn):
+    p = re.compile("UID=(.*?)(?:,|$)")
+    match = p.search(cert_dn)
+    if not match:
+        raise Exception("No UID found in certificate!")
+    uid_raw = match.group()
+    logger.debug(f"uid_raw = {uid_raw}")
+    uid = uid_raw.split("=")[1].rstrip(",")
+    logger.debug(f"uid = {uid}")
+    return uid
+
+
+def validate_token(token, cert_uid):
     public_key = ""
     try:
         with open(settings.PATH_TO_JWT_PUBLIC_KEY) as public_key_file:
@@ -52,13 +64,27 @@ def decode_token(token):
         # verifies jwt signature using RS256 algorithm and public key
         # requires exp claim to verify token is not expired
         # decodes and returns base64 encoded payload
-        return jwt.decode(
+        decoded_token = jwt.decode(
             token,
             public_key,
             verify=True,
             algorithms="RS256",
             options={"require": ["exp"], "verify_exp": True},
         )
+        decoded_client_id = decoded_token["client_id"]
+        request_client_id = settings.CLIENT_ID
+        if decoded_client_id != request_client_id:
+            logger.debug(
+                f"client_id from token {decoded_client_id} does not match request client_id {request_client_id}"
+            )
+            # https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16#section-2.3
+            raise Exception("Access token was not issued to this client!")
+        if decoded_token["userDetails"]["uid"] != cert_uid:
+            # https://tools.ietf.org/id/draft-ietf-oauth-mtls-07.html#rfc.section.3
+            token_uid = decoded_token["userDetails"]["uid"]
+            logger.debug(f"token uid {token_uid} does not match cert uid {cert_uid}")
+            raise Exception("JWT DN does not match client certificate DN!")
+        return decoded_token
     except ExpiredSignatureError as e:
         logger.error(e)
         raise exceptions.AuthenticationFailed("Token is expired!")
@@ -105,7 +131,11 @@ class OAuthAPIJWTAuthentication(authentication.BaseAuthentication):
             return None  # attempt other configured authentication methods
         token = auth_header[1]
         # get JWT public key
-        decoded_token = decode_token(token)
+        cert_dn = request.headers.get("X-Ssl-Client-Dn")
+        if not cert_dn:
+            raise exceptions.AuthenticationFailed("No client certificate DN found!")
+        cert_uid = get_uid_from_dn(cert_dn)
+        decoded_token = validate_token(token, cert_uid)
         user = get_or_create_user_from_token(decoded_token)
         logger.info("user from token: " + str(user.email))
         return (user, decoded_token)
@@ -127,11 +157,17 @@ class OAuthSessionAuthentication(authentication.BaseAuthentication):
 
         token = request.session["oauth_token"]
         access_token = token["access_token"].encode("utf-8")
+        cert_dn = request.headers.get("X-Ssl-Client-Dn")
+        if not cert_dn:
+            raise exceptions.AuthenticationFailed("No client certificate DN found!")
+        cert_uid = get_uid_from_dn(cert_dn)
         try:
-            decoded_token = decode_token(access_token)
-        except exceptions.AuthenticationFailed as error:
+            decoded_token = validate_token(access_token, cert_uid)
+        except Exception as error:
             del request.session["oauth_token"]
             raise error
+        except:
+            del request.session["oauth_token"]
         user = get_or_create_user_from_token(decoded_token)
         logger.info("user from token: " + str(user.email))
         return (user, decoded_token)

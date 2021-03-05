@@ -1,12 +1,12 @@
 import jwt
 import pytest
-from django.test.client import Client
 
 import actions
 import scheduler
 from authentication.auth import oauth_session_authentication_enabled
 from authentication.models import User
 from authentication.tests.test_jwt_auth import PRIVATE_KEY, get_token_payload
+from sensor.tests.scos_test_client import UID, SCOSTestClient
 
 
 @pytest.yield_fixture
@@ -51,9 +51,9 @@ def user(db):
 @pytest.fixture
 def user_client(db, user):
     """A Django test client logged in as a normal user"""
-    client = Client()
+    client = SCOSTestClient()
     if oauth_session_authentication_enabled:
-        token_payload = get_token_payload(authorities=["ROLE_USER"])
+        token_payload, _ = get_token_payload(authorities=["ROLE_USER"], uid=UID)
         encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
@@ -86,9 +86,9 @@ def alt_user(db):
 @pytest.fixture
 def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
-    client = Client()
+    client = SCOSTestClient()
     if oauth_session_authentication_enabled:
-        token_payload = get_token_payload(authorities=["ROLE_USER"])
+        token_payload, _ = get_token_payload(authorities=["ROLE_USER"], uid=UID)
         encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
@@ -104,9 +104,9 @@ def alt_user_client(db, alt_user):
 @pytest.fixture
 def admin_client(db, django_user_model, admin_user):
     """A Django test client logged in as an admin user."""
-    client = Client()
+    client = SCOSTestClient()
     if oauth_session_authentication_enabled:
-        token_payload = get_token_payload()
+        token_payload, _ = get_token_payload(uid=UID)
         encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
@@ -148,9 +148,9 @@ def alt_admin_user(db, django_user_model, django_username_field):
 @pytest.fixture
 def alt_admin_client(db, alt_admin_user):
     """A Django test client logged in as an admin user."""
-    client = Client()
+    client = SCOSTestClient()
     if oauth_session_authentication_enabled:
-        token_payload = get_token_payload()
+        token_payload, _ = get_token_payload(uid=UID)
         encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session

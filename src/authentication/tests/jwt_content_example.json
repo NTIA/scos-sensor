@@ -31,5 +31,5 @@
         "ROLE_MANAGER"
     ],
     "jti": "e4271916-bfe0-4028-b372-dc05c4882c88",
-    "client_id": "sensor01"
+    "client_id": "sensor01.sms.internal"
 }
