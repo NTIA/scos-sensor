@@ -67,7 +67,9 @@ class TaskResult(models.Model):
         all_results = TaskResult.objects.all().order_by("id")
         filter = {"schedule_entry__name": self.schedule_entry.name}
         same_entry_results = all_results.filter(**filter)
-        if same_entry_results.count() > 0 and same_entry_results[0].id != self.id: # prevent from deleting this task result's acquisition
+        if (
+            same_entry_results.count() > 0 and same_entry_results[0].id != self.id
+        ):  # prevent from deleting this task result's acquisition
             acquisitions = same_entry_results[0].data
             if acquisitions.count() > 0:
                 data_path = os.path.dirname(acquisitions.all()[0].data.path)

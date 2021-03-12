@@ -2,10 +2,10 @@ import os
 import tempfile
 
 import numpy as np
+import sigmf.sigmffile
 from rest_framework import status
 
 import sensor.settings
-import sigmf.sigmffile
 from tasks.tests.utils import (
     HTTPS_KWARG,
     reverse_archive,
