@@ -6,7 +6,7 @@ django-extensions==2.2.6
 django-filter==2.2.0
 django-session-timeout==0.1.0
 djangorestframework~=3.9.4
-docker-compose~=1.24.0
+docker-compose~=1.28.5
 drf-yasg==1.15.0
 environs==4.2.0
 gunicorn~=19.9.0

@@ -1,9 +1,19 @@
 import pytest
+from django.conf import settings
 from django.test.client import Client
 
 import actions
 import scheduler
+import shutil
 from authentication.models import User
+from tasks.models import TaskResult
+
+@pytest.fixture(autouse=True)
+def cleanup_db(db):
+    yield
+    # cleans up acquisition data files
+    TaskResult.objects.all().delete()
+    shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
 
 
 @pytest.yield_fixture

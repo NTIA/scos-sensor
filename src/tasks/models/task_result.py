@@ -1,10 +1,12 @@
 import datetime
+import os
+import shutil
 
 from django.db import models
 from django.utils import timezone
 
 from schedule.models import ScheduleEntry
-from sensor.settings import MAX_TASK_RESULTS
+from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
 
 UTC = timezone.timezone.utc
@@ -57,16 +59,22 @@ class TaskResult(models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Allow Swapping max_results for testing
-        self.max_results = MAX_TASK_RESULTS
+        # Allow Swapping max_disk_usage for testing
+        self.max_disk_usage = MAX_DISK_USAGE
 
     def save(self):
-        """Limit number of results to MAX_TASK_RESULTS by removing oldest."""
-        all_results = TaskResult.objects.all()
+        """Limit disk usage to MAX_DISK_USAGE by removing oldest result."""
+        all_results = TaskResult.objects.all().order_by("id")
         filter = {"schedule_entry__name": self.schedule_entry.name}
         same_entry_results = all_results.filter(**filter)
-        if same_entry_results.count() >= self.max_results:
-            same_entry_results[0].delete()
+        if same_entry_results.count() > 0 and same_entry_results[0].id != self.id: # prevent from deleting this task result's acquisition
+            acquisitions = same_entry_results[0].data
+            if acquisitions.count() > 0:
+                data_path = os.path.dirname(acquisitions.all()[0].data.path)
+                disk_space = shutil.disk_usage(data_path)
+                percent_used = (disk_space.used / disk_space.total) * 100
+                if percent_used > self.max_disk_usage:
+                    same_entry_results[0].delete()
 
         super().save()
 
