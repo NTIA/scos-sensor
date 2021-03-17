@@ -58,6 +58,7 @@ LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
+DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
 # JSON configs
 # TODO remove calibration files, add instructions to set these in scos-usrp
