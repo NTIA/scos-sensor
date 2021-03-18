@@ -4,9 +4,9 @@ import os
 import secrets
 import uuid
 from datetime import datetime, timedelta
+from tempfile import NamedTemporaryFile
 
 import jwt
-import pem
 import pytest
 from cryptography.x509 import load_pem_x509_certificate
 from django import conf
@@ -15,6 +15,7 @@ from rest_framework.test import RequestsClient
 
 from authentication.auth import oauth_jwt_authentication_enabled
 from authentication.models import User
+from authentication.tests.utils import get_test_public_private_key
 from sensor import V1
 
 pytestmark = pytest.mark.skipif(
@@ -23,48 +24,14 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-TEST_JWT_PUBLIC_KEY_FILE = os.path.join(conf.settings.CERTS_DIR, "test/test_pubkey.pem")
-TEST_JWT_PRIVATE_KEY_FILE = os.path.join(
-    conf.settings.CERTS_DIR, "test/test_private_key.pem"
-)
-PRIVATE_KEY = None
-PUBLIC_KEY = None
+# PRIVATE_KEY, PUBLIC_KEY = get_test_public_private_key()
 jwt_content_file = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "jwt_content_example.json"
 )
 with open(jwt_content_file) as token_file:
     TOKEN_CONTENT = json.load(token_file)
 
-with open(TEST_JWT_PRIVATE_KEY_FILE, "rb") as pem_file:
-    certs = pem.parse(pem_file.read())
-
-for cert in certs:
-    byte_data = cert.as_bytes()
-    if type(cert) in [pem.RSAPublicKey, pem.Certificate]:
-        x509_cert = load_pem_x509_certificate(byte_data)
-        for attribute in x509_cert.subject:
-            # check commonName (oid = 2.5.4.3)
-            if (
-                attribute.oid.dotted_string == "2.5.4.3"
-                and attribute.value == "sensor01"
-            ):
-                PUBLIC_KEY = cert
-    elif type(cert) in [pem.RSAPrivateKey, pem.PrivateKey]:
-        PRIVATE_KEY = cert
-    else:
-        raise Exception(f"not checking for type = {type(cert)}")
-
-BAD_PRIVATE_KEY_FILE = os.path.join(
-    conf.settings.CERTS_DIR, "test/test_bad_private_key.pem"
-)
-BAD_PRIVATE_KEY = None
-with open(BAD_PRIVATE_KEY_FILE, "rb") as pem_file:
-    certs = pem.parse(pem_file.read())
-    for cert in certs:
-        byte_data = cert.as_bytes()
-        if type(cert) in [pem.RSAPrivateKey, pem.PrivateKey]:
-            BAD_PRIVATE_KEY = cert
-BAD_PUBLIC_KEY_FILE = os.path.join(conf.settings.CERTS_DIR, "test/test_bad_pubkey.pem")
+BAD_PRIVATE_KEY, BAD_PUBLIC_KEY = get_test_public_private_key()
 
 one_min = timedelta(minutes=1)
 one_day = timedelta(days=1)
@@ -106,29 +73,27 @@ def test_no_token_unauthorized(live_server):
 
 
 @pytest.mark.django_db
-def test_token_no_roles_unauthorized(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_no_roles_unauthorized(live_server, jwt_keys):
     token_payload, uid = get_token_payload(authorities=[])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert response.json()["detail"] == "User missing required role"
 
 
 @pytest.mark.django_db
-def test_token_role_manager_accepted(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_role_manager_accepted(live_server, jwt_keys):
     token_payload, uid = get_token_payload()
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 200
 
 
-def test_bad_token_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_bad_token_forbidden(live_server):
     client = RequestsClient()
     token = (
         secrets.token_urlsafe(28)
@@ -140,60 +105,70 @@ def test_bad_token_forbidden(settings, live_server):
     response = client.get(f"{live_server.url}", headers=get_headers("test_uid", token))
     print(f"headers: {response.request.headers}")
     assert response.status_code == 403
+    assert "Unable to decode token!" in response.json()["detail"]
 
 
 @pytest.mark.django_db
-def test_token_expired_1_day_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_expired_1_day_forbidden(live_server, jwt_keys):
     current_datetime = datetime.now()
     token_payload, uid = get_token_payload(exp=(current_datetime - one_day).timestamp())
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert response.json()["detail"] == "Token is expired!"
 
 
 @pytest.mark.django_db
-def test_bad_private_key_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_bad_private_key_forbidden(live_server):
     token_payload, uid = get_token_payload()
-    encoded = jwt.encode(token_payload, str(BAD_PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(
+        token_payload, str(BAD_PRIVATE_KEY.decode("utf-8")), algorithm="RS256"
+    )
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert response.json()["detail"] == "Unable to verify token!"
 
 
 @pytest.mark.django_db
-def test_bad_public_key_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = BAD_PUBLIC_KEY_FILE
-    token_payload, uid = get_token_payload()
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
-    client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
-    assert response.status_code == 403
+def test_bad_public_key_forbidden(settings, live_server, jwt_keys):
+    with NamedTemporaryFile() as jwt_public_key_file:
+        jwt_public_key_file.write(BAD_PUBLIC_KEY)
+        jwt_public_key_file.flush()
+        settings.PATH_TO_JWT_PUBLIC_KEY = jwt_public_key_file.name
+        token_payload, uid = get_token_payload()
+        encoded = jwt.encode(
+            token_payload, str(jwt_keys.private_key), algorithm="RS256"
+        )
+        utf8_bytes = encoded.decode("utf-8")
+        client = RequestsClient()
+        response = client.get(
+            f"{live_server.url}", headers=get_headers(uid, utf8_bytes)
+        )
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Unable to verify token!"
 
 
 @pytest.mark.django_db
-def test_token_expired_1_min_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_expired_1_min_forbidden(live_server, jwt_keys):
     current_datetime = datetime.now()
     token_payload, uid = get_token_payload(exp=(current_datetime - one_min).timestamp())
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert response.json()["detail"] == "Token is expired!"
 
 
 @pytest.mark.django_db
-def test_token_expires_in_1_min_accepted(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_expires_in_1_min_accepted(live_server, jwt_keys):
     current_datetime = datetime.now()
     token_payload, uid = get_token_payload(exp=(current_datetime + one_min).timestamp())
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
@@ -201,22 +176,21 @@ def test_token_expires_in_1_min_accepted(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_token_role_user_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_role_user_forbidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(authorities=["ROLE_USER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert response.json()["detail"] == "User missing required role"
 
 
 @pytest.mark.django_db
-def test_token_role_user_required_role_accepted(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_role_user_required_role_accepted(settings, live_server, jwt_keys):
     settings.REQUIRED_ROLE = "ROLE_USER"
     token_payload, uid = get_token_payload(authorities=["ROLE_USER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
@@ -224,12 +198,11 @@ def test_token_role_user_required_role_accepted(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_token_multiple_roles_accepted(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_multiple_roles_accepted(live_server, jwt_keys):
     token_payload, uid = get_token_payload(
         authorities=["ROLE_MANAGER", "ROLE_USER", "ROLE_ITS"]
     )
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
@@ -237,12 +210,11 @@ def test_token_multiple_roles_accepted(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_token_mulitple_roles_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_mulitple_roles_forbidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(
         authorities=["ROLE_SENSOR", "ROLE_USER", "ROLE_ITS"]
     )
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
@@ -250,10 +222,9 @@ def test_token_mulitple_roles_forbidden(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_urls_unauthorized(settings, live_server, user):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_urls_unauthorized(live_server, jwt_keys):
     token_payload, uid = get_token_payload(authorities=["ROLE_USER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     headers = get_headers(uid, utf8_bytes)
@@ -288,10 +259,9 @@ def test_urls_unauthorized(settings, live_server, user):
 
 
 @pytest.mark.django_db
-def test_urls_authorized(settings, live_server, admin_user):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_urls_authorized(live_server, jwt_keys):
     token_payload, uid = get_token_payload(authorities=["ROLE_MANAGER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     headers = get_headers(uid, utf8_bytes)
@@ -326,12 +296,13 @@ def test_urls_authorized(settings, live_server, admin_user):
 
 
 @pytest.mark.django_db
-def test_user_cannot_view_user_detail(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_user_cannot_view_user_detail(live_server, jwt_keys):
     sensor01_token_payload, sensor01_uid = get_token_payload(
         authorities=["ROLE_MANAGER"]
     )
-    encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(
+        sensor01_token_payload, str(jwt_keys.private_key), algorithm="RS256"
+    )
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(
@@ -341,7 +312,9 @@ def test_user_cannot_view_user_detail(settings, live_server):
 
     sensor02_token_payload, sensor02_uid = get_token_payload(authorities=["ROLE_USER"])
     sensor02_token_payload["user_name"] = "sensor02"
-    encoded = jwt.encode(sensor02_token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(
+        sensor02_token_payload, str(jwt_keys.private_key), algorithm="RS256"
+    )
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
 
@@ -356,17 +329,18 @@ def test_user_cannot_view_user_detail(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_user_cannot_view_user_detail_role_change(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_user_cannot_view_user_detail_role_change(live_server, jwt_keys):
     sensor01_token_payload, uid = get_token_payload(authorities=["ROLE_MANAGER"])
-    encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(
+        sensor01_token_payload, str(jwt_keys.private_key), algorithm="RS256"
+    )
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 200
 
     token_payload, uid = get_token_payload(authorities=["ROLE_USER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
 
@@ -381,10 +355,9 @@ def test_user_cannot_view_user_detail_role_change(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_admin_can_view_user_detail(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_admin_can_view_user_detail(live_server, jwt_keys):
     token_payload, uid = get_token_payload(authorities=["ROLE_MANAGER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     headers = get_headers(uid, utf8_bytes)
@@ -400,12 +373,13 @@ def test_admin_can_view_user_detail(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_admin_can_view_other_user_detail(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_admin_can_view_other_user_detail(live_server, jwt_keys):
     sensor01_token_payload, sensor01_uid = get_token_payload(
         authorities=["ROLE_MANAGER"]
     )
-    encoded = jwt.encode(sensor01_token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(
+        sensor01_token_payload, str(jwt_keys.private_key), algorithm="RS256"
+    )
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(
@@ -417,7 +391,9 @@ def test_admin_can_view_other_user_detail(settings, live_server):
         authorities=["ROLE_MANAGER"]
     )
     sensor02_token_payload["user_name"] = "sensor02"
-    encoded = jwt.encode(sensor02_token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(
+        sensor02_token_payload, str(jwt_keys.private_key), algorithm="RS256"
+    )
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
 
@@ -433,10 +409,9 @@ def test_admin_can_view_other_user_detail(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_token_hidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_hidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(authorities=["ROLE_MANAGER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     headers = get_headers(uid, utf8_bytes)
@@ -457,11 +432,10 @@ def test_token_hidden(settings, live_server):
 
 
 @pytest.mark.django_db
-def test_change_token_role_bad_signature(settings, live_server):
+def test_change_token_role_bad_signature(live_server, jwt_keys):
     """Make sure token modified after it was signed is rejected"""
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
     token_payload, uid = get_token_payload(authorities=["ROLE_USER"])
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     first_period = utf8_bytes.find(".")
     second_period = utf8_bytes.find(".", first_period + 1)
@@ -499,121 +473,148 @@ def test_change_token_role_bad_signature(settings, live_server):
         f"{live_server.url}", headers=get_headers(uid, modified_token)
     )
     assert response.status_code == 403
+    assert response.json()["detail"] == "Unable to verify token!"
 
 
 @pytest.mark.django_db
-def test_token_bad_client_id_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_token_bad_client_id_forbidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(client_id="bad_client_id")
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! Access token was not issued to this client!"
+    )
 
 
 @pytest.mark.django_db
-def test_no_client_id_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_no_client_id_forbidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(client_id="bad_client_id")
     del token_payload["client_id"]
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert "Unable to decode token!" in response.json()["detail"]
 
 
 @pytest.mark.django_db
-def test_client_id_none_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_client_id_none_forbidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(client_id="bad_client_id")
     token_payload["client_id"] = None
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! Access token was not issued to this client!"
+    )
 
 
 @pytest.mark.django_db
-def test_client_id_empty_forbidden(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_client_id_empty_forbidden(live_server, jwt_keys):
     token_payload, uid = get_token_payload(client_id="bad_client_id")
     token_payload["client_id"] = ""
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! Access token was not issued to this client!"
+    )
 
 
 @pytest.mark.django_db
-def test_jwt_uid_missing(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_jwt_uid_missing(live_server, jwt_keys):
     token_payload, uid = get_token_payload()
     token_payload["userDetails"].pop("uid")
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert "Unable to decode token!" in response.json()["detail"]
 
     token_payload, uid = get_token_payload()
     token_payload["userDetails"]["uid"] = None
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! JWT DN does not match client certificate DN!"
+    )
 
     token_payload, uid = get_token_payload()
     token_payload["userDetails"]["uid"] = ""
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! JWT DN does not match client certificate DN!"
+    )
 
 
-def test_header_uid_missing(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_header_uid_missing(live_server, jwt_keys):
     token_payload, _ = get_token_payload()
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(
         f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}",}
     )
     assert response.status_code == 403
+    assert response.json()["detail"] == "No client certificate DN found!"
 
     response = client.get(
         f"{live_server.url}",
         headers={"Authorization": f"Bearer {utf8_bytes}", "X-Ssl-Client-Dn": None},
     )
     assert response.status_code == 403
+    assert response.json()["detail"] == "No client certificate DN found!"
 
     response = client.get(
         f"{live_server.url}",
         headers={"Authorization": f"Bearer {utf8_bytes}", "X-Ssl-Client-Dn": ""},
     )
     assert response.status_code == 403
+    assert response.json()["detail"] == "No client certificate DN found!"
 
 
-def test_header_jwt_uid_mismatch(settings, live_server):
-    settings.PATH_TO_JWT_PUBLIC_KEY = TEST_JWT_PUBLIC_KEY_FILE
+def test_header_jwt_uid_mismatch(live_server, jwt_keys):
     token_payload, uid = get_token_payload()
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(
         f"{live_server.url}", headers=get_headers("test_uid", utf8_bytes)
     )
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! JWT DN does not match client certificate DN!"
+    )
 
     token_payload["userDetails"]["uid"] = "test_uid"
-    encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
     assert response.status_code == 403
+    assert (
+        response.json()["detail"]
+        == "Unable to decode token! JWT DN does not match client certificate DN!"
+    )

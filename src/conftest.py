@@ -1,3 +1,6 @@
+import tempfile
+from collections import namedtuple
+
 import jwt
 import pytest
 
@@ -5,8 +8,13 @@ import actions
 import scheduler
 from authentication.auth import oauth_session_authentication_enabled
 from authentication.models import User
-from authentication.tests.test_jwt_auth import PRIVATE_KEY, get_token_payload
+from authentication.tests.test_jwt_auth import get_token_payload
+from authentication.tests.utils import get_test_public_private_key
 from sensor.tests.scos_test_client import UID, SCOSTestClient
+
+PRIVATE_KEY, PUBLIC_KEY = get_test_public_private_key()
+Keys = namedtuple("KEYS", ["private_key", "public_key"])
+keys = Keys(PRIVATE_KEY.decode("utf-8"), PUBLIC_KEY.decode("utf-8"))
 
 
 @pytest.yield_fixture
@@ -54,7 +62,7 @@ def user_client(db, user):
     client = SCOSTestClient()
     if oauth_session_authentication_enabled:
         token_payload, _ = get_token_payload(authorities=["ROLE_USER"], uid=UID)
-        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        encoded = jwt.encode(token_payload, str(keys.private_key), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
         session["oauth_token"] = {}
@@ -89,7 +97,7 @@ def alt_user_client(db, alt_user):
     client = SCOSTestClient()
     if oauth_session_authentication_enabled:
         token_payload, _ = get_token_payload(authorities=["ROLE_USER"], uid=UID)
-        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        encoded = jwt.encode(token_payload, str(keys.private_key), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
         session["oauth_token"] = {}
@@ -107,7 +115,7 @@ def admin_client(db, django_user_model, admin_user):
     client = SCOSTestClient()
     if oauth_session_authentication_enabled:
         token_payload, _ = get_token_payload(uid=UID)
-        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        encoded = jwt.encode(token_payload, str(keys.private_key), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
         session["oauth_token"] = {}
@@ -151,7 +159,7 @@ def alt_admin_client(db, alt_admin_user):
     client = SCOSTestClient()
     if oauth_session_authentication_enabled:
         token_payload, _ = get_token_payload(uid=UID)
-        encoded = jwt.encode(token_payload, str(PRIVATE_KEY), algorithm="RS256")
+        encoded = jwt.encode(token_payload, str(keys.private_key), algorithm="RS256")
         utf8_bytes = encoded.decode("utf-8")
         session = client.session
         session["oauth_token"] = {}
@@ -195,3 +203,12 @@ mock_time_domain_iq_acquire = stepped_freq_action.SteppedFrequencyTimeDomainIqAc
 actions.by_name["mock_time_domain_iq_acquire"] = mock_time_domain_iq_acquire
 
 actions.init()
+
+
+@pytest.fixture(autouse=True)
+def jwt_keys(settings):
+    with tempfile.NamedTemporaryFile() as jwt_public_key_file:
+        jwt_public_key_file.write(PUBLIC_KEY)
+        jwt_public_key_file.flush()
+        settings.PATH_TO_JWT_PUBLIC_KEY = jwt_public_key_file.name
+        yield keys

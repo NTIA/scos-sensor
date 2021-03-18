@@ -32,7 +32,9 @@ for a custom action would be added in `./src/actions/tests`.
 [tox](https://tox.readthedocs.io/en/latest/) is a tool that can run all
 available tests in a virtual environment against all supported version of
 python. Running `pytest` directly is faster, but running `tox` is a more
-thorough test.
+thorough test. It is not recommended to run `pytest` directly, and instead used `tox`.
+This is because `tox` will set environment variables appropriately depending on the
+command.
 
 The following commands install the sensor's development requirements. We highly
 recommend you initialize a virtual development environment using a tool such a
@@ -41,8 +43,9 @@ recommend you initialize a virtual development environment using a tool such a
 ```bash
 $ cd src
 $ python3 -m pip install -r requirements-dev.txt
-$ pytest          # faster, but less thorough
-$ tox             # tests code in clean virtualenv
+$ tox             # tests code in clean virtualenv, skips OAUTH tests
+$ tox -e py37     # test with single python version
+$ tox -e oauth    # run all tests using OAUTH authentication, skips token tests
 $ tox --recreate  # if you change `requirements.txt`
 $ tox -e coverage # check where test coverage lacks
 ```

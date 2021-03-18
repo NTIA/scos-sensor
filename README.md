@@ -177,89 +177,174 @@ developers familiar with Python.
 This section covers authentication, permissions, and certificates used to access the
 sensor, and the authentication available for the callback URL. Two different types of
 authentication are available for authenticating against the sensor and for
-authenticating when using a callback URL. **Note that the certificate authorities
-(CAs), SSL certificates, private keys, and JWT public keys used in this repository are
-for testing and development purposes only. They should not be used in a production
-system.**
+authenticating when using a callback URL.
 
 ### Sensor Authentication And Permissions
-The sensor can be configured to authenticate using OAuth JWT access tokens from an
-external authorization server or using Djnago Rest Framework Token Authentication.
+The sensor can be configured to authenticate using OAuth with an
+external authorization server or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 This is the default authentication method. To enable Django Rest Framework
 Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
 (this will be enabled if `AUTHENTICATION` set to anything other
-than `JWT`).
+than `OAUTH`).
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
 <token>) matches a user's token.
 
 #### OAuth2 JWT Authentication
-To enable OAuth 2 JWT Authentication, set `AUTHENTICATION` to `JWT` in the environment
-file. To authenticate, the client will need to send a JWT access token in the
-authorization header (using "Bearer " + access token). The token signature will be
-verified using the public key from the `PATH_TO_JWT_PUBLIC_KEY` setting. The expiration
-time will be checked. Only users who have an authority matching the `REQUIRED_ROLE`
-setting will be authorized.
+To enable OAuth 2 JWT (JSON Web Token) Authentication, set `AUTHENTICATION` to `OAUTH`
+in the environment file. To authenticate, the client will need to send a JWT access
+token in the authorization header (using "Bearer " + access token). The token signature
+will be verified using the public key from the `PATH_TO_JWT_PUBLIC_KEY` setting. The
+expiration time will be checked. Only users who have an authority matching the
+`REQUIRED_ROLE` setting will be authorized. See a sample of JWT content
+[here](src/authentication/tests/jwt_content_example.json).
 
 The token is expected to come from an OAuth2 authorization server. For more
 information, see https://tools.ietf.org/html/rfc6749.
+
+Currently, only JWS (JSON Web Signature) JWTs are supported.
 
 #### Certificates
 The NGINX web server requires an SSL certificate to use https. The certificate and
 private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
 file. Note that these paths are relative to the configs/certs directory.
 
-Optionally, client certificates can be required. To require client certificates,
-uncomment `ssl_verify_client on;` and `ssl_ocsp on;` in nginx/conf.template. Set the CA
-certificate used for validating client certificates using the `SSL_CA_PATH` (relative
-to configs/certs) in the environment file.
+The NGINX web server can be set to require client certificates. This can be enabled for
+token authentication and is needed for OAUTH authentication. To require client
+certificates, uncomment `ssl_verify_client on;` and `ssl_ocsp on;` in
+nginx/conf.template. Set the CA certificate used for validating client certificates
+using the `SSL_CA_PATH` (relative to configs/certs) in the environment file.
 
-##### Getting Certificates
-It is recommended to create your own CA for testing. **For production, make sure to use
-certificates from a trusted CA.** For testing, you can use the certificates and keys in
-configs/certs/test or you can use scripts/create_certificates.py to create the test
-CA certificate, test server certificate, and test client certificate. This script can
-also be used with an existing CA. Here are the instructions to use create_certificates
-with an existing CA.
-1. To configure the create_certificates.py script, use create_certificates.ini. In
-create_certificates.ini, set `ca_private_key_path` and `ca_certificate_path` to the
-path of your CA private key and certificate. Configure the remaining parameters as
-desired. The SAN (subject alternative name) parameters will need to be set to the
-appropriate IP addresses and DNS names of your server and client.
-2. While in scos-sensor root directory, run the create_certificates.py script passing
-    the following arguments in the listed order:
+A custom CA can be created for testing. **For production, make sure to use
+certificates from a trusted CA.**
+The below steps describe the process for creating self-signed certificates using
+openssl.
 
-    - ini_path - path to the create_certificates.ini file.
-    - ini_section - section of the INI file to use.
-    - key_passphrase - Passphrase to use to encrypt private keys. Set to `None` to
-    disable encryption.
+Below instructions adapted from
+[here](https://www.golinuxcloud.com/openssl-create-client-server-certificate/#OpenSSL_create_client_certificate)
 
-    The following certificates will be generated:
+##### Server Certificate
+This is the SSL certificate used for the scos-sensor web server and is always required.
 
-    - sensor01_private.pem - sensor private key.
-    - sensor01_certificate.pem - sensor certificate.
-    - sensor01_client_private.pem - client private key.
-    - sensor01_client.pem - client certificate.
-3. Copy sensor01_private and sensor01_certificate to the computer where the scos-sensor
-will run. If you are using client certificates, also copy the CA certificate used to
-generate the certificates. Make sure the certificates are somewhere in configs/certs,
-and that `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) are set to the
-paths of the certificates relative to configs/certs. If you are using client
-certificates, set `SSL_CA_PATH` to the path of the CA certificate relative to
-configs/certs.
-4. Run scos-sensor. If you are using client certificates, use
-sensor01_client_private.pem and sensor01_client to connect to the API.
+###### Step1: Create Self Signed Root CA
+To be able to sign server-side and client-side certificates, we need to create our own
+self-signed root CA certificate first.
 
-The create_certificates.py script can also generate a new CA and use it for generating
-the certificates. To run create_certificates.py this way, comment out
-`ca_private_key_path` and `ca_certificate_path` in create_certificates.ini, make sure
-`ca_private_key_save_path` and the other parameters are set as desired, then repeat
-steps 2-4 above. The CA private key file (saved to ca_private_key_save_path) and the CA
-public key (scostestca.crt) will be generated in addition to the files listed in step
-2 above.
+```
+openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.crt
+```
+
+###### Step2: Generate Server-side certificate
+Generate a host certificate signing request.
+
+```
+openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr
+```
+
+Generate signed certificate with the root certificate authority. If the web site will
+be accessed by other computer, include the server short name, full name, ip in
+SAN (Subject Alternative Name).
+- For example: **-ext san=dns:localhost,dns:sensor01,dns:sensor01.domain,ip:127.0.0.1,ip:xxx.xxx.xxx.xxx**
+
+Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
+It'll store some additional parameters needed during signing the certificate. The
+following is an example:
+
+```
+authorityKeyIdentifier=keyid,issuer:always
+basicConstraints=CA:FALSE
+subjectAltName = @alt_names
+subjectKeyIdentifier = hash
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+[alt_names]
+DNS.1 = sensor01.domain
+DNS.2 = localhost
+IP.1 = 127.0.0.1
+IP.2 = xxx.xxx.xxx.xxx
+```
+
+Sign the host certificate.
+```
+openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in sensor01.csr -out sensor01.pem -days 365 -sha256 -CAcreateserial -extfile sensor01.ext
+```
+
+##### Client Certificate
+This certificate is required for using the sensor with mutual TLS which is required if OAuth authentication is enabled.
+
+###### Step 1: Generate private key
+
+```bash
+openssl genrsa -out client.key.pem 4096
+```
+
+###### Step 2: Generate a host certificate signing request
+
+```
+openssl req -new -key client.key.pem -out client.csr
+```
+
+###### Step 3: Generate signed certificate with the certificate authority
+
+Create client.ext with the following:
+
+```
+basicConstraints = CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+keyUsage = digitalSignature
+extendedKeyUsage = clientAuth
+```
+
+Sign client certificate
+```
+openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in tester02.csr -out client.pem -days 365 -CAcreateserial -sha256 -extfile client.ext
+```
+
+###### Step 4
+Import the generated certificate into your browser.
+
+##### Generating JWT Public/Private Key
+The JWT public key must correspond to the private key of the JWT issuer (OAUTH
+authorization server). The instructions below could be used for manual testing with
+manually created JWTs.
+
+###### Step 1: Create public/private key pair
+```bash
+openssl genrsa -out key.pem 2048
+```
+
+###### Step 2: Extract Public Key
+openssl rsa -in key.pem -outform PEM -pubout -out public.pem
+
+###### Step 3: Extract Private Key
+openssl pkey -inform PEM -outform DER -in client.pem -passin passphrase -out key.pem
+
+###### Configure scos-sensor
+Copy the server certificate, server private key, and CA certificate (if using 2 way
+SSL, required for OAuth) to scos-sensor/configs/certs. Then set `SSL_CERT_PATH` and
+`SSL_KEY_PATH` (in the environment file) to the paths of the certificates relative to
+configs/certs (for certificate at scos-sensor/configs/certs/cert.pem, set
+SSL_CERT_PATH=cert.pem). If you are using client certificates, set `SSL_CA_PATH` to the
+path of the CA certificate relative to configs/certs.
+
+If you are using OAUTH authentication, set PATH_TO_JWT_PUBLIC_KEY to the path of the
+JWT public key. This should come from an OAUTH authorization server. Alternatively, the
+JWT private key created above could be used to manually sign a JWT token for testing
+if PATH_TO_JWT_PUBLIC_KEY is set to the JWT public key created above.
+
+If you are using client certificates, use
+client.pem to connect to the API by importing this certificate into your browser.
+
+For callback functionality with an OAUTH authorized callback URL, set
+PATH_TO_CLIENT_CERT and PATH_TO_VERIFY_CERT. If the callback URL uses the same
+authorization server and certificate authority as the sensor, the sensor server
+certificate could likely be used for PATH_TO_CLIENT_CERT with PATH_TO_VERIFY_CERT set
+to the shared CA certificate or intermediate CA from the same root CA.
+
 
 #### Permissions and Users
 The API requires the user to either have an authority in the JWT token matching the the
