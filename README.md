@@ -69,11 +69,11 @@ prime concern. `scos-sensor` sits on top of a popular open-source framework (see
 site scripting (XSS), cross site request forgery (CSRF), SQL injection, and
 clickjacking attacks, and also enforces SSL/HTTPS (traffic encryption), host header
 validation, and user session security. Two forms of user authentication are supported,
-Django Rest Framework token authentication and authentication using JWT access tokens
-from an OAuth 2 authorization server. `scos-sensor` requires a privileged user or
-service account in order to acces the system. For more information, see
-[security](#security). To minimize the chance of regressions while developing for the
-sensor, we have written almost 200 unit and integration tests. See [Developing](
+Django Rest Framework token authentication and OAuth 2 mutual TLS authentication.
+`scos-sensor` requires a privileged user or service account in order to acces the
+system. For more information, see [security](#security). To minimize the chance of
+regressions while developing for the sensor, we have written almost 200 unit and
+integration tests. See [Developing](
     DEVELOPING.md) to learn how to run the test suite.
 
 We have tried to remove the most common hurdles to remotely deploying a sensor while
@@ -180,30 +180,49 @@ authentication are available for authenticating against the sensor and for
 authenticating when using a callback URL.
 
 ### Sensor Authentication And Permissions
-The sensor can be configured to authenticate using OAuth with an
+The sensor can be configured to authenticate using OAuth 2 with an
 external authorization server or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 This is the default authentication method. To enable Django Rest Framework
 Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
-(this will be enabled if `AUTHENTICATION` set to anything other
-than `OAUTH`).
+Token authentication will be used if `AUTHENTICATION` set to anything other
+than `OAUTH`.
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
 <token>) matches a user's token.
 
-#### OAuth2 JWT Authentication
-To enable OAuth 2 JWT (JSON Web Token) Authentication, set `AUTHENTICATION` to `OAUTH`
-in the environment file. To authenticate, the client will need to send a JWT access
-token in the authorization header (using "Bearer " + access token). The token signature
-will be verified using the public key from the `PATH_TO_JWT_PUBLIC_KEY` setting. The
-expiration time will be checked. Only users who have an authority matching the
-`REQUIRED_ROLE` setting will be authorized. See a sample of JWT content
+If `CALLBACK_AUTHENTICATION=TOKEN`, the user's token will be sent to the callback
+URL. The callback URL server can use this token to verify it matches the token sent to
+the sensor when creating a schedule entry request. This is the default setting and will
+be enabled if `CALLBACK_AUTHENTICATION` is set to anything other than `"OAUTH"`.
+
+#### OAuth 2 Authentication
+To enable OAuth 2 Authentication, set `AUTHENTICATION` to `OAUTH`
+in the environment file. To authenticate against the API, the client will first need to
+get an access token from the authorization server. Then, in each request to the
+sensor, the client sends the JWT access token in the authorization header (using
+"Bearer " + access token). To authenticate against the browsable API, the OAuth 2
+authorization code flow is used. In the OAuth 2 authorization code flow, the user will
+be redirected to the authorization server to enter their username and password before
+being redirected back to the sensor.
+
+The OAuth 2 access token (used both in the authorization header and authorization code
+flow) signature will be verified using the public key from the `PATH_TO_JWT_PUBLIC_KEY`
+setting. The access token verification checks additional properties including the access
+token expiration time and client id. For scos-sensor, mutual TLS is required when using
+OAuth 2. As part of the OAuth 2 access token verification, scos-sensor will verfiy the
+UID in the subject of the client certificate matches the UID in the JWT access token.
+
+Only users who have an authority matching the `REQUIRED_ROLE` setting will have
+permission to access the API endpoints. See a sample of JWT content
 [here](src/authentication/tests/jwt_content_example.json).
 
 The token is expected to come from an OAuth2 authorization server. For more
-information, see https://tools.ietf.org/html/rfc6749.
+information, about OAuth 2 see https://tools.ietf.org/html/rfc6749.
+[This section](https://tools.ietf.org/html/rfc6749#section-4.1) describes the
+authorization code flow.
 
 Currently, only JWS (JSON Web Signature) JWTs are supported.
 
@@ -212,11 +231,13 @@ The NGINX web server requires an SSL certificate to use https. The certificate a
 private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
 file. Note that these paths are relative to the configs/certs directory.
 
-The NGINX web server can be set to require client certificates. This can be enabled for
-token authentication and is needed for OAUTH authentication. To require client
-certificates, uncomment `ssl_verify_client on;` and `ssl_ocsp on;` in
-nginx/conf.template. Set the CA certificate used for validating client certificates
-using the `SSL_CA_PATH` (relative to configs/certs) in the environment file.
+The NGINX web server can be set to require client certificates (mutual TLS). This can
+optionally be enabled for token authentication and is required for OAUTH
+authentication. The client certificate subject UID is only verified for OAuth 2
+authentication, not for token authentication. To require client certificates, uncomment
+`ssl_verify_client on;` and `ssl_ocsp on;` in nginx/conf.template. Set the CA
+certificate used for validating client certificates using the `SSL_CA_PATH` (relative
+to configs/certs) in the environment file.
 
 A custom CA can be created for testing. **For production, make sure to use
 certificates from a trusted CA.**
@@ -234,7 +255,7 @@ To be able to sign server-side and client-side certificates, we need to create o
 self-signed root CA certificate first.
 
 ```
-openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.crt
+openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.pem
 ```
 
 ###### Step2: Generate Server-side certificate
@@ -243,11 +264,6 @@ Generate a host certificate signing request.
 ```
 openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr
 ```
-
-Generate signed certificate with the root certificate authority. If the web site will
-be accessed by other computer, include the server short name, full name, ip in
-SAN (Subject Alternative Name).
-- For example: **-ext san=dns:localhost,dns:sensor01,dns:sensor01.domain,ip:127.0.0.1,ip:xxx.xxx.xxx.xxx**
 
 Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
 It'll store some additional parameters needed during signing the certificate. The
@@ -273,21 +289,14 @@ openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in sensor01.csr -out
 ```
 
 ##### Client Certificate
-This certificate is required for using the sensor with mutual TLS which is required if OAuth authentication is enabled.
+This certificate is required for using the sensor with mutual TLS which is required if
+OAuth authentication is enabled.
 
-###### Step 1: Generate private key
-
-```bash
-openssl genrsa -out client.key.pem 4096
-```
-
-###### Step 2: Generate a host certificate signing request
+Replace the brackets with the information specific to your user and organization.
 
 ```
-openssl req -new -key client.key.pem -out client.csr
+openssl req -new -newkey rsa:4096 -keyout client.key -out client.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/UID=[user ID]/CN=[common name]"
 ```
-
-###### Step 3: Generate signed certificate with the certificate authority
 
 Create client.ext with the following:
 
@@ -299,12 +308,12 @@ keyUsage = digitalSignature
 extendedKeyUsage = clientAuth
 ```
 
-Sign client certificate
-```
-openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in tester02.csr -out client.pem -days 365 -CAcreateserial -sha256 -extfile client.ext
+Sign the client certificate.
+
+```bash
+openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in client.csr -out client.pem -days 365 -sha256 -CAcreateserial -extfile client.ext
 ```
 
-###### Step 4
 Import the generated certificate into your browser.
 
 ##### Generating JWT Public/Private Key
