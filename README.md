@@ -185,7 +185,7 @@ external authorization server or using Django Rest Framework Token Authenticatio
 
 #### Django Rest Framework Token Authentication
 This is the default authentication method. To enable Django Rest Framework
-Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
+Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file.
 Token authentication will be used if `AUTHENTICATION` set to anything other
 than `OAUTH`.
 
@@ -228,13 +228,13 @@ The NGINX web server requires an SSL certificate to use https. The certificate a
 private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
 file. Note that these paths are relative to the configs/certs directory.
 
-The NGINX web server can be set to require client certificates (mutual TLS). This can
+The Nginx web server can be set to require client certificates (mutual TLS). This can
 optionally be enabled for token authentication and is required for OAUTH
 authentication. The client certificate subject UID is only verified for OAuth 2
 authentication, not for token authentication. To require client certificates, uncomment
 `ssl_verify_client on;` and `ssl_ocsp on;` in the [Nginx configuration
 file](nginx/conf.template). Set the CA certificate used for validating client
-certificates using the `SSL_CA_PATH` (relative to configs/certs) in the environment
+certificates using the `SSL_CA_PATH` (relative to `configs/certs`) in the environment
 file.
 
 A custom CA can be created for testing. **For production, make sure to use
@@ -243,7 +243,7 @@ The below steps describe the process for creating self-signed certificates using
 openssl.
 
 Below instructions adapted from
-[here](https://www.golinuxcloud.com/openssl-create-client-server-certificate/#OpenSSL_create_client_certificate)
+[here](https://www.golinuxcloud.com/openssl-create-client-server-certificate/#OpenSSL_create_client_certificate).
 
 ##### Server Certificate
 This is the SSL certificate used for the scos-sensor web server and is always required.
@@ -316,8 +316,9 @@ Import the generated certificate into your browser.
 
 ##### Generating JWT Public/Private Key
 The JWT public key must correspond to the private key of the JWT issuer (OAuth
-authorization server). The instructions below could be used for manual testing with
-manually created JWTs.
+authorization server). For manual testing, the instructions below could be used to
+create a public/private key pair for creating JWTs without an authorization
+server.
 
 ###### Step 1: Create public/private key pair
 ```bash
@@ -331,12 +332,12 @@ openssl rsa -in key.pem -outform PEM -pubout -out public.pem
 openssl pkey -inform PEM -outform DER -in client.pem -passin passphrase -out key.pem
 
 ###### Configure scos-sensor
-Copy the server certificate, server private key, and CA certificate (if using 2 way
-SSL, required for OAuth) to `scos-sensor/configs/certs`. Then set `SSL_CERT_PATH` and
-`SSL_KEY_PATH` (in the environment file) to the paths of the certificates relative to
-configs/certs (for certificate at `scos-sensor/configs/certs/cert.pem`, set
-`SSL_CERT_PATH=cert.pem`). If you are using client certificates, set `SSL_CA_PATH` to the
-path of the CA certificate relative to `configs/certs`.
+Copy the server certificate and server private key to `scos-sensor/configs/certs`. Then
+set `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) to the paths of the
+certificates relative to configs/certs (for certificate at
+`scos-sensor/configs/certs/cert.pem`, set `SSL_CERT_PATH=cert.pem`). For
+mutual TLS/OAuth, also copy the CA certificate to the same directory. Then, set
+`SSL_CA_PATH` to the path of the CA certificate relative to `configs/certs`.
 
 If you are using OAuth authentication, set `PATH_TO_JWT_PUBLIC_KEY` to the path of the
 JWT public key. This should come from an OAuth authorization server. Alternatively, the
