@@ -46,12 +46,12 @@ from itertools import zip_longest
 
 import numpy as np
 from django.core.files.base import ContentFile
+from sigmf.sigmffile import SigMFFile
 
 from actions.measurement_params import MeasurementParams
 from capabilities import capabilities
 from hardware import sdr
 from sensor import settings, utils
-from sigmf.sigmffile import SigMFFile
 
 from .base import Action
 from .sigmf import GLOBAL_INFO, get_coordinate_system_sigmf, get_sensor_location_sigmf

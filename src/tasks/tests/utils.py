@@ -13,7 +13,7 @@ from sensor import V1
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.models import TaskResult
 
-TEST_MAX_TASK_RESULTS = 100  # Reduce from default of settings.MAX_TASK_RESULTS
+TEST_MAX_DISK_USAGE = 10
 ONE_MICROSECOND = datetime.timedelta(0, 0, 1)
 
 EMPTY_RESULTS_RESPONSE = []
@@ -57,7 +57,7 @@ def simulate_acquisitions(client, schedule_entry, n=1, name=None):
     assert 0 < n <= 10
 
     if n > 1:
-        schedule_entry["relative_stop"] = n + 1
+        schedule_entry["relative_stop"] = n
 
     if name is not None:
         schedule_entry["name"] = name
@@ -111,7 +111,7 @@ def create_task_results(n, admin_client, entry_name=None):
             status="success",
             detail="",
         )
-        tr.max_results = TEST_MAX_TASK_RESULTS
+        tr.max_disk_usage = TEST_MAX_DISK_USAGE
         tr.save()
 
     return entry_name

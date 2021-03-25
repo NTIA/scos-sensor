@@ -306,8 +306,8 @@ else:
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
 
-# Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
-MAX_TASK_RESULTS = env.int("MAX_TASK_RESULTS", default=100000)
+# Delete oldest TaskResult (and related acquisitions) of current ScheduleEntry if MAX_DISK_USAGE exceeded
+MAX_DISK_USAGE = env.int("MAX_DISK_USAGE", default=85)  # percent
 # Display at most MAX_TASK_QUEUE upcoming tasks in /tasks/upcoming
 MAX_TASK_QUEUE = 50
 
