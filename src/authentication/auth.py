@@ -40,9 +40,9 @@ def get_uid_from_dn(cert_dn):
     if not match:
         raise Exception("No UID found in certificate!")
     uid_raw = match.group()
-    logger.debug(f"uid_raw = {uid_raw}")
+    # logger.debug(f"uid_raw = {uid_raw}")
     uid = uid_raw.split("=")[1].rstrip(",")
-    logger.debug(f"uid = {uid}")
+    # logger.debug(f"uid = {uid}")
     return uid
 
 
@@ -71,14 +71,6 @@ def validate_token(token, cert_uid):
             algorithms="RS256",
             options={"require": ["exp"], "verify_exp": True},
         )
-        decoded_client_id = decoded_token["client_id"]
-        request_client_id = settings.CLIENT_ID
-        if decoded_client_id != request_client_id:
-            logger.debug(
-                f"client_id from token {decoded_client_id} does not match request client_id {request_client_id}"
-            )
-            # https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16#section-2.3
-            raise Exception("Access token was not issued to this client!")
         if decoded_token["userDetails"]["uid"] != cert_uid:
             # https://tools.ietf.org/id/draft-ietf-oauth-mtls-07.html#rfc.section.3
             token_uid = decoded_token["userDetails"]["uid"]
@@ -163,6 +155,19 @@ class OAuthSessionAuthentication(authentication.BaseAuthentication):
         cert_uid = get_uid_from_dn(cert_dn)
         try:
             decoded_token = validate_token(access_token, cert_uid)
+            if "client_id" not in decoded_token:
+                logger.debug("No client_id in token")
+                raise exceptions.AuthenticationFailed("No client_id in token")
+            decoded_client_id = decoded_token["client_id"]
+            request_client_id = settings.CLIENT_ID
+            if decoded_client_id != request_client_id:
+                logger.debug(
+                    f"client_id from token {decoded_client_id} does not match request client_id {request_client_id}"
+                )
+                # https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16#section-2.3
+                raise exceptions.AuthenticationFailed(
+                    "Access token was not issued to this client!"
+                )
         except Exception as error:
             del request.session["oauth_token"]
             raise error

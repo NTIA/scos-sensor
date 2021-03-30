@@ -176,7 +176,7 @@ developers familiar with Python.
 ## Security
 This section covers authentication, permissions, and certificates used to access the
 sensor, and the authentication available for the callback URL. Two different types of
-authentication are available for authenticating against the sensor and for
+authentication are available for authenticating to the sensor and for
 authenticating when using a callback URL.
 
 ### Sensor Authentication And Permissions
@@ -224,31 +224,18 @@ authorization code flow.
 Currently, only JWS (JSON Web Signature) JWTs are supported.
 
 #### Certificates
-The NGINX web server requires an SSL certificate to use https. The certificate and
-private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
-file. Note that these paths are relative to the configs/certs directory.
+This section describes how to create a self-signed root CA, SSL server certificates for
+the sensor, optional client certificates, and test JWT public/private key pair.
 
-The Nginx web server can be set to require client certificates (mutual TLS). This can
-optionally be enabled for token authentication and is required for OAUTH
-authentication. The client certificate subject UID is only verified for OAuth 2
-authentication, not for token authentication. To require client certificates, uncomment
-`ssl_verify_client on;` and `ssl_ocsp on;` in the [Nginx configuration
-file](nginx/conf.template). Set the CA certificate used for validating client
-certificates using the `SSL_CA_PATH` (relative to `configs/certs`) in the environment
-file.
-
-A custom CA can be created for testing. **For production, make sure to use
-certificates from a trusted CA.**
-The below steps describe the process for creating self-signed certificates using
-openssl.
+As described below, a self-signed CA can be created for testing. **For production, make
+sure to use certificates from a trusted CA.**
 
 Below instructions adapted from
 [here](https://www.golinuxcloud.com/openssl-create-client-server-certificate/#OpenSSL_create_client_certificate).
 
-##### Server Certificate
+##### Sensor Certificate
 This is the SSL certificate used for the scos-sensor web server and is always required.
 
-###### Step1: Create Self Signed Root CA
 To be able to sign server-side and client-side certificates, we need to create our own
 self-signed root CA certificate first.
 
@@ -256,7 +243,6 @@ self-signed root CA certificate first.
 openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.pem
 ```
 
-###### Step2: Generate Server-side certificate
 Generate a host certificate signing request.
 
 ```
@@ -273,17 +259,27 @@ basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 subjectKeyIdentifier = hash
 keyUsage = critical, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth
+extendedKeyUsage = serverAuth, clientAuth
 [alt_names]
 DNS.1 = sensor01.domain
 DNS.2 = localhost
-IP.1 = 127.0.0.1
-IP.2 = xxx.xxx.xxx.xxx
+IP.1 = xxx.xxx.xxx.xxx
+IP.2 = 127.0.0.1
 ```
 
 Sign the host certificate.
 ```
-openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in sensor01.csr -out sensor01.pem -days 365 -sha256 -CAcreateserial -extfile sensor01.ext
+openssl x509 -req -CA scostestca.pem -CAkey scostestca.key -in sensor01.csr -out sensor01.pem -days 365 -sha256 -CAcreateserial -extfile sensor01.ext
+```
+
+If the sensor private key is encrypted, decrypt it using the following command:
+```
+openssl rsa -in sensor01.key -out sensor01_decrypted.key
+```
+
+Combine the sensor certificate and private key into one file:
+```
+cat sensor01_decrypted.key sensor01.pem > sensor01_combined.pem
 ```
 
 ##### Client Certificate
@@ -309,10 +305,16 @@ extendedKeyUsage = clientAuth
 Sign the client certificate.
 
 ```bash
-openssl x509 -req -CA scostestca.crt -CAkey scostestca.key -in client.csr -out client.pem -days 365 -sha256 -CAcreateserial -extfile client.ext
+openssl x509 -req -CA scostestca.pem -CAkey scostestca.key -in client.csr -out client.pem -days 365 -sha256 -CAcreateserial -extfile client.ext
 ```
 
-Import the generated certificate into your browser.
+Convert pem to pkcs12:
+
+```bash
+openssl pkcs12 -export -out client.pfx -inkey client.key -in client.pem -certfile scostestca.pem
+```
+
+Import client.pfx into web browser.
 
 ##### Generating JWT Public/Private Key
 The JWT public key must correspond to the private key of the JWT issuer (OAuth
@@ -322,37 +324,52 @@ server.
 
 ###### Step 1: Create public/private key pair
 ```bash
-openssl genrsa -out key.pem 2048
+openssl genrsa -out jwt.pem 4096
 ```
 
 ###### Step 2: Extract Public Key
-openssl rsa -in key.pem -outform PEM -pubout -out public.pem
+```bash
+openssl rsa -in jwt.pem -outform PEM -pubout -out jwt_public_key.pem
+```
 
 ###### Step 3: Extract Private Key
-openssl pkey -inform PEM -outform DER -in client.pem -passin passphrase -out key.pem
+```bash
+openssl pkey -inform PEM -outform PEM -in jwt.pem -out jwt_private_key.pem
+```
 
 ###### Configure scos-sensor
-Copy the server certificate and server private key to `scos-sensor/configs/certs`. Then
-set `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) to the paths of the
-certificates relative to configs/certs (for certificate at
-`scos-sensor/configs/certs/cert.pem`, set `SSL_CERT_PATH=cert.pem`). For
+The Nginx web server can be set to require client certificates (mutual TLS). This can
+optionally be enabled for token authentication and is required for OAUTH
+authentication. The client certificate subject UID is only verified for OAuth 2
+authentication, not for token authentication. To require client certificates, uncomment
+`ssl_verify_client on;` in the [Nginx configuration file](nginx/conf.template). If you
+use OCSP, also uncomment `ssl_ocsp on;`.
+
+Copy the server certificate and server private key (sensor01_combined.pem) to
+`scos-sensor/configs/certs`. Then set `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the
+environment file) to the path of the sensor01_combined.pem relative to configs/certs
+(for file at `scos-sensor/configs/certs/sensor01_combined.pem`, set
+`SSL_CERT_PATH=sensor01_combined.pem` and `SSL_KEY_PATH=sensor01_combined.pem`). For
 mutual TLS/OAuth, also copy the CA certificate to the same directory. Then, set
 `SSL_CA_PATH` to the path of the CA certificate relative to `configs/certs`.
 
 If you are using OAuth authentication, set `PATH_TO_JWT_PUBLIC_KEY` to the path of the
-JWT public key. This should come from an OAuth authorization server. Alternatively, the
-JWT private key created above could be used to manually sign a JWT token for testing
-if `PATH_TO_JWT_PUBLIC_KEY` is set to the JWT public key created above.
+JWT public key relative to configs/certs. This public key file should correspond to the
+private key of the OAuth authorization server. Alternatively, the JWT private key
+created above could be used to manually sign a JWT token for testing if
+`PATH_TO_JWT_PUBLIC_KEY` is set to the JWT public key created above.
 
-If you are using client certificates, use
-client.pem to connect to the API by importing this certificate into your browser.
+If you are using client certificates, use client.pfx to connect to the API by importing
+this certificate into your browser.
 
 For callback functionality with an OAuth authorized callback URL, set
-`PATH_TO_CLIENT_CERT` and `PATH_TO_VERIFY_CERT`. If the callback URL uses the same
-authorization server and certificate authority as the sensor, the sensor server
-certificate could likely be used for `PATH_TO_CLIENT_CERT` with `PATH_TO_VERIFY_CERT`
-set to the shared CA certificate or intermediate CA from the same root CA.
-
+`PATH_TO_CLIENT_CERT` and `PATH_TO_VERIFY_CERT`, both relative to configs/certs.
+Depending on the configuration of the callback URL server and the authorization server,
+the sensor server certificate could be used as a client certificate by setting
+`PATH_TO_CLIENT_CERT` to the path of sensor01_combined.pem relative to configs/certs.
+Also the CA used to verify the client certificate could potentially be used to verify
+the callback URL server certificate by setting `PATH_TO_VERIFY_CERT` to the same file
+as used for `SSL_CA_PATH` (scostestca.pem).
 
 #### Permissions and Users
 
@@ -368,7 +385,7 @@ have to be pre-created using the sensor's API. The API will accept any user usin
 JWT token if they have an authority matching the required role setting.
 
 ### Callback URL Authentication
-OAuth and Token authentication are supported for authenticating against the server
+OAuth and Token authentication are supported for authenticating to the server
 pointed to by the callback URL. Callback SSL verification can be enabled
 or disabled using `CALLBACK_SSL_VERIFICATION` in the environment file.
 
@@ -392,12 +409,12 @@ The OAuth 2 password flow is supported for callback URL authentication. The foll
 settings in the environment file are used to configure the OAuth 2 password flow
 authentication.
 - `CALLBACK_AUTHENTICATION` - set to `OAUTH`.
-- `CLIENT_ID` - client ID used to authorize the client (the sensor) against the
+- `CLIENT_ID` - client ID used to authorize the client (the sensor) to the
 authorization server.
-- `CLIENT_SECRET` - client secret used to authorize the client (the sensor) against the
+- `CLIENT_SECRET` - client secret used to authorize the client (the sensor) to the
 authorization server.
 - `OAUTH_TOKEN_URL` - URL to get the access token.
-- `PATH_TO_CLIENT_CERT` - client certificate used to authenticate against the
+- `PATH_TO_CLIENT_CERT` - client certificate used to authenticate to the
 authorization server.
 - `PATH_TO_VERIFY_CERT` - CA certificate to verify the authorization server and
 callback URL server SSL certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`

@@ -477,62 +477,6 @@ def test_change_token_role_bad_signature(live_server, jwt_keys):
 
 
 @pytest.mark.django_db
-def test_token_bad_client_id_forbidden(live_server, jwt_keys):
-    token_payload, uid = get_token_payload(client_id="bad_client_id")
-    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
-    client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
-    assert response.status_code == 403
-    assert (
-        response.json()["detail"]
-        == "Unable to decode token! Access token was not issued to this client!"
-    )
-
-
-@pytest.mark.django_db
-def test_no_client_id_forbidden(live_server, jwt_keys):
-    token_payload, uid = get_token_payload(client_id="bad_client_id")
-    del token_payload["client_id"]
-    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
-    client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
-    assert response.status_code == 403
-    assert "Unable to decode token!" in response.json()["detail"]
-
-
-@pytest.mark.django_db
-def test_client_id_none_forbidden(live_server, jwt_keys):
-    token_payload, uid = get_token_payload(client_id="bad_client_id")
-    token_payload["client_id"] = None
-    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
-    client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
-    assert response.status_code == 403
-    assert (
-        response.json()["detail"]
-        == "Unable to decode token! Access token was not issued to this client!"
-    )
-
-
-@pytest.mark.django_db
-def test_client_id_empty_forbidden(live_server, jwt_keys):
-    token_payload, uid = get_token_payload(client_id="bad_client_id")
-    token_payload["client_id"] = ""
-    encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
-    client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(uid, utf8_bytes))
-    assert response.status_code == 403
-    assert (
-        response.json()["detail"]
-        == "Unable to decode token! Access token was not issued to this client!"
-    )
-
-
-@pytest.mark.django_db
 def test_jwt_uid_missing(live_server, jwt_keys):
     token_payload, uid = get_token_payload()
     token_payload["userDetails"].pop("uid")

@@ -617,10 +617,7 @@ def test_bad_client_id_forbidden(live_server, jwt_keys):
     utf8_bytes = encoded.decode("utf-8")
     response = perform_oauth_test(utf8_bytes, uid, live_server, f"{live_server.url}")
     assert response.status_code == 403
-    assert (
-        response.json()["detail"]
-        == "Unable to decode token! Access token was not issued to this client!"
-    )
+    assert response.json()["detail"] == "Access token was not issued to this client!"
 
 
 @pytest.mark.django_db
@@ -631,7 +628,7 @@ def test_no_client_id_forbidden(live_server, jwt_keys):
     utf8_bytes = encoded.decode("utf-8")
     response = perform_oauth_test(utf8_bytes, uid, live_server, f"{live_server.url}")
     assert response.status_code == 403
-    assert "Unable to decode token!" in response.json()["detail"]
+    assert "No client_id in token" == response.json()["detail"]
 
 
 @pytest.mark.django_db
@@ -642,10 +639,7 @@ def test_client_id_none_forbidden(live_server, jwt_keys):
     utf8_bytes = encoded.decode("utf-8")
     response = perform_oauth_test(utf8_bytes, uid, live_server, f"{live_server.url}")
     assert response.status_code == 403
-    assert (
-        response.json()["detail"]
-        == "Unable to decode token! Access token was not issued to this client!"
-    )
+    assert response.json()["detail"] == "Access token was not issued to this client!"
 
 
 @pytest.mark.django_db
@@ -656,10 +650,7 @@ def test_client_id_empty_forbidden(live_server, jwt_keys):
     utf8_bytes = encoded.decode("utf-8")
     response = perform_oauth_test(utf8_bytes, uid, live_server, f"{live_server.url}")
     assert response.status_code == 403
-    assert (
-        response.json()["detail"]
-        == "Unable to decode token! Access token was not issued to this client!"
-    )
+    assert response.json()["detail"] == "Access token was not issued to this client!"
 
 
 @pytest.mark.django_db
