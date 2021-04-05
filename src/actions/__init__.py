@@ -18,9 +18,6 @@ logger.debug(discovered_plugins)
 # Actions initialized here are made available through the API
 registered_actions = {
     "logger": logger_action.Logger(),
-    "admin_logger": logger_action.Logger(
-        loglvl=logger_action.LOGLVL_ERROR, admin_only=True
-    ),
 }
 
 
