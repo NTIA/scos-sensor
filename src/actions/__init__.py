@@ -64,7 +64,6 @@ def get_summary(action_fn):
 MAX_LENGTH = 50
 VALID_ACTIONS = []
 CHOICES = []
-ADMIN_CHOICES = []
 
 
 def init():
@@ -74,10 +73,7 @@ def init():
 
     VALID_ACTIONS = sorted(registered_actions.keys())
     for action in VALID_ACTIONS:
-        if registered_actions[action].admin_only:
-            ADMIN_CHOICES.append((action, get_action_with_summary(action)))
-        else:
-            CHOICES.append((action, get_action_with_summary(action)))
+        CHOICES.append((action, get_action_with_summary(action)))
 
 
 init()

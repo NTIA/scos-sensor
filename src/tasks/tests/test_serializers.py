@@ -6,8 +6,8 @@ from tasks.tests.utils import create_task_results
 
 
 @pytest.mark.django_db
-def test_task_result_serializer(user_client):
-    create_task_results(1, user_client)
+def test_task_result_serializer(admin_client):
+    create_task_results(1, admin_client)
     tr = TaskResult.objects.get()
     context = {"request": None}
     r = TaskResultSerializer(tr, context=context)
@@ -23,10 +23,10 @@ def test_task_result_serializer(user_client):
 # url path versioning
 @pytest.mark.xfail
 @pytest.mark.django_db
-def test_task_result_overview_serializer(user_client, rf):
+def test_task_result_overview_serializer(admin_client, rf):
     from schedule.models import ScheduleEntry
 
-    create_task_results(1, user_client)
+    create_task_results(1, admin_client)
     entries = ScheduleEntry.objects.all()
     context = {"request": None}
     r = TaskResultsOverviewSerializer(entries, many=True, context=context)
