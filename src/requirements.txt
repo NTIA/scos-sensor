@@ -1,27 +1,28 @@
-Django~=3.0.4
-Pygments==2.4.2
-Markdown==3.1.1
-#scos_actions @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos-actions@master#egg=scos_actions
-scos_usrp @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos-usrp@readme_updates#egg=scos_usrp
 coreapi==2.3.3
+cryptography~=3.3.2
+Django~=3.0.4
 django-debug-toolbar==2.2
 django-extensions==2.2.6
 django-filter==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 django-session-timeout==0.1.0
 docker-compose~=1.28.5
 drf-yasg==1.17.1
 environs==7.3.1
 gunicorn==19.9.0
 jsonfield==3.1.0
+Markdown==3.1.1
 numpy~=1.18.5
 oauthlib~=3.1.0
 psycopg2-binary==2.8.5
+Pygments==2.7.4
 pyjwt~=1.7.1
 python-dateutil==2.8.1
 raven==6.10.0
 requests-futures==0.9.9
 requests-mock==1.6.0
 requests_oauthlib~=1.3.0
+#scos_actions @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos-actions@master#egg=scos_actions
+scos_usrp @ git+${DOCKER_GIT_CREDENTIALS}/NTIA/scos-usrp@readme_updates#egg=scos_usrp
 six==1.15.0
 typing==3.6.6
