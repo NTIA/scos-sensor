@@ -110,7 +110,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     priority = serializers.IntegerField(
         required=False,
         allow_null=True,
-        min_value=0,
+        min_value=-20,
         max_value=19,
         help_text=priority_help,
     )
@@ -140,7 +140,6 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             "relative_stop",
             "interval",
             "is_active",
-            "is_private",
             "callback_url",
             "next_task_time",
             "next_task_id",
@@ -160,7 +159,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
                 "help_text": "The name of the user who owns the entry",
             },
         }
-        read_only_fields = ("next_task_time", "is_private")
+        read_only_fields = ("next_task_time",)
         write_only_fields = ("relative_stop", "validate_only")
         # FIXME: This is required by drf_yasg, but may not be required for
         #        built-in DRF 3.10+ OpenAPI generation
@@ -236,24 +235,3 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
             if field in data:
                 filtered_data[field] = data[field]
         return filtered_data
-
-
-class AdminScheduleEntrySerializer(ScheduleEntrySerializer):
-    """ScheduleEntrySerializer class for superusers."""
-
-    action = serializers.ChoiceField(
-        choices=actions.CHOICES + actions.ADMIN_CHOICES, help_text=action_help
-    )
-    priority = serializers.IntegerField(
-        required=False,
-        allow_null=True,
-        min_value=-20,
-        max_value=19,
-        help_text=priority_help,
-    )
-
-    class Meta(ScheduleEntrySerializer.Meta):
-        read_only_fields = ("next_task_time",)
-        # FIXME: This is required by drf_yasg, but may not be required for
-        #        built-in DRF 3.10+ OpenAPI generation
-        ref_name = "AdminScheduleEntry"

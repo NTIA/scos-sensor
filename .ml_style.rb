@@ -4,3 +4,4 @@
 all
 
 rule 'MD013', :line_length => 88
+rule 'MD007', :indent => 3

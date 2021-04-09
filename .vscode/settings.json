@@ -1,9 +1,14 @@
 {
     "python.pythonPath": "${workspaceFolder}/venv/bin/python3",
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true,
     "python.envFile": "${workspaceFolder}/env",
+    "python.testing.cwd": "${workspaceFolder}/src/",
+    "python.testing.pytestPath": "${workspaceFolder}/venv/bin/pytest",
     "[markdown]": {
         "editor.rulers": [
             88
         ]
-      }
+    }
 }

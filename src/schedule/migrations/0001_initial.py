@@ -95,13 +95,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "is_private",
-                    models.BooleanField(
-                        default=False,
-                        help_text="Indicates whether the entry, and resulting data, are only visible to admins",
-                    ),
-                ),
-                (
                     "callback_url",
                     models.URLField(
                         blank=True,
