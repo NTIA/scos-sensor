@@ -296,7 +296,11 @@ else:
 
 if RUNNING_TESTS or RUNNING_DEMO:
     DATABASES = {
-        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            # "NAME": ":memory:"
+            "NAME": "test.db",  # temporary workaround for https://github.com/pytest-dev/pytest-django/issues/783
+        }
     }
 else:
     DATABASES = {
