@@ -3,10 +3,13 @@ import logging
 import pkgutil
 
 from sensor import settings
+from sensor.utils import copy_driver_files
 
 from . import logger as logger_action
 
 logger = logging.getLogger(__name__)
+
+copy_driver_files()  # copy driver files before loading plugins
 
 discovered_plugins = {
     name: importlib.import_module(name)
