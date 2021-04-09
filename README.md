@@ -1,4 +1,4 @@
-# NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
+# NTIA/ITS SCOS Sensor
 
 [![Travis CI Build Status][travis-badge]][travis-link]
 [![API Docs Build Status][api-docs-badge]][api-docs-link]
@@ -203,22 +203,22 @@ provide additional signal analyzer specific actions.
 - schemas: JSON schema files.
 - scripts: Various utility scripts.
 - src: Contains the scos-sensor source code.
-  - actions: Code to discover actions in plugins and to perform a simple logger action.
-  - authentication: Code related to user authentication.
-  - capabilities: Code used to generate capabilities endpoint.
-  - handlers: Code to handle signals received from actions.
-  - schedule: Schedule API endpoint for scheduling actions.
-  - scheduler: Scheduler responsible for executing actions.
-  - sensor: Core app which contains the settings, generates the API root endpoint.
-  - static: Django will collect static files (JavaScript, CSS, …) from all apps to this
-    location.
-  - status: Status endpoint.
-  - tasks: Tasks endpoint used to display upcoming and completed tasks.
-  - templates: HTML templates used by the browsable API.
-  - conftest.py: Used to configure pytest fixtures.
-  - manage.py: Django’s command line tool for administrative tasks.
-  - requirements.txt and requirements-dev.txt: Python dependencies.
-  - tox.ini: Used to configure tox.
+   - actions: Code to discover actions in plugins and to perform a simple logger action.
+   - authentication: Code related to user authentication.
+   - capabilities: Code used to generate capabilities endpoint.
+   - handlers: Code to handle signals received from actions.
+   - schedule: Schedule API endpoint for scheduling actions.
+   - scheduler: Scheduler responsible for executing actions.
+   - sensor: Core app which contains the settings, generates the API root endpoint.
+   - static: Django will collect static files (JavaScript, CSS, …) from all apps to this
+     location.
+   - status: Status endpoint.
+   - tasks: Tasks endpoint used to display upcoming and completed tasks.
+   - templates: HTML templates used by the browsable API.
+   - conftest.py: Used to configure pytest fixtures.
+   - manage.py: Django’s command line tool for administrative tasks.
+   - requirements.txt and requirements-dev.txt: Python dependencies.
+   - tox.ini: Used to configure tox.
 - docker-compose.yml: Used by docker-compose to create services from containers. This
   is needed to run scos-sensor.
 - env.template: Template file for setting environment variables used to configure
@@ -340,6 +340,7 @@ using.
 ```
 
 ## Security
+
 This section covers authentication, permissions, and certificates used to access the
 sensor, and the authentication available for the callback URL. Two different types of
 authentication are available for authenticating against the sensor and for
@@ -349,10 +350,12 @@ for testing and development purposes only. They should not be used in a producti
 system.**
 
 ### Sensor Authentication And Permissions
+
 The sensor can be configured to authenticate using OAuth JWT access tokens from an
 external authorization server or using Djnago Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
+
 This is the default authentication method. To enable Django Rest Framework
 Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
 (this will be enabled if `AUTHENTICATION` set to anything other
@@ -360,9 +363,10 @@ than `JWT`).
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
-<token>) matches a user's token.
+token) matches a user's token.
 
 #### OAuth2 JWT Authentication
+
 To enable OAuth 2 JWT Authentication, set `AUTHENTICATION` to `JWT` in the environment
 file. To authenticate, the client will need to send a JWT access token in the
 authorization header (using "Bearer " + access token). The token signature will be
@@ -371,9 +375,10 @@ time will be checked. Only users who have an authority matching the `REQUIRED_RO
 setting will be authorized.
 
 The token is expected to come from an OAuth2 authorization server. For more
-information, see https://tools.ietf.org/html/rfc6749.
+information, see <https://tools.ietf.org/html/rfc6749>.
 
 #### Certificates
+
 The NGINX web server requires an SSL certificate to use https. The certificate and
 private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
 file. Note that these paths are relative to the configs/certs directory.
@@ -384,40 +389,45 @@ certificate used for validating client certificates using the `SSL_CA_PATH` (rel
 to configs/certs) in the environment file.
 
 ##### Getting Certificates
+
 It is recommended to create your own CA for testing. **For production, make sure to use
 certificates from a trusted CA.** For testing, you can use the certificates and keys in
 configs/certs/test or you can use scripts/create_certificates.py to create the test
 CA certificate, test server certificate, and test client certificate. This script can
 also be used with an existing CA. Here are the instructions to use create_certificates
 with an existing CA.
+
 1. To configure the create_certificates.py script, use create_certificates.ini. In
-create_certificates.ini, set `ca_private_key_path` and `ca_certificate_path` to the
-path of your CA private key and certificate. Configure the remaining parameters as
-desired. The SAN (subject alternative name) parameters will need to be set to the
-appropriate IP addresses and DNS names of your server and client.
-2. While in scos-sensor root directory, run the create_certificates.py script passing
-    the following arguments in the listed order:
+   create_certificates.ini, set `ca_private_key_path` and `ca_certificate_path` to the
+   path of your CA private key and certificate. Configure the remaining parameters as
+   desired. The SAN (subject alternative name) parameters will need to be set to the
+   appropriate IP addresses and DNS names of your server and client.
 
-    - ini_path - path to the create_certificates.ini file.
-    - ini_section - section of the INI file to use.
-    - key_passphrase - Passphrase to use to encrypt private keys. Set to `None` to
-    disable encryption.
+1. While in scos-sensor root directory, run the create_certificates.py script passing
+   the following arguments in the listed order:
 
-    The following certificates will be generated:
+   - ini_path - path to the create_certificates.ini file.
+   - ini_section - section of the INI file to use.
+   - key_passphrase - Passphrase to use to encrypt private keys. Set to `None` to
+     disable encryption.
 
-    - sensor01_private.pem - sensor private key.
-    - sensor01_certificate.pem - sensor certificate.
-    - sensor01_client_private.pem - client private key.
-    - sensor01_client.pem - client certificate.
-3. Copy sensor01_private and sensor01_certificate to the computer where the scos-sensor
-will run. If you are using client certificates, also copy the CA certificate used to
-generate the certificates. Make sure the certificates are somewhere in configs/certs,
-and that `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) are set to the
-paths of the certificates relative to configs/certs. If you are using client
-certificates, set `SSL_CA_PATH` to the path of the CA certificate relative to
-configs/certs.
-4. Run scos-sensor. If you are using client certificates, use
-sensor01_client_private.pem and sensor01_client to connect to the API.
+   The following certificates will be generated:
+
+   - sensor01_private.pem - sensor private key.
+   - sensor01_certificate.pem - sensor certificate.
+   - sensor01_client_private.pem - client private key.
+   - sensor01_client.pem - client certificate.
+
+1. Copy sensor01_private and sensor01_certificate to the computer where the scos-sensor
+   will run. If you are using client certificates, also copy the CA certificate used to
+   generate the certificates. Make sure the certificates are somewhere in configs/certs,
+   and that `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) are set to the
+   paths of the certificates relative to configs/certs. If you are using client
+   certificates, set `SSL_CA_PATH` to the path of the CA certificate relative to
+   configs/certs.
+
+1. Run scos-sensor. If you are using client certificates, use
+   sensor01_client_private.pem and sensor01_client to connect to the API.
 
 The create_certificates.py script can also generate a new CA and use it for generating
 the certificates. To run create_certificates.py this way, comment out
@@ -428,6 +438,7 @@ public key (scostestca.crt) will be generated in addition to the files listed in
 2 above.
 
 #### Permissions and Users
+
 The API requires the user to either have an authority in the JWT token matching the the
 `REQUIRED_ROLE` setting or that the user be a superuser. New users created using the
 API initially do not have superuser access. However, an admin can mark a user as a
@@ -436,14 +447,16 @@ have to be pre-created using the sensor's API. The API will accept any user usin
 JWT token if they have an authority matching the required role setting.
 
 ### Callback URL Authentication
+
 OAuth and Token authentication are supported for authenticating against the server
 pointed to by the callback URL. Callback SSL verification can be enabled
 or disabled using `CALLBACK_SSL_VERIFICATION` in the environment file.
 
 #### Token
+
 A simple form of token authentication is supported for the callback URL. The sensor
 will send the user's (user who created the schedule) token in the authorization header
-("Token " + <token>) when posting results to callback URL. The server can then verify
+("Token " + token) when posting results to callback URL. The server can then verify
 the token against what it originally sent to the sensor when creating the schedule.
 This method of authentication for the callback URL is enabled by default. To verify it
 is enabled, set `CALLBACK_AUTHENTICATION` to `TOKEN` in the environment file (this will
@@ -455,22 +468,24 @@ verify the callback URL server SSL certificate. If this is unset and
 used.
 
 #### OAuth
+
 The OAuth 2 password flow is supported for callback URL authentication. The following
 settings in the environment file are used to configure the OAuth 2 password flow
 authentication.
+
 - `CALLBACK_AUTHENTICATION` - set to `OAUTH`.
 - `CLIENT_ID` - client ID used to authorize the client (the sensor) against the
-authorization server.
+  authorization server.
 - `CLIENT_SECRET` - client secret used to authorize the client (the sensor) against the
-authorization server.
+  authorization server.
 - `OAUTH_TOKEN_URL` - URL to get the access token.
 - `PATH_TO_CLIENT_CERT` - client certificate used to authenticate against the
-authorization server.
+  authorization server.
 - `PATH_TO_VERIFY_CERT` - CA certificate to verify the authorization server and
-callback URL server SSL certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`
-is set to true, [standard trusted CAs](
+  callback URL server SSL certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`
+  is set to true, [standard trusted CAs](
     https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
-used.
+  used.
 
 In src/sensor/settings.py, the OAuth `USER_NAME` and `PASSWORD` are set to be the same
 as `CLIENT_ID` and `CLIENT_SECRET`. This may need to change depending on your
@@ -502,7 +517,7 @@ analyzer.
 
 scos-sensor uses the following convention to discover actions offered by plugins: if
 any Python package begins with "scos_", and contains a dictionary of actions at the
-Python path `<package_name>.discover.actions`, these actions will automatically be
+Python path `package_name.discover.actions`, these actions will automatically be
 available for scheduling.
 
 The scos-usrp plugin adds support for the Ettus B2xx line of software-defined radios.
@@ -651,10 +666,10 @@ pre-commit run --all-files
 
 ## References
 
-- [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
-- [SCOS Data Transfer Specification](https://github.com/NTIA/sigmf-ns-ntia)
-- [SCOS Actions](https://github.com/NTIA/scos-actions)
-- [SCOS USRP](https://github.com/NTIA/scos-usrp)
+- [SCOS Control Plane API Reference](<https://ntia.github.io/scos-sensor/>)
+- [SCOS Data Transfer Specification](<https://github.com/NTIA/sigmf-ns-ntia>)
+- [SCOS Actions](<https://github.com/NTIA/scos-actions>)
+- [SCOS USRP](<https://github.com/NTIA/scos-usrp>)
 
 ## License
 

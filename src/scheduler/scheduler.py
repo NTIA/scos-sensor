@@ -9,8 +9,8 @@ from pathlib import Path
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
 
-from capabilities import capabilities
 from authentication import oauth
+from capabilities import capabilities
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
