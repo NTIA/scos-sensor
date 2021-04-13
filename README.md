@@ -308,10 +308,8 @@ the SigMF metadata to identify the hardware used for the measurement. It should 
 the [sigmf-ns-ntia Sensor Object format](
 https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object
 ). See an example below. Overwrite the [example
-file in scos-sensor/configs](
-https://github.com/NTIA/scos-sensor/blob/SMBWTB475_refactor_radio_interface/configs/sensor_definition.json
-) with the information specific to the sensor you are
-using.
+file in scos-sensor/configs](configs/sensor_definition.json) with the information
+specific to the sensor you are using.
 
 ```json
 {
@@ -525,7 +523,7 @@ It can also be used as an example of a plugin which adds new hardware support an
 re-uses the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
-https://github.com/NTIA/scos-actions/tree/PublicRelease#development).
+https://github.com/ntia/scos-actions#development).
 
 ## Development
 
