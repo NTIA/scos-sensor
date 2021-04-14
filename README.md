@@ -133,8 +133,9 @@ This section provides an overview of high-level concepts used by `scos-sensor`.
   the same time and have the same *priority*, execution order is
   implementation-dependent (undefined).
 
-- *signal*: Django notifications library used to allow scos-sensor to receive
-  notifications and results upon action completion.
+- *signals*: Django event driven programming framework. Actions use signals to send
+  results to scos-sensor. These signals are handled by scos-sensor so that the results
+  can be processed (such as storing measurement data and metadata).
 
 - *task*: A representation of an action to be run at a specific time. When a *task*
   acquires data, that data is stored on disk, and a significant amount of metadata is
@@ -174,13 +175,14 @@ developers familiar with Python.
 A functioning scos-sensor utilizes software from at least three different GitHub
 repositories. As shown below, the scos-sensor repository integrates everything together
 as a functioning scos-sensor and provides the code for the user interface, scheduling,
-and the storage and retrieval of schedules and acquisitions. The scos-actions
-repository provides the core actions API, defines the radio interface that provides an
-abstraction for all signal analyzers, and provides basic actions. Finally, using a real
-radio within scos-sensor requires a third `scos-<signal analyzer>` repository that
-provides the signal analyzer specific implementation of the radio interface where
-`<signal analyzer>` is replaced with the name of the signal analyzer, e.g. a USRP
-scos-sensor utilizes the scos-usrp repository. The signal analyzer specific
+and the storage and retrieval of schedules and acquisitions. The [scos-actions
+repository](https://github.com/ntia/scos-actions) provides the core actions API,
+defines the radio interface that provides an abstraction for all signal analyzers, and
+provides basic actions. Finally, using a real radio within scos-sensor requires a third
+`scos-<signal analyzer>` repository that provides the signal analyzer specific
+implementation of the radio interface where `<signal analyzer>` is replaced with the
+name of the signal analyzer, e.g. a USRP scos-sensor utilizes the [scos-usrp
+repository](https://github.com/ntia/scos-usrp). The signal analyzer specific
 implementation of the radio interface may expose additional properties of the signal
 analyzer to support signal analyzer specific capabilities and the repository may also
 provide additional signal analyzer specific actions.
