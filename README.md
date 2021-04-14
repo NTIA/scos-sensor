@@ -290,8 +290,8 @@ settings in the environment file:
 - IPS: A space separated list of IP addresses. Used to generate [ALLOWED_HOSTS](
   https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
 - FQDN: The server’s fully qualified domain name.
-- MAX_TASK_RESULTS: The maximum number of task results to keep before overwriting old
-  results. Defaults to 100,000.
+- MAX_DISK_USAGE: The maximum disk usage percentage allowed before overwriting old
+  results. Defaults to 85%.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.

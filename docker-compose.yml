@@ -46,7 +46,6 @@ services:
       - IN_DOCKER=1
       - IPS
       - MAX_DISK_USAGE
-      - MAX_TASK_RESULTS
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
       - OAUTH_TOKEN_URL
