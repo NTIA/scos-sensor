@@ -291,7 +291,9 @@ settings in the environment file:
   https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
 - FQDN: The server’s fully qualified domain name.
 - MAX_DISK_USAGE: The maximum disk usage percentage allowed before overwriting old
-  results. Defaults to 85%.
+  results. Defaults to 85%. This disk usage detected by scos-sensor (using the Python
+  `shutil.disk_usage` function) may not match the usage reported by the Linux `df`
+  command.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
