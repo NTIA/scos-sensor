@@ -12,8 +12,8 @@ def monitor_action_completed_callback(sender, **kwargs):
     if healthy:
         if os.path.exists(settings.SDR_HEALTHCHECK_FILE):
             Path(settings.SDR_HEALTHCHECK_FILE).unlink()
-        logger.info("USRP healthy")
+        logger.info("signal analyzer healthy")
     else:
-        logger.warning("USRP unhealthy")
+        logger.warning("signal analyzer unhealthy")
         if settings.IN_DOCKER:
             Path(settings.SDR_HEALTHCHECK_FILE).touch()

@@ -3,8 +3,8 @@
 [![Travis CI Build Status][travis-badge]][travis-link]
 [![API Docs Build Status][api-docs-badge]][api-docs-link]
 
-`scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.22.3
-Spectrum Characterization and Occupancy Sensing](ieee-link) (SCOS) sensor developed by
+`scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.15.22.3
+Spectrum Characterization and Occupancy Sensing][ieee-link] (SCOS) sensor developed by
 [NTIA/ITS]. `scos-sensor` defines a RESTful application programming interface (API),
 that allows authorized users to discover capabilities, schedule actions, and acquire
 resultant data.
@@ -133,8 +133,9 @@ This section provides an overview of high-level concepts used by `scos-sensor`.
   the same time and have the same *priority*, execution order is
   implementation-dependent (undefined).
 
-- *signal*: Django notifications library used to allow scos-sensor to receive
-  notifications and results upon action completion.
+- *signals*: Django event driven programming framework. Actions use signals to send
+  results to scos-sensor. These signals are handled by scos-sensor so that the results
+  can be processed (such as storing measurement data and metadata).
 
 - *task*: A representation of an action to be run at a specific time. When a *task*
   acquires data, that data is stored on disk, and a significant amount of metadata is
@@ -174,13 +175,14 @@ developers familiar with Python.
 A functioning scos-sensor utilizes software from at least three different GitHub
 repositories. As shown below, the scos-sensor repository integrates everything together
 as a functioning scos-sensor and provides the code for the user interface, scheduling,
-and the storage and retrieval of schedules and acquisitions. The scos-actions
-repository provides the core actions API, defines the radio interface that provides an
-abstraction for all signal analyzers, and provides basic actions. Finally, using a real
-radio within scos-sensor requires a third `scos-<signal analyzer>` repository that
-provides the signal analyzer specific implementation of the radio interface where
-`<signal analyzer>` is replaced with the name of the signal analyzer, e.g. a USRP
-scos-sensor utilizes the scos-usrp repository. The signal analyzer specific
+and the storage and retrieval of schedules and acquisitions. The [scos-actions
+repository](https://github.com/ntia/scos-actions) provides the core actions API,
+defines the radio interface that provides an abstraction for all signal analyzers, and
+provides basic actions. Finally, using a real radio within scos-sensor requires a third
+`scos-<signal analyzer>` repository that provides the signal analyzer specific
+implementation of the radio interface where `<signal analyzer>` is replaced with the
+name of the signal analyzer, e.g. a USRP scos-sensor utilizes the [scos-usrp
+repository](https://github.com/ntia/scos-usrp). The signal analyzer specific
 implementation of the radio interface may expose additional properties of the signal
 analyzer to support signal analyzer specific capabilities and the repository may also
 provide additional signal analyzer specific actions.
@@ -288,8 +290,10 @@ settings in the environment file:
 - IPS: A space separated list of IP addresses. Used to generate [ALLOWED_HOSTS](
   https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
 - FQDN: The server’s fully qualified domain name.
-- MAX_TASK_RESULTS: The maximum number of task results to keep before overwriting old
-  results. Defaults to 100,000.
+- MAX_DISK_USAGE: The maximum disk usage percentage allowed before overwriting old
+  results. Defaults to 85%. This disk usage detected by scos-sensor (using the Python
+  `shutil.disk_usage` function) may not match the usage reported by the Linux `df`
+  command.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
@@ -308,10 +312,8 @@ the SigMF metadata to identify the hardware used for the measurement. It should 
 the [sigmf-ns-ntia Sensor Object format](
 https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object
 ). See an example below. Overwrite the [example
-file in scos-sensor/configs](
-https://github.com/NTIA/scos-sensor/blob/SMBWTB475_refactor_radio_interface/configs/sensor_definition.json
-) with the information specific to the sensor you are
-using.
+file in scos-sensor/configs](configs/sensor_definition.json) with the information
+specific to the sensor you are using.
 
 ```json
 {
@@ -525,7 +527,7 @@ It can also be used as an example of a plugin which adds new hardware support an
 re-uses the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
-https://github.com/NTIA/scos-actions/tree/PublicRelease#development).
+https://github.com/ntia/scos-actions#development).
 
 ## Development
 

@@ -170,7 +170,6 @@ INSTALLED_APPS = [
     # project-local apps
     "authentication.apps.AuthenticationConfig",
     "capabilities.apps.CapabilitiesConfig",
-    "hardware.apps.HardwareConfig",
     "handlers.apps.HandlersConfig",
     "tasks.apps.TasksConfig",
     "schedule.apps.ScheduleConfig",
@@ -359,7 +358,6 @@ LOGGING = {
         "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "handlers": {"handlers": ["console"], "level": LOGLEVEL},
-        "hardware": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},

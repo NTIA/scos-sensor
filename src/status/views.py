@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from scos_actions.utils import get_datetime_str_now
 
-# from hardware import radio
 from scheduler import scheduler
 
 from . import last_calibration_time
