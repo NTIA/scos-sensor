@@ -10,6 +10,7 @@ from django.utils import timezone
 from requests_futures.sessions import FuturesSession
 
 from authentication import oauth
+from capabilities import capabilities
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
@@ -139,10 +140,22 @@ class Scheduler(threading.Thread):
     def _call_task_action(self):
         entry_name = self.task.schedule_entry_name
         task_id = self.task.task_id
+        from schedule.serializers import ScheduleEntrySerializer
+        from tasks.serializers import TaskResultSerializer
+
+        schedule_entry = ScheduleEntry.objects.get(name=entry_name)
+
+        schedule_serializer = ScheduleEntrySerializer(
+            schedule_entry, context={"request": schedule_entry.request}
+        )
+        schedule_entry_json = schedule_serializer.to_sigmf_json()
+        schedule_entry_json["id"] = entry_name
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
-            detail = self.task.action_fn(entry_name, task_id)
+            detail = self.task.action_caller(
+                schedule_entry_json, task_id, capabilities["sensor"]
+            )
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):
@@ -165,7 +178,7 @@ class Scheduler(threading.Thread):
 
         if self.entry.callback_url:
             try:
-                logger.debug("Trying callback")
+                logger.debug("Trying callback to URL: " + self.entry.callback_url)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION

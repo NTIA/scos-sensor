@@ -1,3 +1,4 @@
+from sensor import settings
 from sensor.settings import SENSOR_DEFINITION_FILE
 
 capabilities = {}
@@ -17,3 +18,4 @@ def load_from_json(fname):
 
 
 capabilities["sensor"] = load_from_json(SENSOR_DEFINITION_FILE)
+capabilities["sensor"]["id"] = settings.FQDN

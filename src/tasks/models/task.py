@@ -14,10 +14,10 @@ TaskTuple = namedtuple("Task", attributes)
 
 class Task(TaskTuple):
     @property
-    def action_fn(self):
+    def action_caller(self):
         """Action function with curried keyword arguments"""
-        action_fn = actions.by_name[self.action]
-        return action_fn
+        action_caller = actions.by_name[self.action]
+        return action_caller
 
     def __eq__(s, o):
         return (s.time, s.priority) == (o.time, o.priority)

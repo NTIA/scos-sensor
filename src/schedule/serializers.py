@@ -2,15 +2,14 @@ from datetime import datetime
 
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from scos_actions.utils import (
+    convert_datetime_to_millisecond_iso_format,
+    parse_datetime_iso_format_str,
+)
 
 import actions
 from sensor import V1
-from sensor.utils import (
-    convert_datetime_to_millisecond_iso_format,
-    get_datetime_from_timestamp,
-    get_timestamp_from_datetime,
-    parse_datetime_iso_format_str,
-)
+from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
 
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 

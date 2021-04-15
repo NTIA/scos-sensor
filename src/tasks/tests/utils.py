@@ -25,7 +25,7 @@ SINGLE_FREQUENCY_FFT_ACQUISITION = {
     "start": None,
     "stop": None,
     "interval": None,
-    "action": "mock_acquire_single_frequency_fft",
+    "action": "test_single_frequency_m4s_action",
 }
 
 MULTIPLE_FREQUENCY_FFT_ACQUISITIONS = {
@@ -33,7 +33,7 @@ MULTIPLE_FREQUENCY_FFT_ACQUISITIONS = {
     "start": None,
     "relative_stop": 5,
     "interval": 1,
-    "action": "mock_acquire_single_frequency_fft",
+    "action": "test_single_frequency_m4s_action",
 }
 
 SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION = {
@@ -41,7 +41,7 @@ SINGLE_TIMEDOMAIN_IQ_MULTI_RECORDING_ACQUISITION = {
     "start": None,
     "stop": None,
     "interval": None,
-    "action": "mock_multirec_acquire",
+    "action": "test_multi_frequency_iq_action",
 }
 
 SINGLE_TIMEDOMAIN_IQ_ACQUISITION = {
@@ -49,7 +49,7 @@ SINGLE_TIMEDOMAIN_IQ_ACQUISITION = {
     "start": None,
     "stop": None,
     "interval": None,
-    "action": "mock_time_domain_iq_acquire",
+    "action": "test_single_frequency_iq_action",
 }
 
 

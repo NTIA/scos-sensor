@@ -5,8 +5,9 @@ from itertools import chain, count, islice
 
 import actions
 from authentication.models import User
-from schedule.models import ScheduleEntry
+from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
+from sensor import V1
 
 BAD_ACTION_STR = "testing expected failure"
 
@@ -76,7 +77,16 @@ def create_entry(name, priority, start, stop, interval, action, cb_url=None):
     if cb_url is not None:
         kwargs["callback_url"] = cb_url
 
-    return ScheduleEntry.objects.create(**kwargs)
+    r = Request()
+    r.scheme = "https"
+    r.version = V1["version"]
+    r.host = "testserver"
+    r.save()
+    schedule_entry = ScheduleEntry(**kwargs)
+    schedule_entry.request = r
+    schedule_entry.save()
+
+    return schedule_entry
 
 
 def create_action():
@@ -90,7 +100,7 @@ def create_action():
     """
     flag = threading.Event()
 
-    def cb(entry, task_id):
+    def cb(schedule_entry_json, task_id, sensor_definition):
         flag.set()
         return "set flag"
 
@@ -105,7 +115,7 @@ create_action.counter = 0
 
 
 def create_bad_action():
-    def bad_action(entry, task_id):
+    def bad_action(schedule_entry_json, task_id, sensor_definition):
         raise Exception(BAD_ACTION_STR)
 
     actions.by_name["bad_action"] = bad_action
