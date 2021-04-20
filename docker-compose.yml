@@ -2,14 +2,14 @@ version: '3'
 
 services:
   db:
-    image: postgres:11-alpine
+    image: postgres:12-alpine
     restart: always
     environment:
       - POSTGRES_PASSWORD
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./dbdata:/var/lib/postgresql/data
 
   api:
     healthcheck:
@@ -32,8 +32,12 @@ services:
     environment:
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
+      - AUTHENTICATION
+      - CALLBACK_AUTHENTICATION
       - CALLBACK_SSL_VERIFICATION
-      - DEBUG=true
+      - CLIENT_ID
+      - CLIENT_SECRET
+      - DEBUG
       - DOCKER_TAG
       - DOMAINS
       - FQDN
@@ -41,16 +45,20 @@ services:
       - GUNICORN_LOG_LEVEL
       - IN_DOCKER=1
       - IPS
-      - MAX_TASK_RESULTS
+      - MAX_DISK_USAGE
       - MOCK_RADIO
       - MOCK_RADIO_RANDOM
+      - OAUTH_TOKEN_URL
+      - PATH_TO_CLIENT_CERT
+      - PATH_TO_JWT_PUBLIC_KEY
+      - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
       - SECRET_KEY
       - PASSPHRASE
     expose:
       - '8000'
     volumes:
-      - ${REPO_ROOT}:/opt/scos-sensor
+      - ${REPO_ROOT}/drivers:/drivers:ro
     cap_add:
       - SYS_PTRACE
     devices:
@@ -62,6 +70,8 @@ services:
   nginx:
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
+    depends_on:
+      - api
     ports:
       - '80:80'
       - '443:443'
@@ -76,8 +86,9 @@ services:
       dockerfile: docker/Dockerfile-nginx
     volumes:
       - ./nginx/conf.template:/etc/nginx/nginx.conf.template:ro
-      - ${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
-      - ${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
+      - ./configs/certs/${SSL_CERT_PATH}:/etc/ssl/certs/ssl-cert.pem:ro
+      - ./configs/certs/${SSL_KEY_PATH}:/etc/ssl/private/ssl-cert.key:ro
+      - ./configs/certs/${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
 

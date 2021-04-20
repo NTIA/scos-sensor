@@ -1,5 +1,6 @@
 """Queue and run tasks."""
 
+import json
 import logging
 import threading
 from contextlib import contextmanager
@@ -8,6 +9,8 @@ from pathlib import Path
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
 
+from authentication import oauth
+from capabilities import capabilities
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
@@ -16,7 +19,6 @@ from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
 
 from . import utils
-from capabilities import capabilities
 
 logger = logging.getLogger(__name__)
 requests_futures_session = FuturesSession()
@@ -179,16 +181,31 @@ class Scheduler(threading.Thread):
                 logger.debug("Trying callback to URL: " + self.entry.callback_url)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
-                token = self.entry.owner.auth_token
-                headers = {"Authorization": "Token " + str(token)}
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
-                requests_futures_session.post(
-                    self.entry.callback_url,
-                    json=result_json,
-                    background_callback=self._callback_response_handler,
-                    headers=headers,
-                    verify=verify_ssl,
-                )
+                if settings.CALLBACK_SSL_VERIFICATION:
+                    if settings.PATH_TO_VERIFY_CERT != "":
+                        verify_ssl = settings.PATH_TO_VERIFY_CERT
+                logger.debug(settings.CALLBACK_AUTHENTICATION)
+                if settings.CALLBACK_AUTHENTICATION == "OAUTH":
+                    client = oauth.get_oauth_client()
+                    headers = {"Content-Type": "application/json"}
+                    response = client.post(
+                        self.entry.callback_url,
+                        data=json.dumps(result_json),
+                        headers=headers,
+                        verify=verify_ssl,
+                    )
+                    self._callback_response_handler(client, response)
+                else:
+                    token = self.entry.owner.auth_token
+                    headers = {"Authorization": "Token " + str(token)}
+                    requests_futures_session.post(
+                        self.entry.callback_url,
+                        json=result_json,
+                        background_callback=self._callback_response_handler,
+                        headers=headers,
+                        verify=verify_ssl,
+                    )
             except Exception as err:
                 logger.error(str(err))
 

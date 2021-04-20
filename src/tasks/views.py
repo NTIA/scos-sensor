@@ -20,7 +20,6 @@ from django.conf import settings
 
 from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
-from .permissions import IsAdminOrOwnerOrReadOnly
 from .serializers.task import TaskSerializer
 from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSerializer
 import gpg
@@ -64,14 +63,9 @@ class TaskResultsOverviewViewSet(ListModelMixin, GenericViewSet):
     serializer_class = TaskResultsOverviewSerializer
 
     def get_queryset(self):
-        # .list() does not call .get_object(), which triggers permissions
-        # checks, so we need to filter our queryset based on `is_private` and
-        # request user.
+        # .list() does not call .get_object()
         base_queryset = self.filter_queryset(self.queryset)
-        if self.request.user.is_staff:
-            return base_queryset.all()
-        else:
-            return base_queryset.filter(is_private=False)
+        return base_queryset.all()
 
 
 class MultipleFieldLookupMixin(object):
@@ -82,8 +76,6 @@ class MultipleFieldLookupMixin(object):
         base_queryset = self.filter_queryset(base_queryset)
 
         filter = {"schedule_entry__name": self.kwargs["schedule_entry_name"]}
-        if not self.request.user.is_staff:
-            filter.update({"schedule_entry__is_private": False})
 
         queryset = base_queryset.filter(**filter)
 
@@ -114,23 +106,17 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
 
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly
-    ]
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     lookup_fields = ("schedule_entry__name", "task_id")
     ordering_fields = ("task_id", "started", "finished", "duration", "status")
     search_fields = ("task_id", "status", "detail")
 
     def get_queryset(self):
-        # .list() does not call .get_object(), which triggers permissions
-        # checks, so we need to filter our queryset based on `is_private` and
-        # request user.
+        # .list() does not call .get_object()
         base_queryset = self.filter_queryset(self.queryset)
 
         filter = {"schedule_entry__name": self.kwargs["schedule_entry_name"]}
-        if not self.request.user.is_staff:
-            filter.update({"schedule_entry__is_private": False})
 
         queryset = base_queryset.filter(**filter)
 
@@ -188,9 +174,7 @@ class TaskResultInstanceViewSet(
 
     queryset = TaskResult.objects.all()
     serializer_class = TaskResultSerializer
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [
-        IsAdminOrOwnerOrReadOnly
-    ]
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES
     lookup_fields = ("schedule_entry__name", "task_id")
 
     @action(detail=True)

@@ -25,7 +25,7 @@
     ],
     "securityDefinitions": {
         "token": {
-            "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. Non-admin user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can do that in the Sensor Configuration Portal, but only the account's token should be stored and used for general purpose API access. Example cURL call: `curl -kLsS -H \"Authorization: Token 529c30e6e04b3b546f2e073e879b75fdfa147c15\" https://greyhound5.sms.internal/api/v1`",
+            "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. New user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can do that in the Sensor Configuration Portal, but only the account's token should be stored and used for general purpose API access. Example cURL call: `curl -kLsS -H \"Authorization: Token 529c30e6e04b3b546f2e073e879b75fdfa147c15\" https://localhost/api/v1`",
             "in": "header",
             "name": "Token",
             "type": "apiKey"
@@ -152,7 +152,7 @@
                                 "results": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/definitions/AdminScheduleEntry"
+                                        "$ref": "#/definitions/ScheduleEntry"
                                     }
                                 }
                             }
@@ -172,7 +172,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 ],
@@ -180,7 +180,7 @@
                     "201": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -199,7 +199,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -216,7 +216,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 ],
@@ -224,7 +224,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -241,7 +241,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 ],
@@ -249,7 +249,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/AdminScheduleEntry"
+                            "$ref": "#/definitions/ScheduleEntry"
                         }
                     }
                 },
@@ -1052,6 +1052,538 @@
                 }
             ]
         },
+        "/v1/users/": {
+            "get": {
+                "operationId": "v1_users_list",
+                "description": "View user details and create users.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/UserDetails"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "post": {
+                "operationId": "v1_users_create",
+                "description": "View user details and create users.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": []
+        },
+        "/v1/users/me/": {
+            "get": {
+                "operationId": "v1_users_me_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "put": {
+                "operationId": "v1_users_me_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "patch": {
+                "operationId": "v1_users_me_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_users_me_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": []
+        },
+        "/v1/users/me{format}": {
+            "get": {
+                "operationId": "v1_users_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "put": {
+                "operationId": "v1_users_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "patch": {
+                "operationId": "v1_users_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_users_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/users/{format}": {
+            "get": {
+                "operationId": "v1_users_read",
+                "description": "View user details and create users.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/UserDetails"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "post": {
+                "operationId": "v1_users_create",
+                "description": "View user details and create users.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/v1/users/{id}/": {
+            "get": {
+                "operationId": "v1_users_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "put": {
+                "operationId": "v1_users_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "patch": {
+                "operationId": "v1_users_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_users_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/v1/users/{id}{format}": {
+            "get": {
+                "operationId": "v1_users_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "put": {
+                "operationId": "v1_users_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "patch": {
+                "operationId": "v1_users_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "delete": {
+                "operationId": "v1_users_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "v1"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
         "/v1/{format}": {
             "get": {
                 "operationId": "v1_read",
@@ -1077,7 +1609,7 @@
         }
     },
     "definitions": {
-        "AdminScheduleEntry": {
+        "ScheduleEntry": {
             "required": [
                 "name",
                 "action"
@@ -1106,11 +1638,10 @@
                     "type": "string",
                     "enum": [
                         "logger",
+                        "test_monitor_radio",
                         "test_multi_frequency_iq_action",
                         "test_single_frequency_iq_action",
                         "test_single_frequency_m4s_action",
-                        "admin_logger",
-                        "test_monitor_radio",
                         "test_sync_gps"
                     ]
                 },
@@ -1155,11 +1686,6 @@
                     "description": "Indicates whether the entry should be removed from the scheduler without removing it from the system",
                     "type": "boolean",
                     "readOnly": true
-                },
-                "is_private": {
-                    "title": "Is private",
-                    "description": "Indicates whether the entry, and resulting data, are only visible to admins",
-                    "type": "boolean"
                 },
                 "callback_url": {
                     "title": "Callback url",
@@ -1339,6 +1865,74 @@
                     "items": {
                         "$ref": "#/definitions/Acquisition"
                     }
+                }
+            }
+        },
+        "UserDetails": {
+            "required": [
+                "username"
+            ],
+            "type": "object",
+            "properties": {
+                "self": {
+                    "title": "Self",
+                    "type": "string",
+                    "format": "uri",
+                    "readOnly": true
+                },
+                "username": {
+                    "title": "Username",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "type": "string",
+                    "pattern": "^[\\w.@+-]+$",
+                    "maxLength": 150,
+                    "minLength": 1
+                },
+                "is_active": {
+                    "title": "Active",
+                    "description": "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                    "type": "boolean"
+                },
+                "schedule_entries": {
+                    "title": "Schedule entries",
+                    "description": "The list of schedule entries owned by the user",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "date_joined": {
+                    "title": "Date joined",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "last_login": {
+                    "title": "Last login",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254,
+                    "minLength": 1,
+                    "x-nullable": true
+                },
+                "auth_token": {
+                    "title": "Auth token",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "has_usable_password": {
+                    "title": "Has usable password",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "is_admin": {
+                    "title": "Is admin",
+                    "type": "string",
+                    "readOnly": true
                 }
             }
         }

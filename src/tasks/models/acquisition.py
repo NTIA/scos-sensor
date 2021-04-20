@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import pre_delete
 from jsonfield import JSONField
 
 from .task_result import TaskResult

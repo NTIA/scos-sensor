@@ -1,143 +1,65 @@
-NTIA/ITS SCOS Sensor [![Travis CI Build Status][travis-badge]][travis-link] [![API Docs Build Status][api-docs-badge]][api-docs-link]
-====================
+# NTIA/ITS SCOS Sensor
 
-`scos-sensor` is [NTIA/ITS] [Spectrum Monitoring] group's work-in-progress
-reference implementation of the [IEEE 802.22.3 Spectrum Characterization and
-Occupancy Sensing][ieee-link] (SCOS) sensor. It is a platform for operating a
-sensor, such as a software-defined radio (SDR), over a network. The goal is to
-provide a robust, flexible, and secure starting point for remote spectrum
-monitoring.
+[![Travis CI Build Status][travis-badge]][travis-link]
+[![API Docs Build Status][api-docs-badge]][api-docs-link]
+
+`scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.15.22.3
+Spectrum Characterization and Occupancy Sensing][ieee-link] (SCOS) sensor developed by
+[NTIA/ITS]. `scos-sensor` defines a RESTful application programming interface (API),
+that allows authorized users to discover capabilities, schedule actions, and acquire
+resultant data.
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
-[Spectrum Monitoring]: https://www.its.bldrdoc.gov/programs/cac/spectrum-monitoring.aspx
-[ieee-link]: http://www.ieee802.org/22/P802_22_3_PAR_Detail_Approved.pdf
+[ieee-link]: https://standards.ieee.org/standard/802_15_22_3-2020.html
 [travis-link]: https://travis-ci.org/NTIA/scos-sensor
 [travis-badge]: https://travis-ci.org/NTIA/scos-sensor.svg?branch=master
 [api-docs-link]: https://ntia.github.io/scos-sensor/
 [api-docs-badge]: https://img.shields.io/badge/docs-available-brightgreen.svg
 
-
-Table of Contents
------------------
+## Table of Contents
 
 - [Introduction](#introduction)
-- [Quickstart](#quickstart)
-- [Browsable API](#browsable-api)
-- [Adding Actions](#adding-actions)
-- [Architecture](#architecture)
 - [Glossary](#glossary)
+- [Architecture](#architecture)
+- [Overview of scos-sensor Repo Structure](#Overview-of-scos-sensor-Repo-Structure)
+- [Quickstart](#quickstart)
+- [Configuration](#configuration)
+- [Security](#security)
+- [Actions and Hardware Support](#actions-and-hardware-support)
+- [Development](#development)
 - [References](#references)
 - [License](#license)
+- [Contact](#contact)
 
-
-Introduction
-------------
-
-**Note**: It may help to read the [Glossary](#glossary) first.
+## Introduction
 
 `scos-sensor` was designed by NTIA/ITS with the following goals in mind:
 
 - Easy-to-use sensor control and data retrieval via IP network
 - Low-cost, open-source development resources
-- Design flexibility to allow developers to evolve sensor technologies and
-metrics
+- Design flexibility to allow developers to evolve sensor technologies and metrics
 - Hardware agnostic
 - Discoverable sensor capabilities
 - Task scheduling using start/stop times, interval, and/or priority
-- Standardized metadata/data format that supports cooperative sensing and open
-data initiatives
-- Security controls that prevent unauthorized users from accessing internal
-sensor functionality
+- Standardized metadata/data format that supports cooperative sensing and open data
+  initiatives
+- Security controls that prevent unauthorized users from accessing internal sensor
+  functionality
 - Easy-to-deploy with provisioned and configured OS
 - Quality assurance of software via automated testing prior to release
 
-Sensor control is accomplished through a RESTful API. The API is designed to be
-rich enough so that multiple sensors can be automated effectively while being
+Sensor control is accomplished through a RESTful API. The API is designed to be rich
+enough that multiple heterogeneous sensors can be automated effectively while being
 simple enough to still be useful for single-sensor deployments. For example, by
-advertising capabilites and location, an owner of multiple sensors can easily
-filter by frequency range, available *actions*, or geographic location. Yet,
-since each sensor hosts its own [Browsable API](#browsable-api), controlling
-small deployments is as easy as clicking around a website.
+advertising capabilities and location, an owner of multiple sensors can easily filter
+by frequency range, available actions, or geographic location. Yet, since each sensor
+hosts its own Browsable API, controlling small deployments is as easy as clicking
+around a website.
 
-When a *task* acquires data, that data and a significant amount of metadata are
-stored in a local database. The full metadata can be read directly through the
-self-hosted website or retrieved in plain text via a single API call. Our
-metadata and data format is an extension of, and compatible with, the
-[SigMF](https://github.com/gnuradio/sigmf) specification. The [SCOS Data
-Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec) describes
-the `scos` namespace.
-
-When deploying equipment remotely, the robustness and security of software
-becomes a prime concern. `scos-sensor` sits on top of a popular open-source
-framework (see [Architecture](#architecture)), which provides out-of-the-box
-protection against cross site scripting (XSS), cross site request forgery
-(CSRF), SQL injection, and clickjacking attacks, and also enforces SSL/HTTPS
-(traffic encryption), host header validation, and user session security. In
-addition to these, we have implemented an unprivileged *user* type so that the
-sensor owner can allow access to other users and API consumers while
-maintaining ultimate control. To minimize the chance of regressions while
-developing for the sensor, we have written almost 200 unit and integration
-tests. See [Developing](DEVELOPING.md) to learn how to run the test suite.
-
-We have tried to remove the most common hurdles to remotely deploying a sensor
-while maintaining flexibility in two key areas. First, the API itself is
-hardware agnostic, and the implementation assumes different hardware will be
-used depending on sensing requirements (see [Supporting a Different
-SDR](DEVELOPING.md#supporting-a-different-sdr)). Second, we introduce the
-high-level concept of "*actions*" (see [Writing Custom
-Actions](DEVELOPING.md#writing-custom-actions)), which gives the sensor owner
-control over what the sensor can be tasked to do.
-
-We have many of our design and development discussions right here on GitHub. If
-you find a bug or have a use-case that we don't currently support, feel free to
-open an issue.
-
-
-Quickstart
-----------
-
-This section describes how to spin up a production-grade sensor in just a few commands.
-
-We currently support Ettus USRP B2xx software-defined radios out of the box,
-and any Intel-based host computer should work. ARM-based single-board computers
-have also been tested, but we do not prepare pre-build Docker containers at
-this time.
-
-1) Install `git`, `Docker`, and `docker-compose`.
-
-2) Clone the repository.
-
-```bash
-$ git clone https://github.com/NTIA/scos-sensor.git
-$ cd scos-sensor
-```
-
-3) Copy the environment template file and *modify* the copy if necessary, then
-source it.
-
-```bash
-$ cp env.template env
-$ source ./env
-```
-
-4) Run a Dockerized production-grade stack.
-
-```bash
-$ docker-compose up -d                                    # start in background
-$ docker-compose exec api /src/manage.py createsuperuser  # create admin user
-$ docker-compose logs --follow api                        # reattach terminal
-```
-
-Browsable API
--------------
-
-Opening the URL to your sensor (`localhost` if you followed the Quickstart) in
-a browser, you will see a frontend to the API that allows you to do anything
-the JSON API allows.
-
-Relationships in the API are represented by URLs which you can click to
-navigate from endpoint to endpoint. The full API is _discoverable_ simply by
-following these links:
+Opening the URL to your sensor (localhost if you followed the Quickstart) in a browser,
+you will see a frontend to the API that allows you to do anything the JSON API allows.
+Relationships in the API are represented by URLs which you can click to navigate from
+endpoint to endpoint. The full API is *discoverable* simply by following these links:
 
 ![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
 
@@ -149,125 +71,612 @@ Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 
 ![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
+We have tried to remove the most common hurdles to remotely deploying a sensor while
+maintaining flexibility in two key areas. First, the API itself is hardware agnostic,
+and the implementation assumes different hardware will be used depending on sensing
+requirements. Second, we introduce the high-level concept of "actions" which gives the
+sensor owner control over what the sensor can be tasked to do. For more information see
+[Actions and Hardware Support](#actions-and-hardware-support).
 
-Adding Actions
---------------
+## Glossary
 
-This repository contains a basic logger action. Measurement and GPS actions 
-are exposed to scos-sensor in installed python packages. If any python
-package begins with "scos_", and contains <package_name>.discover.actions,
-these actions will automatically be available for scheduling.
+This section provides an overview of high-level concepts used by `scos-sensor`.
 
-The [scos_actions](https://github.com/NTIA/scos_actions) repository is the base repository for actions, and 
-contains actions that can be re-used with different parameters. See
-the [scos_actions](https://github.com/NTIA/scos_actions) repository for more details.
+- *action*: A function that the sensor owner implements and exposes to the API. Actions
+  are the things that the sensor owner wants the sensor to be able to *do*. Since
+  actions block the scheduler while they run, they have exclusive access to the
+  sensor's resources (like the signal analyzer). Currently, there are several logical
+  groupings of actions, such as those that create acquisitions, or admin-only actions
+  that handle administrative tasks. However, actions can theoretically do anything a
+  sensor owner can implement. Some less common (but perfectly acceptable) ideas for
+  actions might be to rotate an antenna, or start streaming data over a socket and only
+  return when the recipient closes the connection.
 
-The [scos_usrp](https://github.com/NTIA/scos_usrp) repository contains USRP specific actions.
+- *acquisition*: The combination of data and metadata created by an action (though an
+  action does not have to create an acquisition). Metadata is accessible directly
+  though the API, while data is retrievable in an easy-to-use archive format with its
+  associated metadata.
 
+- *admin*: A user account that has full control over the sensor and can create schedule
+  entries and view, modify, or delete any other user's schedule entries or
+  acquisitions.
 
-Architecture
-------------
+- *capability*: Available actions, installation specifications (e.g., mobile or
+  stationary), and operational ranges of hardware components (e.g., frequency range of
+  signal analyzer). These values are generally hard-coded by the sensor owner and
+  rarely change.
+
+- *plugin*: A Python package with actions designed to be integrated into scos-sensor.
+
+- *schedule*: The collection of all schedule entries (active and inactive) on the
+  sensor.
+
+- *scheduler*: A thread responsible for executing the schedule. The scheduler reads the
+  schedule at most once a second and consumes all past and present times for each
+  active schedule entry until the schedule is exhausted. The latest task per schedule
+  entry is then added to a priority queue, and the scheduler executes the associated
+  actions and stores/POSTs task results. The scheduler operates in a simple blocking
+  fashion, which significantly simplifies resource deconfliction. When executing the
+  task queue, the scheduler makes a best effort to run each task at its designated
+  time, but the scheduler will not cancel a running task to start another task, even
+  one of higher priority.
+
+- *schedule entry*: Describes a range of scheduler tasks. A schedule entry is at
+  minimum a human readable name and an associated action. Combining different values of
+  *start*, *stop*, *interval*, and *priority* allows for flexible task scheduling. If
+  no start time is given, the first task is scheduled as soon as possible. If no stop
+  time is given, tasks continue to be scheduled until the schedule entry is manually
+  deactivated. Leaving the interval undefined results in a "one-shot" entry, where the
+  scheduler deactivates the entry after a single task is scheduled. One-shot entries
+  can be used with a future start time. If two tasks are scheduled to run at the same
+  time, they will be run in order of *priority*. If two tasks are scheduled to run at
+  the same time and have the same *priority*, execution order is
+  implementation-dependent (undefined).
+
+- *signals*: Django event driven programming framework. Actions use signals to send
+  results to scos-sensor. These signals are handled by scos-sensor so that the results
+  can be processed (such as storing measurement data and metadata).
+
+- *task*: A representation of an action to be run at a specific time. When a *task*
+  acquires data, that data is stored on disk, and a significant amount of metadata is
+  stored in a local database. The full metadata can be read directly through the
+  self-hosted website or retrieved in plain text via a single API call. Our metadata
+  and data format is an extension of, and compatible with, the [SigMF](
+  https://github.com/gnuradio/sigmf) specification - see [sigmf-ns-ntia](
+  https://github.com/NTIA/sigmf-ns-ntia).
+
+- *task result*: A record of the outcome of a task. A result is recorded for each task
+  after the action function returns, and includes metadata such as when the task
+  *started*, when it *finished*, its *duration*, the *result* (`success` or `failure`),
+  and a freeform *detail* string. A `TaskResult` JSON object is also POSTed to a
+  schedule entry's `callback_url`, if provided.
+
+## Architecture
+
+When deploying equipment remotely, the robustness and security of software is a prime
+concern. `scos-sensor` sits on top of a popular open-source framework,
+which provides out-of-the-box protection against cross site scripting (XSS), cross site
+request forgery (CSRF), SQL injection, and clickjacking attacks, and also enforces
+SSL/HTTPS (traffic encryption), host header validation, and user session security.
 
 `scos-sensor` uses a open source software stack that should be comfortable for
 developers familiar with Python.
 
- - Persistent data is stored on disk in a relational database.
- - A *scheduler* thread running in a [Gunicorn] worker process periodically reads
-   the *schedule* from the database and performs the associated *actions*.
- - A website and JSON RESTful API using [Django REST framework] is served over
-   HTTPS via [NGINX], a high-performance web server. These provide easy
-   administration over the sensor.
-
+- Persistent metadata is stored on disk in a relational database, and measurement data
+  is stored in files on disk.
+- A *scheduler* thread running in a [Gunicorn] worker process periodically reads the
+  *schedule* from the database and performs the associated *actions*.
+- A website and JSON RESTful API using [Django REST framework] is served over HTTPS via
+  [NGINX], a high-performance web server. These provide easy administration over the
+  sensor.
 
 ![SCOS Sensor Architecture Diagram](/docs/img/architecture_diagram.png?raw=true)
+
+A functioning scos-sensor utilizes software from at least three different GitHub
+repositories. As shown below, the scos-sensor repository integrates everything together
+as a functioning scos-sensor and provides the code for the user interface, scheduling,
+and the storage and retrieval of schedules and acquisitions. The [scos-actions
+repository](https://github.com/ntia/scos-actions) provides the core actions API,
+defines the radio interface that provides an abstraction for all signal analyzers, and
+provides basic actions. Finally, using a real radio within scos-sensor requires a third
+`scos-<signal analyzer>` repository that provides the signal analyzer specific
+implementation of the radio interface where `<signal analyzer>` is replaced with the
+name of the signal analyzer, e.g. a USRP scos-sensor utilizes the [scos-usrp
+repository](https://github.com/ntia/scos-usrp). The signal analyzer specific
+implementation of the radio interface may expose additional properties of the signal
+analyzer to support signal analyzer specific capabilities and the repository may also
+provide additional signal analyzer specific actions.
+
+![SCOS Sensor Modules](/docs/img/scos-sensor-modules.JPG?raw=true)
 
 [Gunicorn]: http://gunicorn.org/
 [NGINX]: https://www.nginx.com/
 [Django REST framework]: http://www.django-rest-framework.org/
 
+## Overview of scos-sensor Repo Structure
 
-Glossary
---------
+- configs: This folder is used to store the sensor_definition.json file.
+- docker: Contains the docker files used by scos-sensor.
+- docs: Documentation including the [documentation hosted on GitHub pages](
+  https://ntia.github.io/scos-sensor/) generated from the OpenAPI specification.
+- entrypoints: Docker entrypoint scripts which are executed when starting a container.
+- gunicorn: Gunicorn configuration file.
+- nginx: Nginx configuration template and SSL certificates.
+- schemas: JSON schema files.
+- scripts: Various utility scripts.
+- src: Contains the scos-sensor source code.
+   - actions: Code to discover actions in plugins and to perform a simple logger action.
+   - authentication: Code related to user authentication.
+   - capabilities: Code used to generate capabilities endpoint.
+   - handlers: Code to handle signals received from actions.
+   - schedule: Schedule API endpoint for scheduling actions.
+   - scheduler: Scheduler responsible for executing actions.
+   - sensor: Core app which contains the settings, generates the API root endpoint.
+   - static: Django will collect static files (JavaScript, CSS, …) from all apps to this
+     location.
+   - status: Status endpoint.
+   - tasks: Tasks endpoint used to display upcoming and completed tasks.
+   - templates: HTML templates used by the browsable API.
+   - conftest.py: Used to configure pytest fixtures.
+   - manage.py: Django’s command line tool for administrative tasks.
+   - requirements.txt and requirements-dev.txt: Python dependencies.
+   - tox.ini: Used to configure tox.
+- docker-compose.yml: Used by docker-compose to create services from containers. This
+  is needed to run scos-sensor.
+- env.template: Template file for setting environment variables used to configure
+  scos-sensor.
 
-In this section, we'll go over the high-level concepts used by `scos-sensor`.
+## Quickstart
 
- - *action*: A function that the sensor owner implements and exposes to the
-   API. Actions are the things that the sensor owner wants the sensor to be
-   able to *do*. Since actions block the scheduler while they run, they have
-   exclusive access to the sensor's resources (like the SDR). Currently, there
-   are several logical groupings of actions, such as those that create
-   acquisitions, or admin-only actions that handle administrative tasks.
-   However, actions can theoretically do anything a sensor owner can implement.
-   Some less common (but perfectly acceptable) ideas for actions might be to
-   rotate an antenna, or start streaming data over a socket and only return
-   when the recipient closes the connection.
+This section describes how to spin up a production-grade sensor in just a few commands.
 
- - *acquisition*: The combination of data and metadata created by an action
-   (though an action does not have to create an acquisition). Metadata is
-   accessible directly though the API, while data is retrievable in an
-   easy-to-use archive format with its associated metadata.
+We currently support Ettus USRP B2xx software-defined radios out of the box, and any
+Intel-based host computer should work. ARM-based single-board computers have also been
+tested, but we do not prepare pre-built Docker containers for them at this time.
 
- - *admin*: A user account that has full control over the sensor and can create
-   schedule entries and view, modify, or delete any other user's schedule
-   entries or acquisitions. Admins can create non-privileged *user* accounts.
-   Admins can mark a schedule entry as private from unprivileged users.
+1) Install `git`, `Docker`, and `docker-compose`.
 
- - *capability*: Available actions, installation specifications (e.g., mobile
-   or stationary), and operational ranges of hardware components (e.g.,
-   frequency range of SDR). These values are generally hard-coded by the sensor
-   owner and rarely change.
+2) Clone the repository.
 
- - *schedule*: The collection of all schedule entries (active and inactive) on
-   the sensor.
+```bash
+git clone https://github.com/NTIA/scos-sensor.git
+cd scos-sensor
+```
 
- - *scheduler*: A thread responsible for executing the schedule. The scheduler
-   reads the schedule at most once a second and consumes all past and present
-   times for each active schedule entry until the schedule is exhausted. The
-   latest task per schedule entry is then added to a priority queue, and the
-   scheduler executes the associated actions and stores/POSTs task results. The
-   scheduler operates in a simple blocking fashion, which significantly
-   simplifies resource deconfliction. When executing the task queue, the
-   scheduler makes a best effort to run each task at its designated time, but
-   the scheduler will not cancel a running task to start another task, even of
-   higher priority.
+3) Copy the environment template file and *modify* the copy if necessary, then source
+it. The settings in this file are set for running in a development environment on your
+local system. For running in a production environment, many of the settings will need
+to be modified. See [Configuration](#configuration) section. Also, you are strongly
+encouraged to change the default `ADMIN_EMAIL` and `ADMIN_PASSWORD` before running
+scos-sensor. Finally, source the file before running scos-sensor to load the settings
+into your environment.
 
- - *schedule entry*: Describes a range of scheduler tasks. A schedule entry is
-   at minimum a human readable name and an associated action. Combining
-   different values of *start*, *stop*, *interval*, and *priority* allows for
-   flexible task scheduling. If no start time is given, the first task is
-   scheduled as soon as possible. If no stop time is given, tasks continue to
-   be scheduled until the schedule entry is manually deactivated. Leaving the
-   interval undefined results in a "one-shot" entry, where the scheduler
-   deactivates the entry after a single task is scheduled. One-shot entries can
-   be used with a future start time. If two tasks are scheduled to run at the
-   same time, they will be run in order of *priority*. If two tasks are
-   scheduled to run at the same time and have the same *priority*, execution
-   order is implementation-dependent (undefined).
+```bash
+cp env.template env
+source ./env
+```
 
- - *task*: A representation of an action to be run at a specific time.
+4) Run a Dockerized stack.
 
- - *task result*: A record of the outcome of a task. A result is recorded for
-   each task after the action function returns, and includes metadata such as
-   when the task *started*, when it *finished*, its *duration*, the *result*
-   (`success` or `failure`), and a freeform *detail* string. A `TaskResult`
-   JSON object is also POSTed to a schedule entry's `callback_url`, if
-   provided.
+```bash
+docker-compose up -d --build  # start in background
+docker-compose logs --follow api  # reattach terminal
 
- - *user*: An unprivileged account type which can create schedule entries and
-   view, modify, and delete things they own, but which cannot modify or delete
-   things they don't own. Actions marked `admin_only` are not schedulable, and
-   schedule entries marked private by an admin (along with their results and
-   acquisitions) are not visible to users.
+```
 
+## Configuration
 
-References
-----------
+When running in a production environment or on a remote system, various settings will
+need to be configured.
 
- - [SCOS Control Plane API Reference](https://ntia.github.io/scos-sensor/)
- - [SCOS Data Transfer Specification](https://github.com/NTIA/SCOS-Transfer-Spec)
+### Environment File
 
+As explained in the [Quickstart](#quickstart) section, before running scos-sensor, an
+environment (env) file is created from the env.template file. These settings can either
+be set in the environment file or set directly in docker-compose.yml. Here are the
+settings in the environment file:
 
-License
--------
+- ADMIN_EMAIL: Email used to generate admin user. Change in production.
+- ADMIN_PASSWORD: Password used to generate admin user. Change in production.
+- BASE_IMAGE: Base docker image used to build the API container.
+- CALLBACK_SSL_VERIFICATION: Set to “true” in production environment. If false, the SSL
+  certificate validation will be ignored when posting results to the callback URL.
+- DEBUG: Django debug mode. Set to False in production.
+- DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
+- DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
+  https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
+- GIT_BRANCH: Current branch of scos-sensor being used.
+- GUNICORN_LOG_LEVEL: Log level for Gunicorn log messages.
+- IPS: A space separated list of IP addresses. Used to generate [ALLOWED_HOSTS](
+  https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
+- FQDN: The server’s fully qualified domain name.
+- MAX_DISK_USAGE: The maximum disk usage percentage allowed before overwriting old
+  results. Defaults to 85%. This disk usage detected by scos-sensor (using the Python
+  `shutil.disk_usage` function) may not match the usage reported by the Linux `df`
+  command.
+- POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
+  Change in production.
+- REPO_ROOT: Root folder of the repository. Should be correctly set by default.
+- SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
+  unpredictable value. See
+  <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>.
+- SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
+  scos-sensor repository with a valid certificate in production.
+- SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
+  certificate in production.
+
+### Sensor Definition File
+
+This file contains information on the sensor and components being used. It is used in
+the SigMF metadata to identify the hardware used for the measurement. It should follow
+the [sigmf-ns-ntia Sensor Object format](
+https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object
+). See an example below. Overwrite the [example
+file in scos-sensor/configs](configs/sensor_definition.json) with the information
+specific to the sensor you are using.
+
+```json
+{
+    "id": "",
+    "sensor_spec": {
+        "id": "",
+        "model": "greyhound"
+    },
+    "antenna": {
+        "antenna_spec": {
+            "id": "",
+            "model": "L-com HG3512UP-NF"
+        }
+    },
+    "signal_analyzer": {
+        "sigan_spec": {
+            "id": "",
+            "model": "Ettus USRP B210"
+        }
+    },
+    "computer_spec": {
+        "id": "",
+        "model": "Intel NUC"
+    }
+}
+```
+
+## Security
+
+This section covers authentication, permissions, and certificates used to access the
+sensor, and the authentication available for the callback URL. Two different types of
+authentication are available for authenticating against the sensor and for
+authenticating when using a callback URL. **Note that the certificate authorities
+(CAs), SSL certificates, private keys, and JWT public keys used in this repository are
+for testing and development purposes only. They should not be used in a production
+system.**
+
+### Sensor Authentication And Permissions
+
+The sensor can be configured to authenticate using OAuth JWT access tokens from an
+external authorization server or using Djnago Rest Framework Token Authentication.
+
+#### Django Rest Framework Token Authentication
+
+This is the default authentication method. To enable Django Rest Framework
+Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
+(this will be enabled if `AUTHENTICATION` set to anything other
+than `JWT`).
+
+A token is automatically created for each user. Django Rest Framework Token
+Authentication will check that the token in the Authorization header ("Token " +
+token) matches a user's token.
+
+#### OAuth2 JWT Authentication
+
+To enable OAuth 2 JWT Authentication, set `AUTHENTICATION` to `JWT` in the environment
+file. To authenticate, the client will need to send a JWT access token in the
+authorization header (using "Bearer " + access token). The token signature will be
+verified using the public key from the `PATH_TO_JWT_PUBLIC_KEY` setting. The expiration
+time will be checked. Only users who have an authority matching the `REQUIRED_ROLE`
+setting will be authorized.
+
+The token is expected to come from an OAuth2 authorization server. For more
+information, see <https://tools.ietf.org/html/rfc6749>.
+
+#### Certificates
+
+The NGINX web server requires an SSL certificate to use https. The certificate and
+private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
+file. Note that these paths are relative to the configs/certs directory.
+
+Optionally, client certificates can be required. To require client certificates,
+uncomment `ssl_verify_client on;` and `ssl_ocsp on;` in nginx/conf.template. Set the CA
+certificate used for validating client certificates using the `SSL_CA_PATH` (relative
+to configs/certs) in the environment file.
+
+##### Getting Certificates
+
+It is recommended to create your own CA for testing. **For production, make sure to use
+certificates from a trusted CA.** For testing, you can use the certificates and keys in
+configs/certs/test or you can use scripts/create_certificates.py to create the test
+CA certificate, test server certificate, and test client certificate. This script can
+also be used with an existing CA. Here are the instructions to use create_certificates
+with an existing CA.
+
+1. To configure the create_certificates.py script, use create_certificates.ini. In
+   create_certificates.ini, set `ca_private_key_path` and `ca_certificate_path` to the
+   path of your CA private key and certificate. Configure the remaining parameters as
+   desired. The SAN (subject alternative name) parameters will need to be set to the
+   appropriate IP addresses and DNS names of your server and client.
+
+1. While in scos-sensor root directory, run the create_certificates.py script passing
+   the following arguments in the listed order:
+
+   - ini_path - path to the create_certificates.ini file.
+   - ini_section - section of the INI file to use.
+   - key_passphrase - Passphrase to use to encrypt private keys. Set to `None` to
+     disable encryption.
+
+   The following certificates will be generated:
+
+   - sensor01_private.pem - sensor private key.
+   - sensor01_certificate.pem - sensor certificate.
+   - sensor01_client_private.pem - client private key.
+   - sensor01_client.pem - client certificate.
+
+1. Copy sensor01_private and sensor01_certificate to the computer where the scos-sensor
+   will run. If you are using client certificates, also copy the CA certificate used to
+   generate the certificates. Make sure the certificates are somewhere in configs/certs,
+   and that `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) are set to the
+   paths of the certificates relative to configs/certs. If you are using client
+   certificates, set `SSL_CA_PATH` to the path of the CA certificate relative to
+   configs/certs.
+
+1. Run scos-sensor. If you are using client certificates, use
+   sensor01_client_private.pem and sensor01_client to connect to the API.
+
+The create_certificates.py script can also generate a new CA and use it for generating
+the certificates. To run create_certificates.py this way, comment out
+`ca_private_key_path` and `ca_certificate_path` in create_certificates.ini, make sure
+`ca_private_key_save_path` and the other parameters are set as desired, then repeat
+steps 2-4 above. The CA private key file (saved to ca_private_key_save_path) and the CA
+public key (scostestca.crt) will be generated in addition to the files listed in step
+2 above.
+
+#### Permissions and Users
+
+The API requires the user to either have an authority in the JWT token matching the the
+`REQUIRED_ROLE` setting or that the user be a superuser. New users created using the
+API initially do not have superuser access. However, an admin can mark a user as a
+superuser in the Sensor Configuration Portal. When using JWT tokens, the user does not
+have to be pre-created using the sensor's API. The API will accept any user using a
+JWT token if they have an authority matching the required role setting.
+
+### Callback URL Authentication
+
+OAuth and Token authentication are supported for authenticating against the server
+pointed to by the callback URL. Callback SSL verification can be enabled
+or disabled using `CALLBACK_SSL_VERIFICATION` in the environment file.
+
+#### Token
+
+A simple form of token authentication is supported for the callback URL. The sensor
+will send the user's (user who created the schedule) token in the authorization header
+("Token " + token) when posting results to callback URL. The server can then verify
+the token against what it originally sent to the sensor when creating the schedule.
+This method of authentication for the callback URL is enabled by default. To verify it
+is enabled, set `CALLBACK_AUTHENTICATION` to `TOKEN` in the environment file (this will
+be enabled if `CALLBACK_AUTHENTICATION` set to anything other than `OAUTH`).
+`PATH_TO_VERIFY_CERT`, in the environment file, can used to set a CA certificate to
+verify the callback URL server SSL certificate. If this is unset and
+`CALLBACK_SSL_VERIFICATION` is set to true, [standard trusted CAs](
+    https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
+used.
+
+#### OAuth
+
+The OAuth 2 password flow is supported for callback URL authentication. The following
+settings in the environment file are used to configure the OAuth 2 password flow
+authentication.
+
+- `CALLBACK_AUTHENTICATION` - set to `OAUTH`.
+- `CLIENT_ID` - client ID used to authorize the client (the sensor) against the
+  authorization server.
+- `CLIENT_SECRET` - client secret used to authorize the client (the sensor) against the
+  authorization server.
+- `OAUTH_TOKEN_URL` - URL to get the access token.
+- `PATH_TO_CLIENT_CERT` - client certificate used to authenticate against the
+  authorization server.
+- `PATH_TO_VERIFY_CERT` - CA certificate to verify the authorization server and
+  callback URL server SSL certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`
+  is set to true, [standard trusted CAs](
+    https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
+  used.
+
+In src/sensor/settings.py, the OAuth `USER_NAME` and `PASSWORD` are set to be the same
+as `CLIENT_ID` and `CLIENT_SECRET`. This may need to change depending on your
+authorization server.
+
+## Actions and Hardware Support
+
+"Actions" are one of the main concepts used by scos-sensor. At a high level, they are
+the things that the sensor owner wants the sensor to be able to do. At a lower level,
+they are simply Python classes with a special method `__call__`. Actions are designed
+to be discovered programmatically in installed plugins. Plugins are Python packages
+that are designed to be integrated into scos-sensor. The reason for using plugins to
+install actions is that different actions can be offered depending on the hardware
+being used. Rather than requiring a modification to scos-sensor repository, plugins
+allow anyone to add additional hardware support to scos-sensor by offering new or
+existing actions that use the new hardware.
+
+Common action classes can still be re-used by plugins through the scos-actions
+repository. The scos-actions repository is intended to be a dependency for every plugin
+as it contains the actions base class and signals needed to interface with scos-sensor.
+These actions use a common but flexible radio interface that can be implemented for new
+types of hardware. This allows for action re-use by passing the radio interface and the
+required hardware and measurement parameters to the constructor of these actions.
+Alternatively, custom actions that support unique hardware functionality can be added
+to the plugin.
+
+The scos-actions repository can also be installed as a plugin which uses a mock signal
+analyzer.
+
+scos-sensor uses the following convention to discover actions offered by plugins: if
+any Python package begins with "scos_", and contains a dictionary of actions at the
+Python path `package_name.discover.actions`, these actions will automatically be
+available for scheduling.
+
+The scos-usrp plugin adds support for the Ettus B2xx line of software-defined radios.
+It can also be used as an example of a plugin which adds new hardware support and
+re-uses the common actions in scos-actions.
+
+For more information on adding actions and hardware support, see [scos-actions](
+https://github.com/ntia/scos-actions#development).
+
+## Development
+
+### Running the Sensor in Development
+
+The following techniques can be used to make local modifications. Sections are in
+order, so "Running Tests" assumes you've done the setup steps in “Requirements and
+Configuration”.
+
+#### Requirements and Configuration
+
+It is highly recommended that you first initialize a virtual development environment
+using a tool such a conda or venv. The following commands create a virtual environment
+using venv and install the required dependencies for development and testing.
+
+```python
+python3 -m venv ./venv
+source venv/bin/activate
+python3 -m pip install --upgrade pip # upgrade to pip>=18.1
+python3 -m pip install -r src/requirements-dev.txt
+```
+
+#### Running Tests
+
+Ideally, you should add a test that covers any new feature that you add. If you've done
+that, then running the included test suite is the easiest way to check that everything
+is working. In any case, all tests should be run after making any local modifications
+to ensure that you haven't caused a regression.
+
+`scos-sensor` uses [pytest](https://docs.pytest.org/en/latest/) and [pytest-django](
+https://pytest-django.readthedocs.io/en/latest/) for testing. Tests are organized by
+[application](
+https://docs.djangoproject.com/en/dev/ref/applications/#projects-and-applications), so
+tests related to the scheduler are in `./src/scheduler/tests`. [tox](
+https://tox.readthedocs.io/en/latest/) is a tool that can run all available tests in a
+virtual environment against all supported versions of Python. Running `pytest` directly
+is faster, but running `tox` is a more thorough test.
+
+The following commands install the sensor's development requirements. We highly
+recommend you initialize a virtual development environment using a tool such a `conda`
+or `venv` first.
+
+```bash
+cd src
+pytest          # faster, but less thorough
+tox             # tests code in clean virtualenv
+tox --recreate  # if you change `requirements.txt`
+tox -e coverage # check where test coverage lacks
+```
+
+#### Running Docker with Local Changes
+
+The docker-compose file and application code look for information from the environment
+when run, so it's necessary to source the following file in each shell that you intend
+to launch the sensor from. (HINT: it can be useful to add the `source` command to a
+post-activate file in whatever virtual environment you're using).
+
+```bash
+cp env.template env     # modify if necessary, defaults are okay for testing
+source ./env
+```
+
+Then, build the API docker image locally, which will satisfy the `smsntia/scos-sensor`
+and `smsntia/autoheal` images in the Docker compose file and bring up the sensor.
+
+```bash
+docker-compose down
+docker-compose build
+docker-compose up -d
+docker-compose logs --follow api
+```
+
+#### Running Development Server (Not Recommended)
+
+Running the sensor API outside of Docker is possible but not recommended, since Django
+is being asked to run without several security features it expects. See
+[Common Issues](#common-issues) for some hints when running the sensor in this way. The
+following steps assume you've already set up some kind of virtual environment and
+installed python dev requirements from [Requirements and Configuration](
+    #requirements-and-configuration).
+
+```bash
+docker-compose up -d db
+cd src
+./manage.py makemigrations
+./manage.py migrate
+./manage.py createsuperuser
+./manage.py runserver
+```
+
+##### Common Issues
+
+- The development server serves on localhost:8000, not :80
+- If you get a Forbidden (403) error, close any tabs and clear any cache and cookies
+  related to SCOS Sensor and try again
+- If you're using a virtual environment and your signal analyzer driver is installed
+  outside of it, you may need to allow access to system sitepackages. For example, if
+  you're using a virtualenv called `scos-sensor`, you can remove the following text
+  file: `rm -f ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`,
+  and thereafter use the ignore-installed flag to pip: `pip install -I -r
+  requirements.txt.` This should let the devserver fall back to system sitepackages for
+  the signal analyzer driver only.
+
+### Committing
+
+Besides running the test suite and ensuring that all tests are passed, we also expect
+all Python code that's checked in to have been run through an auto-formatter.
+
+This project uses a Python auto-formatter called Black. You probably won't like every
+decision it makes, but our continuous integration test-runner will reject your commit
+if it's not properly formatted.
+
+Additionally, import statement sorting is handled by isort.
+
+The continuous integration test-runner verifies the code is auto-formatted by checking
+that neither isort nor Black would recommend any changes to the code. Occasionally,
+this can fail if these two autoformatters disagree. The only time I've seen this happen
+is with a commented-out import statement, which isort parses, and Black treats as a
+comment. Solution: don't leave commented-out import statements in the code.
+
+There are several ways to autoformat your code before committing. First, IDE
+integration with on-save hooks is very useful. Second, there is a script,
+`scripts/autoformat_python.sh`, that will run both isort and Black over the codebase.
+Lastly, if you've already pip-installed the dev requirements from the section above,
+you already have a utility called `pre-commit` installed that will automate setting up
+this project's git pre-commit hooks. Simply type the following *once*, and each time
+you make a commit, it will be appropriately autoformatted.
+
+```bash
+pre-commit install
+```
+
+You can manually run the pre-commit hooks using the following command.
+
+```bash
+pre-commit run --all-files
+```
+
+## References
+
+- [SCOS Control Plane API Reference](<https://ntia.github.io/scos-sensor/>)
+- [SCOS Data Transfer Specification](<https://github.com/NTIA/sigmf-ns-ntia>)
+- [SCOS Actions](<https://github.com/NTIA/scos-actions>)
+- [SCOS USRP](<https://github.com/NTIA/scos-usrp>)
+
+## License
 
 See [LICENSE](LICENSE.md).
+
+## Contact
+
+For technical questions about scos-sensor, contact Justin Haze, <jhaze@ntia.gov>

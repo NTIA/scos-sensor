@@ -7,8 +7,8 @@ from .utils import HTTPS_KWARG, validate_response
 API_ROOT_ENDPOINTS = {"users", "schedule", "status", "capabilities", "tasks"}
 
 
-def test_index(user_client):
-    response = user_client.get(reverse("api-root", kwargs=V1), **HTTPS_KWARG)
+def test_index(admin_client):
+    response = admin_client.get(reverse("api-root", kwargs=V1), **HTTPS_KWARG)
     rjson = validate_response(response)
 
     assert rjson.keys() == API_ROOT_ENDPOINTS

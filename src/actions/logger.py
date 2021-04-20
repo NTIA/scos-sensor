@@ -1,6 +1,7 @@
 """A simple example action that logs a message."""
 
 import logging
+
 from scos_actions.actions.interfaces.action import Action
 
 logger = logging.getLogger(__name__)
@@ -19,8 +20,7 @@ class Logger(Action):
 
     """
 
-    def __init__(self, loglvl=LOGLVL_INFO, admin_only=False):
-        super(Logger, self).__init__(admin_only=admin_only)
+    def __init__(self, loglvl=LOGLVL_INFO):
         self.loglvl = loglvl
 
     def __call__(self, schedule_entry_json, task_id, sensor_definition):

@@ -6,12 +6,10 @@ from sensor import V1
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 
 
-def test_user_cannot_view_private_entry_in_list(admin_client, user_client):
+def test_user_cannot_view_user_list(admin_client, user_client):
     """An unprivileged user should not be able to see private entries."""
     post_schedule(admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     url = reverse("user-list", kwargs=V1)
     response = user_client.get(url, **HTTPS_KWARG)
-    rjson = validate_response(response, status.HTTP_200_OK)
-    results = rjson["results"]
-    admin_rjson = [user for user in results if user["username"] == "admin"][0]
-    assert admin_rjson["schedule_entries"] == []
+    rjson = validate_response(response, status.HTTP_403_FORBIDDEN)
+    assert "results" not in rjson

@@ -47,20 +47,21 @@ RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
 MOCK_RADIO = env.bool("MOCK_RADIO", default=False) or RUNNING_DEMO or RUNNING_TESTS
 MOCK_RADIO_RANDOM = env.bool("MOCK_RADIO_RANDOM", default=False)
-SENSOR_TYPE = env("SENSOR_TYPE", default="USRP")
-CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
+
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
+SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
 SCHEDULER_HEALTHCHECK_FILE = path.join(REPO_ROOT, "scheduler_dead")
-
 
 LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 
 OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
+DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
 # JSON configs
+# TODO remove calibration files, add instructions to set these in scos-usrp
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
@@ -70,10 +71,10 @@ if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
-# try:
-#     os.remove(SDR_HEALTHCHECK_FILE)
-# except OSError:
-#     pass
+try:
+    os.remove(SDR_HEALTHCHECK_FILE)
+except OSError:
+    pass
 
 # As defined in SigMF
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
@@ -103,6 +104,12 @@ else:
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
+
+SESSION_COOKIE_AGE = 900  # seconds
+SESSION_EXPIRE_SECONDS = 900  # seconds
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = "/api/auth/logout/?next=/api/v1/"
+
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -166,7 +173,6 @@ INSTALLED_APPS = [
     # project-local apps
     "authentication.apps.AuthenticationConfig",
     "capabilities.apps.CapabilitiesConfig",
-    "hardware.apps.HardwareConfig",
     "handlers.apps.HandlersConfig",
     "tasks.apps.TasksConfig",
     "schedule.apps.ScheduleConfig",
@@ -179,6 +185,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django_session_timeout.middleware.SessionTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -213,10 +220,12 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser",
+    ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
@@ -232,41 +241,70 @@ REST_FRAMEWORK = {
     "URL_FIELD_NAME": "self",  # RFC 42867
 }
 
+AUTHENTICATION = env("AUTHENTICATION", default="")
+if AUTHENTICATION == "JWT":
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "authentication.auth.OAuthJWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    )
+else:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    )
+
 
 # https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {
-        "token": {
-            "type": "apiKey",
-            "description": (
-                "Tokens are automatically generated for all users. You can "
-                "view yours by going to your User Details view in the "
-                "browsable API at `/api/v1/users/me` and looking for the "
-                "`auth_token` key. Non-admin user accounts do not initially "
-                "have a password and so can not log in to the browsable API. "
-                "To set a password for a user (for testing purposes), an "
-                "admin can do that in the Sensor Configuration Portal, but "
-                "only the account's token should be stored and used for "
-                "general purpose API access. "
-                'Example cURL call: `curl -kLsS -H "Authorization: Token'
-                ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
-                "https://greyhound5.sms.internal/api/v1`"
-            ),
-            "name": "Token",
-            "in": "header",
-        }
-    },
+    "SECURITY_DEFINITIONS": {},
     "APIS_SORTER": "alpha",
     "OPERATIONS_SORTER": "method",
     "VALIDATOR_URL": None,
 }
+
+if AUTHENTICATION == "JWT":
+    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["oAuth2JWT"] = {
+        "type": "oauth2",
+        "description": (
+            "OAuth2 authentication using resource owner password flow."
+            "This is done by verifing JWT bearer tokens signed with RS256 algorithm."
+            "The JWT_PUBLIC_KEY_FILE setting controls the public key used for signature verification."
+            "Only authorizes users who have an authority matching the REQUIRED_ROLE setting."
+            "For more information, see https://tools.ietf.org/html/rfc6749#section-4.3."
+        ),
+        "flows": {"password": {"scopes": {}}},  # scopes are not used
+    }
+else:
+    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["token"] = {
+        "type": "apiKey",
+        "description": (
+            "Tokens are automatically generated for all users. You can "
+            "view yours by going to your User Details view in the "
+            "browsable API at `/api/v1/users/me` and looking for the "
+            "`auth_token` key. New user accounts do not initially "
+            "have a password and so can not log in to the browsable API. "
+            "To set a password for a user (for testing purposes), an "
+            "admin can do that in the Sensor Configuration Portal, but "
+            "only the account's token should be stored and used for "
+            "general purpose API access. "
+            'Example cURL call: `curl -kLsS -H "Authorization: Token'
+            ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
+            "https://localhost/api/v1`"
+        ),
+        "name": "Token",
+        "in": "header",
+    }
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 if RUNNING_TESTS or RUNNING_DEMO:
     DATABASES = {
-        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            # "NAME": ":memory:"
+            "NAME": "test.db",  # temporary workaround for https://github.com/pytest-dev/pytest-django/issues/783
+        }
     }
 else:
     DATABASES = {
@@ -283,8 +321,8 @@ else:
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
 
-# Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
-MAX_TASK_RESULTS = env.int("MAX_TASK_RESULTS", default=100000)
+# Delete oldest TaskResult (and related acquisitions) of current ScheduleEntry if MAX_DISK_USAGE exceeded
+MAX_DISK_USAGE = env.int("MAX_DISK_USAGE", default=85)  # percent
 # Display at most MAX_TASK_QUEUE upcoming tasks in /tasks/upcoming
 MAX_TASK_QUEUE = 50
 
@@ -321,10 +359,9 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "loggers": {
         "actions": {"handlers": ["console"], "level": LOGLEVEL},
-        # "django": {"handlers": ["console"], "level": LOGLEVEL},
+        "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "handlers": {"handlers": ["console"], "level": LOGLEVEL},
-        "hardware": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},
@@ -341,3 +378,28 @@ if SENTRY_DSN:
     import raven
 
     RAVEN_CONFIG = {"dsn": SENTRY_DSN, "release": raven.fetch_git_sha(REPO_ROOT)}
+
+CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
+# OAuth Password Flow Authentication
+CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
+CLIENT_ID = env("CLIENT_ID", default="")
+CLIENT_SECRET = env("CLIENT_SECRET", default="")
+USER_NAME = CLIENT_ID
+PASSWORD = CLIENT_SECRET
+
+OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
+CERTS_DIR = path.join(CONFIG_DIR, "certs")
+# Sensor certificate with private key used as client cert
+PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")
+if PATH_TO_CLIENT_CERT != "":
+    PATH_TO_CLIENT_CERT = path.join(CERTS_DIR, PATH_TO_CLIENT_CERT)
+# Trusted Certificate Authority certificate to verify authserver and callback URL server certificate
+PATH_TO_VERIFY_CERT = env("PATH_TO_VERIFY_CERT", default="")
+if PATH_TO_VERIFY_CERT != "":
+    PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, PATH_TO_VERIFY_CERT)
+# Public key to verify JWT token
+PATH_TO_JWT_PUBLIC_KEY = env.str("PATH_TO_JWT_PUBLIC_KEY", default="")
+if PATH_TO_JWT_PUBLIC_KEY != "":
+    PATH_TO_JWT_PUBLIC_KEY = path.join(CERTS_DIR, PATH_TO_JWT_PUBLIC_KEY)
+# Required role from JWT token to access API
+REQUIRED_ROLE = "ROLE_MANAGER"
