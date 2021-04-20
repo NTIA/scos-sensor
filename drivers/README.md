@@ -11,7 +11,8 @@ A json file can be used to copy files in this directory to a required destinatio
 the Docker container.
 
 Below is a sample json file. The `"source_path"` must be relative to the `drivers`
-directory. The `"dest_path"` can be anywhere in the Docker container.
+directory. The `"dest_path"` can be anywhere in the Docker container. If they do not
+exist, the destination directory and parent directories will automatically be created.
 
 ```json
 {
