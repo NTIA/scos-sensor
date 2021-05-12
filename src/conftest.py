@@ -183,40 +183,6 @@ def alt_admin_client(db, alt_admin_user):
     return client
 
 
-# Add mock acquisitions for tests
-mock_acquire_single_frequency_fft = actions.acquire_single_freq_fft.SingleFrequencyFftAcquisition(
-    name="mock_acquire_single_frequency_fft",
-    frequency=1e9,  # 1 GHz
-    gain=40,
-    sample_rate=1e6,  # 1 MSa/s
-    fft_size=16,
-    nffts=11,
-)
-actions.by_name["mock_acquire_single_frequency_fft"] = mock_acquire_single_frequency_fft
-
-# Add mock multi-recording acquisition for tests
-stepped_freq_action = actions.acquire_stepped_freq_tdomain_iq
-mock_multirec_acquire = stepped_freq_action.SteppedFrequencyTimeDomainIqAcquisition(
-    name="mock_multirec_acquire",
-    fcs=[1.1e9, 1.2e9, 1.3e9],  # 1400, 1500, 1600 MHz
-    gains=[40, 40, 60],
-    sample_rates=[1e6, 1e6, 1e6],  # 1 MSa/s
-    durations_ms=[1, 2, 1],
-)
-actions.by_name["mock_multirec_acquire"] = mock_multirec_acquire
-
-mock_time_domain_iq_acquire = stepped_freq_action.SteppedFrequencyTimeDomainIqAcquisition(
-    name="mock_time_domain_iq_acquire",
-    fcs=[1.1e9],  # 1400, 1500, 1600 MHz
-    gains=[40],
-    sample_rates=[1e6],  # 1 MSa/s
-    durations_ms=[1],
-)
-actions.by_name["mock_time_domain_iq_acquire"] = mock_time_domain_iq_acquire
-
-actions.init()
-
-
 @pytest.fixture(autouse=True)
 def jwt_keys(settings):
     with tempfile.NamedTemporaryFile() as jwt_public_key_file:
