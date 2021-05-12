@@ -1,7 +1,7 @@
 dist: xenial
 language: python
 python:
-  - 3.6
+  - 3.7
 
 sudo: required
 
@@ -20,13 +20,15 @@ before_install:
   - sudo mknod /dev/bus/usb/001/001 c 189 260
 
 install:
-  - docker-compose up --build -d
+  - MOCK_RADIO=1 docker-compose up --build -d
 
 before_script:
+  - python3 -m pip install --upgrade pip
   - pip install -r ./src/requirements-dev.txt
 
 script:
   - black --check ./src
   - tox -c ./src/tox.ini -e coverage
   - tox -c ./src/tox.ini -e oauth
+  - docker-compose logs
   - docker ps | grep api | grep -q healthy

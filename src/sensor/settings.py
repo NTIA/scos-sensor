@@ -23,6 +23,9 @@ env = Env()
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 REPO_ROOT = path.dirname(BASE_DIR)
+# REPO_ROOT = env("APP_ROOT", default=None)
+# if not REPO_ROOT:
+#     REPO_ROOT = path.dirname(BASE_DIR)
 
 FQDN = env("FQDN", "fqdn.unset")
 
@@ -55,12 +58,16 @@ LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
+DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
 # JSON configs
-SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
-SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
-SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
-ACTION_DEFINITIONS_DIR = path.join(CONFIG_DIR, "actions")
+# TODO remove calibration files, add instructions to set these in scos-usrp
+if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
+    SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
+if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
+    SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
+if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
+    SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 
 # Cleanup any existing healtcheck files
@@ -82,7 +89,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
-    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
+    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"  # TODO not sure why this is set here
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
@@ -155,7 +162,7 @@ INSTALLED_APPS = [
     # project-local apps
     "authentication.apps.AuthenticationConfig",
     "capabilities.apps.CapabilitiesConfig",
-    "hardware.apps.HardwareConfig",
+    "handlers.apps.HandlersConfig",
     "tasks.apps.TasksConfig",
     "schedule.apps.ScheduleConfig",
     "scheduler.apps.SchedulerConfig",
@@ -289,7 +296,11 @@ else:
 
 if RUNNING_TESTS or RUNNING_DEMO:
     DATABASES = {
-        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            # "NAME": ":memory:"
+            "NAME": "test.db",  # temporary workaround for https://github.com/pytest-dev/pytest-django/issues/783
+        }
     }
 else:
     DATABASES = {
@@ -306,8 +317,8 @@ else:
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
 
-# Ensure only the last MAX_TASK_RESULTS results are kept per schedule entry
-MAX_TASK_RESULTS = env.int("MAX_TASK_RESULTS", default=100000)
+# Delete oldest TaskResult (and related acquisitions) of current ScheduleEntry if MAX_DISK_USAGE exceeded
+MAX_DISK_USAGE = env.int("MAX_DISK_USAGE", default=85)  # percent
 # Display at most MAX_TASK_QUEUE upcoming tasks in /tasks/upcoming
 MAX_TASK_QUEUE = 50
 
@@ -346,12 +357,15 @@ LOGGING = {
         "actions": {"handlers": ["console"], "level": LOGLEVEL},
         "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
-        "hardware": {"handlers": ["console"], "level": LOGLEVEL},
+        "handlers": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},
         "status": {"handlers": ["console"], "level": LOGLEVEL},
         "tasks": {"handlers": ["console"], "level": LOGLEVEL},
+        "scos_actions": {"handlers": ["console"], "level": LOGLEVEL},
+        "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
+        "scos_sensor_keysight": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 

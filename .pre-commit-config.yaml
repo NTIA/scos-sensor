@@ -1,4 +1,4 @@
-exclude: src/static/*|LICENSE.md|.+\.pem|.+\.crt
+exclude: src/static/*|LICENSE.md|.+\.pem|.+\.crt|.vscode/*
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.2.3
@@ -25,3 +25,9 @@ repos:
     hooks:
       - id: black
         language_version: python3.6
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.9.0
+    hooks:
+      - id: markdownlint
+        args: [-s, .ml_style.rb, README.md]
+        exclude: LICENSE.md

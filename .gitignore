@@ -83,11 +83,12 @@ target/
 celerybeat-schedule
 
 # dotenv
-.env
+env
 
 # virtualenv
 venv/
 ENV/
+scos_sensor_venv/
 
 # Spyder project settings
 .spyderproject

@@ -24,7 +24,7 @@ class Acquisition(models.Model):
         help_text="The task_result relative to the acquisition",
     )
     recording_id = models.IntegerField(
-        default=0, help_text="The id of the recording relative to the task"
+        default=1, help_text="The id of the recording relative to the task"
     )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
     data = models.FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)

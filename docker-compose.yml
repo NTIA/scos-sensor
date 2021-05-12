@@ -26,36 +26,40 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-api
+      args:
+        - BASE_IMAGE
+        - DOCKER_GIT_CREDENTIALS
     environment:
-      - AUTHENTICATION
-      - DEBUG=true
-      - DOMAINS
-      - IPS
-      - FQDN
-      - GUNICORN_LOG_LEVEL
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
-      - POSTGRES_PASSWORD
-      - SECRET_KEY
-      - DOCKER_TAG
-      - GIT_BRANCH
-      - IN_DOCKER=1
-      - MOCK_RADIO
-      - MOCK_RADIO_RANDOM
-      - CALLBACK_SSL_VERIFICATION
-      - MAX_TASK_RESULTS
-      - PATH_TO_JWT_PUBLIC_KEY
+      - AUTHENTICATION
       - CALLBACK_AUTHENTICATION
+      - CALLBACK_SSL_VERIFICATION
       - CLIENT_ID
       - CLIENT_SECRET
+      - DEBUG
+      - DOCKER_TAG
+      - DOMAINS
+      - FQDN
+      - GIT_BRANCH
+      - GUNICORN_LOG_LEVEL
+      - IN_DOCKER=1
+      - IPS
+      - MAX_DISK_USAGE
+      - MOCK_RADIO
+      - MOCK_RADIO_RANDOM
+      - MAX_TASK_RESULTS
       - OAUTH_AUTHORIZATION_URL
       - OAUTH_TOKEN_URL
       - PATH_TO_CLIENT_CERT
+      - PATH_TO_JWT_PUBLIC_KEY
       - PATH_TO_VERIFY_CERT
+      - POSTGRES_PASSWORD
+      - SECRET_KEY
     expose:
       - '8000'
     volumes:
-      - ${REPO_ROOT}:/opt/scos-sensor
+      - ${REPO_ROOT}/drivers:/drivers:ro
     cap_add:
       - SYS_PTRACE
     devices:

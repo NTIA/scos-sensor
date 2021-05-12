@@ -1,8 +1,11 @@
+import shutil
 import tempfile
 from collections import namedtuple
 
 import jwt
 import pytest
+from django.conf import settings
+from django.test.client import Client
 
 import actions
 import scheduler
@@ -11,10 +14,19 @@ from authentication.models import User
 from authentication.tests.test_jwt_auth import get_token_payload
 from authentication.tests.utils import get_test_public_private_key
 from sensor.tests.scos_test_client import UID, SCOSTestClient
+from tasks.models import TaskResult
 
 PRIVATE_KEY, PUBLIC_KEY = get_test_public_private_key()
 Keys = namedtuple("KEYS", ["private_key", "public_key"])
 keys = Keys(PRIVATE_KEY.decode("utf-8"), PUBLIC_KEY.decode("utf-8"))
+
+
+@pytest.fixture(autouse=True)
+def cleanup_db(db):
+    yield
+    # cleans up acquisition data files
+    TaskResult.objects.all().delete()
+    shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
 
 
 @pytest.yield_fixture
