@@ -343,7 +343,8 @@ optionally be enabled for token authentication and is required for OAUTH
 authentication. The client certificate subject UID is only verified for OAuth 2
 authentication, not for token authentication. To require client certificates, uncomment
 `ssl_verify_client on;` in the [Nginx configuration file](nginx/conf.template). If you
-use OCSP, also uncomment `ssl_ocsp on;`.
+use OCSP, also uncomment `ssl_ocsp on;`. Additional configuration may be needed for
+Nginx to check certificate revocation lists (CRL).
 
 Copy the server certificate and server private key (sensor01_combined.pem) to
 `scos-sensor/configs/certs`. Then set `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the
