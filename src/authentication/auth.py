@@ -35,13 +35,13 @@ def jwt_request_has_required_role(request):
 
 
 def get_uid_from_dn(cert_dn):
-    p = re.compile("UID=(.*?)(?:,|$)")
+    p = re.compile("UID=(.*?)(?:,|\+|$)")
     match = p.search(cert_dn)
     if not match:
         raise Exception("No UID found in certificate!")
     uid_raw = match.group()
     # logger.debug(f"uid_raw = {uid_raw}")
-    uid = uid_raw.split("=")[1].rstrip(",")
+    uid = uid_raw.split("=")[1].rstrip(",").rstrip("+")
     # logger.debug(f"uid = {uid}")
     return uid
 
@@ -173,6 +173,7 @@ class OAuthSessionAuthentication(authentication.BaseAuthentication):
             raise error
         except:
             del request.session["oauth_token"]
+            raise Exception("Error occurred validating token!")
         user = get_or_create_user_from_token(decoded_token)
         logger.info("user from token: " + str(user.email))
         return (user, decoded_token)

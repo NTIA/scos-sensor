@@ -420,7 +420,7 @@ openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out
 Generate a host certificate signing request.
 
 ```bash
-openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr
+openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/UID=[user ID]/CN=[common name]"
 ```
 
 Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
