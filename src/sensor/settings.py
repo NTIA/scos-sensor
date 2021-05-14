@@ -99,14 +99,6 @@ else:
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
 
-SESSION_COOKIE_SECURE = IN_DOCKER
-CSRF_COOKIE_SECURE = IN_DOCKER
-
-SESSION_COOKIE_AGE = 900  # seconds
-SESSION_EXPIRE_SECONDS = 900  # seconds
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_TIMEOUT_REDIRECT = "/api/auth/logout/?next=/api/v1/"
-
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -215,16 +207,15 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": None,
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser",
+        "authentication.permissions.JWTRoleOrIsSuperuser",
     ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.BrowsableAPIRenderer",
+        "sensor.renderer.BrowsableAPIRendererWithCustomAuth"
+        # "rest_framework.renderers.BrowsableAPIRenderer",
     ),
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_VERSION": "v1",  # this should always point to latest stable api
@@ -237,19 +228,6 @@ REST_FRAMEWORK = {
     "URL_FIELD_NAME": "self",  # RFC 42867
 }
 
-AUTHENTICATION = env("AUTHENTICATION", default="")
-if AUTHENTICATION == "JWT":
-    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "authentication.auth.OAuthJWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-    )
-else:
-    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-    )
-
-
 # https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {},
@@ -258,7 +236,24 @@ SWAGGER_SETTINGS = {
     "VALIDATOR_URL": None,
 }
 
-if AUTHENTICATION == "JWT":
+SESSION_COOKIE_SECURE = IN_DOCKER
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CSRF_COOKIE_SECURE = IN_DOCKER
+USE_X_FORWARDED_HOST = IN_DOCKER
+USE_X_FORWARDED_PORT = IN_DOCKER
+SESSION_COOKIE_SAMESITE = "Strict"
+SESSION_COOKIE_AGE = 900  # seconds
+SESSION_EXPIRE_SECONDS = 900  # seconds
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+# https://docs.djangoproject.com/en/3.0/ref/middleware/#module-django.middleware.security
+SECURE_REFERRER_POLICY = "same-origin"  # needs django 3.0+
+
+AUTHENTICATION = env("AUTHENTICATION", default="")
+if AUTHENTICATION == "OAUTH":
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "authentication.auth.OAuthAPIJWTAuthentication",
+        "authentication.auth.OAuthSessionAuthentication",
+    )
     SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["oAuth2JWT"] = {
         "type": "oauth2",
         "description": (
@@ -270,7 +265,12 @@ if AUTHENTICATION == "JWT":
         ),
         "flows": {"password": {"scopes": {}}},  # scopes are not used
     }
+    SESSION_TIMEOUT_REDIRECT = "oauth-logout"
 else:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    )
     SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["token"] = {
         "type": "apiKey",
         "description": (
@@ -290,6 +290,7 @@ else:
         "name": "Token",
         "in": "header",
     }
+    SESSION_TIMEOUT_REDIRECT = "rest_framework:logout"
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -384,6 +385,7 @@ USER_NAME = CLIENT_ID
 PASSWORD = CLIENT_SECRET
 
 OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
+OAUTH_AUTHORIZATION_URL = env("OAUTH_AUTHORIZATION_URL", default="")
 CERTS_DIR = path.join(CONFIG_DIR, "certs")
 # Sensor certificate with private key used as client cert
 PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")
