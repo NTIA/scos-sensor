@@ -164,13 +164,13 @@ def get_oauth_authorized_client(token, live_server):
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False
         response = client.get(  # authserver login
-            response.headers["Location"], allow_redirects=False,
+            response.headers["Location"], allow_redirects=False
         )
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False
         assert reverse("oauth-callback") in response.headers["Location"]
         response = client.get(  # sensor callback
-            response.headers["Location"], allow_redirects=False,
+            response.headers["Location"], allow_redirects=False
         )
         assert response.is_redirect == True
         assert response.is_permanent_redirect == False
@@ -693,7 +693,7 @@ def test_header_uid_missing(live_server, jwt_keys):
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
     utf8_bytes = encoded.decode("utf-8")
     client = get_oauth_authorized_client(utf8_bytes, live_server)
-    response = client.get(f"{live_server.url}",)
+    response = client.get(f"{live_server.url}")
     assert response.status_code == 403
     assert response.json()["detail"] == "No client certificate DN found!"
 

@@ -230,11 +230,11 @@ def test_urls_unauthorized(live_server, jwt_keys):
     headers = get_headers(uid, utf8_bytes)
 
     capabilities = reverse("capabilities", kwargs=V1)
-    response = client.get(f"{live_server.url}{capabilities}", headers=headers,)
+    response = client.get(f"{live_server.url}{capabilities}", headers=headers)
     assert response.status_code == 403
 
     schedule_list = reverse("schedule-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{schedule_list}", headers=headers,)
+    response = client.get(f"{live_server.url}{schedule_list}", headers=headers)
     assert response.status_code == 403
 
     status = reverse("status", kwargs=V1)
@@ -242,19 +242,19 @@ def test_urls_unauthorized(live_server, jwt_keys):
     assert response.status_code == 403
 
     task_root = reverse("task-root", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_root}", headers=headers,)
+    response = client.get(f"{live_server.url}{task_root}", headers=headers)
     assert response.status_code == 403
 
     task_results_overview = reverse("task-results-overview", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_results_overview}", headers=headers,)
+    response = client.get(f"{live_server.url}{task_results_overview}", headers=headers)
     assert response.status_code == 403
 
     upcoming_tasks = reverse("upcoming-tasks", kwargs=V1)
-    response = client.get(f"{live_server.url}{upcoming_tasks}", headers=headers,)
+    response = client.get(f"{live_server.url}{upcoming_tasks}", headers=headers)
     assert response.status_code == 403
 
     user_list = reverse("user-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{user_list}", headers=headers,)
+    response = client.get(f"{live_server.url}{user_list}", headers=headers)
     assert response.status_code == 403
 
 
@@ -267,11 +267,11 @@ def test_urls_authorized(live_server, jwt_keys):
     headers = get_headers(uid, utf8_bytes)
 
     capabilities = reverse("capabilities", kwargs=V1)
-    response = client.get(f"{live_server.url}{capabilities}", headers=headers,)
+    response = client.get(f"{live_server.url}{capabilities}", headers=headers)
     assert response.status_code == 200
 
     schedule_list = reverse("schedule-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{schedule_list}", headers=headers,)
+    response = client.get(f"{live_server.url}{schedule_list}", headers=headers)
     assert response.status_code == 200
 
     status = reverse("status", kwargs=V1)
@@ -279,19 +279,19 @@ def test_urls_authorized(live_server, jwt_keys):
     assert response.status_code == 200
 
     task_root = reverse("task-root", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_root}", headers=headers,)
+    response = client.get(f"{live_server.url}{task_root}", headers=headers)
     assert response.status_code == 200
 
     task_results_overview = reverse("task-results-overview", kwargs=V1)
-    response = client.get(f"{live_server.url}{task_results_overview}", headers=headers,)
+    response = client.get(f"{live_server.url}{task_results_overview}", headers=headers)
     assert response.status_code == 200
 
     upcoming_tasks = reverse("upcoming-tasks", kwargs=V1)
-    response = client.get(f"{live_server.url}{upcoming_tasks}", headers=headers,)
+    response = client.get(f"{live_server.url}{upcoming_tasks}", headers=headers)
     assert response.status_code == 200
 
     user_list = reverse("user-list", kwargs=V1)
-    response = client.get(f"{live_server.url}{user_list}", headers=headers,)
+    response = client.get(f"{live_server.url}{user_list}", headers=headers)
     assert response.status_code == 200
 
 
@@ -349,7 +349,7 @@ def test_user_cannot_view_user_detail_role_change(live_server, jwt_keys):
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
     response = client.get(
-        f"{live_server.url}{user_detail}", headers=get_headers(uid, utf8_bytes),
+        f"{live_server.url}{user_detail}", headers=get_headers(uid, utf8_bytes)
     )
     assert response.status_code == 403
 
@@ -368,7 +368,7 @@ def test_admin_can_view_user_detail(live_server, jwt_keys):
     kws = {"pk": sensor01_user.pk}
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
-    response = client.get(f"{live_server.url}{user_detail}", headers=headers,)
+    response = client.get(f"{live_server.url}{user_detail}", headers=headers)
     assert response.status_code == 200
 
 
@@ -402,8 +402,7 @@ def test_admin_can_view_other_user_detail(live_server, jwt_keys):
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
     response = client.get(
-        f"{live_server.url}{user_detail}",
-        headers=get_headers(sensor02_uid, utf8_bytes),
+        f"{live_server.url}{user_detail}", headers=get_headers(sensor02_uid, utf8_bytes)
     )
     assert response.status_code == 200
 
@@ -423,7 +422,7 @@ def test_token_hidden(live_server, jwt_keys):
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
     client = RequestsClient()
-    response = client.get(f"{live_server.url}{user_detail}", headers=headers,)
+    response = client.get(f"{live_server.url}{user_detail}", headers=headers)
     assert response.status_code == 200
     assert (
         response.json()["auth_token"]
@@ -518,7 +517,7 @@ def test_header_uid_missing(live_server, jwt_keys):
     utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
     response = client.get(
-        f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}",}
+        f"{live_server.url}", headers={"Authorization": f"Bearer {utf8_bytes}"}
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "No client certificate DN found!"

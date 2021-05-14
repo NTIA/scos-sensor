@@ -19,9 +19,7 @@ discovered_plugins = {
 logger.debug(discovered_plugins)
 
 # Actions initialized here are made available through the API
-registered_actions = {
-    "logger": logger_action.Logger(),
-}
+registered_actions = {"logger": logger_action.Logger()}
 
 
 for name, module in discovered_plugins.items():

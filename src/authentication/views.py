@@ -87,7 +87,7 @@ def oauth_login_view(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def oauth_login_callback(request):
-    """ Step 3: Retrieving an access token.
+    """Step 3: Retrieving an access token.
 
     The user has been redirected back from the provider to your registered
     callback URL. With this redirection comes an authorization code included

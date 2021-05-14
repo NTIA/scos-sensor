@@ -4,8 +4,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 
 
 def get_test_public_private_key():
-    """ Creates public/private key pair for testing
-        https://stackoverflow.com/a/39126754
+    """Creates public/private key pair for testing
+    https://stackoverflow.com/a/39126754
     """
     key = rsa.generate_private_key(
         backend=default_backend(), public_exponent=65537, key_size=4096
