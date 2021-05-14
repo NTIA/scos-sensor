@@ -245,7 +245,8 @@ SESSION_COOKIE_SAMESITE = "Strict"
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SECURE_REFERRER_POLICY = "no-referrer"  # needs django 3.0+
+# https://docs.djangoproject.com/en/3.0/ref/middleware/#module-django.middleware.security
+SECURE_REFERRER_POLICY = "same-origin"  # needs django 3.0+
 
 AUTHENTICATION = env("AUTHENTICATION", default="")
 if AUTHENTICATION == "OAUTH":
