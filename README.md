@@ -401,7 +401,7 @@ openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out
 Generate a host certificate signing request.
 
 ```bash
-openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/UID=[user ID]/CN=[common name]"
+openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/CN=[common name]"
 ```
 
 Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
@@ -448,7 +448,7 @@ OAuth authentication is enabled.
 Replace the brackets with the information specific to your user and organization.
 
 ```bash
-openssl req -new -newkey rsa:4096 -keyout client.key -out client.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/UID=[user ID]/CN=[common name]"
+openssl req -new -newkey rsa:4096 -keyout client.key -out client.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/CN=[common name]"
 ```
 
 Create client.ext with the following:
