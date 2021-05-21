@@ -22,7 +22,9 @@ def serialize_location():
         location = sensor["location"]
         # temp location object for serializer
         db_location = Location(
-            gps=False, latitude=location["y"], longitude=location["x"],
+            gps=False,
+            latitude=location["y"],
+            longitude=location["x"],
         )
         if "description" in location:
             db_location.description = location["description"]

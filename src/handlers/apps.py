@@ -17,10 +17,10 @@ class HandlersConfig(AppConfig):
     name = "handlers"
 
     def ready(self):
-        from handlers.measurement_handler import measurement_action_completed_callback
-        from handlers.location_handler import location_action_completed_callback
-        from handlers.monitor_handler import monitor_action_completed_callback
         from handlers.django_handlers import post_delete_callback, post_save_callback
+        from handlers.location_handler import location_action_completed_callback
+        from handlers.measurement_handler import measurement_action_completed_callback
+        from handlers.monitor_handler import monitor_action_completed_callback
 
         measurement_action_completed.connect(measurement_action_completed_callback)
         logger.debug(
