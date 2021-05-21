@@ -4,7 +4,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from scos_actions.utils import get_datetime_str_now
 
+from capabilities import capabilities
 from scheduler import scheduler
+from status.models import Location
 
 from . import last_calibration_time
 from .serializers import LocationSerializer
@@ -15,19 +17,18 @@ logger = logging.getLogger(__name__)
 
 def serialize_location():
     """Returns Location object JSON if set or None and logs an error."""
-    sensor_def = get_location()
-    if sensor_def:
-        return LocationSerializer(sensor_def).data
+    sensor = capabilities["sensor"]
+    if "location" in sensor:
+        location = sensor["location"]
+        # temp location object for serializer
+        db_location = Location(
+            gps=False, latitude=location["y"], longitude=location["x"],
+        )
+        if "description" in location:
+            db_location.description = location["description"]
+        return LocationSerializer(db_location).data
     else:
         return None
-
-
-# def get_last_calibration_time():
-#     """Returns datetime string of last calibration time"""
-#     if radio.is_available and radio.sensor_calibration:
-#         cal_datetime = radio.sensor_calibration.calibration_datetime
-#         return utils.convert_string_to_millisecond_iso_format(cal_datetime)
-#     return "unknown"
 
 
 @api_view()

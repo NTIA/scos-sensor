@@ -3,6 +3,7 @@
 import logging
 
 from django.apps import AppConfig
+from django.db.models.signals import post_delete, post_save
 from scos_actions.actions.interfaces.signals import (
     location_action_completed,
     measurement_action_completed,
@@ -19,6 +20,7 @@ class HandlersConfig(AppConfig):
         from handlers.measurement_handler import measurement_action_completed_callback
         from handlers.location_handler import location_action_completed_callback
         from handlers.monitor_handler import monitor_action_completed_callback
+        from handlers.django_handlers import post_delete_callback, post_save_callback
 
         measurement_action_completed.connect(measurement_action_completed_callback)
         logger.debug(
@@ -33,3 +35,9 @@ class HandlersConfig(AppConfig):
         logger.debug(
             "monitor_action_completed_callback registered to monitor_action_completed"
         )
+
+        post_delete.connect(post_delete_callback)
+        logger.debug("post_delete_callback registered to post_delete")
+
+        post_save.connect(post_save_callback)
+        logger.debug("post_save_callback registered to post_save")

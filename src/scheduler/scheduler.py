@@ -4,6 +4,7 @@ import json
 import logging
 import threading
 from contextlib import contextmanager
+from copy import deepcopy
 from pathlib import Path
 
 from django.utils import timezone
@@ -154,7 +155,7 @@ class Scheduler(threading.Thread):
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
             detail = self.task.action_caller(
-                schedule_entry_json, task_id, capabilities["sensor"]
+                schedule_entry_json, task_id, deepcopy(capabilities["sensor"])
             )
             self.delayfn(0)  # let other threads run
             status = "success"
