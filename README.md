@@ -351,7 +351,7 @@ authenticating when using a callback URL.
 ### Sensor Authentication And Permissions
 
 The sensor can be configured to authenticate using OAuth JWT access tokens from an
-external authorization server or using Djnago Rest Framework Token Authentication.
+external authorization server or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 
