@@ -4,7 +4,7 @@ from status.models import GPS_LOCATION_DESCRIPTION, Location
 
 
 def location_action_completed_callback(sender, **kwargs):
-    """ Update database and capabilities when GPS is synced or database is updated"""
+    """Update database and capabilities when GPS is synced or database is updated"""
 
     if sender is NotifyLocationDeleted or sender is NotifyLocationAdded:
         try:
