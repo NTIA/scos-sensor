@@ -42,7 +42,7 @@ class RadioInterface(ABC):
         raise NotImplementedError("Implement gain setter")
 
     @abstractmethod
-    def acquire_time_domain_samples(self, n, nskip=0, retries=5):
+    def acquire_time_domain_samples(self, n, nskip=0, retries=5, subdev="A:A"):
         raise NotImplementedError("Implement acquire_time_domain_samples")
 
     @abstractmethod
