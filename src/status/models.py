@@ -1,7 +1,7 @@
 from django.db import models
 
 MAX_DESCRIPTION_LEN = 1024
-GPS_LOCATION_DESCRIPTION = "This location is auto-updated by the on-board GPS"
+GPS_LOCATION_DESCRIPTION = "This location is auto-updated by the on-board GPS."
 
 
 class Location(models.Model):
@@ -34,6 +34,12 @@ class Location(models.Model):
         max_digits=9,
         decimal_places=6,
         help_text="Longitude of the sensor in decimal degrees.",
+    )
+    height = models.DecimalField(
+        null=True,
+        max_digits=9,
+        decimal_places=3,
+        help_text="Height of the sensor in meters above sea level.",
     )
 
     def save(self, *args, **kwargs):

@@ -4,14 +4,13 @@ import json
 import logging
 import threading
 from contextlib import contextmanager
-from copy import deepcopy
 from pathlib import Path
 
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
 
 from authentication import oauth
-from capabilities import capabilities
+from capabilities import get_capabilities
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
@@ -154,8 +153,9 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
+            capabilities = get_capabilities()
             detail = self.task.action_caller(
-                schedule_entry_json, task_id, deepcopy(capabilities["sensor"])
+                schedule_entry_json, task_id, capabilities["sensor"]
             )
             self.delayfn(0)  # let other threads run
             status = "success"
