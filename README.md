@@ -231,8 +231,7 @@ provide additional signal analyzer specific actions.
 This section describes how to spin up a production-grade sensor in just a few commands.
 
 We currently support Ettus USRP B2xx software-defined radios out of the box, and any
-Intel-based host computer should work. ARM-based single-board computers have also been
-tested, but we do not prepare pre-built Docker containers for them at this time.
+Intel-based host computer should work.
 
 1) Install `git`, `Docker`, and `docker-compose`.
 
@@ -254,6 +253,16 @@ into your environment.
 ```bash
 cp env.template env
 source ./env
+```
+
+4) Create sensor certificate. Running the script in the below command will create
+a certificate authority and localhost SSL certificate for the sensor. The certificate
+authority and the sensor certificate will have dummy values for the subject and
+password.
+
+```bash
+cd scripts/
+./create_localhost_cert.sh
 ```
 
 4) Run a Dockerized stack.
@@ -392,13 +401,15 @@ Below instructions adapted from
 This is the SSL certificate used for the scos-sensor web server and is always required.
 
 To be able to sign server-side and client-side certificates, we need to create our own
-self-signed root CA certificate first.
+self-signed root CA certificate first. The command will prompt you to enter a
+password and the values for the CA subject.
 
 ```bash
 openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.pem
 ```
 
-Generate a host certificate signing request.
+Generate a host certificate signing request. Replace the values in square brackets in the
+subject for the server certificate.
 
 ```bash
 openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/CN=[common name]"
@@ -406,7 +417,7 @@ openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "
 
 Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
 It'll store some additional parameters needed when signing the certificate. Adjust the
-settings in the below example for your sensor:
+settings, especially DNS names and IP addresses, in the below example for your sensor:
 
 ```text
 authorityKeyIdentifier=keyid,issuer:always
