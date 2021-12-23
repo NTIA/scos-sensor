@@ -18,8 +18,12 @@ def location_action_completed_callback(sender, **kwargs):
         if Location.objects.filter(active=True).exists():
             active_location = Location.objects.get(active=True)
             description = active_location.description
+            if not description.endswith("."):
+                description += "."
+            description += " "
         else:
             description = ""
+        description += GPS_LOCATION_DESCRIPTION
         gps_location = Location.objects.create(
             gps=True,
             latitude=latitude,
