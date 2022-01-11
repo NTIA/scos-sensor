@@ -493,6 +493,16 @@ In src/sensor/settings.py, the OAuth `USER_NAME` and `PASSWORD` are set to be th
 as `CLIENT_ID` and `CLIENT_SECRET`. This may need to change depending on your
 authorization server.
 
+### Data File Encryption
+
+The data file is encrypted on disk by default using gpg. The metadata files are not
+encrypted. Note that the data will be written to the disk unecrypted when decrypting
+the file (although the unecrypted temporary file is removed). Set the `PASSPHRASE` in
+the env file to control the passphrase used for encryption. A random passphrase is
+created when deploying using puppet. The random passphrase is stored in an
+environment variable (using export command) and is passed to the container. Use the
+ENCRYPT_DATA_FILES setting in the env file to disable encryption.
+
 ## Actions and Hardware Support
 
 "Actions" are one of the main concepts used by scos-sensor. At a high level, they are
@@ -543,8 +553,9 @@ It is highly recommended that you first initialize a virtual development environ
 using a tool such a conda or venv. The following commands create a virtual environment
 using venv and install the required dependencies for development and testing.
 
-```python
-python3 -m venv ./venv
+```bash
+sudo apt install python3-gpg
+python3 -m venv --system-site-packages ./venv # --system-site-packages needed for access to python3-gpg package
 source venv/bin/activate
 python3 -m pip install --upgrade pip # upgrade to pip>=18.1
 python3 -m pip install -r src/requirements-dev.txt
@@ -612,6 +623,7 @@ installed python dev requirements from [Requirements and Configuration](
 ```bash
 docker-compose up -d db
 cd src
+export MOCK_RADIO=1 MOCK_RADIO_RANDOM=1 # if running without usrp
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py createsuperuser
