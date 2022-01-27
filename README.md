@@ -258,7 +258,10 @@ source ./env
 4) Create sensor certificate. Running the script in the below command will create
 a certificate authority and localhost SSL certificate for the sensor. The certificate
 authority and the sensor certificate will have dummy values for the subject and
-password.
+password. To create a certificate specific to your host and organization, see the
+[security section](#security). The sensor certificate created by
+'create_localhost_cert.sh' should only be used for testing purposes when connecting to
+scos-sensor website from the same computer as where it is hosted.
 
 ```bash
 cd scripts/
@@ -387,8 +390,10 @@ information, see <https://tools.ietf.org/html/rfc6749>.
 
 #### Certificates
 
-This section describes how to create a self-signed root CA, SSL server certificates for
-the sensor, optional client certificates, and test JWT public/private key pair.
+Use this section to create self-signed certificates with customized organizational
+and host information. This section includes instructions for creating a self-signed
+root CA, SSL server certificates for the sensor, optional client certificates, and test
+JWT public/private key pair.
 
 As described below, a self-signed CA can be created for testing. **For production, make
 sure to use certificates from a trusted CA.**
