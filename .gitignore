@@ -122,3 +122,5 @@ greyhound-*.json
 *.csr 
 # certificate serial number file
 *.srl
+# certificate extensions
+*.ext
