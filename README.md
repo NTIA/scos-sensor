@@ -662,6 +662,39 @@ python3 -m pip install --upgrade pip # upgrade to pip>=18.1
 python3 -m pip install -r src/requirements-dev.txt
 ```
 
+#### Using pip-tools
+
+It is recommended to keep direct dependencies in a separate file. The direct
+dependencies are in the requirements.in and requirements-dev.in files. Then pip-tools
+can be used to generate files with all the dependencies and transitive dependencies
+(sub-dependencies). The files containing all the dependencies are in requirements.txt
+and requirements-dev.txt. Run the following in the virtual environment to install
+pip-tools.
+
+```bash
+python -m pip install pip-tools
+```
+
+To update requirements.txt after modifying requirements.in:
+
+```bash
+pip-compile requirements.in
+```
+
+To update requirements-dev.txt after modifying requirements.in or requirements-dev.in:
+
+```bash
+pip-compile requirements-dev.in
+```
+
+Use pip-sync to match virtual environment to requirements-dev.txt:
+
+```bash
+pip-sync requirements.txt requirements-dev.txt
+```
+
+For more information about pip-tools, see <https://pip-tools.readthedocs.io/en/latest/#>
+
 #### Running Tests
 
 Ideally, you should add a test that covers any new feature that you add. If you've done
@@ -738,7 +771,7 @@ cd src
 - If you're using a virtual environment and your signal analyzer driver is installed
   outside of it, you may need to allow access to system sitepackages. For example, if
   you're using a virtualenv called `scos-sensor`, you can remove the following text
-  file: `rm -f ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`,
+  file: `rm -f ~/.virtualenvs/scos-sensor/lib/python3.7/no-global-site-packages.txt`,
   and thereafter use the ignore-installed flag to pip: `pip install -I -r
   requirements.txt.` This should let the devserver fall back to system sitepackages for
   the signal analyzer driver only.
