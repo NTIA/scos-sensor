@@ -119,7 +119,7 @@ greyhound-*.json
 # End of https://www.toptal.com/developers/gitignore/api/certificates
 
 # Certificate Signing Request
-*.csr 
+*.csr
 # certificate serial number file
 *.srl
 # certificate extensions

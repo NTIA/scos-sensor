@@ -1,4 +1,5 @@
 import copy
+
 from sensor import settings
 from sensor.settings import SENSOR_DEFINITION_FILE
 
@@ -18,6 +19,7 @@ def load_from_json(fname):
 
 def get_sigmf_location():
     from status.models import Location
+
     try:
         db_location = Location.objects.get(active=True)
         return {
@@ -40,4 +42,6 @@ def get_capabilities():
     location = get_sigmf_location()
     if location:
         capabilities["sensor"]["location"] = location
+    else:
+        del capabilities["sensor"]["location"]
     return capabilities

@@ -9,7 +9,7 @@ drf-yasg~=1.20.0
 environs==7.3.1
 gunicorn==19.9.0
 jsonfield==3.1.0
-numpy~=1.18.5
+numpy~=1.21.0
 oauthlib~=3.1.0
 psycopg2-binary==2.8.5
 pyjwt~=1.7.1
@@ -17,5 +17,5 @@ raven==6.10.0
 requests-futures==0.9.9
 requests-mock==1.6.0
 requests_oauthlib~=1.3.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@bug_fix#egg=scos_actions
-#scos_usrp @ git+https://github.com/NTIA/scos-usrp@master#egg=scos_usrp
+#scos_actions @ git+https://github.com/NTIA/scos-actions@bug_fix#egg=scos_actions
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies#egg=scos_usrp

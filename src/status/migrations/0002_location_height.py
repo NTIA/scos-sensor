@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('status', '0001_initial'),
+        ("status", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='location',
-            name='height',
-            field=models.DecimalField(decimal_places=3, help_text='Height of the sensor in meters above sea level.', max_digits=9, null=True),
+            model_name="location",
+            name="height",
+            field=models.DecimalField(
+                decimal_places=3,
+                help_text="Height of the sensor in meters above sea level.",
+                max_digits=9,
+                null=True,
+            ),
         ),
     ]

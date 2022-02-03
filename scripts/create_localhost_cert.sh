@@ -14,4 +14,4 @@ cat localhost.key localhost.pem > localhost_combined.pem
 cp scostestca.pem ../configs/certs/
 mv ../configs/certs/scostestca.pem ../configs/certs/scos_test_ca.crt
 cp localhost_combined.pem ../configs/certs/
-mv ../configs/certs/localhost_combined.pem ../configs/certs/sensor01.pem 
+mv ../configs/certs/localhost_combined.pem ../configs/certs/sensor01.pem
