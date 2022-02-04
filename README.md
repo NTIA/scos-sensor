@@ -177,15 +177,16 @@ repositories. As shown below, the scos-sensor repository integrates everything t
 as a functioning scos-sensor and provides the code for the user interface, scheduling,
 and the storage and retrieval of schedules and acquisitions. The [scos-actions
 repository](https://github.com/ntia/scos-actions) provides the core actions API,
-defines the radio interface that provides an abstraction for all signal analyzers, and
-provides basic actions. Finally, using a real radio within scos-sensor requires a third
-`scos-<signal analyzer>` repository that provides the signal analyzer specific
-implementation of the radio interface where `<signal analyzer>` is replaced with the
-name of the signal analyzer, e.g. a USRP scos-sensor utilizes the [scos-usrp
-repository](https://github.com/ntia/scos-usrp). The signal analyzer specific
-implementation of the radio interface may expose additional properties of the signal
-analyzer to support signal analyzer specific capabilities and the repository may also
-provide additional signal analyzer specific actions.
+defines the signal analyzer interface that provides an abstraction for all signal
+analyzers, and provides basic actions. Finally, using a real signal analyzer within
+scos-sensor requires a third `scos-<signal analyzer>` repository that provides the
+signal analyzer specific implementation of the signal analyzer interface where
+`<signal analyzer>` is replaced with the name of the signal analyzer, e.g. a USRP
+scos-sensor utilizes the [scos-usrp repository](https://github.com/ntia/scos-usrp). The
+signal analyzer specific implementation of the signal analyzer interface may expose
+additional properties of the signal analyzer to support signal analyzer specific
+capabilities and the repository may also provide additional signal analyzer specific
+actions.
 
 ![SCOS Sensor Modules](/docs/img/scos-sensor-modules.JPG?raw=true)
 
@@ -230,7 +231,7 @@ provide additional signal analyzer specific actions.
 
 This section describes how to spin up a production-grade sensor in just a few commands.
 
-We currently support Ettus USRP B2xx software-defined radios out of the box, and any
+We currently support Ettus USRP B2xx signal analyzers out of the box, and any
 Intel-based host computer should work.
 
 1) Install `git`, `Docker`, and `docker-compose`.
@@ -620,11 +621,11 @@ existing actions that use the new hardware.
 Common action classes can still be re-used by plugins through the scos-actions
 repository. The scos-actions repository is intended to be a dependency for every plugin
 as it contains the actions base class and signals needed to interface with scos-sensor.
-These actions use a common but flexible radio interface that can be implemented for new
-types of hardware. This allows for action re-use by passing the radio interface and the
-required hardware and measurement parameters to the constructor of these actions.
-Alternatively, custom actions that support unique hardware functionality can be added
-to the plugin.
+These actions use a common but flexible signal analyzer interface that can be
+implemented for new types of hardware. This allows for action re-use by passing the
+signal analyzer interface implementation and the required hardware and measurement
+parameters to the constructor of these actions. Alternatively, custom actions that
+support unique hardware functionality can be added to the plugin.
 
 The scos-actions repository can also be installed as a plugin which uses a mock signal
 analyzer.
@@ -634,7 +635,7 @@ any Python package begins with "scos_", and contains a dictionary of actions at 
 Python path `package_name.discover.actions`, these actions will automatically be
 available for scheduling.
 
-The scos-usrp plugin adds support for the Ettus B2xx line of software-defined radios.
+The scos-usrp plugin adds support for the Ettus B2xx line of signal analyzers.
 It can also be used as an example of a plugin which adds new hardware support and
 re-uses the common actions in scos-actions.
 
