@@ -20,7 +20,7 @@ before_install:
   - sudo mknod /dev/bus/usb/001/001 c 189 260
 
 install:
-  - MOCK_RADIO=1 docker-compose up --build -d
+  - MOCK_SIGAN=1 docker-compose up --build -d
 
 before_script:
   - python3 -m pip install --upgrade pip

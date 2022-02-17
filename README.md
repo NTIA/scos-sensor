@@ -177,15 +177,16 @@ repositories. As shown below, the scos-sensor repository integrates everything t
 as a functioning scos-sensor and provides the code for the user interface, scheduling,
 and the storage and retrieval of schedules and acquisitions. The [scos-actions
 repository](https://github.com/ntia/scos-actions) provides the core actions API,
-defines the radio interface that provides an abstraction for all signal analyzers, and
-provides basic actions. Finally, using a real radio within scos-sensor requires a third
-`scos-<signal analyzer>` repository that provides the signal analyzer specific
-implementation of the radio interface where `<signal analyzer>` is replaced with the
-name of the signal analyzer, e.g. a USRP scos-sensor utilizes the [scos-usrp
-repository](https://github.com/ntia/scos-usrp). The signal analyzer specific
-implementation of the radio interface may expose additional properties of the signal
-analyzer to support signal analyzer specific capabilities and the repository may also
-provide additional signal analyzer specific actions.
+defines the signal analyzer interface that provides an abstraction for all signal
+analyzers, and provides basic actions. Finally, using a real signal analyzer within
+scos-sensor requires a third `scos-<signal analyzer>` repository that provides the
+signal analyzer specific implementation of the signal analyzer interface where
+`<signal analyzer>` is replaced with the name of the signal analyzer, e.g. a USRP
+scos-sensor utilizes the [scos-usrp repository](https://github.com/ntia/scos-usrp). The
+signal analyzer specific implementation of the signal analyzer interface may expose
+additional properties of the signal analyzer to support signal analyzer specific
+capabilities and the repository may also provide additional signal analyzer specific
+actions.
 
 ![SCOS Sensor Modules](/docs/img/scos-sensor-modules.JPG?raw=true)
 
@@ -230,9 +231,8 @@ provide additional signal analyzer specific actions.
 
 This section describes how to spin up a production-grade sensor in just a few commands.
 
-We currently support Ettus USRP B2xx software-defined radios out of the box, and any
-Intel-based host computer should work. ARM-based single-board computers have also been
-tested, but we do not prepare pre-built Docker containers for them at this time.
+We currently support Ettus USRP B2xx signal analyzers out of the box, and any
+Intel-based host computer should work.
 
 1) Install `git`, `Docker`, and `docker-compose`.
 
@@ -254,6 +254,19 @@ into your environment.
 ```bash
 cp env.template env
 source ./env
+```
+
+4) Create sensor certificate. Running the script in the below command will create
+a certificate authority and localhost SSL certificate for the sensor. The certificate
+authority and the sensor certificate will have dummy values for the subject and
+password. To create a certificate specific to your host and organization, see the
+[security section](#security). The sensor certificate created by
+'create_localhost_cert.sh' should only be used for testing purposes when connecting to
+scos-sensor website from the same computer as where it is hosted.
+
+```bash
+cd scripts/
+./create_localhost_cert.sh
 ```
 
 4) Run a Dockerized stack.
@@ -346,15 +359,12 @@ specific to the sensor you are using.
 This section covers authentication, permissions, and certificates used to access the
 sensor, and the authentication available for the callback URL. Two different types of
 authentication are available for authenticating against the sensor and for
-authenticating when using a callback URL. **Note that the certificate authorities
-(CAs), SSL certificates, private keys, and JWT public keys used in this repository are
-for testing and development purposes only. They should not be used in a production
-system.**
+authenticating when using a callback URL.
 
 ### Sensor Authentication And Permissions
 
 The sensor can be configured to authenticate using OAuth JWT access tokens from an
-external authorization server or using Djnago Rest Framework Token Authentication.
+external authorization server or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 
@@ -381,63 +391,166 @@ information, see <https://tools.ietf.org/html/rfc6749>.
 
 #### Certificates
 
-The NGINX web server requires an SSL certificate to use https. The certificate and
-private key should be set using `SSL_CERT_PATH` and `SSL_KEY_PATH` in the environment
-file. Note that these paths are relative to the configs/certs directory.
+Use this section to create self-signed certificates with customized organizational
+and host information. This section includes instructions for creating a self-signed
+root CA, SSL server certificates for the sensor, optional client certificates, and test
+JWT public/private key pair.
 
-Optionally, client certificates can be required. To require client certificates,
-uncomment `ssl_verify_client on;` and `ssl_ocsp on;` in nginx/conf.template. Set the CA
-certificate used for validating client certificates using the `SSL_CA_PATH` (relative
-to configs/certs) in the environment file.
+As described below, a self-signed CA can be created for testing. **For production, make
+sure to use certificates from a trusted CA.**
 
-##### Getting Certificates
+Below instructions adapted from
+[here](https://www.golinuxcloud.com/openssl-create-client-server-certificate/#OpenSSL_create_client_certificate).
 
-It is recommended to create your own CA for testing. **For production, make sure to use
-certificates from a trusted CA.** For testing, you can use the certificates and keys in
-configs/certs/test or you can use scripts/create_certificates.py to create the test
-CA certificate, test server certificate, and test client certificate. This script can
-also be used with an existing CA. Here are the instructions to use create_certificates
-with an existing CA.
+##### Sensor Certificate
 
-1. To configure the create_certificates.py script, use create_certificates.ini. In
-   create_certificates.ini, set `ca_private_key_path` and `ca_certificate_path` to the
-   path of your CA private key and certificate. Configure the remaining parameters as
-   desired. The SAN (subject alternative name) parameters will need to be set to the
-   appropriate IP addresses and DNS names of your server and client.
+This is the SSL certificate used for the scos-sensor web server and is always required.
 
-1. While in scos-sensor root directory, run the create_certificates.py script passing
-   the following arguments in the listed order:
+To be able to sign server-side and client-side certificates, we need to create our own
+self-signed root CA certificate first. The command will prompt you to enter a
+password and the values for the CA subject.
 
-   - ini_path - path to the create_certificates.ini file.
-   - ini_section - section of the INI file to use.
-   - key_passphrase - Passphrase to use to encrypt private keys. Set to `None` to
-     disable encryption.
+```bash
+openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.pem
+```
 
-   The following certificates will be generated:
+Generate a host certificate signing request. Replace the values in square brackets in the
+subject for the server certificate.
 
-   - sensor01_private.pem - sensor private key.
-   - sensor01_certificate.pem - sensor certificate.
-   - sensor01_client_private.pem - client private key.
-   - sensor01_client.pem - client certificate.
+```bash
+openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/CN=[common name]"
+```
 
-1. Copy sensor01_private and sensor01_certificate to the computer where the scos-sensor
-   will run. If you are using client certificates, also copy the CA certificate used to
-   generate the certificates. Make sure the certificates are somewhere in configs/certs,
-   and that `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the environment file) are set to the
-   paths of the certificates relative to configs/certs. If you are using client
-   certificates, set `SSL_CA_PATH` to the path of the CA certificate relative to
-   configs/certs.
+Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
+It'll store some additional parameters needed when signing the certificate. Adjust the
+settings, especially DNS names and IP addresses, in the below example for your sensor:
 
-1. Run scos-sensor. If you are using client certificates, use
-   sensor01_client_private.pem and sensor01_client to connect to the API.
+```text
+authorityKeyIdentifier=keyid,issuer:always
+basicConstraints=CA:FALSE
+subjectAltName = @alt_names
+subjectKeyIdentifier = hash
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+[alt_names]
+DNS.1 = sensor01.domain
+DNS.2 = localhost
+IP.1 = xxx.xxx.xxx.xxx
+IP.2 = 127.0.0.1
+```
 
-The create_certificates.py script can also generate a new CA and use it for generating
-the certificates. To run create_certificates.py this way, comment out
-`ca_private_key_path` and `ca_certificate_path` in create_certificates.ini, make sure
-`ca_private_key_save_path` and the other parameters are set as desired, then repeat
-steps 2-4 above. The CA private key file (saved to ca_private_key_save_path) and the CA
-public key (scostestca.crt) will be generated in addition to the files listed in step
-2 above.
+Sign the host certificate.
+
+```bash
+openssl x509 -req -CA scostestca.pem -CAkey scostestca.key -in sensor01.csr -out sensor01.pem -days 365 -sha256 -CAcreateserial -extfile sensor01.ext
+```
+
+If the sensor private key is encrypted, decrypt it using the following command:
+
+```bash
+openssl rsa -in sensor01.key -out sensor01_decrypted.key
+```
+
+Combine the sensor certificate and private key into one file:
+
+```bash
+cat sensor01_decrypted.key sensor01.pem > sensor01_combined.pem
+```
+
+##### Client Certificate
+
+This certificate is required for using the sensor with mutual TLS which is required if
+OAuth authentication is enabled.
+
+Replace the brackets with the information specific to your user and organization.
+
+```bash
+openssl req -new -newkey rsa:4096 -keyout client.key -out client.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/CN=[common name]"
+```
+
+Create client.ext with the following:
+
+```text
+basicConstraints = CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+keyUsage = digitalSignature
+extendedKeyUsage = clientAuth
+```
+
+Sign the client certificate.
+
+```bash
+openssl x509 -req -CA scostestca.pem -CAkey scostestca.key -in client.csr -out client.pem -days 365 -sha256 -CAcreateserial -extfile client.ext
+```
+
+Convert pem to pkcs12:
+
+```bash
+openssl pkcs12 -export -out client.pfx -inkey client.key -in client.pem -certfile scostestca.pem
+```
+
+Import client.pfx into web browser for use with the browsable API or use the client.pem
+or client.pfx when communicating with the API programmatically.
+
+##### Generating JWT Public/Private Key
+
+The JWT public key must correspond to the private key of the JWT issuer (OAuth
+authorization server). For manual testing, the instructions below could be used to
+create a public/private key pair for creating JWTs without an authorization
+server.
+
+###### Step 1: Create public/private key pair
+
+```bash
+openssl genrsa -out jwt.pem 4096
+```
+
+###### Step 2: Extract Public Key
+
+```bash
+openssl rsa -in jwt.pem -outform PEM -pubout -out jwt_public_key.pem
+```
+
+###### Step 3: Extract Private Key
+
+```bash
+openssl pkey -inform PEM -outform PEM -in jwt.pem -out jwt_private_key.pem
+```
+
+###### Configure scos-sensor
+
+The Nginx web server can be set to require client certificates (mutual TLS). This can
+optionally be enabled. To require client certificates, uncomment
+`ssl_verify_client on;` in the [Nginx configuration file](nginx/conf.template). If you
+use OCSP, also uncomment `ssl_ocsp on;`. Additional configuration may be needed for
+Nginx to check certificate revocation lists (CRL).
+
+Copy the server certificate and server private key (sensor01_combined.pem) to
+`scos-sensor/configs/certs`. Then set `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the
+environment file) to the path of the sensor01_combined.pem relative to configs/certs
+(for file at `scos-sensor/configs/certs/sensor01_combined.pem`, set
+`SSL_CERT_PATH=sensor01_combined.pem` and `SSL_KEY_PATH=sensor01_combined.pem`). For
+mutual TLS, also copy the CA certificate to the same directory. Then, set
+`SSL_CA_PATH` to the path of the CA certificate relative to `configs/certs`.
+
+If you are using JWT authentication, set `PATH_TO_JWT_PUBLIC_KEY` to the path of the
+JWT public key relative to configs/certs. This public key file should correspond to the
+private key used to sign the JWT. Alternatively, the JWT private key
+created above could be used to manually sign a JWT token for testing if
+`PATH_TO_JWT_PUBLIC_KEY` is set to the JWT public key created above.
+
+If you are using client certificates, use client.pfx to connect to the browsable API by
+importing this certificate into your browser.
+
+For callback functionality with an OAuth authorized callback URL, set
+`PATH_TO_CLIENT_CERT` and `PATH_TO_VERIFY_CERT`, both relative to configs/certs.
+Depending on the configuration of the callback URL server and the authorization server,
+the sensor server certificate could be used as a client certificate by setting
+`PATH_TO_CLIENT_CERT` to the path of sensor01_combined.pem relative to configs/certs.
+Also the CA used to verify the client certificate could potentially be used to verify
+the callback URL server certificate by setting `PATH_TO_VERIFY_CERT` to the same file
+as used for `SSL_CA_PATH` (scostestca.pem).
 
 #### Permissions and Users
 
@@ -508,11 +621,11 @@ existing actions that use the new hardware.
 Common action classes can still be re-used by plugins through the scos-actions
 repository. The scos-actions repository is intended to be a dependency for every plugin
 as it contains the actions base class and signals needed to interface with scos-sensor.
-These actions use a common but flexible radio interface that can be implemented for new
-types of hardware. This allows for action re-use by passing the radio interface and the
-required hardware and measurement parameters to the constructor of these actions.
-Alternatively, custom actions that support unique hardware functionality can be added
-to the plugin.
+These actions use a common but flexible signal analyzer interface that can be
+implemented for new types of hardware. This allows for action re-use by passing the
+signal analyzer interface implementation and the required hardware and measurement
+parameters to the constructor of these actions. Alternatively, custom actions that
+support unique hardware functionality can be added to the plugin.
 
 The scos-actions repository can also be installed as a plugin which uses a mock signal
 analyzer.
@@ -522,7 +635,7 @@ any Python package begins with "scos_", and contains a dictionary of actions at 
 Python path `package_name.discover.actions`, these actions will automatically be
 available for scheduling.
 
-The scos-usrp plugin adds support for the Ettus B2xx line of software-defined radios.
+The scos-usrp plugin adds support for the Ettus B2xx line of signal analyzers.
 It can also be used as an example of a plugin which adds new hardware support and
 re-uses the common actions in scos-actions.
 
@@ -549,6 +662,39 @@ source venv/bin/activate
 python3 -m pip install --upgrade pip # upgrade to pip>=18.1
 python3 -m pip install -r src/requirements-dev.txt
 ```
+
+#### Using pip-tools
+
+It is recommended to keep direct dependencies in a separate file. The direct
+dependencies are in the requirements.in and requirements-dev.in files. Then pip-tools
+can be used to generate files with all the dependencies and transitive dependencies
+(sub-dependencies). The files containing all the dependencies are in requirements.txt
+and requirements-dev.txt. Run the following in the virtual environment to install
+pip-tools.
+
+```bash
+python -m pip install pip-tools
+```
+
+To update requirements.txt after modifying requirements.in:
+
+```bash
+pip-compile requirements.in
+```
+
+To update requirements-dev.txt after modifying requirements.in or requirements-dev.in:
+
+```bash
+pip-compile requirements-dev.in
+```
+
+Use pip-sync to match virtual environment to requirements-dev.txt:
+
+```bash
+pip-sync requirements.txt requirements-dev.txt
+```
+
+For more information about pip-tools, see <https://pip-tools.readthedocs.io/en/latest/#>
 
 #### Running Tests
 
@@ -626,7 +772,7 @@ cd src
 - If you're using a virtual environment and your signal analyzer driver is installed
   outside of it, you may need to allow access to system sitepackages. For example, if
   you're using a virtualenv called `scos-sensor`, you can remove the following text
-  file: `rm -f ~/.virtualenvs/scos-sensor/lib/python3.6/no-global-site-packages.txt`,
+  file: `rm -f ~/.virtualenvs/scos-sensor/lib/python3.7/no-global-site-packages.txt`,
   and thereafter use the ignore-installed flag to pip: `pip install -I -r
   requirements.txt.` This should let the devserver fall back to system sitepackages for
   the signal analyzer driver only.

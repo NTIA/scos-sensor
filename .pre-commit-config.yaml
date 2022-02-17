@@ -1,7 +1,7 @@
 exclude: src/static/*|LICENSE.md|.+\.pem|.+\.crt|.vscode/*
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.2.3
+    rev: v4.1.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -10,24 +10,29 @@ repos:
       - id: check-yaml
       - id: debug-statements
   - repo: https://github.com/asottile/seed-isort-config
-    rev: v1.9.1
+    rev: v2.2.0
     hooks:
       - id: seed-isort-config
-        language_version: python3.6
+        language_version: python3.7
         args: [--application-directories=./src, --settings-path=./src]
   - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.20
+    rev: v5.10.1
     hooks:
       - id: isort
-        language_version: python3.6
+        language_version: python3.7
   - repo: https://github.com/ambv/black
-    rev: stable
+    rev: 22.1.0
     hooks:
       - id: black
-        language_version: python3.6
-  - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.9.0
-    hooks:
-      - id: markdownlint
-        args: [-s, .ml_style.rb, README.md]
-        exclude: LICENSE.md
+        language_version: python3.7
+  # TODO markdownlint broken
+  # - repo: https://github.com/jumanjihouse/pre-commit-hooks
+  #   rev: 2.1.5  # or specific git tag
+  #   hooks:
+  #     - id: markdownlint
+  # - repo: https://github.com/markdownlint/markdownlint
+  #   rev: v0.11.0
+  #   hooks:
+  #     - id: markdownlint
+  #       args: [-s, .ml_style.rb, README.md]
+  #       exclude: LICENSE.md

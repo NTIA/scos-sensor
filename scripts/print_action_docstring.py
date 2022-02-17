@@ -6,6 +6,7 @@ import os
 import sys
 
 import django
+
 from actions import registered_actions  # noqa
 
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")

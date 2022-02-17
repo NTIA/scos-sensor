@@ -45,8 +45,8 @@ __cmd = path.split(sys.argv[0])[-1]
 IN_DOCKER = env.bool("IN_DOCKER", default=False)
 RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
-MOCK_RADIO = env.bool("MOCK_RADIO", default=False) or RUNNING_DEMO or RUNNING_TESTS
-MOCK_RADIO_RANDOM = env.bool("MOCK_RADIO_RANDOM", default=False)
+MOCK_SIGAN = env.bool("MOCK_SIGAN", default=False) or RUNNING_DEMO or RUNNING_TESTS
+MOCK_SIGAN_RANDOM = env.bool("MOCK_SIGAN_RANDOM", default=False)
 
 
 # Healthchecks - the existance of any of these indicates an unhealthy state

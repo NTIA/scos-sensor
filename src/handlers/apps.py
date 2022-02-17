@@ -3,6 +3,7 @@
 import logging
 
 from django.apps import AppConfig
+from django.db.models.signals import post_delete, post_save
 from scos_actions.actions.interfaces.signals import (
     location_action_completed,
     measurement_action_completed,
@@ -16,8 +17,8 @@ class HandlersConfig(AppConfig):
     name = "handlers"
 
     def ready(self):
-        from handlers.measurement_handler import measurement_action_completed_callback
         from handlers.location_handler import location_action_completed_callback
+        from handlers.measurement_handler import measurement_action_completed_callback
         from handlers.monitor_handler import monitor_action_completed_callback
 
         measurement_action_completed.connect(measurement_action_completed_callback)
