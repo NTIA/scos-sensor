@@ -215,7 +215,7 @@ class Scheduler(threading.Thread):
                     requests_futures_session.post(
                         self.entry.callback_url,
                         json=result_json,
-                        hooks={'response': response_task_result_handler}
+                        hooks={'response': response_task_result_handler},
                         headers=headers,
                         verify=verify_ssl
                     )
