@@ -221,6 +221,8 @@ class Scheduler(threading.Thread):
                     )
             except Exception as err:
                 logger.error(str(err))
+                tr.status = 'notification_failed'
+                tr.save()
 
 
     def _queue_pending_tasks(self, schedule_snapshot):
