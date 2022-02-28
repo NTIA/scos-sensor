@@ -169,13 +169,25 @@ class Scheduler(threading.Thread):
         return status, detail[:MAX_DETAIL_LEN]
 
     def _finalize_task_result(self, started, finished, status, detail):
+
+
+
         tr = self.task_result
         tr.started = started
         tr.finished = finished
         tr.duration = finished - started
         tr.status = status
         tr.detail = detail
-        tr.save()
+
+        def response_task_result_handler(resp, *args, **kwargs):
+            if resp.ok:
+                logger.info("POSTed to {}".format(resp.url))
+            else:
+                msg = "Failed to POST to {}: {}"
+                logger.warning(msg.format(resp.url, resp.reason))
+                tr.status = 'notification_failed'
+            tr.save()
+
 
         if self.entry.callback_url:
             try:
@@ -196,27 +208,20 @@ class Scheduler(threading.Thread):
                         headers=headers,
                         verify=verify_ssl,
                     )
-                    self._callback_response_handler(client, response)
+                    response_task_result_handler(response)
                 else:
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
                     requests_futures_session.post(
                         self.entry.callback_url,
                         json=result_json,
-                        background_callback=self._callback_response_handler,
+                        hooks={'response': response_task_result_handler}
                         headers=headers,
-                        verify=verify_ssl,
+                        verify=verify_ssl
                     )
             except Exception as err:
                 logger.error(str(err))
 
-    @staticmethod
-    def _callback_response_handler(sess, resp):
-        if resp.ok:
-            logger.info("POSTed to {}".format(resp.url))
-        else:
-            msg = "Failed to POST to {}: {}"
-            logger.warning(msg.format(resp.url, resp.reason))
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()
