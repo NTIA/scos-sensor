@@ -5,10 +5,8 @@ import logging
 import threading
 from contextlib import contextmanager
 from pathlib import Path
-
+import requests
 from django.utils import timezone
-from requests_futures.sessions import FuturesSession
-
 from authentication import oauth
 from capabilities import get_capabilities
 from schedule.models import ScheduleEntry
@@ -176,26 +174,6 @@ class Scheduler(threading.Thread):
         tr.status = status
         tr.detail = detail
 
-        def response_task_result_handler(resp, *args, **kwargs):
-            try:
-                if resp:
-                    logger.info("Callback Handler: POSTed to {}".format(resp.url))
-                    if resp.ok:
-                        logger.info("POSTed to {}".format(resp.url))
-                    else:
-                        msg = "Failed to POST to {}: {}"
-                        logger.warning(msg.format(resp.url, resp.reason))
-                        tr.status = 'notification_failed'
-                else:
-                    msg = "Failed to POST to {}: {}"
-                    logger.warning(msg.format(resp.url, resp.reason))
-                    tr.status = 'notification_failed'
-                tr.save()
-            except Exception as err:
-                logger.error(str(err))
-                tr.status = 'notification_failed'
-                tr.save()
-
         if self.entry.callback_url:
             try:
                 logger.info("Trying callback to URL: " + self.entry.callback_url)
@@ -215,24 +193,32 @@ class Scheduler(threading.Thread):
                         headers=headers,
                         verify=verify_ssl
                     )
-                    response_task_result_handler(response)
+                    self._callback_response_handler(response, tr)
                 else:
                     logger.info('Posting with token')
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
-                    requests_futures_session.post(
+                    response = requests.post(
                         self.entry.callback_url,
                         json=result_json,
-                        hooks={'response': response_task_result_handler},
                         headers=headers,
                         verify=verify_ssl
                     )
                     logger.info('posted')
+                    self._callback_response_handler(response, tr)
             except Exception as err:
                 logger.error("Error")
                 logger.error(str(err))
                 tr.status = 'notification_failed'
                 tr.save()
+
+    @staticmethod
+    def _callback_response_handler(resp, task_result):
+        if resp.ok:
+            logger.info("POSTed to {}".format(resp.url))
+        else:
+            msg = "Failed to POST to {}: {}"
+            logger.warning(msg.format(resp.url, resp.reason))
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()
