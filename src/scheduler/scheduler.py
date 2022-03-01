@@ -141,7 +141,6 @@ class Scheduler(threading.Thread):
         entry_name = self.task.schedule_entry_name
         task_id = self.task.task_id
         from schedule.serializers import ScheduleEntrySerializer
-        from tasks.serializers import TaskResultSerializer
 
         schedule_entry = ScheduleEntry.objects.get(name=entry_name)
 
@@ -170,8 +169,6 @@ class Scheduler(threading.Thread):
 
     def _finalize_task_result(self, started, finished, status, detail):
 
-
-
         tr = self.task_result
         tr.started = started
         tr.finished = finished
@@ -180,18 +177,28 @@ class Scheduler(threading.Thread):
         tr.detail = detail
 
         def response_task_result_handler(resp, *args, **kwargs):
-            if resp.ok:
-                logger.info("POSTed to {}".format(resp.url))
-            else:
-                msg = "Failed to POST to {}: {}"
-                logger.warning(msg.format(resp.url, resp.reason))
+            try:
+                if resp:
+                    logger.info("Callback Handler: POSTed to {}".format(resp.url))
+                    if resp.ok:
+                        logger.info("POSTed to {}".format(resp.url))
+                    else:
+                        msg = "Failed to POST to {}: {}"
+                        logger.warning(msg.format(resp.url, resp.reason))
+                        tr.status = 'notification_failed'
+                else:
+                    msg = "Failed to POST to {}: {}"
+                    logger.warning(msg.format(resp.url, resp.reason))
+                    tr.status = 'notification_failed'
+                tr.save()
+            except Exception as err:
+                logger.error(str(err))
                 tr.status = 'notification_failed'
-            tr.save()
-
+                tr.save()
 
         if self.entry.callback_url:
             try:
-                logger.debug("Trying callback to URL: " + self.entry.callback_url)
+                logger.info("Trying callback to URL: " + self.entry.callback_url)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
@@ -206,7 +213,7 @@ class Scheduler(threading.Thread):
                         self.entry.callback_url,
                         data=json.dumps(result_json),
                         headers=headers,
-                        verify=verify_ssl,
+                        verify=verify_ssl
                     )
                     response_task_result_handler(response)
                 else:
@@ -223,7 +230,6 @@ class Scheduler(threading.Thread):
                 logger.error(str(err))
                 tr.status = 'notification_failed'
                 tr.save()
-
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()
