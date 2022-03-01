@@ -4,7 +4,6 @@ import shutil
 
 from django.db import models
 from django.utils import timezone
-
 from schedule.models import ScheduleEntry
 from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
@@ -44,8 +43,8 @@ class TaskResult(models.Model):
     )
     status = models.CharField(
         default="in-progress",
-        max_length=11,
-        help_text='"success" or "failure"',
+        max_length=19,
+        help_text='"success", "failure", or "notification_failed"',
         choices=RESULT_CHOICES,
     )
     detail = models.CharField(
@@ -64,9 +63,9 @@ class TaskResult(models.Model):
 
     def save(self):
         """Limit disk usage to MAX_DISK_USAGE by removing oldest result."""
-        all_results = TaskResult.objects.all().order_by("id")
         filter = {"schedule_entry__name": self.schedule_entry.name}
-        same_entry_results = all_results.filter(**filter)
+
+        same_entry_results = TaskResult.objects.filter(**filter).order_by("id")
         if (
             same_entry_results.count() > 0 and same_entry_results[0].id != self.id
         ):  # prevent from deleting this task result's acquisition

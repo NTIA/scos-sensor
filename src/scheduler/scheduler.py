@@ -207,7 +207,6 @@ class Scheduler(threading.Thread):
                     logger.info('posted')
                     self._callback_response_handler(response, tr)
             except Exception as err:
-                logger.error("Error")
                 logger.error(str(err))
                 tr.status = 'notification_failed'
                 tr.save()
