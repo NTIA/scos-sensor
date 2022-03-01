@@ -217,6 +217,7 @@ class Scheduler(threading.Thread):
                     )
                     response_task_result_handler(response)
                 else:
+                    logger.info('Posting with token')
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
                     requests_futures_session.post(
@@ -226,7 +227,9 @@ class Scheduler(threading.Thread):
                         headers=headers,
                         verify=verify_ssl
                     )
+                    logger.info('posted')
             except Exception as err:
+                logger.error("Error")
                 logger.error(str(err))
                 tr.status = 'notification_failed'
                 tr.save()
