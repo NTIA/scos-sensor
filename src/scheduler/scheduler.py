@@ -19,7 +19,7 @@ from tasks.task_queue import TaskQueue
 from . import utils
 
 logger = logging.getLogger(__name__)
-requests_futures_session = FuturesSession()
+
 
 
 class Scheduler(threading.Thread):
