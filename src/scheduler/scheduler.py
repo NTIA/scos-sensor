@@ -218,6 +218,11 @@ class Scheduler(threading.Thread):
         else:
             msg = "Failed to POST to {}: {}"
             logger.warning(msg.format(resp.url, resp.reason))
+            task_result.status = 'notification_failed'
+
+        task_result.save()
+
+
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()
