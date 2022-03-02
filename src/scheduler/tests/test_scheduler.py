@@ -7,6 +7,7 @@ import requests_mock
 from django import conf
 
 from scheduler.scheduler import Scheduler, minimum_duration
+from tasks.models import TaskResult
 
 from .utils import (
     BAD_ACTION_STR,
@@ -427,6 +428,17 @@ def test_success_posted_to_callback_url(test_scheduler, settings):
     assert action_flag.is_set()
     verify_request(request_history)
 
+@pytest.mark.django_db
+def test_notification_failed_status(test_scheduler):
+    entry = create_entry("t", 1, 1, 100, 5, "logger", 'https://badmgr.its.bldrdoc.gov')
+    entry.save()
+    entry.refresh_from_db()
+    print('entry = ' + entry.name)
+    s = test_scheduler
+    advance_testclock(s.timefn, 1)
+    s.run(blocking=False)  # queue first 10 tasks
+    result = TaskResult.objects.first()
+    assert result.status == 'notification_failed'
 
 @pytest.mark.django_db
 def test_starvation(test_scheduler):
@@ -469,3 +481,4 @@ def test_task_pushed_past_stop_still_runs(test_scheduler):
 
 def test_str():
     str(Scheduler())
+
