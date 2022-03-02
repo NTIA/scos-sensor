@@ -1830,7 +1830,7 @@
                 },
                 "status": {
                     "title": "Status",
-                    "description": "\"success\" or \"failure\"",
+                    "description": "\"success\", \"failure\", or \"notification_failed\"",
                     "type": "string",
                     "enum": [
                         1,

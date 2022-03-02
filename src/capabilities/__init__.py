@@ -43,5 +43,6 @@ def get_capabilities():
     if location:
         capabilities["sensor"]["location"] = location
     else:
-        del capabilities["sensor"]["location"]
+        if "location" in capabilities['sensor']:
+            del capabilities["sensor"]["location"]
     return capabilities

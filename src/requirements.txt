@@ -10,8 +10,6 @@ attrs==21.4.0
     # via jsonschema
 bcrypt==3.2.0
     # via paramiko
-cached-property==1.5.2
-    # via docker-compose
 certifi==2021.10.8
     # via requests
 cffi==1.15.0
@@ -69,8 +67,6 @@ gunicorn==19.9.0
     # via -r requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.10.1
-    # via jsonschema
 inflection==0.5.1
     # via drf-yasg
 itypes==1.2.0
@@ -129,28 +125,25 @@ requests==2.27.1
     #   coreapi
     #   docker
     #   docker-compose
-    #   requests-futures
     #   requests-mock
     #   requests-oauthlib
-requests-futures==0.9.9
-    # via -r requirements.in
 requests-mock==1.6.0
     # via -r requirements.in
 requests-oauthlib==1.3.1
     # via -r requirements.in
-ruamel.yaml==0.16.13
+ruamel-yaml==0.16.13
     # via
     #   drf-yasg
     #   scos-actions
-ruamel.yaml.clib==0.2.6
+ruamel-yaml-clib==0.2.6
     # via
-    #   ruamel.yaml
+    #   ruamel-yaml
     #   scos-actions
 scipy==1.7.3
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@bug_fix
+scos_actions @ git+https://github.com/NTIA/scos-actions@bug_fix
     # via scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
     # via scos-actions
@@ -171,10 +164,6 @@ sqlparse==0.4.2
     #   django-debug-toolbar
 texttable==1.6.4
     # via docker-compose
-typing-extensions==4.0.1
-    # via
-    #   asgiref
-    #   importlib-metadata
 uritemplate==4.1.1
     # via
     #   coreapi
@@ -185,8 +174,6 @@ websocket-client==0.59.0
     # via
     #   docker
     #   docker-compose
-zipp==3.7.0
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
