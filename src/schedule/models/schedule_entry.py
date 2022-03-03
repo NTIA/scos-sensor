@@ -69,7 +69,6 @@ class ScheduleEntry(models.Model):
         help_text="[Required] The unique identifier used in URLs and filenames",
     )
     action = models.CharField(
-        choices=actions.CHOICES,
         max_length=actions.MAX_LENGTH,
         help_text="[Required] The name of the action to be scheduled",
     )

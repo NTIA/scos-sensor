@@ -210,6 +210,8 @@ class Scheduler(threading.Thread):
                 logger.error(str(err))
                 tr.status = 'notification_failed'
                 tr.save()
+        else:
+            tr.save()
 
     @staticmethod
     def _callback_response_handler(resp, task_result):
