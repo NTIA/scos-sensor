@@ -1,20 +1,7 @@
 import copy
-
+from scos_actions.capabilities import capabilities
 from sensor import settings
 from sensor.settings import SENSOR_DEFINITION_FILE
-
-
-def load_from_json(fname):
-    import json
-    import logging
-
-    logger = logging.getLogger(__name__)
-
-    try:
-        with open(fname) as f:
-            return json.load(f)
-    except Exception:
-        logger.exception("Unable to load JSON file {}".format(fname))
 
 
 def get_sigmf_location():
@@ -32,17 +19,13 @@ def get_sigmf_location():
         return None
 
 
-_capabilities = {}
-_capabilities["sensor"] = load_from_json(SENSOR_DEFINITION_FILE)
-_capabilities["sensor"]["id"] = settings.FQDN
-
-
 def get_capabilities():
-    capabilities = copy.deepcopy(_capabilities)
+    updated_capabilities = copy.deepcopy(capabilities)
+    updated_capabilities["sensor"]["id"] = settings.FQDN
     location = get_sigmf_location()
     if location:
-        capabilities["sensor"]["location"] = location
+        updated_capabilities["sensor"]["location"] = location
     else:
-        if "location" in capabilities['sensor']:
-            del capabilities["sensor"]["location"]
-    return capabilities
+        if "location" in updated_capabilities['sensor']:
+            del updated_capabilities["sensor"]["location"]
+    return updated_capabilities
