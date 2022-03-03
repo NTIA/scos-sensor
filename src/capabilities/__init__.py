@@ -42,6 +42,6 @@ def get_capabilities():
     location = get_sigmf_location()
     if location:
         capabilities["sensor"]["location"] = location
-    else:
-        del capabilities["sensor"]["location"]
+    #else:
+    #    del capabilities["sensor"]["location"]
     return capabilities
