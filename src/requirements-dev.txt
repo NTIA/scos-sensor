@@ -8,7 +8,7 @@ asgiref==3.5.0
     # via
     #   -r requirements.txt
     #   django
-aspy.refactor-imports==2.2.1
+aspy-refactor-imports==2.2.1
     # via seed-isort-config
 attrs==21.4.0
     # via
@@ -25,7 +25,7 @@ black==21.12b0
 cached-property==1.5.2
     # via
     #   -r requirements.txt
-    #   aspy.refactor-imports
+    #   aspy-refactor-imports
     #   docker-compose
 certifi==2021.10.8
     # via
@@ -130,7 +130,7 @@ idna==3.3
     # via
     #   -r requirements.txt
     #   requests
-importlib-metadata==4.10.1
+importlib-metadata==4.11.2
     # via
     #   -r requirements.txt
     #   click
@@ -273,30 +273,27 @@ requests==2.27.1
     #   coreapi
     #   docker
     #   docker-compose
-    #   requests-futures
     #   requests-mock
     #   requests-oauthlib
-requests-futures==0.9.9
-    # via -r requirements.txt
 requests-mock==1.6.0
     # via -r requirements.txt
 requests-oauthlib==1.3.1
     # via -r requirements.txt
-ruamel.yaml==0.16.13
+ruamel-yaml==0.16.13
     # via
     #   -r requirements.txt
     #   drf-yasg
-ruamel.yaml.clib==0.2.6
+ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
-    #   ruamel.yaml
+    #   ruamel-yaml
 scipy==1.7.3
     # via -r requirements.txt
-scos-actions @ git+https://github.com/NTIA/scos-actions@bug_fix
+scos_actions @ git+https://github.com/NTIA/scos-actions@bug_fix
     # via
     #   -r requirements.txt
     #   scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
     # via -r requirements.txt
 seed-isort-config==1.9.1
     # via -r requirements-dev.in
@@ -337,7 +334,7 @@ tox==3.12.1
     # via -r requirements-dev.in
 typed-ast==1.5.2
     # via black
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via
     #   -r requirements.txt
     #   asgiref

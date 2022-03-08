@@ -4,9 +4,11 @@ import time
 
 import pytest
 import requests_mock
+import requests
 from django import conf
 
 from scheduler.scheduler import Scheduler, minimum_duration
+from tasks.models import TaskResult
 
 from .utils import (
     BAD_ACTION_STR,
@@ -319,16 +321,16 @@ def verify_request(request_history, status="success", detail=None):
         oauth_history = request_history[0]
         assert oauth_history.verify == conf.settings.PATH_TO_VERIFY_CERT
         assert (
-            oauth_history.text
-            == f"grant_type=password&username={conf.settings.USER_NAME}&password={conf.settings.PASSWORD}"
+                oauth_history.text
+                == f"grant_type=password&username={conf.settings.USER_NAME}&password={conf.settings.PASSWORD}"
         )
         assert oauth_history.cert == conf.settings.PATH_TO_CLIENT_CERT
         auth_header = oauth_history.headers.get("Authorization")
         auth_header = auth_header.replace("Basic ", "")
         auth_header_decoded = base64.b64decode(auth_header).decode("utf-8")
         assert (
-            auth_header_decoded
-            == f"{conf.settings.CLIENT_ID}:{conf.settings.CLIENT_SECRET}"
+                auth_header_decoded
+                == f"{conf.settings.CLIENT_ID}:{conf.settings.CLIENT_SECRET}"
         )
         request_json = request_history[1].json()
     else:
@@ -426,6 +428,35 @@ def test_success_posted_to_callback_url(test_scheduler, settings):
     assert cb_flag.is_set()
     assert action_flag.is_set()
     verify_request(request_history)
+
+
+@pytest.mark.django_db
+def test_notification_failed_status_unknown_host(test_scheduler):
+    entry = create_entry("t", 1, 1, 100, 5, "logger", 'https://badmgr.its.bldrdoc.gov')
+    entry.save()
+    entry.refresh_from_db()
+    print('entry = ' + entry.name)
+    s = test_scheduler
+    advance_testclock(s.timefn, 1)
+    s.run(blocking=False)  # queue first 10 tasks
+    result = TaskResult.objects.first()
+    assert result.status == 'notification_failed'
+
+
+@pytest.mark.django_db
+def test_notification_failed_status_request_ok_false(test_scheduler):
+    entry = create_entry("t", 1, 1, 100, 5, "logger")
+    entry.save()
+    entry.refresh_from_db()
+    print('entry = ' + entry.name)
+    s = test_scheduler
+    advance_testclock(s.timefn, 1)
+    s.run(blocking=False)  # queue first 10 tasks
+    tr = TaskResult.objects.first()
+    response = requests.Response()
+    response.status_code = 400
+    s._callback_response_handler(response, tr)
+    assert tr.status == 'notification_failed'
 
 
 @pytest.mark.django_db
