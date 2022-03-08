@@ -23,10 +23,7 @@ bcrypt==3.2.0
 black==21.12b0
     # via -r requirements-dev.in
 cached-property==1.5.2
-    # via
-    #   -r requirements.txt
-    #   aspy-refactor-imports
-    #   docker-compose
+    # via aspy-refactor-imports
 certifi==2021.10.8
     # via
     #   -r requirements.txt
@@ -79,7 +76,7 @@ django==3.1.14
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
-django-debug-toolbar==3.0
+django-debug-toolbar==3.2.1
     # via -r requirements.txt
 django-extensions==3.1.5
     # via -r requirements.txt
@@ -130,16 +127,6 @@ idna==3.3
     # via
     #   -r requirements.txt
     #   requests
-importlib-metadata==4.11.2
-    # via
-    #   -r requirements.txt
-    #   click
-    #   jsonschema
-    #   pep517
-    #   pluggy
-    #   pre-commit
-    #   pytest
-    #   virtualenv
 inflection==0.5.1
     # via
     #   -r requirements.txt
@@ -284,16 +271,14 @@ ruamel-yaml==0.16.13
     #   -r requirements.txt
     #   drf-yasg
 ruamel-yaml-clib==0.2.6
-    # via
-    #   -r requirements.txt
-    #   ruamel-yaml
+    # via -r requirements.txt
 scipy==1.7.3
     # via -r requirements.txt
-scos_actions @ git+https://github.com/NTIA/scos-actions@bug_fix
+scos-actions @ git+https://github.com/NTIA/scos-actions@bug_fix
     # via
     #   -r requirements.txt
     #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
+scos-usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
     # via -r requirements.txt
 seed-isort-config==1.9.1
     # via -r requirements-dev.in
@@ -332,14 +317,8 @@ tomli==1.2.3
     #   pep517
 tox==3.12.1
     # via -r requirements-dev.in
-typed-ast==1.5.2
-    # via black
 typing-extensions==4.1.1
-    # via
-    #   -r requirements.txt
-    #   asgiref
-    #   black
-    #   importlib-metadata
+    # via black
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
@@ -360,11 +339,6 @@ websocket-client==0.59.0
     #   docker-compose
 wheel==0.37.1
     # via pip-tools
-zipp==3.7.0
-    # via
-    #   -r requirements.txt
-    #   importlib-metadata
-    #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
