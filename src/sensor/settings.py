@@ -160,13 +160,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_extensions",
-    "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
     "drf_yasg",  # OpenAPI generator
-    "raven.contrib.django.raven_compat",
-    "debug_toolbar",
     # project-local apps
     "authentication.apps.AuthenticationConfig",
     "capabilities.apps.CapabilitiesConfig",
@@ -179,7 +175,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django_session_timeout.middleware.SessionTimeoutMiddleware",
@@ -189,6 +184,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.extend(
+        [
+            "debug_toolbar",
+            "django_extensions",
+        ]
+    )
+
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "sensor.urls"
 
@@ -369,11 +374,6 @@ LOGGING = {
     },
 }
 
-SENTRY_DSN = env("SENTRY_DSN", default="")
-if SENTRY_DSN:
-    import raven
-
-    RAVEN_CONFIG = {"dsn": SENTRY_DSN, "release": raven.fetch_git_sha(REPO_ROOT)}
 
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # OAuth Password Flow Authentication

@@ -19,7 +19,7 @@ cffi==1.15.0
     #   bcrypt
     #   cryptography
     #   pynacl
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
     # via requests
 coreapi==2.3.3
     # via drf-yasg
@@ -29,33 +29,26 @@ coreschema==0.0.4
     #   drf-yasg
 cryptography==36.0.1
     # via paramiko
-distro==1.6.0
+distro==1.7.0
     # via docker-compose
-django==3.1.14
+django==3.2.12
     # via
     #   -r requirements.in
-    #   django-debug-toolbar
-    #   django-extensions
-    #   django-filter
     #   django-session-timeout
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
-django-debug-toolbar==3.0
-    # via -r requirements.in
-django-extensions==3.1.5
-    # via -r requirements.in
-django-filter==2.4.0
-    # via -r requirements.in
+    #   scos-actions
+    #   scos-usrp
 django-session-timeout==0.1.0
     # via -r requirements.in
 djangorestframework==3.13.1
     # via
     #   -r requirements.in
     #   drf-yasg
-docker[ssh]==4.4.4
+docker[ssh]==5.0.3
     # via docker-compose
-docker-compose==1.28.6
+docker-compose==1.29.2
     # via -r requirements.in
 dockerpty==0.4.1
     # via docker-compose
@@ -63,13 +56,15 @@ docopt==0.6.2
     # via docker-compose
 drf-yasg==1.20.0
     # via -r requirements.in
-environs==7.3.1
-    # via -r requirements.in
-gunicorn==19.9.0
+environs==9.5.0
+    # via
+    #   -r requirements.in
+    #   scos-usrp
+gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.10.1
+importlib-metadata==4.11.2
     # via jsonschema
 inflection==0.5.1
     # via drf-yasg
@@ -81,16 +76,17 @@ jsonfield==3.1.0
     # via -r requirements.in
 jsonschema==3.2.0
     # via docker-compose
-markupsafe==2.0.1
+markupsafe==2.1.0
     # via jinja2
 marshmallow==3.14.1
     # via environs
 numpy==1.21.5
     # via
-    #   -r requirements.in
     #   scipy
+    #   scos-actions
+    #   scos-usrp
     #   sigmf
-oauthlib==3.1.1
+oauthlib==3.2.0
     # via
     #   -r requirements.in
     #   requests-oauthlib
@@ -98,11 +94,11 @@ packaging==21.3
     # via drf-yasg
 paramiko==2.9.2
     # via docker
-psycopg2-binary==2.8.5
+psycopg2-binary==2.9.3
     # via -r requirements.in
 pycparser==2.21
     # via cffi
-pyjwt==1.7.1
+pyjwt==2.3.0
     # via -r requirements.in
 pynacl==1.5.0
     # via paramiko
@@ -122,8 +118,6 @@ pytz==2021.3
     #   djangorestframework
 pyyaml==5.4.1
     # via docker-compose
-raven==6.10.0
-    # via -r requirements.in
 requests==2.27.1
     # via
     #   coreapi
@@ -132,25 +126,23 @@ requests==2.27.1
     #   requests-futures
     #   requests-mock
     #   requests-oauthlib
-requests-futures==0.9.9
+requests-futures==1.0.0
     # via -r requirements.in
-requests-mock==1.6.0
+requests-mock==1.9.3
     # via -r requirements.in
 requests-oauthlib==1.3.1
     # via -r requirements.in
-ruamel.yaml==0.16.13
+ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
-ruamel.yaml.clib==0.2.6
-    # via
-    #   ruamel.yaml
-    #   scos-actions
+ruamel-yaml-clib==0.2.6
+    # via ruamel-yaml
 scipy==1.7.3
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@bug_fix
+scos_actions @ git+https://github.com/NTIA/scos-actions@refactor_dependencies
     # via scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@refactor_dependencies
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
     # via scos-actions
@@ -158,7 +150,6 @@ six==1.16.0
     # via
     #   bcrypt
     #   django-session-timeout
-    #   docker
     #   dockerpty
     #   jsonschema
     #   python-dateutil
@@ -166,12 +157,10 @@ six==1.16.0
     #   sigmf
     #   websocket-client
 sqlparse==0.4.2
-    # via
-    #   django
-    #   django-debug-toolbar
+    # via django
 texttable==1.6.4
     # via docker-compose
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via
     #   asgiref
     #   importlib-metadata
