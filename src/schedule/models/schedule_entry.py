@@ -1,7 +1,7 @@
 import sys
 from itertools import count
 
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, ValidationError
 from django.db import models
 
 import actions
@@ -69,7 +69,6 @@ class ScheduleEntry(models.Model):
         help_text="[Required] The unique identifier used in URLs and filenames",
     )
     action = models.CharField(
-        choices=actions.CHOICES,
         max_length=actions.MAX_LENGTH,
         help_text="[Required] The name of the action to be scheduled",
     )
@@ -158,9 +157,11 @@ class ScheduleEntry(models.Model):
         if self.next_task_time is None:
             self.next_task_time = self.start
 
-        # used by .save to detect whether to reset .next_task_time
+        # used by .save to detect whether to reset .next_task_times
         self.__start = self.start
         self.__interval = self.interval
+        if self.action not in actions.registered_actions:
+            raise ValidationError(self.action + ' does not exist')
 
     def update(self, *args, **kwargs):
         super(ScheduleEntry, self).update(*args, **kwargs)
