@@ -39,7 +39,6 @@ RUN chmod +x /entrypoints/api_entrypoint.sh
 COPY ./configs /configs
 
 # Args are passed in via docker-compose during build time
-ARG DEBUG
 ARG DOMAINS
 ARG IPS
 ARG SECRET_KEY

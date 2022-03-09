@@ -125,8 +125,6 @@ requests==2.27.1
     #   docker-compose
     #   requests-mock
     #   requests-oauthlib
-requests-futures==1.0.0
-    # via -r requirements.in
 requests-mock==1.9.3
     # via -r requirements.in
 requests-oauthlib==1.3.1
