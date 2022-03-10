@@ -16,5 +16,4 @@ pyjwt~=1.7.1
 raven==6.10.0
 requests-mock==1.6.0
 requests_oauthlib~=1.3.0
-#scos_actions @ git+https://github.com/NTIA/scos-actions@bug_fix#egg=scos_actions
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@fix_dependencies#egg=scos_usrp
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@preselector_test#egg=scos_usrp
