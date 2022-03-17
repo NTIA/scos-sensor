@@ -1,6 +1,7 @@
 from status.models import GPS_LOCATION_DESCRIPTION, Location
 from scos_actions.capabilities import capabilities
 
+
 def location_action_completed_callback(sender, **kwargs):
     """Update database and capabilities when GPS is synced or database is updated"""
 
@@ -36,3 +37,10 @@ def db_location_updated(sender, **kwargs):
         capabilities['sensor']['location']['y'] = instance.latitude
         capabilities['sensor']['location']['z'] = instance.height
         capabilities['sensor']['location']['description'] = instance.description
+
+
+def db_location_deleted(sender, **kwargs):
+    instance = kwargs["instance"]
+    if isinstance(instance, Location):
+        if 'location' in capabilities['sensor'] and instance.active:
+            capabilities['sensor']['location'] = None

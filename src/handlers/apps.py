@@ -19,6 +19,7 @@ class HandlersConfig(AppConfig):
     def ready(self):
         from handlers.location_handler import location_action_completed_callback
         from handlers.location_handler import db_location_updated
+        from handlers.location_handler import db_location_deleted
         from handlers.measurement_handler import measurement_action_completed_callback
         from handlers.monitor_handler import monitor_action_completed_callback
 
@@ -33,6 +34,11 @@ class HandlersConfig(AppConfig):
         post_save.connect(db_location_updated)
         logger.debug(
             "db_location_updated registered to post_save"
+        )
+
+        post_delete.connect(db_location_deleted)
+        logger.debug(
+            "db_location_deleted registered to poste_delete"
         )
 
         monitor_action_completed.connect(monitor_action_completed_callback)
