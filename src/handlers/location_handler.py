@@ -30,7 +30,7 @@ def location_action_completed_callback(sender, **kwargs):
 
 def db_location_updated(sender, **kwargs):
     instance = kwargs["instance"]
-    if isinstance(instance, Location):
+    if isinstance(instance, Location) and instance.active:
         if 'location' not in capabilities['sensor']:
             capabilities['sensor']['location'] = {}
         capabilities['sensor']['location']['x'] = instance.longitude
