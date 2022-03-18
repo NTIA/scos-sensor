@@ -36,6 +36,7 @@ def db_location_updated(sender, **kwargs):
         capabilities['sensor']['location']['x'] = instance.longitude
         capabilities['sensor']['location']['y'] = instance.latitude
         capabilities['sensor']['location']['z'] = instance.height
+        capabilities['sensor']['location']['gps'] = instance.gps
         capabilities['sensor']['location']['description'] = instance.description
 
 
