@@ -8,7 +8,7 @@ asgiref==3.5.0
     # via
     #   -r requirements.txt
     #   django
-aspy-refactor-imports==2.2.1
+aspy-refactor-imports==3.0.1
     # via seed-isort-config
 attrs==21.4.0
     # via
@@ -55,7 +55,7 @@ coreschema==0.0.4
     #   drf-yasg
 coverage[toml]==6.3.2
     # via pytest-cov
-cryptography==36.0.1
+cryptography==36.0.2
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -112,13 +112,13 @@ filelock==3.6.0
     #   virtualenv
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.4.11
+identify==2.4.12
     # via pre-commit
 idna==3.3
     # via
     #   -r requirements.txt
     #   requests
-importlib-metadata==4.11.2
+importlib-metadata==4.11.3
     # via
     #   -r requirements.txt
     #   click
@@ -140,7 +140,7 @@ itypes==1.2.0
     # via
     #   -r requirements.txt
     #   coreapi
-jinja2==3.0.3
+jinja2==3.1.0
     # via
     #   -r requirements.txt
     #   coreschema
@@ -150,11 +150,11 @@ jsonschema==3.2.0
     # via
     #   -r requirements.txt
     #   docker-compose
-markupsafe==2.1.0
+markupsafe==2.1.1
     # via
     #   -r requirements.txt
     #   jinja2
-marshmallow==3.14.1
+marshmallow==3.15.0
     # via
     #   -r requirements.txt
     #   environs
@@ -176,9 +176,10 @@ packaging==21.3
     # via
     #   -r requirements.txt
     #   drf-yasg
+    #   marshmallow
     #   pytest
     #   tox
-paramiko==2.9.2
+paramiko==2.10.3
     # via
     #   -r requirements.txt
     #   docker
@@ -218,7 +219,7 @@ pyrsistent==0.18.1
     # via
     #   -r requirements.txt
     #   jsonschema
-pytest==7.0.1
+pytest==7.1.1
     # via
     #   pytest-cov
     #   pytest-django
@@ -233,7 +234,7 @@ python-dotenv==0.19.2
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2021.3
+pytz==2022.1
     # via
     #   -r requirements.txt
     #   django
@@ -265,7 +266,7 @@ ruamel-yaml-clib==0.2.6
     #   ruamel-yaml
 scipy==1.7.3
     # via -r requirements.txt
-scos_actions @ git+https://github.com/NTIA/scos-actions@refactor_dependencies
+scos_actions @ git+https://github.com/NTIA/scos-actions@0.1.0
     # via
     #   -r requirements.txt
     #   scos-usrp
@@ -282,6 +283,7 @@ six==1.16.0
     #   django-session-timeout
     #   dockerpty
     #   jsonschema
+    #   paramiko
     #   python-dateutil
     #   requests-mock
     #   tox
@@ -320,11 +322,11 @@ uritemplate==4.1.1
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.8
+urllib3==1.26.9
     # via
     #   -r requirements.txt
     #   requests
-virtualenv==20.13.3
+virtualenv==20.13.4
     # via
     #   pre-commit
     #   tox
