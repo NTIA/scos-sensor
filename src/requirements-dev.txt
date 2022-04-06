@@ -19,7 +19,7 @@ bcrypt==3.2.0
     # via
     #   -r requirements.txt
     #   paramiko
-black==22.1.0
+black==22.3.0
     # via -r requirements-dev.in
 cached-property==1.5.2
     # via
@@ -42,7 +42,7 @@ charset-normalizer==2.0.12
     # via
     #   -r requirements.txt
     #   requests
-click==8.0.4
+click==8.1.2
     # via black
 coreapi==2.3.3
     # via
@@ -140,7 +140,7 @@ itypes==1.2.0
     # via
     #   -r requirements.txt
     #   coreapi
-jinja2==3.1.0
+jinja2==3.1.1
     # via
     #   -r requirements.txt
     #   coreschema
@@ -193,7 +193,7 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-pre-commit==2.17.0
+pre-commit==2.18.1
     # via -r requirements-dev.in
 psycopg2-binary==2.9.3
     # via -r requirements.txt
@@ -229,7 +229,7 @@ pytest-django==4.5.2
     # via -r requirements-dev.in
 python-dateutil==2.8.2
     # via -r requirements.txt
-python-dotenv==0.19.2
+python-dotenv==0.20.0
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -326,7 +326,7 @@ urllib3==1.26.9
     # via
     #   -r requirements.txt
     #   requests
-virtualenv==20.13.4
+virtualenv==20.14.0
     # via
     #   pre-commit
     #   tox
@@ -335,7 +335,7 @@ websocket-client==0.59.0
     #   -r requirements.txt
     #   docker
     #   docker-compose
-zipp==3.7.0
+zipp==3.8.0
     # via
     #   -r requirements.txt
     #   importlib-metadata
