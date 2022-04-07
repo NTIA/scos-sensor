@@ -1,20 +1,14 @@
-Django~=3.1.14
-django-debug-toolbar==3.0
-django-extensions~=3.1.5
-django-filter~=2.4.0
-djangorestframework~=3.13.1
-django-session-timeout==0.1.0
-docker-compose~=1.28.5
-drf-yasg~=1.20.0
-environs==7.3.1
-gunicorn==19.9.0
-jsonfield==3.1.0
-numpy~=1.21.0
-oauthlib~=3.1.0
-psycopg2-binary==2.8.5
-pyjwt~=1.7.1
-raven==6.10.0
-requests-mock==1.6.0
-requests_oauthlib~=1.3.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0#egg=scos_actions
-scos_usrp @ git+https://github.com/NTIA/scos-usrp#egg=scos_usrp
+django>=3.1.13, <4.0
+djangorestframework>=3.0, <4.0
+django-session-timeout>=0.1, <1.0
+docker-compose>=1.0, <2.0
+drf-yasg>=1.0, <2.0
+environs>=9.0, <10.0
+gunicorn>=20.0, <21.0
+jsonfield>=3.0, <4.0
+oauthlib>=3.0, <4.0
+psycopg2-binary>=2.0, <3.0
+pyjwt>=2.0, <3.0
+requests-mock>=1.0, <2.0
+requests_oauthlib>=1.0, <2.0
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@refactor_dependencies
