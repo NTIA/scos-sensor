@@ -11,4 +11,5 @@ psycopg2-binary>=2.0, <3.0
 pyjwt>=2.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0#egg=scos_actions
 scos_usrp @ git+https://github.com/NTIA/scos-usrp@refactor_dependencies

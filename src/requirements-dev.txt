@@ -166,7 +166,6 @@ numpy==1.21.5
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
-    #   scipy
     #   scos-usrp
 oauthlib==3.2.0
     # via
@@ -227,8 +226,6 @@ pytest-cov==3.0.0
     # via -r requirements-dev.in
 pytest-django==4.5.2
     # via -r requirements-dev.in
-python-dateutil==2.8.2
-    # via -r requirements.txt
 python-dotenv==0.20.0
     # via
     #   -r requirements.txt
@@ -264,9 +261,7 @@ ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.7.3
-    # via -r requirements.txt
-scos_actions @ git+https://github.com/NTIA/scos-actions@0.1.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0
     # via
     #   -r requirements.txt
     #   scos-usrp
@@ -274,8 +269,6 @@ scos_usrp @ git+https://github.com/NTIA/scos-usrp@refactor_dependencies
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
-sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
-    # via -r requirements.txt
 six==1.16.0
     # via
     #   -r requirements.txt
@@ -284,7 +277,6 @@ six==1.16.0
     #   dockerpty
     #   jsonschema
     #   paramiko
-    #   python-dateutil
     #   requests-mock
     #   tox
     #   virtualenv
