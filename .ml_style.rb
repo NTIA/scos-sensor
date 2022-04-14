@@ -3,5 +3,5 @@
 # Enable all rules by default
 all
 
-rule 'MD013', :line_length => 88
+rule 'MD013', :line_length => 88, :code_blocks => false
 rule 'MD007', :indent => 3

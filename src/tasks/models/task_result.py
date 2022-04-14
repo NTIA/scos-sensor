@@ -4,7 +4,6 @@ import shutil
 
 from django.db import models
 from django.utils import timezone
-
 from schedule.models import ScheduleEntry
 from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
@@ -18,10 +17,12 @@ class TaskResult(models.Model):
     SUCCESS = 1
     FAILURE = 2
     IN_PROGRESS = 3
+    NOTIFICATION_FAILED = 4
     RESULT_CHOICES = (
         (SUCCESS, "success"),
         (FAILURE, "failure"),
         (IN_PROGRESS, "in-progress"),
+        (NOTIFICATION_FAILED, "notification_failed")
     )
 
     schedule_entry = models.ForeignKey(
@@ -40,12 +41,12 @@ class TaskResult(models.Model):
         help_text="The time the task finished",
     )
     duration = models.DurationField(
-        default=timezone.ZERO, help_text="Task duration in seconds"
+        default=datetime.timedelta(), help_text="Task duration in seconds"
     )
     status = models.CharField(
         default="in-progress",
-        max_length=11,
-        help_text='"success" or "failure"',
+        max_length=19,
+        help_text='"success", "failure", or "notification_failed"',
         choices=RESULT_CHOICES,
     )
     detail = models.CharField(
@@ -64,9 +65,9 @@ class TaskResult(models.Model):
 
     def save(self):
         """Limit disk usage to MAX_DISK_USAGE by removing oldest result."""
-        all_results = TaskResult.objects.all().order_by("id")
         filter = {"schedule_entry__name": self.schedule_entry.name}
-        same_entry_results = all_results.filter(**filter)
+
+        same_entry_results = TaskResult.objects.filter(**filter).order_by("id")
         if (
             same_entry_results.count() > 0 and same_entry_results[0].id != self.id
         ):  # prevent from deleting this task result's acquisition

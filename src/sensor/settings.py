@@ -45,8 +45,8 @@ __cmd = path.split(sys.argv[0])[-1]
 IN_DOCKER = env.bool("IN_DOCKER", default=False)
 RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
-MOCK_RADIO = env.bool("MOCK_RADIO", default=False) or RUNNING_DEMO or RUNNING_TESTS
-MOCK_RADIO_RANDOM = env.bool("MOCK_RADIO_RANDOM", default=False)
+MOCK_SIGAN = env.bool("MOCK_SIGAN", default=False) or RUNNING_DEMO or RUNNING_TESTS
+MOCK_SIGAN_RANDOM = env.bool("MOCK_SIGAN_RANDOM", default=False)
 
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
@@ -69,6 +69,7 @@ if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
+PRESELECTOR_CONFIG=path.join(CONFIG_DIR, "preselector_config.json")
 
 # Cleanup any existing healtcheck files
 try:
@@ -160,13 +161,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_extensions",
-    "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
     "drf_yasg",  # OpenAPI generator
-    "raven.contrib.django.raven_compat",
-    "debug_toolbar",
     # project-local apps
     "authentication.apps.AuthenticationConfig",
     "capabilities.apps.CapabilitiesConfig",
@@ -179,7 +176,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django_session_timeout.middleware.SessionTimeoutMiddleware",
@@ -189,6 +185,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.extend(
+        [
+            "debug_toolbar",
+            "django_extensions",
+        ]
+    )
+
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "sensor.urls"
 
@@ -369,11 +375,6 @@ LOGGING = {
     },
 }
 
-SENTRY_DSN = env("SENTRY_DSN", default="")
-if SENTRY_DSN:
-    import raven
-
-    RAVEN_CONFIG = {"dsn": SENTRY_DSN, "release": raven.fetch_git_sha(REPO_ROOT)}
 
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # OAuth Password Flow Authentication
@@ -399,3 +400,7 @@ if PATH_TO_JWT_PUBLIC_KEY != "":
     PATH_TO_JWT_PUBLIC_KEY = path.join(CERTS_DIR, PATH_TO_JWT_PUBLIC_KEY)
 # Required role from JWT token to access API
 REQUIRED_ROLE = "ROLE_MANAGER"
+
+PRESELECTOR_CONFIG = env.str('PRESELECTOR_CONFIG', default=path.join(CONFIG_DIR, 'preselector_config.json'))
+PRESELECTOR_MODULE = env.str('PRESELECTOR_MODULE', default='its_preselector.web_relay_preselector')
+PRESELECTOR_CLASS = env.str('PRESELECTOR_CLASS', default='WebRelayPreselector')
