@@ -132,7 +132,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0
     # via
     #   -r requirements.in
     #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@refactor_dependencies
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@0.1.0
     # via -r requirements.in
 six==1.16.0
     # via
