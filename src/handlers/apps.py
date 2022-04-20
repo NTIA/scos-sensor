@@ -38,7 +38,7 @@ class HandlersConfig(AppConfig):
 
         post_delete.connect(db_location_deleted)
         logger.debug(
-            "db_location_deleted registered to poste_delete"
+            "db_location_deleted registered to post_delete"
         )
 
         monitor_action_completed.connect(monitor_action_completed_callback)
