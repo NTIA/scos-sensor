@@ -38,7 +38,7 @@ class Acquisition(models.Model):
     )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
     data = FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)
-    data_encrypted = models.BooleanField()
+    data_encrypted = models.BooleanField(default=False)
 
 
     class Meta:
