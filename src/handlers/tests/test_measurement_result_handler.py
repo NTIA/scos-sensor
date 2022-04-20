@@ -1,6 +1,5 @@
 import pytest
 import numpy as np
-from scos_actions.hardware.mocks.mock_radio import generate_random
 
 from scos_actions.actions.interfaces.signals import measurement_action_completed
 from tasks.models import Acquisition

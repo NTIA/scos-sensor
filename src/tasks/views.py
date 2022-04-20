@@ -1,5 +1,8 @@
 import logging
-import tempfile
+import os
+from memory_tempfile import MemoryTempfile
+
+tempfile = MemoryTempfile() # create temp file in RAM rather than disk
 from functools import partial
 
 import sigmf.archive
@@ -22,9 +25,10 @@ from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
 from .serializers.task import TaskSerializer
 from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSerializer
-import gpg
 
-PASSPHRASE = settings.PASSPHRASE
+from cryptography.fernet import Fernet
+
+ENCRYPTION_KEY = settings.ENCRYPTION_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -210,9 +214,15 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
     multirecording = len(acquisitions) > 1
 
     for acq in acquisitions:
+        tmp_file_path = ""
         with tempfile.NamedTemporaryFile(delete=True) as tmpdata:
             if acq.data_encrypted:
-                gpg.Context().decrypt(acq.data.read(), sink=tmpdata, passphrase=PASSPHRASE)
+                fernet = Fernet(ENCRYPTION_KEY)
+                raw_data = acq.data.read()
+                data = fernet.decrypt(raw_data)
+                del raw_data
+                tmpdata.write(data) # decrypted data will be stored on disk in tmp file
+                del data
             else:
                 tmpdata.write(acq.data.read())
             tmpdata.seek(0)  # move fd ptr to start of data for reading
@@ -220,8 +230,12 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
             if multirecording:
                 name += "-" + str(acq.recording_id)
             sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.metadata, name=name)
+            logger.debug("Unencrypted Acq data stored in " + tmpdata.name)
+            tmp_file_path = tmpdata.name
             sigmf_file.set_data_file(tmpdata.name)
 
             sigmf.archive.SigMFArchive(sigmf_file, path=name, fileobj=fileobj)
+        if os.path.exists(tmp_file_path):
+            os.remove(tmp_file_path)
 
     logger.debug("sigmf archive built")

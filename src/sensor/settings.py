@@ -14,6 +14,7 @@ import os
 import sys
 from os import path
 
+from cryptography.fernet import Fernet
 from environs import Env
 
 env = Env()
@@ -90,13 +91,11 @@ INTERNAL_IPS = ["127.0.0.1"]
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
-    PASSPHRASE = "changeme"
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
-    PASSPHRASE = env.str("PASSPHRASE")
     DEBUG = env.bool("DEBUG", default=False)
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
@@ -104,6 +103,7 @@ else:
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
+ENCRYPTION_KEY = Fernet.generate_key()
 
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds
