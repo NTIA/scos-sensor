@@ -23,7 +23,7 @@ class Logger(Action):
     def __init__(self, loglvl=LOGLVL_INFO):
         self.loglvl = loglvl
 
-    def __call__(self, schedule_entry_json, task_id, sensor_definition):
+    def __call__(self, schedule_entry_json, task_id):
         msg = "running test {name}/{tid}"
         schedule_entry_name = schedule_entry_json["name"]
         logger.log(
