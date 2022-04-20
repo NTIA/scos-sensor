@@ -69,9 +69,8 @@ def test_no_token_unauthorized(live_server):
 def test_token_no_roles_unauthorized(live_server, jwt_keys):
     token_payload = get_token_payload(authorities=[])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 403
     assert response.json()["detail"] == "User missing required role"
 
@@ -80,9 +79,8 @@ def test_token_no_roles_unauthorized(live_server, jwt_keys):
 def test_token_role_manager_accepted(live_server, jwt_keys):
     token_payload = get_token_payload()
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
 
@@ -106,9 +104,8 @@ def test_token_expired_1_day_forbidden(live_server, jwt_keys):
     current_datetime = datetime.now()
     token_payload = get_token_payload(exp=(current_datetime - one_day).timestamp())
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 403
     assert response.json()["detail"] == "Token is expired!"
 
@@ -119,9 +116,8 @@ def test_bad_private_key_forbidden(live_server):
     encoded = jwt.encode(
         token_payload, str(BAD_PRIVATE_KEY.decode("utf-8")), algorithm="RS256"
     )
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 403
     assert response.json()["detail"] == "Unable to verify token!"
 
@@ -136,9 +132,8 @@ def test_bad_public_key_forbidden(settings, live_server, jwt_keys):
         encoded = jwt.encode(
             token_payload, str(jwt_keys.private_key), algorithm="RS256"
         )
-        utf8_bytes = encoded.decode("utf-8")
         client = RequestsClient()
-        response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+        response = client.get(f"{live_server.url}", headers=get_headers(encoded))
         assert response.status_code == 403
         assert response.json()["detail"] == "Unable to verify token!"
 
@@ -148,9 +143,8 @@ def test_token_expired_1_min_forbidden(live_server, jwt_keys):
     current_datetime = datetime.now()
     token_payload = get_token_payload(exp=(current_datetime - one_min).timestamp())
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 403
     assert response.json()["detail"] == "Token is expired!"
 
@@ -160,9 +154,8 @@ def test_token_expires_in_1_min_accepted(live_server, jwt_keys):
     current_datetime = datetime.now()
     token_payload = get_token_payload(exp=(current_datetime + one_min).timestamp())
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
 
@@ -170,9 +163,8 @@ def test_token_expires_in_1_min_accepted(live_server, jwt_keys):
 def test_token_role_user_forbidden(live_server, jwt_keys):
     token_payload = get_token_payload(authorities=["ROLE_USER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 403
     assert response.json()["detail"] == "User missing required role"
 
@@ -182,9 +174,8 @@ def test_token_role_user_required_role_accepted(settings, live_server, jwt_keys)
     settings.REQUIRED_ROLE = "ROLE_USER"
     token_payload = get_token_payload(authorities=["ROLE_USER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
 
@@ -194,9 +185,8 @@ def test_token_multiple_roles_accepted(live_server, jwt_keys):
         authorities=["ROLE_MANAGER", "ROLE_USER", "ROLE_ITS"]
     )
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
 
@@ -206,9 +196,8 @@ def test_token_mulitple_roles_forbidden(live_server, jwt_keys):
         authorities=["ROLE_SENSOR", "ROLE_USER", "ROLE_ITS"]
     )
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 403
 
 
@@ -216,9 +205,8 @@ def test_token_mulitple_roles_forbidden(live_server, jwt_keys):
 def test_urls_unauthorized(live_server, jwt_keys):
     token_payload = get_token_payload(authorities=["ROLE_USER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    headers = get_headers(utf8_bytes)
+    headers = get_headers(encoded)
 
     capabilities = reverse("capabilities", kwargs=V1)
     response = client.get(f"{live_server.url}{capabilities}", headers=headers)
@@ -253,9 +241,8 @@ def test_urls_unauthorized(live_server, jwt_keys):
 def test_urls_authorized(live_server, jwt_keys):
     token_payload = get_token_payload(authorities=["ROLE_MANAGER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    headers = get_headers(utf8_bytes)
+    headers = get_headers(encoded)
 
     capabilities = reverse("capabilities", kwargs=V1)
     response = client.get(f"{live_server.url}{capabilities}", headers=headers)
@@ -292,9 +279,8 @@ def test_user_cannot_view_user_detail(live_server, jwt_keys):
     encoded = jwt.encode(
         sensor01_token_payload, str(jwt_keys.private_key), algorithm="RS256"
     )
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
     sensor02_token_payload = get_token_payload(authorities=["ROLE_USER"])
@@ -302,7 +288,6 @@ def test_user_cannot_view_user_detail(live_server, jwt_keys):
     encoded = jwt.encode(
         sensor02_token_payload, str(jwt_keys.private_key), algorithm="RS256"
     )
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
 
     sensor01_user = User.objects.get(username=sensor01_token_payload["user_name"])
@@ -310,7 +295,7 @@ def test_user_cannot_view_user_detail(live_server, jwt_keys):
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
     response = client.get(
-        f"{live_server.url}{user_detail}", headers=get_headers(utf8_bytes)
+        f"{live_server.url}{user_detail}", headers=get_headers(encoded)
     )
     assert response.status_code == 403
 
@@ -321,14 +306,12 @@ def test_user_cannot_view_user_detail_role_change(live_server, jwt_keys):
     encoded = jwt.encode(
         sensor01_token_payload, str(jwt_keys.private_key), algorithm="RS256"
     )
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
     token_payload = get_token_payload(authorities=["ROLE_USER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
 
     sensor01_user = User.objects.get(username=sensor01_token_payload["user_name"])
@@ -336,7 +319,7 @@ def test_user_cannot_view_user_detail_role_change(live_server, jwt_keys):
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
     response = client.get(
-        f"{live_server.url}{user_detail}", headers=get_headers(utf8_bytes)
+        f"{live_server.url}{user_detail}", headers=get_headers(encoded)
     )
     assert response.status_code == 403
 
@@ -345,9 +328,8 @@ def test_user_cannot_view_user_detail_role_change(live_server, jwt_keys):
 def test_admin_can_view_user_detail(live_server, jwt_keys):
     token_payload = get_token_payload(authorities=["ROLE_MANAGER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    headers = get_headers(utf8_bytes)
+    headers = get_headers(encoded)
     response = client.get(f"{live_server.url}", headers=headers)
     assert response.status_code == 200
 
@@ -365,9 +347,8 @@ def test_admin_can_view_other_user_detail(live_server, jwt_keys):
     encoded = jwt.encode(
         sensor01_token_payload, str(jwt_keys.private_key), algorithm="RS256"
     )
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_headers(utf8_bytes))
+    response = client.get(f"{live_server.url}", headers=get_headers(encoded))
     assert response.status_code == 200
 
     sensor02_token_payload = get_token_payload(authorities=["ROLE_MANAGER"])
@@ -375,7 +356,6 @@ def test_admin_can_view_other_user_detail(live_server, jwt_keys):
     encoded = jwt.encode(
         sensor02_token_payload, str(jwt_keys.private_key), algorithm="RS256"
     )
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
 
     sensor01_user = User.objects.get(username=sensor01_token_payload["user_name"])
@@ -383,7 +363,7 @@ def test_admin_can_view_other_user_detail(live_server, jwt_keys):
     kws.update(V1)
     user_detail = reverse("user-detail", kwargs=kws)
     response = client.get(
-        f"{live_server.url}{user_detail}", headers=get_headers(utf8_bytes)
+        f"{live_server.url}{user_detail}", headers=get_headers(encoded)
     )
     assert response.status_code == 200
 
@@ -392,9 +372,8 @@ def test_admin_can_view_other_user_detail(live_server, jwt_keys):
 def test_token_hidden(live_server, jwt_keys):
     token_payload = get_token_payload(authorities=["ROLE_MANAGER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
     client = RequestsClient()
-    headers = get_headers(utf8_bytes)
+    headers = get_headers(encoded)
     response = client.get(f"{live_server.url}", headers=headers)
     assert response.status_code == 200
 
@@ -416,10 +395,9 @@ def test_change_token_role_bad_signature(live_server, jwt_keys):
     """Make sure token modified after it was signed is rejected"""
     token_payload = get_token_payload(authorities=["ROLE_USER"])
     encoded = jwt.encode(token_payload, str(jwt_keys.private_key), algorithm="RS256")
-    utf8_bytes = encoded.decode("utf-8")
-    first_period = utf8_bytes.find(".")
-    second_period = utf8_bytes.find(".", first_period + 1)
-    payload = utf8_bytes[first_period + 1 : second_period]
+    first_period = encoded.find(".")
+    second_period = encoded.find(".", first_period + 1)
+    payload = encoded[first_period + 1 : second_period]
     payload_bytes = payload.encode("utf-8")
     # must be multiple of 4 for b64decode
     for i in range(len(payload_bytes) % 4):
@@ -431,8 +409,8 @@ def test_change_token_role_bad_signature(live_server, jwt_keys):
     payload_data["authorities"] = ["ROLE_MANAGER"]
     payload_data["userDetails"]["authorities"] = [{"authority": "ROLE_MANAGER"}]
     payload_str = json.dumps(payload_data)
-    encoded = base64.b64encode(payload_str.encode("utf-8"))
-    modified_payload = encoded.decode("utf-8")
+    modified_payload = base64.b64encode(payload_str.encode("utf-8"))
+    modified_payload = modified_payload.decode("utf-8")
     # remove padding
     if modified_payload.endswith("="):
         last_padded_index = len(modified_payload) - 1
@@ -442,11 +420,11 @@ def test_change_token_role_bad_signature(live_server, jwt_keys):
                 break
         modified_payload = modified_payload[: last_padded_index + 1]
     modified_token = (
-        utf8_bytes[:first_period]
+        encoded[:first_period]
         + "."
         + modified_payload
         + "."
-        + utf8_bytes[second_period + 1 :]
+        + encoded[second_period + 1 :]
     )
     client = RequestsClient()
     response = client.get(f"{live_server.url}", headers=get_headers(modified_token))

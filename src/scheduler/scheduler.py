@@ -5,12 +5,9 @@ import logging
 import threading
 from contextlib import contextmanager
 from pathlib import Path
-
+import requests
 from django.utils import timezone
-from requests_futures.sessions import FuturesSession
-
 from authentication import oauth
-from capabilities import get_capabilities
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
@@ -21,7 +18,7 @@ from tasks.task_queue import TaskQueue
 from . import utils
 
 logger = logging.getLogger(__name__)
-requests_futures_session = FuturesSession()
+
 
 
 class Scheduler(threading.Thread):
@@ -141,7 +138,6 @@ class Scheduler(threading.Thread):
         entry_name = self.task.schedule_entry_name
         task_id = self.task.task_id
         from schedule.serializers import ScheduleEntrySerializer
-        from tasks.serializers import TaskResultSerializer
 
         schedule_entry = ScheduleEntry.objects.get(name=entry_name)
 
@@ -153,9 +149,8 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
-            capabilities = get_capabilities()
             detail = self.task.action_caller(
-                schedule_entry_json, task_id, capabilities["sensor"]
+                schedule_entry_json, task_id
             )
             self.delayfn(0)  # let other threads run
             status = "success"
@@ -169,17 +164,17 @@ class Scheduler(threading.Thread):
         return status, detail[:MAX_DETAIL_LEN]
 
     def _finalize_task_result(self, started, finished, status, detail):
+
         tr = self.task_result
         tr.started = started
         tr.finished = finished
         tr.duration = finished - started
         tr.status = status
         tr.detail = detail
-        tr.save()
 
         if self.entry.callback_url:
             try:
-                logger.debug("Trying callback to URL: " + self.entry.callback_url)
+                logger.info("Trying callback to URL: " + self.entry.callback_url)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(tr, context=context).data
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
@@ -194,29 +189,40 @@ class Scheduler(threading.Thread):
                         self.entry.callback_url,
                         data=json.dumps(result_json),
                         headers=headers,
-                        verify=verify_ssl,
+                        verify=verify_ssl
                     )
-                    self._callback_response_handler(client, response)
+                    self._callback_response_handler(response, tr)
                 else:
+                    logger.info('Posting with token')
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
-                    requests_futures_session.post(
+                    response = requests.post(
                         self.entry.callback_url,
                         json=result_json,
-                        background_callback=self._callback_response_handler,
                         headers=headers,
-                        verify=verify_ssl,
+                        verify=verify_ssl
                     )
+                    logger.info('posted')
+                    self._callback_response_handler(response, tr)
             except Exception as err:
                 logger.error(str(err))
+                tr.status = 'notification_failed'
+                tr.save()
+        else:
+            tr.save()
 
     @staticmethod
-    def _callback_response_handler(sess, resp):
+    def _callback_response_handler(resp, task_result):
         if resp.ok:
             logger.info("POSTed to {}".format(resp.url))
         else:
             msg = "Failed to POST to {}: {}"
             logger.warning(msg.format(resp.url, resp.reason))
+            task_result.status = 'notification_failed'
+
+        task_result.save()
+
+
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()

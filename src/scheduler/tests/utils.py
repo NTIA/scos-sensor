@@ -100,7 +100,7 @@ def create_action():
     """
     flag = threading.Event()
 
-    def cb(schedule_entry_json, task_id, sensor_definition):
+    def cb(schedule_entry_json, task_id):
         flag.set()
         return "set flag"
 
@@ -115,7 +115,7 @@ create_action.counter = 0
 
 
 def create_bad_action():
-    def bad_action(schedule_entry_json, task_id, sensor_definition):
+    def bad_action(schedule_entry_json, task_id):
         raise Exception(BAD_ACTION_STR)
 
     actions.by_name["bad_action"] = bad_action
