@@ -75,7 +75,6 @@ django==3.2.12
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
-    #   scos-usrp
 django-debug-toolbar==3.2.4
     # via -r requirements-dev.in
 django-extensions==3.1.5
@@ -103,9 +102,7 @@ docopt==0.6.2
 drf-yasg==1.20.0
     # via -r requirements.txt
 environs==9.5.0
-    # via
-    #   -r requirements.txt
-    #   scos-usrp
+    # via -r requirements.txt
 filelock==3.6.0
     # via
     #   tox
@@ -166,7 +163,6 @@ numpy==1.21.5
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
-    #   scos-usrp
 oauthlib==3.2.0
     # via
     #   -r requirements.txt
@@ -261,11 +257,11 @@ ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@y_factor_cal_complete
     # via
     #   -r requirements.txt
-    #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@0.1.0
+    #   scos-tekrsa
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@y_factor_cal_complete
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
@@ -286,6 +282,10 @@ sqlparse==0.4.2
     #   -r requirements.txt
     #   django
     #   django-debug-toolbar
+tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@main
+    # via
+    #   -r requirements.txt
+    #   scos-tekrsa
 texttable==1.6.4
     # via
     #   -r requirements.txt
