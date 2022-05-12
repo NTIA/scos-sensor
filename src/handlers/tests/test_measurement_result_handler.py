@@ -46,29 +46,29 @@ class TestMeasurementResultHandler:
         return archive_data
 
     @pytest.mark.django_db
-    def test_measurement_result_handler_data_encrypted(self, settings, user_client, test_scheduler):
+    def test_measurement_result_handler_data_encrypted(self, settings, admin_client, test_scheduler):
         settings.ENCRYPT_DATA_FILES = True
-        entry_name, task_id, measurement_data = self.simulate_acq_get_data(user_client)
+        entry_name, task_id, measurement_data = self.simulate_acq_get_data(admin_client)
         
         acq = Acquisition.objects.get(task_result__schedule_entry__name=entry_name)
         assert acq.data_encrypted == True
         database_data = np.fromfile(acq.data, dtype=np.complex64)
         assert not np.array_equal(measurement_data, database_data)
-        download_data = self.download_archive_data(user_client, entry_name, task_id)
+        download_data = self.download_archive_data(admin_client, entry_name, task_id)
         
         assert not np.array_equal(download_data, database_data)
         assert np.array_equal(measurement_data, download_data)
 
     @pytest.mark.django_db
-    def test_measurement_result_handler_data_not_encrypted(self, settings, user_client, test_scheduler):
+    def test_measurement_result_handler_data_not_encrypted(self, settings, admin_client, test_scheduler):
         settings.ENCRYPT_DATA_FILES = False
-        entry_name, task_id, measurement_data = self.simulate_acq_get_data(user_client)
+        entry_name, task_id, measurement_data = self.simulate_acq_get_data(admin_client)
 
         acq = Acquisition.objects.get(task_result__schedule_entry__name=entry_name)
         assert acq.data_encrypted == False
         database_data = np.fromfile(acq.data, dtype=np.complex64)
         assert np.array_equal(measurement_data, database_data)
-        download_data = self.download_archive_data(user_client, entry_name, task_id)
+        download_data = self.download_archive_data(admin_client, entry_name, task_id)
         
         assert np.array_equal(download_data, database_data)
         assert np.array_equal(measurement_data, download_data)

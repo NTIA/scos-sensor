@@ -47,7 +47,7 @@ def measurement_action_completed_callback(sender, **kwargs):
         acquisition.data.save(name, ContentFile(encrypted))
         acquisition.data_encrypted = True
     else:
-        acquisition.data.save(name, data)
+        acquisition.data.save(name, ContentFile(data))
         acquisition.data_encrypted = False
     acquisition.save()
     
