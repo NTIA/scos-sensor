@@ -4,11 +4,11 @@
 #
 #    pip-compile requirements.in
 #
-asgiref==3.5.0
+asgiref==3.5.1
     # via django
 attrs==21.4.0
     # via jsonschema
-bcrypt==3.2.0
+bcrypt==3.2.2
     # via paramiko
 cached-property==1.5.2
     # via docker-compose
@@ -27,7 +27,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==37.0.0
+cryptography==37.0.2
     # via paramiko
 distro==1.7.0
     # via docker-compose
@@ -69,7 +69,7 @@ inflection==0.5.1
     # via drf-yasg
 itypes==1.2.0
     # via coreapi
-jinja2==3.1.1
+jinja2==3.1.2
     # via coreschema
 jsonfield==3.1.0
     # via -r requirements.in
@@ -130,15 +130,14 @@ ruamel-yaml==0.17.21
     # via drf-yasg
 ruamel-yaml-clib==0.2.6
     # via ruamel-yaml
-scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@fix_dateutil_dependency
     # via
     #   -r requirements.in
     #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@0.1.0
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
     # via -r requirements.in
 six==1.16.0
     # via
-    #   bcrypt
     #   django-session-timeout
     #   dockerpty
     #   jsonschema
