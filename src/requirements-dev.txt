@@ -75,10 +75,6 @@ django==3.2.12
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
-django-debug-toolbar==3.2.4
-    # via -r requirements-dev.in
-django-extensions==3.1.5
-    # via -r requirements-dev.in
 django-session-timeout==0.1.0
     # via -r requirements.txt
 djangorestframework==3.13.1

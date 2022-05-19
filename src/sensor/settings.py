@@ -186,15 +186,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
-    INSTALLED_APPS.extend(
-        [
-            "debug_toolbar",
-            "django_extensions",
-        ]
-    )
 
-    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "sensor.urls"
 
