@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-asgiref==3.5.1
+asgiref==3.5.2
     # via
     #   -r requirements.txt
     #   django
@@ -26,7 +26,7 @@ cached-property==1.5.2
     #   -r requirements.txt
     #   aspy-refactor-imports
     #   docker-compose
-certifi==2021.10.8
+certifi==2022.5.18.1
     # via
     #   -r requirements.txt
     #   requests
@@ -53,7 +53,7 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.3.2
+coverage[toml]==6.3.3
     # via pytest-cov
 cryptography==37.0.2
     # via
@@ -106,13 +106,13 @@ environs==9.5.0
     # via
     #   -r requirements.txt
     #   scos-usrp
-filelock==3.6.0
+filelock==3.7.0
     # via
     #   tox
     #   virtualenv
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.0
+identify==2.5.1
     # via pre-commit
 idna==3.3
     # via
@@ -158,8 +158,6 @@ marshmallow==3.15.0
     # via
     #   -r requirements.txt
     #   environs
-memory-tempfile==2.2.3
-    # via -r requirements.txt
 mypy-extensions==0.4.3
     # via black
 nodeenv==1.6.0
@@ -180,7 +178,7 @@ packaging==21.3
     #   marshmallow
     #   pytest
     #   tox
-paramiko==2.10.4
+paramiko==2.11.0
     # via
     #   -r requirements.txt
     #   docker
@@ -206,13 +204,13 @@ pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via -r requirements.txt
 pynacl==1.5.0
     # via
     #   -r requirements.txt
     #   paramiko
-pyparsing==3.0.8
+pyparsing==3.0.9
     # via
     #   -r requirements.txt
     #   packaging
@@ -328,6 +326,8 @@ websocket-client==0.59.0
     #   -r requirements.txt
     #   docker
     #   docker-compose
+wheel==0.37.1
+    # via -r requirements.txt
 zipp==3.8.0
     # via
     #   -r requirements.txt

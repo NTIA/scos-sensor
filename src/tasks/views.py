@@ -1,9 +1,8 @@
 import logging
 import os
-from memory_tempfile import MemoryTempfile
 
-tempfile = MemoryTempfile() # create temp file in RAM rather than disk
 from functools import partial
+import tempfile
 
 import sigmf.archive
 import sigmf.sigmffile
@@ -151,7 +150,7 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
         fname = settings.FQDN + "_" + schedule_entry_name + ".sigmf"
 
         # FileResponse handles closing the file
-        tmparchive = tempfile.TemporaryFile()
+        tmparchive = tempfile.TemporaryFile(dir=settings.SCOS_TMP)
         build_sigmf_archive(tmparchive, schedule_entry_name, acquisitions)
         content_type = "application/x-tar"
         response = FileResponse(
@@ -191,7 +190,7 @@ class TaskResultInstanceViewSet(
             raise Http404
 
         # FileResponse handles closing the file
-        tmparchive = tempfile.TemporaryFile()
+        tmparchive = tempfile.TemporaryFile(dir=settings.SCOS_TMP)
         build_sigmf_archive(tmparchive, schedule_entry_name, acquisitions)
         content_type = "application/x-tar"
         response = FileResponse(
@@ -215,8 +214,10 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
 
     for acq in acquisitions:
         tmp_file_path = ""
-        with tempfile.NamedTemporaryFile(delete=True) as tmpdata:
+        with tempfile.NamedTemporaryFile(dir=settings.SCOS_TMP, delete=True) as tmpdata:
             if acq.data_encrypted:
+                if not ENCRYPTION_KEY:
+                    raise Exception("No value set for ENCRYPTION_KEY!")
                 fernet = Fernet(ENCRYPTION_KEY)
                 raw_data = acq.data.read()
                 data = fernet.decrypt(raw_data)

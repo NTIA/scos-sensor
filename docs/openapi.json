@@ -703,7 +703,7 @@
         },
         "/v1/tasks/completed/{schedule_entry_name}/{task_id}/archive": {
             "get": {
-                "operationId": "v1_tasks_completed_archive",
+                "operationId": "v1_tasks_completed_archive_read",
                 "description": "Downloads the acquisition's SigMF archive.",
                 "parameters": [],
                 "responses": {
@@ -736,7 +736,7 @@
         },
         "/v1/tasks/completed/{schedule_entry_name}/{task_id}/archive{format}": {
             "get": {
-                "operationId": "v1_tasks_archive",
+                "operationId": "v1_tasks_completed_read",
                 "description": "Downloads the acquisition's SigMF archive.",
                 "parameters": [],
                 "responses": {

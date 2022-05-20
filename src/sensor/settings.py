@@ -89,22 +89,30 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 # IP when the first request comes in.
 INTERNAL_IPS = ["127.0.0.1"]
 
+ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
+
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
     DEBUG = True
     ALLOWED_HOSTS = []
+    ENCRYPTION_KEY = 'TLdADba-Aq8vEe_hh6l19MspniioP2-8alQF5ZycCQs='
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
     DEBUG = env.bool("DEBUG", default=False)
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
+    ENCRYPTION_KEY = env.str("ENCRYPTION_KEY")
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
-ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
-ENCRYPTION_KEY = Fernet.generate_key()
+if IN_DOCKER:
+    SCOS_TMP = env.str("SCOS_TMP", default="/scos_tmp")
+else:
+    SCOS_TMP = None
+
+
 
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds
