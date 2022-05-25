@@ -21,11 +21,6 @@ bcrypt==3.2.0
     #   paramiko
 black==22.3.0
     # via -r requirements-dev.in
-cached-property==1.5.2
-    # via
-    #   -r requirements.txt
-    #   aspy-refactor-imports
-    #   docker-compose
 certifi==2021.10.8
     # via
     #   -r requirements.txt
@@ -118,16 +113,6 @@ idna==3.3
     # via
     #   -r requirements.txt
     #   requests
-importlib-metadata==4.11.3
-    # via
-    #   -r requirements.txt
-    #   click
-    #   jsonschema
-    #   pluggy
-    #   pre-commit
-    #   pytest
-    #   tox
-    #   virtualenv
 inflection==0.5.1
     # via
     #   -r requirements.txt
@@ -204,7 +189,7 @@ pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via -r requirements.txt
 pynacl==1.5.0
     # via
@@ -301,14 +286,6 @@ tomli==2.0.1
     #   pytest
 tox==3.24.5
     # via -r requirements-dev.in
-typed-ast==1.5.2
-    # via black
-typing-extensions==4.1.1
-    # via
-    #   -r requirements.txt
-    #   asgiref
-    #   black
-    #   importlib-metadata
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
@@ -327,10 +304,6 @@ websocket-client==0.59.0
     #   -r requirements.txt
     #   docker
     #   docker-compose
-zipp==3.8.0
-    # via
-    #   -r requirements.txt
-    #   importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
