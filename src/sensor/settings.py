@@ -96,7 +96,7 @@ if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
     DEBUG = True
     ALLOWED_HOSTS = []
-    ENCRYPTION_KEY = 'TLdADba-Aq8vEe_hh6l19MspniioP2-8alQF5ZycCQs='
+    ENCRYPTION_KEY = Fernet.generate_key()
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")

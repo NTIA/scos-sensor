@@ -53,7 +53,7 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.3.3
+coverage[toml]==6.4.1
     # via pytest-cov
 cryptography==37.0.2
     # via
@@ -106,7 +106,7 @@ environs==9.5.0
     # via
     #   -r requirements.txt
     #   scos-usrp
-filelock==3.7.0
+filelock==3.7.1
     # via
     #   tox
     #   virtualenv
@@ -118,7 +118,7 @@ idna==3.3
     # via
     #   -r requirements.txt
     #   requests
-importlib-metadata==4.11.3
+importlib-metadata==4.11.4
     # via
     #   -r requirements.txt
     #   click
@@ -154,7 +154,7 @@ markupsafe==2.1.1
     # via
     #   -r requirements.txt
     #   jinja2
-marshmallow==3.15.0
+marshmallow==3.16.0
     # via
     #   -r requirements.txt
     #   environs
@@ -300,7 +300,7 @@ tomli==2.0.1
     #   pytest
 tox==3.25.0
     # via -r requirements-dev.in
-typed-ast==1.5.3
+typed-ast==1.5.4
     # via black
 typing-extensions==4.2.0
     # via
