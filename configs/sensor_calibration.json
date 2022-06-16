@@ -1,0 +1,1997 @@
+{
+    "calibration_datetime": "2019-09-20T02:03:38.967055Z",
+    "calibration_data": {
+        "sample_rates": [
+            {
+                "calibration_data": {
+                    "frequencies": [
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 63.41318984193854,
+                                            "gain_sensor": -11.4609954908858,
+                                            "noise_figure_preselector": 53.84375778724545,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -53.52288239232973,
+                                            "1db_compression_sensor": 22.88826982982973
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 43.936313078858596,
+                                            "gain_sensor": 24.21453104658883,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -37.668526285791565,
+                                            "1db_compression_sensor": -12.01558627670844
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 650000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 55.60600295988542,
+                                            "gain_sensor": -3.2419118232375297,
+                                            "noise_figure_preselector": 43.896824420057754,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -45.45918238856349,
+                                            "1db_compression_sensor": 14.815411445163491
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 32.2556068936354,
+                                            "gain_sensor": 36.7974615682031,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -25.297182873727742,
+                                            "1db_compression_sensor": -24.395188069672265
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 660000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 62.13136963661786,
+                                            "gain_sensor": -10.243856291137682,
+                                            "noise_figure_preselector": 50.134820134145635,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -52.42376151808989,
+                                            "1db_compression_sensor": 21.770832193789886
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 41.16137774510788,
+                                            "gain_sensor": 26.85647212536859,
+                                            "noise_figure_preselector": 29.26633587609605,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -35.15173909017145,
+                                            "1db_compression_sensor": -14.54889023412855
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 670000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 54.65809352003993,
+                                            "gain_sensor": -2.5396624540789503,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -44.71340619028524,
+                                            "1db_compression_sensor": 14.051318485085243
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 30.424748066654033,
+                                            "gain_sensor": 37.98341976128384,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -24.02902989408556,
+                                            "1db_compression_sensor": -25.679857811114438
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 680000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 48.487776762705096,
+                                            "gain_sensor": 3.588699580618382,
+                                            "noise_figure_preselector": 37.98051311806256,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -38.49833619371652,
+                                            "1db_compression_sensor": 7.827090107616524
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 36.81994153372932,
+                                            "gain_sensor": 31.489208643269137,
+                                            "noise_figure_preselector": 19.273595066016366,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -30.402822229663556,
+                                            "1db_compression_sensor": -19.314323856436438
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 690000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 16.65510221579288,
+                                            "gain_sensor": 37.87321022363967,
+                                            "noise_figure_preselector": 5.504085300792432,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.288414660130897,
+                                            "1db_compression_sensor": -26.39198980686911
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 14.955561968825492,
+                                            "gain_sensor": 57.73066849030627,
+                                            "noise_figure_preselector": 0.751947637231813,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.392361498856886,
+                                            "1db_compression_sensor": -45.33304296814311
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 700000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 14.650424323580921,
+                                            "gain_sensor": 38.286429982262234,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.924382900331466,
+                                            "1db_compression_sensor": -26.66670789966853
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 11.656843711283472,
+                                            "gain_sensor": 58.16795842413686,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.84301195157213,
+                                            "1db_compression_sensor": -45.89667884842786
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 710000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 17.868691767780277,
+                                            "gain_sensor": 38.26760950979334,
+                                            "noise_figure_preselector": 11.84747325907587,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.850539917527769,
+                                            "1db_compression_sensor": -26.65123721547223
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 16.802228993016968,
+                                            "gain_sensor": 58.138006358629085,
+                                            "noise_figure_preselector": 11.641246367449627,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.873217868653626,
+                                            "1db_compression_sensor": -45.880759264346366
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 720000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 14.003796981414723,
+                                            "gain_sensor": 38.60610908990602,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.613638667795179,
+                                            "1db_compression_sensor": -26.79882479820482
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 11.099155745183495,
+                                            "gain_sensor": 58.51413734041175,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.5421638732903844,
+                                            "1db_compression_sensor": -46.22609959270961
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 730000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 16.26759196612838,
+                                            "gain_sensor": 38.54648817820651,
+                                            "noise_figure_preselector": 4.031488844131793,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.562165664958549,
+                                            "1db_compression_sensor": -26.76098413404145
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 14.737431804231207,
+                                            "gain_sensor": 58.47058342346831,
+                                            "noise_figure_preselector": 4.460247694246128,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.557012916479259,
+                                            "1db_compression_sensor": -46.225536882520736
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 740000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 13.628508417180683,
+                                            "gain_sensor": 38.64098525523293,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6340649316599354,
+                                            "1db_compression_sensor": -26.599771200340065
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 10.17879054031593,
+                                            "gain_sensor": 58.54656374550917,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.622585913588246,
+                                            "1db_compression_sensor": -46.17425021841175
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 750000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 15.10447270740697,
+                                            "gain_sensor": 38.40533445897441,
+                                            "noise_figure_preselector": 2.611233302248348,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.7368827799721345,
+                                            "1db_compression_sensor": -26.40763968502787
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 12.833504459885248,
+                                            "gain_sensor": 58.156059384765655,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.834980318859593,
+                                            "1db_compression_sensor": -45.976142146140404
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 760000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 13.532699369255454,
+                                            "gain_sensor": 38.46738255585788,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.804867690985354,
+                                            "1db_compression_sensor": -26.25034110701465
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 10.049845581562352,
+                                            "gain_sensor": 58.38443616139549,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8541100333056164,
+                                            "1db_compression_sensor": -45.971298764694374
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 770000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 14.864129491745757,
+                                            "gain_sensor": 38.49236979673021,
+                                            "noise_figure_preselector": 6.851088742189164,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6832023898938573,
+                                            "1db_compression_sensor": -26.282692741106132
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 12.541677288693393,
+                                            "gain_sensor": 58.42674539715172,
+                                            "noise_figure_preselector": 6.62063998330391,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6642793982474586,
+                                            "1db_compression_sensor": -46.17541573275253
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 780000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 13.93134401530638,
+                                            "gain_sensor": 38.264994177686376,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.928078313206555,
+                                            "1db_compression_sensor": -25.948503150793442
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 10.601883714680454,
+                                            "gain_sensor": 58.24757646150437,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.7858521033328785,
+                                            "1db_compression_sensor": -46.06812936066712
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 790000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 15.320759016275943,
+                                            "gain_sensor": 38.290025440419335,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8880752157407628,
+                                            "1db_compression_sensor": -25.899192581259236
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 13.11497852228743,
+                                            "gain_sensor": 58.25572326724243,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9212266464455467,
+                                            "1db_compression_sensor": -45.94704115055445
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 800000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 14.393487262165323,
+                                            "gain_sensor": 37.771344667377825,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.4737912396019865,
+                                            "1db_compression_sensor": -25.325522581298014
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 11.059657236004554,
+                                            "gain_sensor": 57.619147742387874,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.551587010821933,
+                                            "1db_compression_sensor": -45.32702681007807
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 810000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 28.070552033896263,
+                                            "gain_sensor": 25.27682423720705,
+                                            "noise_figure_preselector": 22.105607969985787,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.859427593669388,
+                                            "1db_compression_sensor": -12.951932251130607
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 25.487085159839168,
+                                            "gain_sensor": 45.58614303791775,
+                                            "noise_figure_preselector": 22.012433773802975,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.427725334179428,
+                                            "1db_compression_sensor": -33.46123451062057
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 820000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 57.105726226149066,
+                                            "gain_sensor": -5.151582968984279,
+                                            "noise_figure_preselector": 44.58010009559673,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -47.339507310838556,
+                                            "1db_compression_sensor": 17.51610144213856
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 33.92895738262315,
+                                            "gain_sensor": 34.06296771497823,
+                                            "noise_figure_preselector": 20.336285048969238,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -28.02095241266636,
+                                            "1db_compression_sensor": -21.87835345603363
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 830000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 52.465347256268394,
+                                            "gain_sensor": -0.2709611582237841,
+                                            "noise_figure_preselector": 44.23570053566581,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -42.38313811173865,
+                                            "1db_compression_sensor": 12.547686219138654
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 29.279390250843733,
+                                            "gain_sensor": 39.216425385646666,
+                                            "noise_figure_preselector": 24.009643714625636,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -22.71951507455536,
+                                            "1db_compression_sensor": -27.190136818044635
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 840000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 56.33492457758529,
+                                            "gain_sensor": -4.384736878814131,
+                                            "noise_figure_preselector": 48.94822504348806,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -46.504098656265434,
+                                            "1db_compression_sensor": 16.65660073976543
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 8647759.416132875,
+                                            "noise_figure_sensor": 34.02154298331368,
+                                            "gain_sensor": 33.87732939680607,
+                                            "noise_figure_preselector": 27.495033182957755,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -28.153034382488542,
+                                            "1db_compression_sensor": -21.766963534011452
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 850000000.0
+                        }
+                    ]
+                },
+                "sample_rate": 10000000.0
+            },
+            {
+                "calibration_data": {
+                    "frequencies": [
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 62.74144898998765,
+                                            "gain_sensor": -10.673238889128093,
+                                            "noise_figure_preselector": 54.3608132296346,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -52.76164940142695,
+                                            "1db_compression_sensor": 22.88826982982973
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 43.46341072929226,
+                                            "gain_sensor": 24.607739475146914,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -37.32810238667156,
+                                            "1db_compression_sensor": -12.01558627670844
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 650000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 55.388770977528765,
+                                            "gain_sensor": -3.164039249124528,
+                                            "noise_figure_preselector": 42.465522818637275,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -45.41381192475457,
+                                            "1db_compression_sensor": 14.815411445163491
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 31.862565841489413,
+                                            "gain_sensor": 36.809934375339544,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -25.335877791172386,
+                                            "1db_compression_sensor": -24.395188069672265
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 660000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 60.87176895624672,
+                                            "gain_sensor": -8.97799126548945,
+                                            "noise_figure_preselector": 46.930313055515626,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -51.180088089879916,
+                                            "1db_compression_sensor": 21.770832193789886
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 40.81142356606361,
+                                            "gain_sensor": 27.015287138158854,
+                                            "noise_figure_preselector": 28.345249387888586,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -35.04506077555979,
+                                            "1db_compression_sensor": -14.54889023412855
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 670000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 53.944619942466694,
+                                            "gain_sensor": -1.9209825606928703,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -44.126643959955956,
+                                            "1db_compression_sensor": 14.051318485085243
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 30.798634197314243,
+                                            "gain_sensor": 37.205705768903755,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -24.902200623257656,
+                                            "1db_compression_sensor": -25.679857811114438
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 680000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 48.49679479743792,
+                                            "gain_sensor": 3.5584746863595313,
+                                            "noise_figure_preselector": 37.395482584779614,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -38.55002891925317,
+                                            "1db_compression_sensor": 7.827090107616524
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 36.41710497807891,
+                                            "gain_sensor": 31.65655418681264,
+                                            "noise_figure_preselector": 20.834955732506494,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -30.26324685859987,
+                                            "1db_compression_sensor": -19.314323856436438
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 690000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 16.17007297768646,
+                                            "gain_sensor": 37.88486619017837,
+                                            "noise_figure_preselector": 5.797635271258513,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.303667091520197,
+                                            "1db_compression_sensor": -26.39198980686911
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 14.014338118582629,
+                                            "gain_sensor": 57.728299512725954,
+                                            "noise_figure_preselector": 1.6240464890661328,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.338783825913147,
+                                            "1db_compression_sensor": -45.33304296814311
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 700000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 14.513912661912286,
+                                            "gain_sensor": 38.3011297695405,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9346342638400387,
+                                            "1db_compression_sensor": -26.66670789966853
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 11.422966698271736,
+                                            "gain_sensor": 58.11002333310625,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9614108363843172,
+                                            "1db_compression_sensor": -45.89667884842786
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 710000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 16.902932474635918,
+                                            "gain_sensor": 38.284827041049454,
+                                            "noise_figure_preselector": 9.10211226425229,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8698983443294424,
+                                            "1db_compression_sensor": -26.65123721547223
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 15.532921947872978,
+                                            "gain_sensor": 58.0903005158943,
+                                            "noise_figure_preselector": 9.25737256522131,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9470150087740947,
+                                            "1db_compression_sensor": -45.880759264346366
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 720000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 13.731208968827701,
+                                            "gain_sensor": 38.625223024725756,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6210392170246593,
+                                            "1db_compression_sensor": -26.79882479820482
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 10.568975123607856,
+                                            "gain_sensor": 58.528617478827776,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.5702767632190344,
+                                            "1db_compression_sensor": -46.22609959270961
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 730000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 15.577035484445958,
+                                            "gain_sensor": 38.520848305009466,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.619142737581406,
+                                            "1db_compression_sensor": -26.76098413404145
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 13.696540937513078,
+                                            "gain_sensor": 58.486705213925376,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.58626477859454,
+                                            "1db_compression_sensor": -46.225536882520736
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 740000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 13.415753150860468,
+                                            "gain_sensor": 38.685639774989355,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.580789693576577,
+                                            "1db_compression_sensor": -26.599771200340065
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 9.788811508741645,
+                                            "gain_sensor": 58.58227616274629,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6025677696619027,
+                                            "1db_compression_sensor": -46.17425021841175
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 750000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 14.38838920547991,
+                                            "gain_sensor": 38.371615880674874,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.835098638961618,
+                                            "1db_compression_sensor": -26.40763968502787
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 11.831979563515716,
+                                            "gain_sensor": 58.21444301633029,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9123886497774905,
+                                            "1db_compression_sensor": -45.976142146140404
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 760000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 13.509557823970368,
+                                            "gain_sensor": 38.48156827279616,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8311761879992474,
+                                            "1db_compression_sensor": -26.25034110701465
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 9.697826498959387,
+                                            "gain_sensor": 58.38776498356712,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8999603128680747,
+                                            "1db_compression_sensor": -45.971298764694374
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 770000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 14.390621838011214,
+                                            "gain_sensor": 38.50906518341812,
+                                            "noise_figure_preselector": 0.20541482074170447,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.7058384931145696,
+                                            "1db_compression_sensor": -26.282692741106132
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 11.67334746134378,
+                                            "gain_sensor": 58.470758454349806,
+                                            "noise_figure_preselector": 2.583352835513461,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6369972206779124,
+                                            "1db_compression_sensor": -46.17541573275253
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 780000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 13.811057164410272,
+                                            "gain_sensor": 38.278941800119505,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9441279446551007,
+                                            "1db_compression_sensor": -25.948503150793442
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 10.10385419185475,
+                                            "gain_sensor": 58.26807747713848,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.828052905504599,
+                                            "1db_compression_sensor": -46.06812936066712
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 790000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 14.805798600469643,
+                                            "gain_sensor": 38.30234275095736,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.904757497666644,
+                                            "1db_compression_sensor": -25.899192581259236
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 12.154238266966132,
+                                            "gain_sensor": 58.23076456569456,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9111275685627476,
+                                            "1db_compression_sensor": -45.94704115055445
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 800000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 14.244825400781764,
+                                            "gain_sensor": 37.78470072277385,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.4865083147602505,
+                                            "1db_compression_sensor": -25.325522581298014
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 10.625111198286646,
+                                            "gain_sensor": 57.63784576477489,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.554966047727987,
+                                            "1db_compression_sensor": -45.32702681007807
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 810000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 27.58236560339853,
+                                            "gain_sensor": 25.27800165632984,
+                                            "noise_figure_preselector": 19.331401092916746,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.892575735945194,
+                                            "1db_compression_sensor": -12.951932251130607
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 24.506400022743662,
+                                            "gain_sensor": 45.64206648800242,
+                                            "noise_figure_preselector": 19.72975592616794,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.436362435343575,
+                                            "1db_compression_sensor": -33.46123451062057
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 820000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 55.89908706401127,
+                                            "gain_sensor": -4.014143528033401,
+                                            "noise_figure_preselector": 39.53054185441819,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -46.24066496938278,
+                                            "1db_compression_sensor": 17.51610144213856
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 32.96928541674326,
+                                            "gain_sensor": 34.8542732099195,
+                                            "noise_figure_preselector": 17.136754848314933,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -27.25396357056521,
+                                            "1db_compression_sensor": -21.87835345603363
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 830000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 52.50387007012418,
+                                            "gain_sensor": -0.5021593860606686,
+                                            "noise_figure_preselector": 42.03163914925448,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -42.6597020511214,
+                                            "1db_compression_sensor": 12.547686219138654
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 28.88139347432977,
+                                            "gain_sensor": 39.12004163850504,
+                                            "noise_figure_preselector": 21.932106469380194,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -22.905649210683038,
+                                            "1db_compression_sensor": -27.190136818044635
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 840000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 57.567538032358264,
+                                            "gain_sensor": -5.7069012094032345,
+                                            "noise_figure_preselector": 50.127532197890396,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -47.861721239044876,
+                                            "1db_compression_sensor": 16.65660073976543
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 13514344.20534668,
+                                            "noise_figure_sensor": 33.049793813022475,
+                                            "gain_sensor": 34.60279418303305,
+                                            "noise_figure_preselector": 27.387869395344403,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -27.487338773497676,
+                                            "1db_compression_sensor": -21.766963534011452
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 850000000.0
+                        }
+                    ]
+                },
+                "sample_rate": 15360000.0
+            },
+            {
+                "calibration_data": {
+                    "frequencies": [
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 54.45182304691716,
+                                            "gain_sensor": -2.445336463270827,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -44.53416735915112,
+                                            "1db_compression_sensor": 22.88826982982973
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 28.64552449866592,
+                                            "gain_sensor": 39.5598726400342,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -22.400370332693498,
+                                            "1db_compression_sensor": -12.01558627670844
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 650000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 54.386562373525805,
+                                            "gain_sensor": -2.2767239275228732,
+                                            "noise_figure_preselector": 33.92707793092997,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -44.52900806211428,
+                                            "1db_compression_sensor": 14.815411445163491
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 31.52056029295133,
+                                            "gain_sensor": 36.548099176267215,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -25.583766935179234,
+                                            "1db_compression_sensor": -24.395188069672265
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 660000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 53.89557968026195,
+                                            "gain_sensor": -1.7788627060704982,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -43.98734751019682,
+                                            "1db_compression_sensor": 21.770832193789886
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 30.36054367281703,
+                                            "gain_sensor": 37.4544210141881,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -24.514164772992963,
+                                            "1db_compression_sensor": -14.54889023412855
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 670000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 51.16922358441347,
+                                            "gain_sensor": 1.10989772054657,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -41.098342644764266,
+                                            "1db_compression_sensor": 14.051318485085243
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 26.94505359288401,
+                                            "gain_sensor": 40.87289139892731,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -21.15714303596433,
+                                            "1db_compression_sensor": -25.679857811114438
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 680000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 44.982462353702545,
+                                            "gain_sensor": 7.982493383622099,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -34.13601669392405,
+                                            "1db_compression_sensor": 7.827090107616524
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 21.743715921960344,
+                                            "gain_sensor": 47.819760284550895,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -14.136660396518323,
+                                            "1db_compression_sensor": -19.314323856436438
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 690000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 15.546148187048288,
+                                            "gain_sensor": 37.86355366326215,
+                                            "noise_figure_preselector": 2.647254972883367,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.3335369882384285,
+                                            "1db_compression_sensor": -26.39198980686911
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 12.618493071265732,
+                                            "gain_sensor": 57.698346348488684,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.35810109333157,
+                                            "1db_compression_sensor": -45.33304296814311
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 700000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 16.143758608447257,
+                                            "gain_sensor": 38.282584808225366,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9577674186817475,
+                                            "1db_compression_sensor": -26.66670789966853
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.189762240066017,
+                                            "gain_sensor": 58.03153650652939,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.064571703504761,
+                                            "1db_compression_sensor": -45.89667884842786
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 710000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 15.488037712338851,
+                                            "gain_sensor": 38.25735271591432,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8975273473598975,
+                                            "1db_compression_sensor": -26.65123721547223
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 13.541377671499049,
+                                            "gain_sensor": 58.07476828730239,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9224635961879954,
+                                            "1db_compression_sensor": -45.880759264346366
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 720000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 15.705243011052247,
+                                            "gain_sensor": 38.56224228416204,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6882926840512553,
+                                            "1db_compression_sensor": -26.79882479820482
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 13.704064792237688,
+                                            "gain_sensor": 58.56866907055373,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.5453107166522386,
+                                            "1db_compression_sensor": -46.22609959270961
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 730000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.616494774454452,
+                                            "gain_sensor": 38.53649911757272,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6089829832953555,
+                                            "1db_compression_sensor": -26.76098413404145
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 12.090575128342039,
+                                            "gain_sensor": 58.40351435174195,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6835771756560405,
+                                            "1db_compression_sensor": -46.225536882520736
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 740000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.721851931323386,
+                                            "gain_sensor": 38.670040360439366,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.5998876696311797,
+                                            "1db_compression_sensor": -26.599771200340065
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 12.101320046737342,
+                                            "gain_sensor": 58.514809938857056,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.6808714591783556,
+                                            "1db_compression_sensor": -46.17425021841175
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 750000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.568689882412144,
+                                            "gain_sensor": 38.36242126437405,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8106111154279105,
+                                            "1db_compression_sensor": -26.40763968502787
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 11.316164464599524,
+                                            "gain_sensor": 58.14296861777935,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.89938730331302,
+                                            "1db_compression_sensor": -45.976142146140404
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 760000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.396406452085287,
+                                            "gain_sensor": 38.4595054579638,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8531373962061295,
+                                            "1db_compression_sensor": -26.25034110701465
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 11.152573956801291,
+                                            "gain_sensor": 58.392959136943084,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8506786019948933,
+                                            "1db_compression_sensor": -45.971298764694374
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 770000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.231964421631602,
+                                            "gain_sensor": 38.48504990822962,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.726717119223032,
+                                            "1db_compression_sensor": -26.282692741106132
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 10.836299472199201,
+                                            "gain_sensor": 58.41315830226909,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.698293857269441,
+                                            "1db_compression_sensor": -46.17541573275253
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 780000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.670480179163718,
+                                            "gain_sensor": 38.25929161722755,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.962616634967695,
+                                            "1db_compression_sensor": -25.948503150793442
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 11.558161718664962,
+                                            "gain_sensor": 58.24980510652376,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.8838180379307587,
+                                            "1db_compression_sensor": -46.06812936066712
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 790000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 14.488489761389417,
+                                            "gain_sensor": 38.277154402229336,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.9342609775574218,
+                                            "1db_compression_sensor": -25.899192581259236
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 11.22203843626761,
+                                            "gain_sensor": 58.212145305094474,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -3.902104424508842,
+                                            "1db_compression_sensor": -45.94704115055445
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 800000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 15.088014846717215,
+                                            "gain_sensor": 37.752764232333554,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.5189391482493235,
+                                            "1db_compression_sensor": -25.325522581298014
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 12.082703928123408,
+                                            "gain_sensor": 57.664751776038976,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -4.515947617584295,
+                                            "1db_compression_sensor": -45.32702681007807
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 810000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 27.23272697679667,
+                                            "gain_sensor": 25.24889318378453,
+                                            "noise_figure_preselector": 0.0,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.92023513872099,
+                                            "1db_compression_sensor": -12.951932251130607
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 23.394504557800502,
+                                            "gain_sensor": 45.55030718825381,
+                                            "noise_figure_preselector": 12.649186843528032,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.4862281681133,
+                                            "1db_compression_sensor": -33.46123451062057
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 820000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 46.88047539464448,
+                                            "gain_sensor": 5.5950801075962175,
+                                            "noise_figure_preselector": 36.5030866131687,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -36.62702481182482,
+                                            "1db_compression_sensor": 17.51610144213856
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 22.891234277255563,
+                                            "gain_sensor": 45.81724091164871,
+                                            "noise_figure_preselector": 16.993633957694115,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -16.268010951450044,
+                                            "1db_compression_sensor": -21.87835345603363
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 830000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 51.70756004611348,
+                                            "gain_sensor": 0.3506953178294694,
+                                            "noise_figure_preselector": 10.183129459818938,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -41.79599860466154,
+                                            "1db_compression_sensor": 12.547686219138654
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 28.726154524031955,
+                                            "gain_sensor": 39.15601744502092,
+                                            "noise_figure_preselector": 20.952495458902906,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -22.840717640588267,
+                                            "1db_compression_sensor": -27.190136818044635
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 840000000.0
+                        },
+                        {
+                            "calibration_data": {
+                                "gains": [
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 53.10072535270308,
+                                            "gain_sensor": -0.7955440982391195,
+                                            "noise_figure_preselector": 45.7943110905218,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -42.94614067978631,
+                                            "1db_compression_sensor": 16.65660073976543
+                                        },
+                                        "gain": 40.0
+                                    },
+                                    {
+                                        "calibration_data": {
+                                            "enbw_sensor": 35507044.81753448,
+                                            "noise_figure_sensor": 30.021560857094386,
+                                            "gain_sensor": 38.69688926799172,
+                                            "noise_figure_preselector": 26.232226802556667,
+                                            "1db_compression_preselector": 100.0,
+                                            "gain_preselector": -23.355658831098886,
+                                            "1db_compression_sensor": -21.766963534011452
+                                        },
+                                        "gain": 60.0
+                                    }
+                                ]
+                            },
+                            "frequency": 850000000.0
+                        }
+                    ]
+                },
+                "sample_rate": 40000000.0
+            }
+        ]
+    },
+    "calibration_frequency_divisions": [],
+    "clock_rate_lookup_by_sample_rate": [
+        {
+            "sample_rate": 10000000.0,
+            "clock_frequency": 40000000.0
+        },
+        {
+            "sample_rate": 15360000.0,
+            "clock_frequency": 30720000.0
+        },
+        {
+            "sample_rate": 40000000.0,
+            "clock_frequency": 40000000.0
+        }
+    ],
+    "sensor_uid": "DEFAULT"
+}
