@@ -69,8 +69,6 @@ distro==1.7.0
 django==3.2.12
     # via
     #   -r requirements.txt
-    #   django-debug-toolbar
-    #   django-extensions
     #   django-session-timeout
     #   djangorestframework
     #   drf-yasg
@@ -277,8 +275,7 @@ sqlparse==0.4.2
     # via
     #   -r requirements.txt
     #   django
-    #   django-debug-toolbar
-tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@main
+tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.0.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
