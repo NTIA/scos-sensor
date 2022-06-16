@@ -1,5 +1,5 @@
 {
-	"calibration_params": [
+	"calibration_parameters": [
 		"sample_rate",
 		"frequency",
 		"gain"
