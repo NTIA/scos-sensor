@@ -4,21 +4,21 @@ import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
-import actions
-from scos_actions.capabilities import capabilities
+from capabilities import capabilities
+from capabilities import actions
+from actions import get_summary
 
 logger = logging.getLogger(__name__)
 
 
 def get_actions(include_admin_actions=False):
     serialized_actions = []
-    for action in actions.by_name:
+    for action in actions:
         serialized_actions.append(
             {
                 "name": action,
-                "summary": actions.get_summary(actions.by_name[action]),
-                "description": actions.by_name[action].description,
+                "summary": get_summary(actions[action]),
+                "description": actions[action].description,
             }
         )
 
