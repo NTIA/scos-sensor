@@ -5,7 +5,6 @@ import pkgutil
 from sensor import settings
 from sensor.utils import copy_driver_files
 
-from . import logger as logger_action
 
 logger = logging.getLogger(__name__)
 
