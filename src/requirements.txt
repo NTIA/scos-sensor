@@ -10,8 +10,6 @@ attrs==21.4.0
     # via jsonschema
 bcrypt==3.2.0
     # via paramiko
-cached-property==1.5.2
-    # via docker-compose
 certifi==2021.10.8
     # via requests
 cffi==1.15.0
@@ -63,8 +61,6 @@ gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.11.3
-    # via jsonschema
 inflection==0.5.1
     # via drf-yasg
 itypes==1.2.0
@@ -79,7 +75,7 @@ markupsafe==2.1.1
     # via jinja2
 marshmallow==3.15.0
     # via environs
-numpy==1.21.5
+numpy==1.22.0
     # via scos-usrp
 oauthlib==3.2.0
     # via
@@ -147,10 +143,6 @@ sqlparse==0.4.2
     # via django
 texttable==1.6.4
     # via docker-compose
-typing-extensions==4.1.1
-    # via
-    #   asgiref
-    #   importlib-metadata
 uritemplate==4.1.1
     # via
     #   coreapi
@@ -161,8 +153,6 @@ websocket-client==0.59.0
     # via
     #   docker
     #   docker-compose
-zipp==3.8.0
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
