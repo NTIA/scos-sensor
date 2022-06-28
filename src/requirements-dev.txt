@@ -275,7 +275,7 @@ sqlparse==0.4.2
     # via
     #   -r requirements.txt
     #   django
-tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.0.0
+tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.1.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
