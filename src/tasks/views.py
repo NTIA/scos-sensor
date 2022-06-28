@@ -231,7 +231,6 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
             if multirecording:
                 name += "-" + str(acq.recording_id)
             sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.metadata, name=name)
-            logger.debug("Unencrypted Acq data stored in " + tmpdata.name)
             tmp_file_path = tmpdata.name
             sigmf_file.set_data_file(tmpdata.name)
 
