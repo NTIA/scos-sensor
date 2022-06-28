@@ -62,8 +62,8 @@ services:
       - '8000'
     volumes:
       - ${REPO_ROOT}/drivers:/drivers:ro
-      - type: tmpfs
-        target: /scos_tmp
+    tmpfs:
+      - /scos_tmp
     cap_add:
       - SYS_PTRACE
     devices:
