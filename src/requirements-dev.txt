@@ -10,6 +10,8 @@ asgiref==3.5.0
     #   django
 aspy-refactor-imports==3.0.1
     # via seed-isort-config
+atomicwrites==1.4.1
+    # via pytest
 attrs==21.4.0
     # via
     #   -r requirements.txt
@@ -44,6 +46,13 @@ charset-normalizer==2.0.12
     #   requests
 click==8.1.2
     # via black
+colorama==0.4.5
+    # via
+    #   -r requirements.txt
+    #   click
+    #   docker-compose
+    #   pytest
+    #   tox
 coreapi==2.3.3
     # via
     #   -r requirements.txt
@@ -226,6 +235,10 @@ pytz==2022.1
     #   -r requirements.txt
     #   django
     #   djangorestframework
+pywin32==227
+    # via
+    #   -r requirements.txt
+    #   docker
 pyyaml==5.4.1
     # via
     #   -r requirements.txt
@@ -251,11 +264,11 @@ ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scos_actions @ git+https://github.com/NTIA/scos-actions@y_factor_cal_complete
+scos-actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@y_factor_cal_complete
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@y_factor_cal_complete
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
@@ -275,7 +288,7 @@ sqlparse==0.4.2
     # via
     #   -r requirements.txt
     #   django
-tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.1.0
+tekrsa-api-wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.1.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
