@@ -45,7 +45,12 @@ def measurement_action_completed_callback(sender, **kwargs):
         if not ENCRYPTION_KEY:
             raise Exception("No value set for ENCRYPTION_KEY!")
         fernet = Fernet(ENCRYPTION_KEY)
-        encrypted = fernet.encrypt(bytes(data))
+        _data = bytes(data)
+        del data
+        del kwargs["data"]
+        assert "data" not in kwargs
+        encrypted = fernet.encrypt(_data)
+        del _data
         acquisition.data.save(name, ContentFile(encrypted))
         acquisition.data_encrypted = True
     else:
