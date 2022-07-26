@@ -111,8 +111,6 @@ pyparsing==3.0.7
     # via packaging
 pyrsistent==0.18.1
     # via jsonschema
-python-dateutil==2.8.2
-    # via scos-actions
 python-dotenv==0.20.0
     # via
     #   docker-compose
@@ -158,7 +156,6 @@ six==1.16.0
     #   dockerpty
     #   jsonschema
     #   paramiko
-    #   python-dateutil
     #   requests-mock
     #   sigmf
     #   websocket-client
