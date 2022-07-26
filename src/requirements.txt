@@ -21,8 +21,6 @@ cffi==1.15.0
     #   pynacl
 charset-normalizer==2.0.12
     # via requests
-colorama==0.4.5
-    # via docker-compose
 coreapi==2.3.3
     # via drf-yasg
 coreschema==0.0.4
@@ -40,6 +38,7 @@ django==3.2.12
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
+    #   scos-actions
 django-session-timeout==0.1.0
     # via -r requirements.in
 djangorestframework==3.13.1
@@ -66,6 +65,8 @@ importlib-metadata==4.11.3
     # via jsonschema
 inflection==0.5.1
     # via drf-yasg
+its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
+    # via scos-actions
 itypes==1.2.0
     # via coreapi
 jinja2==3.1.1
@@ -78,8 +79,15 @@ markupsafe==2.1.1
     # via jinja2
 marshmallow==3.15.0
     # via environs
+numexpr==2.8.3
+    # via scos-actions
 numpy==1.21.5
-    # via tekrsa-api-wrap
+    # via
+    #   numexpr
+    #   scipy
+    #   scos-actions
+    #   sigmf
+    #   tekrsa-api-wrap
 oauthlib==3.2.0
     # via
     #   -r requirements.in
@@ -88,6 +96,7 @@ packaging==21.3
     # via
     #   drf-yasg
     #   marshmallow
+    #   numexpr
 paramiko==2.10.3
     # via docker
 psycopg2-binary==2.9.3
@@ -102,6 +111,8 @@ pyparsing==3.0.7
     # via packaging
 pyrsistent==0.18.1
     # via jsonschema
+python-dateutil==2.8.2
+    # via scos-actions
 python-dotenv==0.20.0
     # via
     #   docker-compose
@@ -110,8 +121,6 @@ pytz==2022.1
     # via
     #   django
     #   djangorestframework
-pywin32==227
-    # via docker
 pyyaml==5.4.1
     # via docker-compose
 requests==2.27.1
@@ -119,6 +128,7 @@ requests==2.27.1
     #   coreapi
     #   docker
     #   docker-compose
+    #   its-preselector
     #   requests-mock
     #   requests-oauthlib
 requests-mock==1.9.3
@@ -126,15 +136,21 @@ requests-mock==1.9.3
 requests-oauthlib==1.3.1
     # via -r requirements.in
 ruamel-yaml==0.17.21
-    # via drf-yasg
+    # via
+    #   drf-yasg
+    #   scos-actions
 ruamel-yaml-clib==0.2.6
     # via ruamel-yaml
-scos-actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
+scipy==1.7.3
+    # via scos-actions
+scos_actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
     # via
     #   -r requirements.in
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@actions-dsp-update
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@actions-dsp-update
     # via -r requirements.in
+sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
+    # via scos-actions
 six==1.16.0
     # via
     #   bcrypt
@@ -142,11 +158,13 @@ six==1.16.0
     #   dockerpty
     #   jsonschema
     #   paramiko
+    #   python-dateutil
     #   requests-mock
+    #   sigmf
     #   websocket-client
 sqlparse==0.4.2
     # via django
-tekrsa-api-wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.1.0
+tekrsa_api_wrap @ git+https://github.com/NTIA/tekrsa-api-wrap@1.1.0
     # via scos-tekrsa
 texttable==1.6.4
     # via docker-compose
