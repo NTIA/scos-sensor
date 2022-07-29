@@ -27,6 +27,7 @@ except KeyError:
 UserModel = get_user_model()
 
 try:
+    username = os.environ["ADMIN_NAME"]
     admin_user = UserModel._default_manager.get(username="admin")
     admin_user.email = email
     admin_user.set_password(password)
