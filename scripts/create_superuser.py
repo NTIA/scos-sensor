@@ -25,13 +25,12 @@ except KeyError:
     sys.exit(0)
 
 UserModel = get_user_model()
-
+username = os.environ["ADMIN_NAME"]
 try:
-    username = os.environ["ADMIN_NAME"]
-    admin_user = UserModel._default_manager.get(username="admin")
+    admin_user = UserModel._default_manager.get(username=username)
     admin_user.email = email
     admin_user.set_password(password)
     print("Reset admin account password and email from environment")
 except UserModel.DoesNotExist:
-    UserModel._default_manager.create_superuser("admin", email, password)
+    UserModel._default_manager.create_superuser(username, email, password)
     print("Created admin account with password and email from environment")
