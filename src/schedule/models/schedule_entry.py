@@ -161,7 +161,7 @@ class ScheduleEntry(models.Model):
         self.__start = self.start
         self.__interval = self.interval
         if self.action not in actions.registered_actions:
-            raise ValidationError(self.action + ' does not exist')
+            raise ValidationError(self.action + " does not exist")
 
     def update(self, *args, **kwargs):
         super(ScheduleEntry, self).update(*args, **kwargs)

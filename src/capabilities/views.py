@@ -4,9 +4,9 @@ import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from capabilities import capabilities
-from capabilities import actions
+
 from actions import get_summary
+from capabilities import actions, capabilities
 
 logger = logging.getLogger(__name__)
 

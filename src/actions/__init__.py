@@ -5,7 +5,6 @@ import pkgutil
 from sensor import settings
 from sensor.utils import copy_driver_files
 
-
 logger = logging.getLogger(__name__)
 
 copy_driver_files()  # copy driver files before loading plugins

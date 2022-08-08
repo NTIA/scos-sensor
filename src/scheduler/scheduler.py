@@ -5,8 +5,10 @@ import logging
 import threading
 from contextlib import contextmanager
 from pathlib import Path
+
 import requests
 from django.utils import timezone
+
 from authentication import oauth
 from schedule.models import ScheduleEntry
 from sensor import settings
@@ -18,7 +20,6 @@ from tasks.task_queue import TaskQueue
 from . import utils
 
 logger = logging.getLogger(__name__)
-
 
 
 class Scheduler(threading.Thread):
@@ -149,9 +150,7 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug("running task {}/{}".format(entry_name, task_id))
-            detail = self.task.action_caller(
-                schedule_entry_json, task_id
-            )
+            detail = self.task.action_caller(schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):
@@ -189,24 +188,24 @@ class Scheduler(threading.Thread):
                         self.entry.callback_url,
                         data=json.dumps(result_json),
                         headers=headers,
-                        verify=verify_ssl
+                        verify=verify_ssl,
                     )
                     self._callback_response_handler(response, tr)
                 else:
-                    logger.info('Posting with token')
+                    logger.info("Posting with token")
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
                     response = requests.post(
                         self.entry.callback_url,
                         json=result_json,
                         headers=headers,
-                        verify=verify_ssl
+                        verify=verify_ssl,
                     )
-                    logger.info('posted')
+                    logger.info("posted")
                     self._callback_response_handler(response, tr)
             except Exception as err:
                 logger.error(str(err))
-                tr.status = 'notification_failed'
+                tr.status = "notification_failed"
                 tr.save()
         else:
             tr.save()
@@ -218,11 +217,9 @@ class Scheduler(threading.Thread):
         else:
             msg = "Failed to POST to {}: {}"
             logger.warning(msg.format(resp.url, resp.reason))
-            task_result.status = 'notification_failed'
+            task_result.status = "notification_failed"
 
         task_result.save()
-
-
 
     def _queue_pending_tasks(self, schedule_snapshot):
         pending_queue = TaskQueue()

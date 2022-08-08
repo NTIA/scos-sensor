@@ -69,7 +69,7 @@ if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
-PRESELECTOR_CONFIG=path.join(CONFIG_DIR, "preselector_config.json")
+PRESELECTOR_CONFIG = path.join(CONFIG_DIR, "preselector_config.json")
 
 # Cleanup any existing healtcheck files
 try:
@@ -185,7 +185,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 
 ROOT_URLCONF = "sensor.urls"
@@ -394,6 +393,10 @@ if PATH_TO_JWT_PUBLIC_KEY != "":
 # Required role from JWT token to access API
 REQUIRED_ROLE = "ROLE_MANAGER"
 
-PRESELECTOR_CONFIG = env.str('PRESELECTOR_CONFIG', default=path.join(CONFIG_DIR, 'preselector_config.json'))
-PRESELECTOR_MODULE = env.str('PRESELECTOR_MODULE', default='its_preselector.web_relay_preselector')
-PRESELECTOR_CLASS = env.str('PRESELECTOR_CLASS', default='WebRelayPreselector')
+PRESELECTOR_CONFIG = env.str(
+    "PRESELECTOR_CONFIG", default=path.join(CONFIG_DIR, "preselector_config.json")
+)
+PRESELECTOR_MODULE = env.str(
+    "PRESELECTOR_MODULE", default="its_preselector.web_relay_preselector"
+)
+PRESELECTOR_CLASS = env.str("PRESELECTOR_CLASS", default="WebRelayPreselector")

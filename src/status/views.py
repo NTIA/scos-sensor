@@ -2,11 +2,11 @@ import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from scos_actions.settings import sensor_calibration
 from scos_actions.utils import get_datetime_str_now
 
 from scheduler import scheduler
 
-from . import last_calibration_time
 from .serializers import LocationSerializer
 from .utils import get_location
 
@@ -30,6 +30,6 @@ def status(request, version, format=None):
             "scheduler": scheduler.thread.status,
             "location": serialize_location(),
             "system_time": get_datetime_str_now(),
-            "last_calibration_time": last_calibration_time(),
+            "last_calibration_time": sensor_calibration.calibration_datetime,
         }
     )
