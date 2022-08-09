@@ -2,8 +2,11 @@ import importlib
 import logging
 
 from actions import discovered_plugins
+from .status_monitor import StatusMonitor
 
 logger = logging.getLogger(__name__)
+
+status_monitor = StatusMonitor()
 
 last_calibration_time = None
 

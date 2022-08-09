@@ -1,7 +1,10 @@
 import pytest
 from django import conf
 from status.models import Location
+from status import status_monitor
 from scos_actions.capabilities import capabilities
+from scos_actions.actions.interfaces.signals import register_component_with_status
+from unittest.mock import MagicMock
 
 
 @pytest.mark.django_db
@@ -115,3 +118,17 @@ def test_db_location_deleted_inactive_handler():
     assert capabilities['sensor']['location']['description'] == 'test'
 
 
+def test_status_handler():
+    status_object = 'Status'
+    status_object.name = MagicMock(return_value='TestObject')
+    status_object.get_status = MagicMock(return_value={'example': 'healthy'})
+    register_component_with_status.send(
+        status_object.__class__,
+        component=status_object
+    )
+    status = {}
+    for component in status_monitor.status_components:
+        status.update(component.get_status())
+
+    assert 'TestObject' in status
+    assert status['TestObject']['example'] == 'healthy'
