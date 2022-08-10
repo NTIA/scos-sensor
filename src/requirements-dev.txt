@@ -8,8 +8,6 @@ asgiref==3.5.0
     # via
     #   -r requirements.txt
     #   django
-aspy-refactor-imports==3.0.1
-    # via seed-isort-config
 attrs==21.4.0
     # via
     #   -r requirements.txt
@@ -19,8 +17,6 @@ bcrypt==3.2.0
     # via
     #   -r requirements.txt
     #   paramiko
-black==22.3.0
-    # via -r requirements-dev.in
 certifi==2021.10.8
     # via
     #   -r requirements.txt
@@ -37,8 +33,6 @@ charset-normalizer==2.0.12
     # via
     #   -r requirements.txt
     #   requests
-click==8.1.2
-    # via black
 coreapi==2.3.3
     # via
     #   -r requirements.txt
@@ -61,7 +55,7 @@ distro==1.7.0
     # via
     #   -r requirements.txt
     #   docker-compose
-django==3.2.12
+django==3.2.15
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -111,8 +105,6 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==1.1.1
     # via pytest
-isort==5.10.1
-    # via -r requirements-dev.in
 its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
     # via
     #   -r requirements.txt
@@ -139,8 +131,6 @@ marshmallow==3.15.0
     # via
     #   -r requirements.txt
     #   environs
-mypy-extensions==0.4.3
-    # via black
 nodeenv==1.6.0
     # via pre-commit
 numexpr==2.8.3
@@ -172,12 +162,8 @@ paramiko==2.10.3
     # via
     #   -r requirements.txt
     #   docker
-pathspec==0.9.0
-    # via black
 platformdirs==2.5.1
-    # via
-    #   black
-    #   virtualenv
+    # via virtualenv
 pluggy==1.0.0
     # via
     #   pytest
@@ -257,7 +243,7 @@ ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.7.3
+scipy==1.9.0
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -265,8 +251,6 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
     # via -r requirements.txt
 scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@actions-dsp-update
     # via -r requirements.txt
-seed-isort-config==2.2.0
-    # via -r requirements-dev.in
 sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
     # via
     #   -r requirements.txt
@@ -303,13 +287,10 @@ toml==0.10.2
     #   tox
 tomli==2.0.1
     # via
-    #   black
     #   coverage
     #   pytest
 tox==3.24.5
     # via -r requirements-dev.in
-typing-extensions==4.1.1
-    # via black
 uritemplate==4.1.1
     # via
     #   -r requirements.txt

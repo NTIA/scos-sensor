@@ -29,7 +29,7 @@ cryptography==36.0.2
     # via paramiko
 distro==1.7.0
     # via docker-compose
-django==3.2.12
+django==3.2.15
     # via
     #   -r requirements.in
     #   django-session-timeout
@@ -137,7 +137,7 @@ ruamel-yaml==0.17.21
     #   scos-actions
 ruamel-yaml-clib==0.2.6
     # via ruamel-yaml
-scipy==1.7.3
+scipy==1.9.0
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
     # via -r requirements.in
