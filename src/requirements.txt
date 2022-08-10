@@ -61,7 +61,7 @@ idna==3.3
     # via requests
 inflection==0.5.1
     # via drf-yasg
-its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
+its_preselector @ https://github.com/NTIA/Preselector/archive/refs/tags/1.0.0.zip
     # via scos-actions
 itypes==1.2.0
     # via coreapi
@@ -139,11 +139,13 @@ ruamel-yaml-clib==0.2.6
     # via ruamel-yaml
 scipy==1.9.0
     # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
-    # via -r requirements.in
+scos_actions @ https://github.com/NTIA/scos-actions/archive/refs/heads/dsp-refactor.zip
+    # via
+    #   -r requirements.in
+    #   scos-tekrsa
 scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@actions-dsp-update
     # via -r requirements.in
-sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
+sigmf @ https://github.com/NTIA/SigMF/archive/refs/heads/multi-recording-archive.zip
     # via scos-actions
 six==1.16.0
     # via
@@ -158,7 +160,7 @@ six==1.16.0
     #   websocket-client
 sqlparse==0.4.2
     # via django
-tekrsa-api-wrap==1.2.2
+tekrsa-api-wrap==1.2.3
     # via scos-tekrsa
 texttable==1.6.4
     # via docker-compose

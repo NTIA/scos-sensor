@@ -11,5 +11,5 @@ psycopg2-binary>=2.0, <3.0
 pyjwt>=2.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
+scos_actions @ https://github.com/NTIA/scos-actions/archive/refs/heads/dsp-refactor.zip
 scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@actions-dsp-update

@@ -105,7 +105,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==1.1.1
     # via pytest
-its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
+its_preselector @ https://github.com/NTIA/Preselector/archive/refs/tags/1.0.0.zip
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -247,11 +247,13 @@ scipy==1.9.0
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@dsp-refactor
-    # via -r requirements.txt
+scos_actions @ https://github.com/NTIA/scos-actions/archive/refs/heads/dsp-refactor.zip
+    # via
+    #   -r requirements.txt
+    #   scos-tekrsa
 scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@actions-dsp-update
     # via -r requirements.txt
-sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
+sigmf @ https://github.com/NTIA/SigMF/archive/refs/heads/multi-recording-archive.zip
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -273,7 +275,7 @@ sqlparse==0.4.2
     # via
     #   -r requirements.txt
     #   django
-tekrsa-api-wrap==1.2.2
+tekrsa-api-wrap==1.2.3
     # via
     #   -r requirements.txt
     #   scos-tekrsa
