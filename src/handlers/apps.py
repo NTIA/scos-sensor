@@ -8,7 +8,6 @@ from scos_actions.actions.interfaces.signals import (
     location_action_completed,
     measurement_action_completed,
     monitor_action_completed,
-    register_component_with_status
 )
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,7 @@ class HandlersConfig(AppConfig):
         from handlers.location_handler import db_location_deleted
         from handlers.measurement_handler import measurement_action_completed_callback
         from handlers.monitor_handler import monitor_action_completed_callback
-        from handlers.status_handler import register_component_with_status_completed_callback
+
 
         measurement_action_completed.connect(measurement_action_completed_callback)
         logger.debug(
@@ -48,7 +47,4 @@ class HandlersConfig(AppConfig):
             "monitor_action_completed_callback registered to monitor_action_completed"
         )
 
-        register_component_with_status.connect(register_component_with_status_completed_callback)
-        logger.debug(
-            "register_component_with_status_completed_callback registered to add status registrations"
-        )
+

@@ -69,7 +69,7 @@ if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
-PRESELECTOR_CONFIG=path.join(CONFIG_DIR, "preselector_config.json")
+PRESELECTOR_CONFIG = path.join(CONFIG_DIR, "preselector_config.json")
 
 # Cleanup any existing healtcheck files
 try:
@@ -404,3 +404,5 @@ REQUIRED_ROLE = "ROLE_MANAGER"
 PRESELECTOR_CONFIG = env.str('PRESELECTOR_CONFIG', default=path.join(CONFIG_DIR, 'preselector_config.json'))
 PRESELECTOR_MODULE = env.str('PRESELECTOR_MODULE', default='its_preselector.web_relay_preselector')
 PRESELECTOR_CLASS = env.str('PRESELECTOR_CLASS', default='WebRelayPreselector')
+SWITCH_CONFIGS_DIR = env.str('SWITCH_CONFIGS_DIR', default=path.join(CONFIG_DIR, 'switches'))
+

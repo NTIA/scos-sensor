@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import actions
-from scos_actions.capabilities import capabilities
+from . import sensor_capabilities
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +29,6 @@ def get_actions(include_admin_actions=False):
 def capabilities_view(request, version, format=None):
     """The capabilites of the sensor."""
     filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
-    filtered_capabilities = copy.deepcopy(capabilities)
+    filtered_capabilities = copy.deepcopy(sensor_capabilities)
     filtered_capabilities["actions"] = filtered_actions
     return Response(filtered_capabilities)

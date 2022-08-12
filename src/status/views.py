@@ -3,16 +3,22 @@ import shutil
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from scos_actions.utils import get_datetime_str_now
 
 from scheduler import scheduler
+from . import sensor_cal
 
-from . import last_calibration_time
+from its_preselector.web_relay import WebRelay
+from its_preselector.preselector import Preselector
+
+from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
+from scos_actions.status import status_registrar
+from scos_actions.utils import get_datetime_str_now
+
 from .serializers import LocationSerializer
-from . import status_monitor
 from .utils import get_location
 
 logger = logging.getLogger(__name__)
+logger.info('Loading status/views')
 
 
 def serialize_location():
@@ -26,21 +32,37 @@ def serialize_location():
 
 def disk_usage():
     usage = shutil.disk_usage('/')
-    return usage.used / usage.total
+    percent_used = round(100 * usage.used / usage.total)
+    logger.info(str(percent_used) + ' disk used')
+    return percent_used
 
 
 @api_view()
 def status(request, version, format=None):
     """The status overview of the sensor."""
+    healthy = True
     status_json = {
         "scheduler": scheduler.thread.status,
         "location": serialize_location(),
         "system_time": get_datetime_str_now(),
-        "last_calibration_time": last_calibration_time(),
+        "last_calibration_time": sensor_cal.calibration_datetime,
         "disk_usage": disk_usage()
     }
-    for component in status_monitor.status_components:
-        status_json[component.name] = component.get_status()
+    for component in status_registrar.status_components:
+        logger.info('Adding status ' + str(component.name) + ' = ' + str(component.get_status()))
+        component_status =  component.get_status()
+        if isinstance(component, WebRelay):
+            if 'switches' in status_json:
+                status_json['switches'].append(component_status)
+            else:
+                status_json['switches'] = [component_status]
+        elif isinstance(component, Preselector):
+            status_json['preselector'] = component_status
+        elif isinstance(component,SignalAnalyzerInterface):
+            status_json['signal_analyzer'] = component_status
+        if 'healthy' in component_status:
+            healthy = healthy and component_status['healthy']
+    status_json['healthy'] = healthy
     return Response(
-        status
+        status_json
     )
