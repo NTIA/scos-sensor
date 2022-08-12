@@ -1,7 +1,6 @@
 -rrequirements.txt
 black>=22.0, <23.0
 cryptography>=36.0, <38.0
-django-debug-toolbar>=3.2.1, <4.0
 django-extensions>=3.0, <4.0
 isort>=5.0, <6.0
 numpy>=1.0, <2.0

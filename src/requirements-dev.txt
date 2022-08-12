@@ -69,7 +69,6 @@ distro==1.7.0
 django==3.2.15
     # via
     #   -r requirements.txt
-    #   django-debug-toolbar
     #   django-extensions
     #   django-session-timeout
     #   djangorestframework
@@ -77,8 +76,6 @@ django==3.2.15
     #   jsonfield
     #   scos-actions
     #   scos-usrp
-django-debug-toolbar==3.5.0
-    # via -r requirements-dev.in
 django-extensions==3.2.0
     # via -r requirements-dev.in
 django-session-timeout==0.1.0
@@ -308,7 +305,6 @@ sqlparse==0.4.2
     # via
     #   -r requirements.txt
     #   django
-    #   django-debug-toolbar
 texttable==1.6.4
     # via
     #   -r requirements.txt
