@@ -12,10 +12,10 @@ trap cleanup_demodb SIGTERM
 trap cleanup_demodb SIGINT
 
 echo "Starting Migrations"
-python3.7 manage.py migrate
+python3 manage.py migrate
 
 echo "Creating superuser (if managed)"
-python3.7 /scripts/create_superuser.py
+python3 /scripts/create_superuser.py
 
 echo "Starting Gunicorn"
 exec gunicorn sensor.wsgi -c ../gunicorn/config.py &
