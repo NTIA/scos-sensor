@@ -1,8 +1,8 @@
 {
-    "id": "",
+    "id": "seadog03",
     "sensor_spec": {
-        "id": "",
-        "model": "greyhound"
+        "id": "seadog03",
+        "model": "seadog"
     },
     "antenna": {
         "antenna_spec": {
@@ -10,10 +10,16 @@
             "model": "L-com HG3512UP-NF"
         }
     },
+    "preselector" : {
+        "preselector_spec" : {
+          "supplemental_information" : "10dB pad added in front of SigAn"
+        },
+        "cal_sources" : [ { "enr": 15.7 } ]
+    },
     "signal_analyzer": {
         "sigan_spec": {
             "id": "",
-            "model": "Ettus USRP B210"
+            "model": "Tektronix RSA 507A"
         }
     },
     "computer_spec": {
