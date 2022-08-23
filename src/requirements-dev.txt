@@ -86,7 +86,9 @@ docopt==0.6.2
 drf-yasg==1.20.0
     # via -r requirements.txt
 environs==9.5.0
-    # via -r requirements.txt
+    # via
+    #   -r requirements.txt
+    #   scos-tekrsa
 filelock==3.6.0
     # via
     #   tox

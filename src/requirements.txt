@@ -54,7 +54,9 @@ docopt==0.6.2
 drf-yasg==1.20.0
     # via -r requirements.in
 environs==9.5.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   scos-tekrsa
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
