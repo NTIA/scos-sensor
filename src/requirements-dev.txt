@@ -48,7 +48,7 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.4.3
+coverage[toml]==6.4.4
     # via pytest-cov
 cryptography==37.0.4
     # via
@@ -72,7 +72,7 @@ django==3.2.15
     #   jsonfield
     #   scos-actions
     #   scos-usrp
-django-debug-toolbar==3.5.0
+django-debug-toolbar==3.6.0
     # via -r requirements-dev.in
 django-extensions==3.2.0
     # via -r requirements-dev.in
@@ -82,7 +82,7 @@ djangorestframework==3.13.1
     # via
     #   -r requirements.txt
     #   drf-yasg
-docker[ssh]==5.0.3
+docker[ssh]==6.0.0
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -152,7 +152,7 @@ mypy-extensions==0.4.3
     # via black
 nodeenv==1.7.0
     # via pre-commit
-numpy==1.23.1
+numpy==1.23.2
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -167,6 +167,7 @@ oauthlib==3.2.0
 packaging==21.3
     # via
     #   -r requirements.txt
+    #   docker
     #   drf-yasg
     #   marshmallow
     #   pytest
@@ -228,7 +229,7 @@ python-dotenv==0.20.0
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2022.2
+pytz==2022.2.1
     # via
     #   -r requirements.txt
     #   django
@@ -319,6 +320,7 @@ uritemplate==4.1.1
 urllib3==1.26.11
     # via
     #   -r requirements.txt
+    #   docker
     #   requests
 virtualenv==20.16.3
     # via

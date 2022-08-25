@@ -44,7 +44,7 @@ djangorestframework==3.13.1
     # via
     #   -r requirements.in
     #   drf-yasg
-docker[ssh]==5.0.3
+docker[ssh]==6.0.0
     # via docker-compose
 docker-compose==1.29.2
     # via -r requirements.in
@@ -78,7 +78,7 @@ markupsafe==2.1.1
     # via jinja2
 marshmallow==3.17.0
     # via environs
-numpy==1.23.1
+numpy==1.23.2
     # via
     #   scipy
     #   scos-actions
@@ -90,6 +90,7 @@ oauthlib==3.2.0
     #   requests-oauthlib
 packaging==21.3
     # via
+    #   docker
     #   drf-yasg
     #   marshmallow
 paramiko==2.11.0
@@ -112,7 +113,7 @@ python-dotenv==0.20.0
     # via
     #   docker-compose
     #   environs
-pytz==2022.2
+pytz==2022.2.1
     # via
     #   django
     #   djangorestframework
@@ -166,7 +167,9 @@ uritemplate==4.1.1
     #   coreapi
     #   drf-yasg
 urllib3==1.26.11
-    # via requests
+    # via
+    #   docker
+    #   requests
 websocket-client==0.59.0
     # via
     #   docker
