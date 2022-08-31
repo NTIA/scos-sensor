@@ -49,6 +49,10 @@ cryptography==36.0.2
     #   -r requirements-dev.in
     #   -r requirements.txt
     #   paramiko
+defusedxml==0.7.1
+    # via
+    #   -r requirements.txt
+    #   its-preselector
 distlib==0.3.4
     # via virtualenv
 distro==1.7.0
@@ -107,7 +111,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==1.1.1
     # via pytest
-its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
+its-preselector @ git+https://github.com/NTIA/Preselector@2.0.0
     # via
     #   -r requirements.txt
     #   scos-actions
