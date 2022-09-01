@@ -1860,7 +1860,7 @@
                 "duration": {
                     "title": "Duration",
                     "description": "Task duration in seconds",
-                    "type": "number"
+                    "type": "string"
                 },
                 "data": {
                     "type": "array",

@@ -38,13 +38,13 @@ def disk_usage():
     usage = shutil.disk_usage('/')
     percent_used = round(100 * usage.used / usage.total)
     logger.info(str(percent_used) + ' disk used')
-    return percent_used
+    return round(percent_used, 2)
 
 def get_days_up():
     elapsed = datetime.datetime.utcnow() - start_time
     days = elapsed.days
     fractional_day = elapsed.seconds / (60 *60*24)
-    return days + fractional_day
+    return round(days + fractional_day, 4)
 
 
 
@@ -62,7 +62,6 @@ def status(request, version, format=None):
         "days_up": get_days_up()
     }
     for component in status_registrar.status_components:
-        logger.info('Adding status ' + str(component.name) + ' = ' + str(component.get_status()))
         component_status =  component.get_status()
         if isinstance(component, WebRelay):
             if 'switches' in status_json:

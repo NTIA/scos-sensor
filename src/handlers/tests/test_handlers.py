@@ -1,7 +1,7 @@
 import pytest
 from django import conf
 from scos_actions.capabilities import capabilities
-
+from status.models import  Location
 
 
 @pytest.mark.django_db
