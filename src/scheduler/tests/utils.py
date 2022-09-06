@@ -1,4 +1,5 @@
 import collections
+import logging
 import threading
 import time
 from itertools import chain, count, islice
@@ -11,6 +12,8 @@ from sensor import V1
 
 BAD_ACTION_STR = "testing expected failure"
 
+logger = logging.getLogger(__name__)
+logger.debug("*************** scos-sensor/scheduler/test/utils ***********")
 
 class TestClock(object):
     """Manually-incremented clock counter"""
@@ -105,7 +108,7 @@ def create_action():
         return "set flag"
 
     cb.__name__ = "testcb" + str(create_action.counter)
-    actions.by_name[cb.__name__] = cb
+    actions.registered_actions[cb.__name__] = cb
     create_action.counter += 1
 
     return cb, flag
@@ -118,7 +121,7 @@ def create_bad_action():
     def bad_action(schedule_entry_json, task_id):
         raise Exception(BAD_ACTION_STR)
 
-    actions.by_name["bad_action"] = bad_action
+    actions.registered_actions["bad_action"] = bad_action
     return bad_action
 
 

@@ -1,4 +1,4 @@
-version: '3'
+﻿version: '3'
 
 services:
   db:
@@ -47,7 +47,7 @@ services:
       - IN_DOCKER=1
       - IPS
       - MAX_DISK_USAGE
-      - MOCK_SIGAN=1
+      - MOCK_SIGAN
       - MOCK_SIGAN_RANDOM
       - OAUTH_TOKEN_URL
       - PATH_TO_CLIENT_CERT
@@ -55,6 +55,8 @@ services:
       - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
       - SECRET_KEY
+      - SIGAN_POWER_SWITCH
+      - SIGAN_POWER_CYCLE_STATES
     expose:
       - '8000'
     volumes:

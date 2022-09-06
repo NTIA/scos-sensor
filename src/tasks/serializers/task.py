@@ -1,9 +1,13 @@
+import logging
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 import actions
 from schedule.serializers import DateTimeFromTimestampField
 from sensor import V1
+
+logger = logging.getLogger(__name__)
+logger.debug("***************** scos-sensor/serializers/task.py **************")
 
 
 class TaskSerializer(serializers.Serializer):

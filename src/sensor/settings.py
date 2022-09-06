@@ -396,4 +396,6 @@ PRESELECTOR_CONFIG = env.str('PRESELECTOR_CONFIG', default=path.join(CONFIG_DIR,
 PRESELECTOR_MODULE = env.str('PRESELECTOR_MODULE', default='its_preselector.web_relay_preselector')
 PRESELECTOR_CLASS = env.str('PRESELECTOR_CLASS', default='WebRelayPreselector')
 SWITCH_CONFIGS_DIR = env.str('SWITCH_CONFIGS_DIR', default=path.join(CONFIG_DIR, 'switches'))
+SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
+SIGAN_POWER_SWITCH = env('SIGAN_POWER_SWITCH', default=None)
 

@@ -1,3 +1,4 @@
+import logging
 import sys
 from itertools import count
 
@@ -6,6 +7,9 @@ from django.db import models
 
 import actions
 from scheduler import utils
+
+logger = logging.getLogger(__name__)
+logger.debug("************** scos-sensor/schedule/models/schedule_entry.py *****************")
 
 if sys.version_info.major == 2:
     range = xrange  # noqa
@@ -31,7 +35,6 @@ class ScheduleEntry(models.Model):
     If two tasks are scheduled to run at the same time, they will be run in
     order of `priority`. If two tasks are scheduled to run at the same time and
     have the same `priority`, execution order is undefined.
-
     """
 
     # Implementation notes:
