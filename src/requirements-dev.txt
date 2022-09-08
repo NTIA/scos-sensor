@@ -74,7 +74,6 @@ django==3.2.15
     #   drf-yasg
     #   jsonfield
     #   scos-actions
-    #   scos-usrp
 django-extensions==3.2.0
     # via -r requirements-dev.in
 django-session-timeout==0.1.0
@@ -102,7 +101,8 @@ drf-yasg==1.21.3
 environs==9.5.0
     # via
     #   -r requirements.txt
-    #   scos-usrp
+    #   scos-actions
+    #   scos-tekrsa
 filelock==3.8.0
     # via
     #   tox
@@ -123,7 +123,7 @@ iniconfig==1.1.1
     # via pytest
 isort==5.10.1
     # via -r requirements-dev.in
-its-preselector @ git+https://github.com/NTIA/Preselector@WebRelayAndStatus
+its-preselector @ git+https://github.com/NTIA/Preselector@2.1.0
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -164,8 +164,8 @@ numpy==1.23.2
     #   numexpr
     #   scipy
     #   scos-actions
-    #   scos-usrp
     #   sigmf
+    #   tekrsa-api-wrap
 oauthlib==3.2.0
     # via
     #   -r requirements.txt
@@ -272,11 +272,11 @@ scipy==1.9.0
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@MultiSwitchStatus
+scos_actions @ git+https://github.com/NTIA/scos-actions@master
     # via
     #   -r requirements.txt
-    #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@MultiSwitchStatus
+    #   scos-tekrsa
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@power-cycle-classification
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
@@ -300,6 +300,10 @@ sqlparse==0.4.2
     # via
     #   -r requirements.txt
     #   django
+tekrsa-api-wrap==1.2.3
+    # via
+    #   -r requirements.txt
+    #   scos-tekrsa
 texttable==1.6.4
     # via
     #   -r requirements.txt

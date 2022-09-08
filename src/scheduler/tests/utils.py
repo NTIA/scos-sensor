@@ -4,7 +4,7 @@ import threading
 import time
 from itertools import chain, count, islice
 
-import actions
+
 from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
@@ -108,7 +108,7 @@ def create_action():
         return "set flag"
 
     cb.__name__ = "testcb" + str(create_action.counter)
-    actions.registered_actions[cb.__name__] = cb
+    registered_actions[cb.__name__] = cb
     create_action.counter += 1
 
     return cb, flag
@@ -121,7 +121,7 @@ def create_bad_action():
     def bad_action(schedule_entry_json, task_id):
         raise Exception(BAD_ACTION_STR)
 
-    actions.registered_actions["bad_action"] = bad_action
+    registered_actions["bad_action"] = bad_action
     return bad_action
 
 

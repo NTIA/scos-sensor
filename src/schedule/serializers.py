@@ -7,8 +7,8 @@ from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     parse_datetime_iso_format_str,
 )
-
-import actions
+from . import registered_actions
+from . import get_action_with_summary
 from sensor import V1
 from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
 
@@ -19,6 +19,10 @@ logger.debug("******** scos-sensor/schedule/serializers.py ****************")
 
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = "Lower number is higher priority (default={})".format(DEFAULT_PRIORITY)
+CHOICES = []
+actions = sorted(registered_actions.keys())
+for action in actions:
+    CHOICES.append((action, get_action_with_summary(action)))
 
 
 def datetimes_to_timestamps(validated_data):
@@ -107,7 +111,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     )
     # action choices is modified in schedule/views.py based on user
     action = serializers.ChoiceField(
-        choices=actions.CHOICES,
+        choices=CHOICES,
         help_text="[Required] The name of the action to be scheduled",
     )
     # priority min_value is modified in schedule/views.py based on user

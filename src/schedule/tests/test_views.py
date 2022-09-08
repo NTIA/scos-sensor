@@ -3,14 +3,13 @@ from rest_framework.reverse import reverse
 
 from schedule.tests.utils import (
     EMPTY_SCHEDULE_RESPONSE,
-    TEST_PRIVATE_SCHEDULE_ENTRY,
     TEST_SCHEDULE_ENTRY,
     post_schedule,
     reverse_detail_url,
 )
 from sensor import V1
 from sensor.tests.utils import HTTPS_KWARG, validate_response
-from tasks.tests.utils import simulate_frequency_fft_acquisitions
+from test_utils.task_test_utils import simulate_frequency_fft_acquisitions
 
 
 def test_entry_posted_to_schedule_is_immediately_available(admin_client):

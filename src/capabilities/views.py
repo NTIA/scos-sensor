@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from . import actions_by_name
 from . import sensor_capabilities
-from actions import get_summary
+from utils import get_summary
 
 logger = logging.getLogger(__name__)
 logger.debug("scos-sensor/capabilities/views.py")

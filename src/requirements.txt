@@ -39,7 +39,6 @@ django==3.2.15
     #   drf-yasg
     #   jsonfield
     #   scos-actions
-    #   scos-usrp
 django-session-timeout==0.1.0
     # via -r requirements.in
 djangorestframework==3.13.1
@@ -59,14 +58,15 @@ drf-yasg==1.21.3
 environs==9.5.0
     # via
     #   -r requirements.in
-    #   scos-usrp
+    #   scos-actions
+    #   scos-tekrsa
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
     # via requests
 inflection==0.5.1
     # via drf-yasg
-its-preselector @ git+https://github.com/NTIA/Preselector@WebRelayAndStatus
+its-preselector @ git+https://github.com/NTIA/Preselector@2.1.0
     # via scos-actions
 itypes==1.2.0
     # via coreapi
@@ -87,8 +87,8 @@ numpy==1.23.2
     #   numexpr
     #   scipy
     #   scos-actions
-    #   scos-usrp
     #   sigmf
+    #   tekrsa-api-wrap
 oauthlib==3.2.0
     # via
     #   -r requirements.in
@@ -145,11 +145,11 @@ ruamel-yaml-clib==0.2.6
     # via ruamel-yaml
 scipy==1.9.0
     # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@MultiSwitchStatus
+scos_actions @ git+https://github.com/NTIA/scos-actions@master
     # via
     #   -r requirements.in
-    #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@MultiSwitchStatus
+    #   scos-tekrsa
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@power-cycle-classification
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
@@ -165,6 +165,8 @@ six==1.16.0
     #   websocket-client
 sqlparse==0.4.2
     # via django
+tekrsa-api-wrap==1.2.3
+    # via scos-tekrsa
 texttable==1.6.4
     # via docker-compose
 uritemplate==4.1.1
