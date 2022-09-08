@@ -2,10 +2,11 @@ import importlib
 import logging
 import pkgutil
 
-from sensor import settings
-from sensor.utils import copy_driver_files
 from scos_actions.actions.interfaces.signals import register_action
 from scos_actions.discover import test_actions
+
+from sensor import settings
+from sensor.utils import copy_driver_files
 
 logger = logging.getLogger(__name__)
 logger.debug("************ Initializing scos-sensor/actions ************ ")

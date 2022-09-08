@@ -6,7 +6,7 @@ registered_actions = OrderedDict()
 
 
 def add_action_handler(sender, **kwargs):
-    action = kwargs['action']
+    action = kwargs["action"]
     registered_actions[action.name] = action
 
 

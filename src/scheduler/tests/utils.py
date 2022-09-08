@@ -4,7 +4,6 @@ import threading
 import time
 from itertools import chain, count, islice
 
-
 from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
@@ -15,7 +14,8 @@ BAD_ACTION_STR = "testing expected failure"
 logger = logging.getLogger(__name__)
 logger.debug("*************** scos-sensor/scheduler/test/utils ***********")
 
-class TestClock(object):
+
+class TestClock:
     """Manually-incremented clock counter"""
 
     def __init__(self):

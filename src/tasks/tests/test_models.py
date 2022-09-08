@@ -5,7 +5,10 @@ import pytest
 from django.conf import settings
 
 from tasks.models import TaskResult
-from test_utils.task_test_utils import create_task_results, simulate_frequency_fft_acquisitions
+from test_utils.task_test_utils import (
+    create_task_results,
+    simulate_frequency_fft_acquisitions,
+)
 
 DiskUsage = namedtuple("DiskUsage", ["total", "used", "free"])
 

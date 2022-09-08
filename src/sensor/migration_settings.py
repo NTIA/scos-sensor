@@ -93,7 +93,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
-    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8" 
+    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
@@ -175,8 +175,7 @@ INSTALLED_APPS = [
     "schedule.apps.ScheduleConfig",
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
-    "sensor.apps.SensorConfig"  # global settings/utils, etc
-
+    "sensor.apps.SensorConfig",  # global settings/utils, etc
 ]
 
 MIDDLEWARE = [
@@ -367,7 +366,7 @@ LOGGING = {
         "scos_actions": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_sensor_keysight": {"handlers": ["console"], "level": LOGLEVEL},
-        "scos_tekrsa": {"handlers": ["console"], "level": LOGLEVEL}
+        "scos_tekrsa": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 
@@ -397,10 +396,15 @@ if PATH_TO_JWT_PUBLIC_KEY != "":
 # Required role from JWT token to access API
 REQUIRED_ROLE = "ROLE_MANAGER"
 
-PRESELECTOR_CONFIG = env.str('PRESELECTOR_CONFIG', default=path.join(CONFIG_DIR, 'preselector_config.json'))
-PRESELECTOR_MODULE = env.str('PRESELECTOR_MODULE', default='its_preselector.web_relay_preselector')
-PRESELECTOR_CLASS = env.str('PRESELECTOR_CLASS', default='WebRelayPreselector')
-SWITCH_CONFIGS_DIR = env.str('SWITCH_CONFIGS_DIR', default=path.join(CONFIG_DIR, 'switches'))
+PRESELECTOR_CONFIG = env.str(
+    "PRESELECTOR_CONFIG", default=path.join(CONFIG_DIR, "preselector_config.json")
+)
+PRESELECTOR_MODULE = env.str(
+    "PRESELECTOR_MODULE", default="its_preselector.web_relay_preselector"
+)
+PRESELECTOR_CLASS = env.str("PRESELECTOR_CLASS", default="WebRelayPreselector")
+SWITCH_CONFIGS_DIR = env.str(
+    "SWITCH_CONFIGS_DIR", default=path.join(CONFIG_DIR, "switches")
+)
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
-SIGAN_POWER_SWITCH = env('SIGAN_POWER_SWITCH', default=None)
-
+SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)

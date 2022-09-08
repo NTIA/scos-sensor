@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 import copy
 import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from . import actions_by_name
-from . import sensor_capabilities
 from utils import get_summary
+
+from . import actions_by_name, sensor_capabilities
 
 logger = logging.getLogger(__name__)
 logger.debug("scos-sensor/capabilities/views.py")

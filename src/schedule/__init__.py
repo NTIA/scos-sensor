@@ -1,7 +1,7 @@
 import logging
 
-from utils.action_registrar import registered_actions
 from utils import get_summary
+from utils.action_registrar import registered_actions
 
 
 def get_action_with_summary(action):
@@ -16,7 +16,7 @@ def get_action_with_summary(action):
 
 
 logger = logging.getLogger(__name__)
-logger.debug("********************* scos-sensor/schedule/__init ************************")
+logger.debug(
+    "********************* scos-sensor/schedule/__init ************************"
+)
 actions = registered_actions
-
-

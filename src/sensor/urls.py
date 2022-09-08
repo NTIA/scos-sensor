@@ -59,4 +59,3 @@ urlpatterns = [
     re_path(API_PREFIX, include(api_urlpatterns)),
     path("api/auth/", include("rest_framework.urls")),
 ]
-

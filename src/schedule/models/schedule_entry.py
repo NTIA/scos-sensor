@@ -7,11 +7,12 @@ from django.db import models
 
 from constants import MAX_ACTION_LENGTH
 from schedule import actions
-
 from scheduler import utils
 
 logger = logging.getLogger(__name__)
-logger.debug("************** scos-sensor/schedule/models/schedule_entry.py *****************")
+logger.debug(
+    "************** scos-sensor/schedule/models/schedule_entry.py *****************"
+)
 
 if sys.version_info.major == 2:
     range = xrange  # noqa
@@ -154,7 +155,7 @@ class ScheduleEntry(models.Model):
     def __init__(self, *args, **kwargs):
         relative_stop = kwargs.pop("relative_stop", None)
 
-        super(ScheduleEntry, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if relative_stop:
             self.stop = self.start + relative_stop
@@ -166,10 +167,10 @@ class ScheduleEntry(models.Model):
         self.__start = self.start
         self.__interval = self.interval
         if self.action not in actions:
-            raise ValidationError(self.action + ' does not exist')
+            raise ValidationError(self.action + " does not exist")
 
     def update(self, *args, **kwargs):
-        super(ScheduleEntry, self).update(*args, **kwargs)
+        super().update(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         if self.start != self.__start or self.interval != self.__interval:
@@ -177,7 +178,7 @@ class ScheduleEntry(models.Model):
             self.__start = self.start
             self.__interval = self.interval
 
-        super(ScheduleEntry, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def take_pending(self):
         """Take the range of times up to and including now."""

@@ -1,5 +1,5 @@
-from datetime import datetime
 import logging
+from datetime import datetime
 
 from rest_framework import serializers
 from rest_framework.reverse import reverse
@@ -7,11 +7,11 @@ from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     parse_datetime_iso_format_str,
 )
-from . import registered_actions
-from . import get_action_with_summary
+
 from sensor import V1
 from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
 
+from . import get_action_with_summary, registered_actions
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
         if dt_str is None:
             return None
 
-        dt = super(DateTimeFromTimestampField, self).to_internal_value(dt_str)
+        dt = super().to_internal_value(dt_str)
         return get_timestamp_from_datetime(dt)
 
 
@@ -178,7 +178,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         if self.validated_data.get("validate_only"):
             return
 
-        super(ScheduleEntrySerializer, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def validate(self, data):
         """Do object-level validation."""
