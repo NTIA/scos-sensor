@@ -4,10 +4,14 @@
 #
 #    pip-compile requirements.in
 #
+aiosignal==1.2.0
+    # via ray
 asgiref==3.5.0
     # via django
 attrs==21.4.0
-    # via jsonschema
+    # via
+    #   jsonschema
+    #   ray
 bcrypt==3.2.0
     # via paramiko
 certifi==2021.10.8
@@ -19,6 +23,8 @@ cffi==1.15.0
     #   pynacl
 charset-normalizer==2.0.12
     # via requests
+click==8.0.4
+    # via ray
 coreapi==2.3.3
     # via drf-yasg
 coreschema==0.0.4
@@ -27,8 +33,8 @@ coreschema==0.0.4
     #   drf-yasg
 cryptography==36.0.2
     # via paramiko
-defusedxml==0.7.1
-    # via its-preselector
+distlib==0.3.6
+    # via virtualenv
 distro==1.7.0
     # via docker-compose
 django==3.2.15
@@ -59,13 +65,23 @@ environs==9.5.0
     # via
     #   -r requirements.in
     #   scos-tekrsa
+filelock==3.8.0
+    # via
+    #   ray
+    #   virtualenv
+frozenlist==1.3.1
+    # via
+    #   aiosignal
+    #   ray
+grpcio==1.43.0
+    # via ray
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
     # via requests
 inflection==0.5.1
     # via drf-yasg
-its-preselector @ git+https://github.com/NTIA/Preselector@2.0.0
+its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
     # via scos-actions
 itypes==1.2.0
     # via coreapi
@@ -74,16 +90,21 @@ jinja2==3.1.1
 jsonfield==3.1.0
     # via -r requirements.in
 jsonschema==3.2.0
-    # via docker-compose
+    # via
+    #   docker-compose
+    #   ray
 markupsafe==2.1.1
     # via jinja2
 marshmallow==3.15.0
     # via environs
+msgpack==1.0.4
+    # via ray
 numexpr==2.8.3
     # via scos-actions
 numpy==1.22.4
     # via
     #   numexpr
+    #   ray
     #   scipy
     #   scos-actions
     #   sigmf
@@ -99,6 +120,10 @@ packaging==21.3
     #   numexpr
 paramiko==2.10.3
     # via docker
+platformdirs==2.5.2
+    # via virtualenv
+protobuf==3.20.1
+    # via ray
 psycopg2-binary==2.9.3
     # via -r requirements.in
 pycparser==2.21
@@ -122,13 +147,18 @@ pytz==2022.1
     #   django
     #   djangorestframework
 pyyaml==5.4.1
-    # via docker-compose
+    # via
+    #   docker-compose
+    #   ray
+ray==2.0.0
+    # via scos-actions
 requests==2.27.1
     # via
     #   coreapi
     #   docker
     #   docker-compose
     #   its-preselector
+    #   ray
     #   requests-mock
     #   requests-oauthlib
 requests-mock==1.9.3
@@ -156,6 +186,7 @@ six==1.16.0
     #   bcrypt
     #   django-session-timeout
     #   dockerpty
+    #   grpcio
     #   jsonschema
     #   paramiko
     #   python-dateutil
@@ -174,6 +205,8 @@ uritemplate==4.1.1
     #   drf-yasg
 urllib3==1.26.9
     # via requests
+virtualenv==20.16.5
+    # via ray
 websocket-client==0.59.0
     # via
     #   docker
