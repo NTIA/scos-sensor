@@ -1,13 +1,13 @@
 {
 	"name": "preselector",
-	"base_url": "http://192.168.82.223/state.xml",
+	"base_url": "http://192.168.82.221/state.xml",
 	"control_states": {
 		"noise_diode_on" : "1State=1,2State=1,3State=0,4State=0",
 		"noise_diode_off" : "1State=1,2State=0,3State=0,4State=0",
 		"antenna" : "1State=0,2State=0,3State=0,4State=0"
 	},
 	"status_states": {
-		"noise diode powered" : "relay2=1",
+		"noise diode powered": "relay2=1",
 		"antenna path enabled": "relay1=0",
 		"noise diode path enabled": "relay1=1"
 	}

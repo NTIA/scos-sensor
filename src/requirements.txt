@@ -32,6 +32,8 @@ coreschema==0.0.4
     #   drf-yasg
 cryptography==38.0.1
     # via paramiko
+defusedxml==0.7.1
+    # via its-preselector
 distlib==0.3.6
     # via virtualenv
 distro==1.7.0
@@ -63,6 +65,7 @@ drf-yasg==1.21.3
 environs==9.5.0
     # via
     #   -r requirements.in
+    #   scos-actions
     #   scos-tekrsa
 filelock==3.8.0
     # via
@@ -80,7 +83,7 @@ idna==3.3
     # via requests
 inflection==0.5.1
     # via drf-yasg
-its-preselector @ git+https://github.com/NTIA/Preselector@1.0.0
+its-preselector @ git+https://github.com/NTIA/Preselector@2.1.0
     # via scos-actions
 itypes==1.2.0
     # via coreapi
