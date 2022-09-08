@@ -17,6 +17,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 1
+    shm_size: '16gb'
     restart: always
     depends_on:
       - db
