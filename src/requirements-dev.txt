@@ -8,33 +8,32 @@ aiosignal==1.2.0
     # via
     #   -r requirements.txt
     #   ray
-asgiref==3.5.0
+asgiref==3.5.2
     # via
     #   -r requirements.txt
     #   django
-attrs==21.4.0
+attrs==22.1.0
     # via
     #   -r requirements.txt
     #   jsonschema
     #   pytest
     #   ray
-bcrypt==3.2.0
+bcrypt==4.0.0
     # via
     #   -r requirements.txt
     #   paramiko
-certifi==2021.10.8
+certifi==2022.6.15
     # via
     #   -r requirements.txt
     #   requests
-cffi==1.15.0
+cffi==1.15.1
     # via
     #   -r requirements.txt
-    #   bcrypt
     #   cryptography
     #   pynacl
 cfgv==3.3.1
     # via pre-commit
-charset-normalizer==2.0.12
+charset-normalizer==2.1.1
     # via
     #   -r requirements.txt
     #   requests
@@ -51,9 +50,9 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.3.2
+coverage[toml]==6.4.4
     # via pytest-cov
-cryptography==36.0.2
+cryptography==38.0.1
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -80,7 +79,7 @@ djangorestframework==3.13.1
     # via
     #   -r requirements.txt
     #   drf-yasg
-docker[ssh]==5.0.3
+docker[ssh]==6.0.0
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -94,7 +93,7 @@ docopt==0.6.2
     # via
     #   -r requirements.txt
     #   docker-compose
-drf-yasg==1.20.0
+drf-yasg==1.21.3
     # via -r requirements.txt
 environs==9.5.0
     # via
@@ -117,7 +116,7 @@ grpcio==1.43.0
     #   ray
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.4.12
+identify==2.5.5
     # via pre-commit
 idna==3.3
     # via
@@ -137,7 +136,7 @@ itypes==1.2.0
     # via
     #   -r requirements.txt
     #   coreapi
-jinja2==3.1.1
+jinja2==3.1.2
     # via
     #   -r requirements.txt
     #   coreschema
@@ -152,7 +151,7 @@ markupsafe==2.1.1
     # via
     #   -r requirements.txt
     #   jinja2
-marshmallow==3.15.0
+marshmallow==3.17.1
     # via
     #   -r requirements.txt
     #   environs
@@ -160,13 +159,13 @@ msgpack==1.0.4
     # via
     #   -r requirements.txt
     #   ray
-nodeenv==1.6.0
+nodeenv==1.7.0
     # via pre-commit
 numexpr==2.8.3
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.22.4
+numpy==1.23.2
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -183,12 +182,13 @@ oauthlib==3.2.0
 packaging==21.3
     # via
     #   -r requirements.txt
+    #   docker
     #   drf-yasg
     #   marshmallow
     #   numexpr
     #   pytest
     #   tox
-paramiko==2.10.3
+paramiko==2.11.0
     # via
     #   -r requirements.txt
     #   docker
@@ -200,7 +200,7 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-pre-commit==2.18.1
+pre-commit==2.20.0
     # via -r requirements-dev.in
 protobuf==3.20.1
     # via
@@ -216,13 +216,13 @@ pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via -r requirements.txt
 pynacl==1.5.0
     # via
     #   -r requirements.txt
     #   paramiko
-pyparsing==3.0.7
+pyparsing==3.0.9
     # via
     #   -r requirements.txt
     #   packaging
@@ -230,7 +230,7 @@ pyrsistent==0.18.1
     # via
     #   -r requirements.txt
     #   jsonschema
-pytest==7.1.1
+pytest==7.1.3
     # via
     #   pytest-cov
     #   pytest-django
@@ -242,16 +242,17 @@ python-dateutil==2.8.2
     # via
     #   -r requirements.txt
     #   scos-actions
-python-dotenv==0.20.0
+python-dotenv==0.21.0
     # via
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2022.1
+pytz==2022.2.1
     # via
     #   -r requirements.txt
     #   django
     #   djangorestframework
+    #   drf-yasg
 pyyaml==5.4.1
     # via
     #   -r requirements.txt
@@ -262,7 +263,7 @@ ray==2.0.0
     # via
     #   -r requirements.txt
     #   scos-actions
-requests==2.27.1
+requests==2.28.1
     # via
     #   -r requirements.txt
     #   coreapi
@@ -272,7 +273,7 @@ requests==2.27.1
     #   ray
     #   requests-mock
     #   requests-oauthlib
-requests-mock==1.9.3
+requests-mock==1.10.0
     # via -r requirements.txt
 requests-oauthlib==1.3.1
     # via -r requirements.txt
@@ -285,7 +286,7 @@ ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.9.0
+scipy==1.9.1
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -302,7 +303,6 @@ sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
 six==1.16.0
     # via
     #   -r requirements.txt
-    #   bcrypt
     #   django-session-timeout
     #   dockerpty
     #   grpcio
@@ -326,23 +326,23 @@ texttable==1.6.4
     #   -r requirements.txt
     #   docker-compose
 toml==0.10.2
-    # via
-    #   pre-commit
-    #   tox
+    # via pre-commit
 tomli==2.0.1
     # via
     #   coverage
     #   pytest
-tox==3.24.5
+    #   tox
+tox==3.26.0
     # via -r requirements-dev.in
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.9
+urllib3==1.26.12
     # via
     #   -r requirements.txt
+    #   docker
     #   requests
 virtualenv==20.16.5
     # via
