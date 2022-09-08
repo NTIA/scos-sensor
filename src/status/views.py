@@ -2,7 +2,7 @@ import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from scos_actions.settings import sensor_calibration
+from scos_actions.calibration import sensor_calibration
 from scos_actions.utils import get_datetime_str_now
 
 from scheduler import scheduler
