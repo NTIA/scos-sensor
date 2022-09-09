@@ -10,12 +10,6 @@
             "model": "None"
         }
     },
-    "preselector" : {
-        "preselector_spec" : {
-          "supplemental_information" : "Oldest rev preselector with no enclosure"
-        },
-        "cal_sources" : [ { "enr": 14.53 } ]
-    },
     "signal_analyzer": {
         "sigan_spec": {
             "id": "",
