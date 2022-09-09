@@ -146,7 +146,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@fix_dateutil_dependency
     #   scos-usrp
 scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
     # via -r requirements.in
-sigmf @ git+https://github.com/NTIA/SigMF.git@python3.10_fix
+sigmf @ git+https://github.com/NTIA/SigMF@python3.10_fix
     # via scos-actions
 six==1.16.0
     # via

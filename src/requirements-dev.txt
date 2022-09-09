@@ -274,7 +274,7 @@ scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
-sigmf @ git+https://github.com/NTIA/SigMF.git@python3.10_fix
+sigmf @ git+https://github.com/NTIA/SigMF@python3.10_fix
     # via
     #   -r requirements.txt
     #   scos-actions
