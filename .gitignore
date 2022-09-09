@@ -1,7 +1,7 @@
 # local settings
 env
 db.sqlite3
-
+drivers/cyusb.conf
 # Test generated files
 files/*
 
