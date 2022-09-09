@@ -6,7 +6,7 @@ import sys
 
 import django
 
-from utils import registered_actions  # noqa
+from utils.action_registrar import registered_actions
 
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
 

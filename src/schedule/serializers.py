@@ -1,4 +1,3 @@
-import logging
 from datetime import datetime
 
 from rest_framework import serializers
@@ -13,9 +12,6 @@ from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetim
 
 from . import get_action_with_summary, registered_actions
 from .models import DEFAULT_PRIORITY, ScheduleEntry
-
-logger = logging.getLogger(__name__)
-logger.debug("******** scos-sensor/schedule/serializers.py ****************")
 
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = "Lower number is higher priority (default={})".format(DEFAULT_PRIORITY)

@@ -4,6 +4,6 @@ import logging
 from scos_actions.calibration import sensor_calibration
 
 logger = logging.getLogger(__name__)
-logger.debug("scos-sensor.status initializing")
+logger.debug("********** Initializing status **********")
 sensor_cal = sensor_calibration
 start_time = datetime.datetime.utcnow()

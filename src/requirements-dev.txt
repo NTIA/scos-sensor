@@ -276,7 +276,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@4.0.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@main
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@2.0.1
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in

@@ -2,7 +2,7 @@
     "id": "",
     "sensor_spec": {
         "id": "",
-        "model": "mockgreyhound"
+        "model": "greyhound"
     },
     "antenna": {
         "antenna_spec": {

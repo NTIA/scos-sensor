@@ -1857,10 +1857,10 @@
                     "type": "string",
                     "format": "date-time"
                 },
-                "duration": {
+                "onon": {
                     "title": "Duration",
                     "description": "Task duration in seconds",
-                    "type": "string"
+                    "type": "number"
                 },
                 "data": {
                     "type": "array",

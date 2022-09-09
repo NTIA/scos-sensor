@@ -47,7 +47,7 @@ services:
       - IN_DOCKER=1
       - IPS
       - MAX_DISK_USAGE
-      - MOCK_SIGAN=1
+      - MOCK_SIGAN
       - MOCK_SIGAN_RANDOM
       - OAUTH_TOKEN_URL
       - PATH_TO_CLIENT_CERT

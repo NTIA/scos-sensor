@@ -16,7 +16,5 @@ def get_action_with_summary(action):
 
 
 logger = logging.getLogger(__name__)
-logger.debug(
-    "********************* scos-sensor/schedule/__init ************************"
-)
+logger.debug("********** Initializing schedule **********")
 actions = registered_actions

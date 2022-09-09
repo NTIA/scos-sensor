@@ -8,9 +8,8 @@ from scos_actions.discover import test_actions
 from sensor import settings
 from sensor.utils import copy_driver_files
 
-#
 logger = logging.getLogger(__name__)
-logger.debug("************ Initializing scos-sensor/actions ************ ")
+logger.debug("********** Initializing actions **********")
 
 copy_driver_files()  # copy driver files before loading plugins
 
