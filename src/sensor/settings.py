@@ -8,8 +8,9 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 
-!!!!!!NOTE!!!!!: This file is used when scos-sensor runs migrations prior to running. runtime_settings.py is copied over
-this file when scos sensor is run.
+!!!!!!NOTE!!!!!: This file is replaced when scos-sensor runs in docker. migration_settings.py is used when migrations are
+run and runtime_settings is used when scos sensor is run in docker.
+Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
 
 """
 
@@ -64,7 +65,6 @@ CONFIG_DIR = path.join(REPO_ROOT, "configs")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
 # JSON configs
-# TODO remove calibration files, add instructions to set these in scos-usrp
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
@@ -93,7 +93,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
-    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"  # TODO not sure why this is set here
+    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
@@ -176,6 +176,7 @@ INSTALLED_APPS = [
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
     "sensor.apps.SensorConfig",  # global settings/utils, etc
+    "actions.apps.ActionsConfig",
 ]
 
 MIDDLEWARE = [

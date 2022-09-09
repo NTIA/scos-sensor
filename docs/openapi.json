@@ -1857,7 +1857,7 @@
                     "type": "string",
                     "format": "date-time"
                 },
-                "onon": {
+                "duration": {
                     "title": "Duration",
                     "description": "Task duration in seconds",
                     "type": "number"
