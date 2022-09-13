@@ -295,11 +295,11 @@ scipy==1.9.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@nasctn-sea
+scos_actions @ git+https://github.com/NTIA/scos-actions@sea-prototype-v0.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@nasctn-sea
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@sea-prototype-v0.1
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
