@@ -21,11 +21,6 @@ bcrypt==3.2.0
     #   paramiko
 black==22.3.0
     # via -r requirements-dev.in
-cached-property==1.5.2
-    # via
-    #   -r requirements.txt
-    #   aspy-refactor-imports
-    #   docker-compose
 certifi==2021.10.8
     # via
     #   -r requirements.txt
@@ -75,6 +70,7 @@ django==3.2.12
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
+    #   scos-actions
     #   scos-usrp
 django-debug-toolbar==3.2.4
     # via -r requirements-dev.in
@@ -118,16 +114,6 @@ idna==3.3
     # via
     #   -r requirements.txt
     #   requests
-importlib-metadata==4.11.3
-    # via
-    #   -r requirements.txt
-    #   click
-    #   jsonschema
-    #   pluggy
-    #   pre-commit
-    #   pytest
-    #   tox
-    #   virtualenv
 inflection==0.5.1
     # via
     #   -r requirements.txt
@@ -136,6 +122,10 @@ iniconfig==1.1.1
     # via pytest
 isort==5.10.1
     # via -r requirements-dev.in
+its-preselector @ git+https://github.com/NTIA/Preselector@0.0.1
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 itypes==1.2.0
     # via
     #   -r requirements.txt
@@ -166,8 +156,11 @@ numpy==1.21.5
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
+    #   scipy
+    #   scos-actions
     #   scos-usrp
-oauthlib==3.2.0
+    #   sigmf
+oauthlib==3.2.1
     # via
     #   -r requirements.txt
     #   requests-oauthlib
@@ -226,6 +219,10 @@ pytest-cov==3.0.0
     # via -r requirements-dev.in
 pytest-django==4.5.2
     # via -r requirements-dev.in
+python-dateutil==2.8.2
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 python-dotenv==0.20.0
     # via
     #   -r requirements.txt
@@ -247,6 +244,7 @@ requests==2.27.1
     #   coreapi
     #   docker
     #   docker-compose
+    #   its-preselector
     #   requests-mock
     #   requests-oauthlib
 requests-mock==1.9.3
@@ -257,10 +255,15 @@ ruamel-yaml==0.17.21
     # via
     #   -r requirements.txt
     #   drf-yasg
+    #   scos-actions
 ruamel-yaml-clib==0.2.6
     # via
     #   -r requirements.txt
     #   ruamel-yaml
+scipy==1.9.1
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@1.0.0
     # via
     #   -r requirements.txt
@@ -269,6 +272,10 @@ scos_usrp @ git+https://github.com/NTIA/scos-usrp@0.1.0
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
+sigmf @ git+https://github.com/NTIA/SigMF.git@multi-recording-archive
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 six==1.16.0
     # via
     #   -r requirements.txt
@@ -277,7 +284,9 @@ six==1.16.0
     #   dockerpty
     #   jsonschema
     #   paramiko
+    #   python-dateutil
     #   requests-mock
+    #   sigmf
     #   tox
     #   virtualenv
     #   websocket-client
@@ -301,14 +310,6 @@ tomli==2.0.1
     #   pytest
 tox==3.24.5
     # via -r requirements-dev.in
-typed-ast==1.5.2
-    # via black
-typing-extensions==4.1.1
-    # via
-    #   -r requirements.txt
-    #   asgiref
-    #   black
-    #   importlib-metadata
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
@@ -327,10 +328,6 @@ websocket-client==0.59.0
     #   -r requirements.txt
     #   docker
     #   docker-compose
-zipp==3.8.0
-    # via
-    #   -r requirements.txt
-    #   importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
