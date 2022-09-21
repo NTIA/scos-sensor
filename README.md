@@ -1,6 +1,6 @@
 # NTIA/ITS SCOS Sensor
 
-[![Travis CI Build Status][travis-badge]][travis-link]
+[![GitHub Actions Status][github-actions-badge]][github-actions-link]
 [![API Docs Build Status][api-docs-badge]][api-docs-link]
 
 `scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.15.22.3
@@ -11,8 +11,8 @@ resultant data.
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
 [ieee-link]: https://standards.ieee.org/standard/802_15_22_3-2020.html
-[travis-link]: https://travis-ci.org/NTIA/scos-sensor
-[travis-badge]: https://travis-ci.org/NTIA/scos-sensor.svg?branch=master
+[github-actions-link]: https://github.com/NTIA/scos-sensor/actions
+[github-actions-badge]: https://github.com/NTIA/scos-sensor/actions/workflows/github-actions-test.yml/badge.svg
 [api-docs-link]: https://ntia.github.io/scos-sensor/
 [api-docs-badge]: https://img.shields.io/badge/docs-available-brightgreen.svg
 
