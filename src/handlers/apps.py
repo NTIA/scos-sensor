@@ -32,14 +32,10 @@ class HandlersConfig(AppConfig):
             "location_action_completed_callback registered to location_action_completed"
         )
         post_save.connect(db_location_updated)
-        logger.debug(
-            "db_location_updated registered to post_save"
-        )
+        logger.debug("db_location_updated registered to post_save")
 
         post_delete.connect(db_location_deleted)
-        logger.debug(
-            "db_location_deleted registered to post_delete"
-        )
+        logger.debug("db_location_deleted registered to post_delete")
 
         monitor_action_completed.connect(monitor_action_completed_callback)
         logger.debug(

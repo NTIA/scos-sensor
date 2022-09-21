@@ -22,7 +22,7 @@ class TaskResult(models.Model):
         (SUCCESS, "success"),
         (FAILURE, "failure"),
         (IN_PROGRESS, "in-progress"),
-        (NOTIFICATION_FAILED, "notification_failed")
+        (NOTIFICATION_FAILED, "notification_failed"),
     )
 
     schedule_entry = models.ForeignKey(
