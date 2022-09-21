@@ -1,6 +1,10 @@
-name: scos-sensor test
-on: [push, pull_request]
-workflow_dispatch:
+name: 'scos-sensor test'
+
+on: 
+  workflow_dispatch:
+  push:
+  pull_request:
+
 jobs:
   test-scos-sensor:
     runs-on: ubuntu-20.04
