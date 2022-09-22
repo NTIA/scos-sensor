@@ -38,7 +38,7 @@ services:
       - CALLBACK_SSL_VERIFICATION
       - CLIENT_ID
       - CLIENT_SECRET
-      - DEBUG=1
+      - DEBUG
       - DOCKER_TAG
       - DOMAINS
       - FQDN
