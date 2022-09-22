@@ -42,7 +42,7 @@ jobs:
         run: sh create_localhost_cert.sh
 
       - name: Run Docker
-        run: source ./env && export MOCK_SIGAN=1 && export MOCK_SIGAN_RANDOM=1 && docker-compose up -d --build
+        run: source ./env.template && export MOCK_SIGAN=1 && export MOCK_SIGAN_RANDOM=1 && docker-compose up -d --build
 
       - name: Check Logs
         run: docker-compose logs
