@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Install ubuntu packages
-        run: sudo apt-get install -y docker-compose docker.io
+        run: sudo apt-get install -y docker-compose docker.io containerd
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -49,3 +49,7 @@ jobs:
 
       - name: Check Container
         run: docker ps | grep api | grep -q healthy
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose down
