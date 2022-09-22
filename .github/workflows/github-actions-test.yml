@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Install ubuntu packages
-        run: sudo apt-get install -y docker-compose docker.io containerd
+        run: sudo apt-get install -y docker-compose docker.io containerd runc
 
       - name: Checkout
         uses: actions/checkout@v3
