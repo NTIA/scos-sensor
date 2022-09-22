@@ -41,6 +41,11 @@ jobs:
         working-directory: ./scripts
         run: sh create_localhost_cert.sh
 
+      - name: Create Fake USB # Create fake usb device node to make api container happy
+        run : | 
+          sudo mkdir -p /dev/bus/usb/001
+          sudo mknod /dev/bus/usb/001/001 c 189 260
+
       - name: Run Docker
         run: source ./env.template && export MOCK_SIGAN=1 && export MOCK_SIGAN_RANDOM=1 && docker-compose up -d --build
 
