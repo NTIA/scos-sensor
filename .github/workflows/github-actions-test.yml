@@ -50,7 +50,7 @@ jobs:
         run: source ./env.template && export MOCK_SIGAN=1 && export MOCK_SIGAN_RANDOM=1 && docker-compose up -d --build
 
       - name: Pause # wait for containers to finish starting
-        run: sleep 12
+        run: sleep 15
 
       - name: Check Logs
         run: docker-compose logs
