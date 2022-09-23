@@ -167,7 +167,7 @@ numpy==1.23.2
     #   scos-actions
     #   scos-usrp
     #   sigmf
-oauthlib==3.2.0
+oauthlib==3.2.1
     # via
     #   -r requirements.txt
     #   requests-oauthlib
