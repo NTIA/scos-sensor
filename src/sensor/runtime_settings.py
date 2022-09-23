@@ -9,7 +9,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 
 !!!!!!NOTE!!!!!: This file is used when scos-sensor runs in docker. migration_settings.py is used when migrations are
-run in docker. Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
+run in docker. Make sure migration_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
 
 """
 
