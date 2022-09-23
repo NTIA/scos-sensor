@@ -1642,6 +1642,7 @@
                         "test_multi_frequency_iq_action",
                         "test_single_frequency_iq_action",
                         "test_single_frequency_m4s_action",
+                        "test_survey_iq_action",
                         "test_sync_gps"
                     ]
                 },
@@ -1860,7 +1861,7 @@
                 "duration": {
                     "title": "Duration",
                     "description": "Task duration in seconds",
-                    "type": "number"
+                    "type": "string"
                 },
                 "data": {
                     "type": "array",

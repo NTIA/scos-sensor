@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from scos_actions.actions.interfaces.signals import measurement_action_completed
+from scos_actions.signals import measurement_action_completed
 from tasks.models import Acquisition
 from tasks.tests.utils import reverse_archive, simulate_timedomain_iq_acquisition, HTTPS_KWARG
 from handlers.measurement_handler import measurement_action_completed_callback
