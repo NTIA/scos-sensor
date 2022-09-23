@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import logging
 
 from django.apps import AppConfig
@@ -17,9 +15,11 @@ class HandlersConfig(AppConfig):
     name = "handlers"
 
     def ready(self):
-        from handlers.location_handler import location_action_completed_callback
-        from handlers.location_handler import db_location_updated
-        from handlers.location_handler import db_location_deleted
+        from handlers.location_handler import (
+            db_location_deleted,
+            db_location_updated,
+            location_action_completed_callback,
+        )
         from handlers.measurement_handler import measurement_action_completed_callback
         from handlers.monitor_handler import monitor_action_completed_callback
 
@@ -32,14 +32,10 @@ class HandlersConfig(AppConfig):
             "location_action_completed_callback registered to location_action_completed"
         )
         post_save.connect(db_location_updated)
-        logger.debug(
-            "db_location_updated registered to post_save"
-        )
+        logger.debug("db_location_updated registered to post_save")
 
         post_delete.connect(db_location_deleted)
-        logger.debug(
-            "db_location_deleted registered to post_delete"
-        )
+        logger.debug("db_location_deleted registered to post_delete")
 
         monitor_action_completed.connect(monitor_action_completed_callback)
         logger.debug(

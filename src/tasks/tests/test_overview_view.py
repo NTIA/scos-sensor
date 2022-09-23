@@ -1,12 +1,11 @@
 from rest_framework import status
 
 from sensor.tests.utils import HTTPS_KWARG, validate_response
-from tasks.tests.utils import (
+from test_utils.task_test_utils import (
     EMPTY_RESULTS_RESPONSE,
     create_task_results,
     get_results_overview,
     reverse_results_overview,
-    simulate_frequency_fft_acquisitions,
 )
 
 
