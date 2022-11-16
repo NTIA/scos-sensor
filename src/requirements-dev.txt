@@ -15,13 +15,13 @@ attrs==22.1.0
     #   -r requirements.txt
     #   jsonschema
     #   pytest
-bcrypt==4.0.0
+bcrypt==4.0.1
     # via
     #   -r requirements.txt
     #   paramiko
-black==22.8.0
+black==22.10.0
     # via -r requirements-dev.in
-certifi==2022.9.14
+certifi==2022.9.24
     # via
     #   -r requirements.txt
     #   requests
@@ -38,6 +38,13 @@ charset-normalizer==2.1.1
     #   requests
 click==8.1.3
     # via black
+colorama==0.4.6
+    # via
+    #   -r requirements.txt
+    #   click
+    #   docker-compose
+    #   pytest
+    #   tox
 coreapi==2.3.3
     # via
     #   -r requirements.txt
@@ -47,23 +54,19 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.4.4
+coverage[toml]==6.5.0
     # via pytest-cov
-cryptography==38.0.1
+cryptography==38.0.3
     # via
     #   -r requirements.txt
     #   paramiko
-defusedxml==0.7.1
-    # via
-    #   -r requirements.txt
-    #   its-preselector
 distlib==0.3.6
     # via virtualenv
-distro==1.7.0
+distro==1.8.0
     # via
     #   -r requirements.txt
     #   docker-compose
-django==3.2.15
+django==3.2.16
     # via
     #   -r requirements.txt
     #   django-debug-toolbar
@@ -72,9 +75,8 @@ django==3.2.15
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
-    #   scos-actions
     #   scos-usrp
-django-debug-toolbar==3.6.0
+django-debug-toolbar==3.7.0
     # via -r requirements-dev.in
 django-extensions==3.2.1
     # via -r requirements-dev.in
@@ -84,7 +86,7 @@ djangorestframework==3.13.1
     # via
     #   -r requirements.txt
     #   drf-yasg
-docker[ssh]==6.0.0
+docker[ssh]==6.0.1
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -98,20 +100,21 @@ docopt==0.6.2
     # via
     #   -r requirements.txt
     #   docker-compose
-drf-yasg==1.21.3
+drf-yasg==1.21.4
     # via -r requirements.txt
 environs==9.5.0
     # via
     #   -r requirements.txt
-    #   scos-actions
     #   scos-usrp
+exceptiongroup==1.0.4
+    # via pytest
 filelock==3.8.0
     # via
     #   tox
     #   virtualenv
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.5
+identify==2.5.8
     # via pre-commit
 idna==3.4
     # via
@@ -125,10 +128,6 @@ iniconfig==1.1.1
     # via pytest
 isort==5.10.1
     # via -r requirements-dev.in
-its-preselector @ git+https://github.com/NTIA/Preselector@2.1.0
-    # via
-    #   -r requirements.txt
-    #   scos-actions
 itypes==1.2.0
     # via
     #   -r requirements.txt
@@ -147,7 +146,7 @@ markupsafe==2.1.1
     # via
     #   -r requirements.txt
     #   jinja2
-marshmallow==3.18.0
+marshmallow==3.19.0
     # via
     #   -r requirements.txt
     #   environs
@@ -155,20 +154,12 @@ mypy-extensions==0.4.3
     # via black
 nodeenv==1.7.0
     # via pre-commit
-numexpr==2.8.3
-    # via
-    #   -r requirements.txt
-    #   scos-actions
-numpy==1.23.3
+numpy==1.23.4
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
-    #   numexpr
-    #   scipy
-    #   scos-actions
     #   scos-usrp
-    #   sigmf
-oauthlib==3.2.1
+oauthlib==3.2.2
     # via
     #   -r requirements.txt
     #   requests-oauthlib
@@ -178,16 +169,15 @@ packaging==21.3
     #   docker
     #   drf-yasg
     #   marshmallow
-    #   numexpr
     #   pytest
     #   tox
-paramiko==2.11.0
+paramiko==2.12.0
     # via
     #   -r requirements.txt
     #   docker
-pathspec==0.10.1
+pathspec==0.10.2
     # via black
-platformdirs==2.5.2
+platformdirs==2.5.4
     # via
     #   black
     #   virtualenv
@@ -197,17 +187,15 @@ pluggy==1.0.0
     #   tox
 pre-commit==2.20.0
     # via -r requirements-dev.in
-psycopg2-binary==2.9.3
+psycopg2-binary==2.9.5
     # via -r requirements.txt
 py==1.11.0
-    # via
-    #   pytest
-    #   tox
+    # via tox
 pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
-pyjwt==2.5.0
+pyjwt==2.6.0
     # via -r requirements.txt
 pynacl==1.5.0
     # via
@@ -217,11 +205,11 @@ pyparsing==3.0.9
     # via
     #   -r requirements.txt
     #   packaging
-pyrsistent==0.18.1
+pyrsistent==0.19.2
     # via
     #   -r requirements.txt
     #   jsonschema
-pytest==7.1.3
+pytest==7.2.0
     # via
     #   pytest-cov
     #   pytest-django
@@ -229,21 +217,21 @@ pytest-cov==3.0.0
     # via -r requirements-dev.in
 pytest-django==4.5.2
     # via -r requirements-dev.in
-python-dateutil==2.8.2
-    # via
-    #   -r requirements.txt
-    #   scos-actions
 python-dotenv==0.21.0
     # via
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2022.2.1
+pytz==2022.6
     # via
     #   -r requirements.txt
     #   django
     #   djangorestframework
     #   drf-yasg
+pywin32==305
+    # via
+    #   -r requirements.txt
+    #   docker
 pyyaml==5.4.1
     # via
     #   -r requirements.txt
@@ -255,7 +243,6 @@ requests==2.28.1
     #   coreapi
     #   docker
     #   docker-compose
-    #   its-preselector
     #   requests-mock
     #   requests-oauthlib
 requests-mock==1.10.0
@@ -266,16 +253,11 @@ ruamel-yaml==0.17.21
     # via
     #   -r requirements.txt
     #   drf-yasg
-    #   scos-actions
-ruamel-yaml-clib==0.2.6
+ruamel-yaml-clib==0.2.7
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.9.1
-    # via
-    #   -r requirements.txt
-    #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@fix_dateutil_dependency
+scos_actions @ git+https://github.com/NTIA/scos-actions@4.0.2
     # via
     #   -r requirements.txt
     #   scos-usrp
@@ -283,10 +265,6 @@ scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in
-sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
-    # via
-    #   -r requirements.txt
-    #   scos-actions
 six==1.16.0
     # via
     #   -r requirements.txt
@@ -294,9 +272,7 @@ six==1.16.0
     #   dockerpty
     #   jsonschema
     #   paramiko
-    #   python-dateutil
     #   requests-mock
-    #   sigmf
     #   tox
     #   websocket-client
 sqlparse==0.4.3
@@ -316,9 +292,9 @@ tomli==2.0.1
     #   coverage
     #   pytest
     #   tox
-tox==3.26.0
+tox==3.27.1
     # via -r requirements-dev.in
-typing-extensions==4.3.0
+typing-extensions==4.4.0
     # via black
 uritemplate==4.1.1
     # via
@@ -330,7 +306,7 @@ urllib3==1.26.12
     #   -r requirements.txt
     #   docker
     #   requests
-virtualenv==20.16.5
+virtualenv==20.16.7
     # via
     #   pre-commit
     #   tox
@@ -339,7 +315,7 @@ websocket-client==0.59.0
     #   -r requirements.txt
     #   docker
     #   docker-compose
-wheel==0.37.1
+wheel==0.38.4
     # via -r requirements.txt
 
 # The following packages are considered to be unsafe in a requirements file:

@@ -8,9 +8,9 @@ asgiref==3.5.2
     # via django
 attrs==22.1.0
     # via jsonschema
-bcrypt==4.0.0
+bcrypt==4.0.1
     # via paramiko
-certifi==2022.9.14
+certifi==2022.9.24
     # via requests
 cffi==1.15.1
     # via
@@ -18,28 +18,27 @@ cffi==1.15.1
     #   pynacl
 charset-normalizer==2.1.1
     # via requests
+colorama==0.4.6
+    # via docker-compose
 coreapi==2.3.3
     # via drf-yasg
 coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==38.0.1
+cryptography==38.0.3
     # via
     #   -r requirements.in
     #   paramiko
-defusedxml==0.7.1
-    # via its-preselector
-distro==1.7.0
+distro==1.8.0
     # via docker-compose
-django==3.2.15
+django==3.2.16
     # via
     #   -r requirements.in
     #   django-session-timeout
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
-    #   scos-actions
     #   scos-usrp
 django-session-timeout==0.1.0
     # via -r requirements.in
@@ -47,7 +46,7 @@ djangorestframework==3.13.1
     # via
     #   -r requirements.in
     #   drf-yasg
-docker[ssh]==6.0.0
+docker[ssh]==6.0.1
     # via docker-compose
 docker-compose==1.29.2
     # via -r requirements.in
@@ -55,12 +54,11 @@ dockerpty==0.4.1
     # via docker-compose
 docopt==0.6.2
     # via docker-compose
-drf-yasg==1.21.3
+drf-yasg==1.21.4
     # via -r requirements.in
 environs==9.5.0
     # via
     #   -r requirements.in
-    #   scos-actions
     #   scos-usrp
 gunicorn==20.1.0
     # via -r requirements.in
@@ -68,8 +66,6 @@ idna==3.4
     # via requests
 inflection==0.5.1
     # via drf-yasg
-its-preselector @ git+https://github.com/NTIA/Preselector@2.1.0
-    # via scos-actions
 itypes==1.2.0
     # via coreapi
 jinja2==3.1.2
@@ -80,18 +76,11 @@ jsonschema==3.2.0
     # via docker-compose
 markupsafe==2.1.1
     # via jinja2
-marshmallow==3.18.0
+marshmallow==3.19.0
     # via environs
-numexpr==2.8.3
-    # via scos-actions
-numpy==1.23.3
-    # via
-    #   numexpr
-    #   scipy
-    #   scos-actions
-    #   scos-usrp
-    #   sigmf
-oauthlib==3.2.1
+numpy==1.23.4
+    # via scos-usrp
+oauthlib==3.2.2
     # via
     #   -r requirements.in
     #   requests-oauthlib
@@ -100,32 +89,31 @@ packaging==21.3
     #   docker
     #   drf-yasg
     #   marshmallow
-    #   numexpr
-paramiko==2.11.0
+paramiko==2.12.0
     # via docker
-psycopg2-binary==2.9.3
+psycopg2-binary==2.9.5
     # via -r requirements.in
 pycparser==2.21
     # via cffi
-pyjwt==2.5.0
+pyjwt==2.6.0
     # via -r requirements.in
 pynacl==1.5.0
     # via paramiko
 pyparsing==3.0.9
     # via packaging
-pyrsistent==0.18.1
+pyrsistent==0.19.2
     # via jsonschema
-python-dateutil==2.8.2
-    # via scos-actions
 python-dotenv==0.21.0
     # via
     #   docker-compose
     #   environs
-pytz==2022.2.1
+pytz==2022.6
     # via
     #   django
     #   djangorestframework
     #   drf-yasg
+pywin32==305
+    # via docker
 pyyaml==5.4.1
     # via docker-compose
 requests==2.28.1
@@ -133,7 +121,6 @@ requests==2.28.1
     #   coreapi
     #   docker
     #   docker-compose
-    #   its-preselector
     #   requests-mock
     #   requests-oauthlib
 requests-mock==1.10.0
@@ -141,30 +128,22 @@ requests-mock==1.10.0
 requests-oauthlib==1.3.1
     # via -r requirements.in
 ruamel-yaml==0.17.21
-    # via
-    #   drf-yasg
-    #   scos-actions
-ruamel-yaml-clib==0.2.6
+    # via drf-yasg
+ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
-scipy==1.9.1
-    # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@fix_dateutil_dependency
+scos_actions @ git+https://github.com/NTIA/scos-actions@4.0.2
     # via
     #   -r requirements.in
     #   scos-usrp
 scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
     # via -r requirements.in
-sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
-    # via scos-actions
 six==1.16.0
     # via
     #   django-session-timeout
     #   dockerpty
     #   jsonschema
     #   paramiko
-    #   python-dateutil
     #   requests-mock
-    #   sigmf
     #   websocket-client
 sqlparse==0.4.3
     # via django
@@ -182,7 +161,7 @@ websocket-client==0.59.0
     # via
     #   docker
     #   docker-compose
-wheel==0.37.1
+wheel==0.38.4
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
