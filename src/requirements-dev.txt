@@ -49,7 +49,7 @@ coreschema==0.0.4
     #   drf-yasg
 coverage[toml]==6.5.0
     # via pytest-cov
-cryptography==38.0.3
+cryptography==38.0.4
     # via
     #   -r requirements.txt
     #   paramiko
@@ -113,7 +113,7 @@ filelock==3.8.0
     #   virtualenv
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.8
+identify==2.5.9
     # via pre-commit
 idna==3.4
     # via
@@ -161,7 +161,7 @@ numexpr==2.8.4
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.23.4
+numpy==1.23.5
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -303,7 +303,7 @@ sqlparse==0.4.3
     #   -r requirements.txt
     #   django
     #   django-debug-toolbar
-texttable==1.6.4
+texttable==1.6.7
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -324,12 +324,12 @@ uritemplate==4.1.1
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   -r requirements.txt
     #   docker
     #   requests
-virtualenv==20.16.7
+virtualenv==20.17.0
     # via
     #   pre-commit
     #   tox

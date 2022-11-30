@@ -24,7 +24,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==38.0.3
+cryptography==38.0.4
     # via
     #   -r requirements.in
     #   paramiko
@@ -84,7 +84,7 @@ marshmallow==3.19.0
     # via environs
 numexpr==2.8.4
     # via scos-actions
-numpy==1.23.4
+numpy==1.23.5
     # via
     #   numexpr
     #   scipy
@@ -167,13 +167,13 @@ six==1.16.0
     #   websocket-client
 sqlparse==0.4.3
     # via django
-texttable==1.6.4
+texttable==1.6.7
     # via docker-compose
 uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   docker
     #   requests
