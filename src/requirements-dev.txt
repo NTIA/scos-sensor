@@ -278,7 +278,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@4.0.2
     # via
     #   -r requirements.txt
     #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@2.0.1
     # via -r requirements.txt
 seed-isort-config==2.2.0
     # via -r requirements-dev.in

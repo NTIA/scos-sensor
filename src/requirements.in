@@ -13,5 +13,5 @@ pyjwt>=2.4.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
 scos_actions @ git+https://github.com/NTIA/scos-actions@4.0.2
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@update_scos_actions_version
+scos_usrp @ git+https://github.com/NTIA/scos-usrp@2.0.1
 wheel
