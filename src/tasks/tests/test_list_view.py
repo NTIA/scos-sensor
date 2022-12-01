@@ -3,10 +3,9 @@ import os
 import pytest
 from rest_framework import status
 
-from conftest import user_client
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.models import Acquisition, TaskResult
-from tasks.tests.utils import (
+from test_utils.task_test_utils import (
     create_task_results,
     get_result_list,
     reverse_result_detail,

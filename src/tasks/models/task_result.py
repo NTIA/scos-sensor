@@ -5,6 +5,7 @@ import shutil
 
 from django.db import models
 from django.utils import timezone
+
 from schedule.models import ScheduleEntry
 from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
@@ -25,7 +26,7 @@ class TaskResult(models.Model):
         (SUCCESS, "success"),
         (FAILURE, "failure"),
         (IN_PROGRESS, "in-progress"),
-        (NOTIFICATION_FAILED, "notification_failed")
+        (NOTIFICATION_FAILED, "notification_failed"),
     )
 
     schedule_entry = models.ForeignKey(

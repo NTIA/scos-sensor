@@ -71,11 +71,11 @@ class TaskResultsOverviewViewSet(ListModelMixin, GenericViewSet):
         return base_queryset.all()
 
 
-class MultipleFieldLookupMixin(object):
+class MultipleFieldLookupMixin:
     """Get multiple field filtering based on a `lookup_fields` attribute."""
 
     def get_queryset(self):
-        base_queryset = super(MultipleFieldLookupMixin, self).get_queryset()
+        base_queryset = super().get_queryset()
         base_queryset = self.filter_queryset(base_queryset)
 
         filter = {"schedule_entry__name": self.kwargs["schedule_entry_name"]}

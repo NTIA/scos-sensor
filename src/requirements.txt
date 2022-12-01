@@ -43,7 +43,7 @@ django==3.2.16
     #   scos-usrp
 django-session-timeout==0.1.0
     # via -r requirements.in
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   drf-yasg
@@ -181,8 +181,6 @@ websocket-client==0.59.0
     # via
     #   docker
     #   docker-compose
-wheel==0.38.4
-    # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -1,14 +1,9 @@
-import importlib
+import datetime
 import logging
 
-from actions import discovered_plugins
+from scos_actions.calibration import sensor_calibration
 
 logger = logging.getLogger(__name__)
-
-last_calibration_time = None
-
-for name, module in discovered_plugins.items():
-    logger.debug("Looking for actions in " + name + ": " + str(module))
-    discover = importlib.import_module(name + ".discover")
-    if hasattr(discover, "get_last_calibration_time"):
-        last_calibration_time = discover.get_last_calibration_time
+logger.debug("********** Initializing status **********")
+sensor_cal = sensor_calibration
+start_time = datetime.datetime.utcnow()

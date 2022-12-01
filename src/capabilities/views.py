@@ -1,24 +1,25 @@
-# -*- coding: utf-8 -*-
 import copy
 import logging
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-import actions
-from scos_actions.capabilities import capabilities
+from utils import get_summary
+
+from . import actions_by_name, sensor_capabilities
 
 logger = logging.getLogger(__name__)
+logger.debug("scos-sensor/capabilities/views.py")
 
 
 def get_actions(include_admin_actions=False):
     serialized_actions = []
-    for action in actions.by_name:
+    for action in actions_by_name:
         serialized_actions.append(
             {
                 "name": action,
-                "summary": actions.get_summary(actions.by_name[action]),
-                "description": actions.by_name[action].description,
+                "summary": get_summary(actions_by_name[action]),
+                "description": actions_by_name[action].description,
             }
         )
 
@@ -29,6 +30,6 @@ def get_actions(include_admin_actions=False):
 def capabilities_view(request, version, format=None):
     """The capabilites of the sensor."""
     filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
-    filtered_capabilities = copy.deepcopy(capabilities)
+    filtered_capabilities = copy.deepcopy(sensor_capabilities)
     filtered_capabilities["actions"] = filtered_actions
     return Response(filtered_capabilities)

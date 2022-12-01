@@ -8,9 +8,9 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 
-!!!!!!NOTE!!!!!: This file is replaced when scos-sensor runs in docker. migration_settings.py is used when migrations are
-run and runtime_settings is used when scos sensor is run in docker.
-Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
+!!!!!!NOTE!!!!!: This file is used when scos-sensor runs migrations prior to running. runtime_settings.py is copied over
+this file when scos sensor is run. Make sure runtime_settings.py and this stay in sync as needed.
+See entrypoints/api_entrypoints.sh
 
 """
 
@@ -18,7 +18,6 @@ import os
 import sys
 from os import path
 
-from cryptography.fernet import Fernet
 from environs import Env
 
 env = Env()
@@ -92,30 +91,20 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 # IP when the first request comes in.
 INTERNAL_IPS = ["127.0.0.1"]
 
-ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
-
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
     SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
     DEBUG = True
     ALLOWED_HOSTS = []
-    ENCRYPTION_KEY = Fernet.generate_key()
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
     DEBUG = env.bool("DEBUG", default=False)
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
-    ENCRYPTION_KEY = env.str("ENCRYPTION_KEY")
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
-if IN_DOCKER:
-    SCOS_TMP = env.str("SCOS_TMP", default="/scos_tmp")
-else:
-    SCOS_TMP = None
-
-
 
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds
@@ -187,7 +176,6 @@ INSTALLED_APPS = [
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
     "sensor.apps.SensorConfig",  # global settings/utils, etc
-    "actions.apps.ActionsConfig",
 ]
 
 MIDDLEWARE = [
@@ -214,7 +202,6 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request"
             ],
             "builtins": ["sensor.templatetags.sensor_tags"],
         },

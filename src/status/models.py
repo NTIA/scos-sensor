@@ -55,4 +55,4 @@ class Location(models.Model):
 
             qs.update(active=False)
 
-        super(Location, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)

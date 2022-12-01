@@ -7,7 +7,7 @@ import sigmf.sigmffile
 from rest_framework import status
 
 import sensor.settings
-from tasks.tests.utils import (
+from test_utils.task_test_utils import (
     HTTPS_KWARG,
     reverse_archive,
     reverse_archive_all,

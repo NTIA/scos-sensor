@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tasks', '0002_auto_20200319_1420'),
+        ("tasks", "0002_auto_20200319_1420"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='taskresult',
-            name='status',
-            field=models.CharField(choices=[(1, 'success'), (2, 'failure'), (3, 'in-progress')], default='in-progress', help_text='"success", "failure", or "notification_failed"', max_length=19),
+            model_name="taskresult",
+            name="status",
+            field=models.CharField(
+                choices=[(1, "success"), (2, "failure"), (3, "in-progress")],
+                default="in-progress",
+                help_text='"success", "failure", or "notification_failed"',
+                max_length=19,
+            ),
         ),
     ]
