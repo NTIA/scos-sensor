@@ -109,6 +109,10 @@ else:
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
+if IN_DOCKER:
+    SCOS_TMP = env.str("SCOS_TMP", default="/scos_tmp")
+else:
+    SCOS_TMP = None
 
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds

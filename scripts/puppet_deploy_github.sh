@@ -16,7 +16,6 @@ fi
 
 set -e # exit on error
 cd $REPO_ROOT
-export PASSPHRASE="$(python3 scripts/generate_passphrase.py 64)"
 rm -rf configs/certs/test # make sure test certs are not used in production
 docker-compose up -d
 touch .deployed

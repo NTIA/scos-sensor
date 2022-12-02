@@ -19,7 +19,6 @@ cd $REPO_ROOT
 
 docker-compose pull
 # docker-compose run api /src/manage.py createsuperuser
-export PASSPHRASE="$(python3 scripts/generate_passphrase.py 64)"
 rm -rf configs/certs/test # make sure test certs are not used in production
 docker-compose up -d --no-build
 touch .deployed

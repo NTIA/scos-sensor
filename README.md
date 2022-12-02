@@ -608,13 +608,15 @@ authorization server.
 
 ### Data File Encryption
 
-The data file is encrypted on disk by default using gpg. The metadata files are not
-encrypted. Note that the data will be written to the disk unecrypted when decrypting
-the file (although the unecrypted temporary file is removed). Set the `PASSPHRASE` in
-the env file to control the passphrase used for encryption. A random passphrase is
-created when deploying using puppet. The random passphrase is stored in an
-environment variable (using export command) and is passed to the container. Use the
-ENCRYPT_DATA_FILES setting in the env file to disable encryption.
+The data file is encrypted on disk by default using cryptography Fernet module. Note
+that the Fernet encryption module is not suitable for large data files. In testing,
+it seems to work fine with 1 second acquisition data files with size around 120 MB. It
+does not work with 10 second acquisition data files with size around 1 GB. The metadata
+files are not encrypted. Note that the data will be written to the disk unecrypted when
+decrypting the file (although the unecrypted temporary file is removed). Set the
+`ENCRYPTION_KEY`  environment variable to control the encryption key used for
+encryption. The env file will generate a random key. Use the `ENCRYPT_DATA_FILES`
+setting in the env file to disable encryption.
 
 ## Actions and Hardware Support
 
@@ -693,8 +695,7 @@ using a tool such a conda or venv. The following commands create a virtual envir
 using venv and install the required dependencies for development and testing.
 
 ```bash
-sudo apt install python3-gpg
-python3 -m venv --system-site-packages ./venv # --system-site-packages needed for access to python3-gpg package
+python3 -m venv ./venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip # upgrade to pip>=18.1
 python3 -m pip install -r src/requirements-dev.txt

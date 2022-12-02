@@ -57,7 +57,6 @@ services:
       - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
       - SECRET_KEY
-      - PASSPHRASE
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
     expose:

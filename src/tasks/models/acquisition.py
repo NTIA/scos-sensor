@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from django.db.models.fields.files import FileField
 from django.db.models.signals import pre_delete
