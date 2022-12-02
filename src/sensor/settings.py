@@ -116,7 +116,6 @@ else:
     SCOS_TMP = None
 
 
-
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
@@ -214,7 +213,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request"
+                "django.template.context_processors.request",
             ],
             "builtins": ["sensor.templatetags.sensor_tags"],
         },

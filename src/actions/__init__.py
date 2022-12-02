@@ -2,8 +2,8 @@ import importlib
 import logging
 import pkgutil
 
-from scos_actions.signals import register_action
 from scos_actions.discover import test_actions
+from scos_actions.signals import register_action
 
 from sensor import settings
 from sensor.utils import copy_driver_files

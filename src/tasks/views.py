@@ -1,11 +1,12 @@
 import logging
 import os
-
-from functools import partial
 import tempfile
+from functools import partial
 
 import sigmf.archive
 import sigmf.sigmffile
+from cryptography.fernet import Fernet
+from django.conf import settings
 from django.http import FileResponse, Http404
 from rest_framework import filters, status
 from rest_framework.decorators import action, api_view
@@ -18,14 +19,11 @@ from rest_framework.viewsets import GenericViewSet
 
 from schedule.models import ScheduleEntry
 from scheduler import scheduler
-from django.conf import settings
 
 from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
 from .serializers.task import TaskSerializer
 from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSerializer
-
-from cryptography.fernet import Fernet
 
 ENCRYPTION_KEY = settings.ENCRYPTION_KEY
 
@@ -222,7 +220,7 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
                 raw_data = acq.data.read()
                 data = fernet.decrypt(raw_data)
                 del raw_data
-                tmpdata.write(data) # decrypted data will be stored on disk in tmp file
+                tmpdata.write(data)  # decrypted data will be stored on disk in tmp file
                 del data
             else:
                 tmpdata.write(acq.data.read())
