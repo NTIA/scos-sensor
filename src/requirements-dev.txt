@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiosignal==1.2.0
+aiosignal==1.3.1
     # via
     #   -r requirements.txt
     #   ray
@@ -18,11 +18,11 @@ attrs==22.1.0
     #   jsonschema
     #   pytest
     #   ray
-bcrypt==4.0.0
+bcrypt==4.0.1
     # via
     #   -r requirements.txt
     #   paramiko
-certifi==2022.6.15
+certifi==2022.12.7
     # via
     #   -r requirements.txt
     #   requests
@@ -37,7 +37,7 @@ charset-normalizer==2.1.1
     # via
     #   -r requirements.txt
     #   requests
-click==8.0.4
+click==8.1.3
     # via
     #   -r requirements.txt
     #   ray
@@ -50,9 +50,9 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.4.4
+coverage[toml]==6.5.0
     # via pytest-cov
-cryptography==38.0.1
+cryptography==38.0.4
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -65,11 +65,11 @@ distlib==0.3.6
     # via
     #   -r requirements.txt
     #   virtualenv
-distro==1.7.0
+distro==1.8.0
     # via
     #   -r requirements.txt
     #   docker-compose
-django==3.2.15
+django==3.2.16
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -79,11 +79,11 @@ django==3.2.15
     #   scos-actions
 django-session-timeout==0.1.0
     # via -r requirements.txt
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.txt
     #   drf-yasg
-docker[ssh]==6.0.0
+docker[ssh]==6.0.1
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -97,33 +97,35 @@ docopt==0.6.2
     # via
     #   -r requirements.txt
     #   docker-compose
-drf-yasg==1.21.3
+drf-yasg==1.21.4
     # via -r requirements.txt
 environs==9.5.0
     # via
     #   -r requirements.txt
     #   scos-actions
     #   scos-tekrsa
-filelock==3.8.0
+exceptiongroup==1.0.4
+    # via pytest
+filelock==3.8.2
     # via
     #   -r requirements.txt
     #   ray
     #   tox
     #   virtualenv
-frozenlist==1.3.1
+frozenlist==1.3.3
     # via
     #   -r requirements.txt
     #   aiosignal
     #   ray
-grpcio==1.43.0
+grpcio==1.51.1
     # via
     #   -r requirements.txt
     #   ray
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.5
+identify==2.5.9
     # via pre-commit
-idna==3.3
+idna==3.4
     # via
     #   -r requirements.txt
     #   requests
@@ -156,7 +158,7 @@ markupsafe==2.1.1
     # via
     #   -r requirements.txt
     #   jinja2
-marshmallow==3.17.1
+marshmallow==3.19.0
     # via
     #   -r requirements.txt
     #   environs
@@ -166,11 +168,11 @@ msgpack==1.0.4
     #   ray
 nodeenv==1.7.0
     # via pre-commit
-numexpr==2.8.3
+numexpr==2.8.4
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.23.2
+numpy==1.23.5
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -180,24 +182,23 @@ numpy==1.23.2
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
-oauthlib==3.2.0
+oauthlib==3.2.2
     # via
     #   -r requirements.txt
     #   requests-oauthlib
-packaging==21.3
+packaging==22.0
     # via
     #   -r requirements.txt
     #   docker
     #   drf-yasg
     #   marshmallow
-    #   numexpr
     #   pytest
     #   tox
-paramiko==2.11.0
+paramiko==2.12.0
     # via
     #   -r requirements.txt
     #   docker
-platformdirs==2.5.2
+platformdirs==2.6.0
     # via
     #   -r requirements.txt
     #   virtualenv
@@ -207,35 +208,29 @@ pluggy==1.0.0
     #   tox
 pre-commit==2.20.0
     # via -r requirements-dev.in
-protobuf==3.20.1
+protobuf==4.21.12
     # via
     #   -r requirements.txt
     #   ray
-psycopg2-binary==2.9.3
+psycopg2-binary==2.9.5
     # via -r requirements.txt
 py==1.11.0
-    # via
-    #   pytest
-    #   tox
+    # via tox
 pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
-pyjwt==2.4.0
+pyjwt==2.6.0
     # via -r requirements.txt
 pynacl==1.5.0
     # via
     #   -r requirements.txt
     #   paramiko
-pyparsing==3.0.9
-    # via
-    #   -r requirements.txt
-    #   packaging
-pyrsistent==0.18.1
+pyrsistent==0.19.2
     # via
     #   -r requirements.txt
     #   jsonschema
-pytest==7.1.3
+pytest==7.2.0
     # via
     #   pytest-cov
     #   pytest-django
@@ -252,7 +247,7 @@ python-dotenv==0.21.0
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2022.2.1
+pytz==2022.6
     # via
     #   -r requirements.txt
     #   django
@@ -264,7 +259,7 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray==2.0.0
+ray==2.2.0
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -287,11 +282,11 @@ ruamel-yaml==0.17.21
     #   -r requirements.txt
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.6
+ruamel-yaml-clib==0.2.7
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.9.1
+scipy==1.9.3
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -299,7 +294,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@nasctn-sea
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@nasctn-sea
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@failure_recovery
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -310,7 +305,6 @@ six==1.16.0
     #   -r requirements.txt
     #   django-session-timeout
     #   dockerpty
-    #   grpcio
     #   jsonschema
     #   paramiko
     #   python-dateutil
@@ -318,15 +312,15 @@ six==1.16.0
     #   sigmf
     #   tox
     #   websocket-client
-sqlparse==0.4.2
+sqlparse==0.4.3
     # via
     #   -r requirements.txt
     #   django
-tekrsa-api-wrap==1.2.3
+tekrsa-api-wrap==1.3.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-texttable==1.6.4
+texttable==1.6.7
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -337,19 +331,19 @@ tomli==2.0.1
     #   coverage
     #   pytest
     #   tox
-tox==3.26.0
+tox==3.27.1
     # via -r requirements-dev.in
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   -r requirements.txt
     #   docker
     #   requests
-virtualenv==20.16.5
+virtualenv==20.17.1
     # via
     #   -r requirements.txt
     #   pre-commit
