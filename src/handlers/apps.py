@@ -39,5 +39,5 @@ class HandlersConfig(AppConfig):
 
         trigger_api_restart.connect(trigger_api_restart_callback)
         logger.debug(
-            "monitor_action_completed_callback registered to monitor_action_completed"
+            "trigger_api_restart_callback registered to trigger_api_restart"
         )
