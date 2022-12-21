@@ -268,7 +268,7 @@ scipy==1.9.3
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@healthy
+scos_actions @ git+https://github.com/NTIA/scos-actions@5.0.0
     # via
     #   -r requirements.txt
     #   scos-usrp
