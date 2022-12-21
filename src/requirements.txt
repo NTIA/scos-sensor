@@ -38,7 +38,6 @@ django==3.2.16
     #   drf-yasg
     #   jsonfield
     #   scos-actions
-    #   scos-usrp
 django-session-timeout==0.1.0
     # via -r requirements.in
 djangorestframework==3.14.0
@@ -59,7 +58,7 @@ environs==9.5.0
     # via
     #   -r requirements.in
     #   scos-actions
-    #   scos-usrp
+    #   scos-tekrsa
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.4
@@ -87,8 +86,8 @@ numpy==1.23.5
     #   numexpr
     #   scipy
     #   scos-actions
-    #   scos-usrp
     #   sigmf
+    #   tekrsa-api-wrap
 oauthlib==3.2.2
     # via
     #   -r requirements.in
@@ -146,8 +145,8 @@ scipy==1.9.3
 scos_actions @ git+https://github.com/NTIA/scos-actions@5.0.0
     # via
     #   -r requirements.in
-    #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@3.0.0
+    #   scos-tekrsa
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@health_check
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
@@ -163,6 +162,8 @@ six==1.16.0
     #   websocket-client
 sqlparse==0.4.3
     # via django
+tekrsa-api-wrap==1.3.0
+    # via scos-tekrsa
 texttable==1.6.7
     # via docker-compose
 uritemplate==4.1.1
