@@ -20,14 +20,19 @@ discovered_plugins = {
 }
 logger.debug(discovered_plugins)
 
-if settings.MOCK_SIGAN or settings.RUNNING_TESTS:
-    for name, action in test_actions.items():
-        logger.debug("test_action: " + name + "=" + str(action))
-        register_action.send(sender=__name__, action=action)
-else:
-    for name, module in discovered_plugins.items():
-        logger.debug("Looking for actions in " + name + ": " + str(module))
-        discover = importlib.import_module(name + ".discover")
+# Actions initialized here are made available through the API
+registered_actions = {}
+
+
+for name, module in discovered_plugins.items():
+    logger.debug("Looking for actions in " + name + ": " + str(module))
+    discover = importlib.import_module(name + ".discover")
+    if settings.MOCK_SIGAN or settings.RUNNING_TESTS:
+        if hasattr(discover, "test_actions"):
+            for name, action in discover.test_actions.items():
+                logger.debug("test_action: " + name + "=" + str(action))
+                registered_actions[name] = action
+    else:
         for name, action in discover.actions.items():
             logger.debug("action: " + name + "=" + str(action))
             register_action.send(sender=__name__, action=action)

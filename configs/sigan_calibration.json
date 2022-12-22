@@ -1,0 +1,175 @@
+{
+	"calibration_parameters": [
+		"sample_rate",
+		"frequency",
+		"reference_level"
+	],
+	"calibration_datetime": "2020-11-18T23:13:09.156274Z",
+	"calibration_data": {
+		"14000000.0":{
+			"3555000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3565000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3575000000":{
+				
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3585000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3595000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3605000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3615000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3625000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3635000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3645000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3655000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3665000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3675000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3685000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			},
+			"3695000000":{
+				"-25":{
+					"noise_figure_sigan": 46.03993010994134,
+					"enbw_sigan": 15723428.858731967,
+					"gain_sigan": 0.40803345928877379,
+					"gain_preselector": 0,
+					"noise_figure_preselector": 0
+					
+				}
+			}
+		}
+	},
+	"clock_rate_lookup_by_sample_rate": [
+		{
+			"sample_rate": 3500000.0,
+			"clock_frequency": 3500000.0
+		},
+		{
+			"sample_rate": 28000000.0,
+			"clock_frequency": 28000000.0
+		}
+	],
+	"calibration_frequency_divisions": [],
+	"sigan_uid": "US55120115"
+}
