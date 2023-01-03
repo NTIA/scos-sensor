@@ -1640,6 +1640,7 @@
                         "logger",
                         "test_monitor_sigan",
                         "test_multi_frequency_iq_action",
+                        "test_nasctn_sea_data_product",
                         "test_single_frequency_iq_action",
                         "test_single_frequency_m4s_action",
                         "test_survey_iq_action",
