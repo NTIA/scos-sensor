@@ -38,6 +38,4 @@ class HandlersConfig(AppConfig):
         logger.debug("db_location_deleted registered to post_delete")
 
         trigger_api_restart.connect(trigger_api_restart_callback)
-        logger.debug(
-            "trigger_api_restart_callback registered to trigger_api_restart"
-        )
+        logger.debug("trigger_api_restart_callback registered to trigger_api_restart")

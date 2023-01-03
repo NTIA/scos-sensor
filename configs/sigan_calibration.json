@@ -14,7 +14,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3565000000":{
@@ -24,18 +24,18 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3575000000":{
-				
+
 				"-25":{
 					"noise_figure_sigan": 46.03993010994134,
 					"enbw_sigan": 15723428.858731967,
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3585000000":{
@@ -45,7 +45,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3595000000":{
@@ -55,7 +55,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3605000000":{
@@ -65,7 +65,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3615000000":{
@@ -75,7 +75,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3625000000":{
@@ -85,7 +85,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3635000000":{
@@ -95,7 +95,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3645000000":{
@@ -105,7 +105,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3655000000":{
@@ -115,7 +115,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3665000000":{
@@ -125,7 +125,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3675000000":{
@@ -135,7 +135,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3685000000":{
@@ -145,7 +145,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			},
 			"3695000000":{
@@ -155,7 +155,7 @@
 					"gain_sigan": 0.40803345928877379,
 					"gain_preselector": 0,
 					"noise_figure_preselector": 0
-					
+
 				}
 			}
 		}
