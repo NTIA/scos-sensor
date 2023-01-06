@@ -11,6 +11,6 @@ psycopg2-binary>=2.0, <3.0
 pyjwt>=2.4.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@nasctn-sea
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.0
 #scos_usrp @ git+https://github.com/NTIA/scos-usrp@3.0.0
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@health_check
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@nasctn-sea
