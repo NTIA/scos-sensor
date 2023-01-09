@@ -311,7 +311,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@nasctn-sea
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
