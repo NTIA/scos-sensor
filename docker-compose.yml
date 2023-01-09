@@ -48,8 +48,8 @@ services:
       - IN_DOCKER=1
       - IPS
       - MAX_DISK_USAGE
-      - MOCK_SIGAN
-      - MOCK_SIGAN_RANDOM
+      - MOCK_SIGAN=1
+      - MOCK_SIGAN_RANDOM=1
       - OAUTH_TOKEN_URL
       - PATH_TO_CLIENT_CERT
       - PATH_TO_JWT_PUBLIC_KEY
