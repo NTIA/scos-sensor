@@ -176,7 +176,7 @@ ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
 scipy==1.9.3
     # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
     # via
     #   -r requirements.in
     #   scos-tekrsa

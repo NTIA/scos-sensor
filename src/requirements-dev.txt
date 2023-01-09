@@ -307,7 +307,7 @@ scipy==1.9.3
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
