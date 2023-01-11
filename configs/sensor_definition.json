@@ -1,7 +1,7 @@
 {
-    "id": "seadog03",
+    "id": "seadog",
     "sensor_spec": {
-        "id": "seadog03",
+        "id": "seadog",
         "model": "seadog"
     },
     "antenna": {
