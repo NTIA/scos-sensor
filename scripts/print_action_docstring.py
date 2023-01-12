@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-from __future__ import absolute_import, print_function
 
 import os
 import sys
 
 import django
 
-from actions import registered_actions  # noqa
+from utils.action_registrar import registered_actions
 
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
 

@@ -12,9 +12,9 @@ attrs==22.1.0
     # via
     #   jsonschema
     #   ray
-bcrypt==4.0.0
+bcrypt==4.0.1
     # via paramiko
-certifi==2022.6.15
+certifi==2022.9.24
     # via requests
 cffi==1.15.1
     # via
@@ -36,9 +36,9 @@ defusedxml==0.7.1
     # via its-preselector
 distlib==0.3.6
     # via virtualenv
-distro==1.7.0
+distro==1.8.0
     # via docker-compose
-django==3.2.15
+django==3.2.16
     # via
     #   -r requirements.in
     #   django-session-timeout
@@ -48,11 +48,11 @@ django==3.2.15
     #   scos-actions
 django-session-timeout==0.1.0
     # via -r requirements.in
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   drf-yasg
-docker[ssh]==6.0.0
+docker[ssh]==6.0.1
     # via docker-compose
 docker-compose==1.29.2
     # via -r requirements.in
@@ -60,7 +60,7 @@ dockerpty==0.4.1
     # via docker-compose
 docopt==0.6.2
     # via docker-compose
-drf-yasg==1.21.3
+drf-yasg==1.21.4
     # via -r requirements.in
 environs==9.5.0
     # via
@@ -79,7 +79,7 @@ grpcio==1.43.0
     # via ray
 gunicorn==20.1.0
     # via -r requirements.in
-idna==3.3
+idna==3.4
     # via requests
 inflection==0.5.1
     # via drf-yasg
@@ -97,13 +97,13 @@ jsonschema==3.2.0
     #   ray
 markupsafe==2.1.1
     # via jinja2
-marshmallow==3.17.1
+marshmallow==3.19.0
     # via environs
 msgpack==1.0.4
     # via ray
-numexpr==2.8.3
+numexpr==2.8.4
     # via scos-actions
-numpy==1.23.2
+numpy==1.23.5
     # via
     #   numexpr
     #   ray
@@ -111,7 +111,7 @@ numpy==1.23.2
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
-oauthlib==3.2.0
+oauthlib==3.2.2
     # via
     #   -r requirements.in
     #   requests-oauthlib
@@ -121,23 +121,23 @@ packaging==21.3
     #   drf-yasg
     #   marshmallow
     #   numexpr
-paramiko==2.11.0
+paramiko==2.12.0
     # via docker
 platformdirs==2.5.2
     # via virtualenv
 protobuf==3.20.1
     # via ray
-psycopg2-binary==2.9.3
+psycopg2-binary==2.9.5
     # via -r requirements.in
 pycparser==2.21
     # via cffi
-pyjwt==2.4.0
+pyjwt==2.6.0
     # via -r requirements.in
 pynacl==1.5.0
     # via paramiko
 pyparsing==3.0.9
     # via packaging
-pyrsistent==0.18.1
+pyrsistent==0.19.2
     # via jsonschema
 python-dateutil==2.8.2
     # via scos-actions
@@ -145,7 +145,7 @@ python-dotenv==0.21.0
     # via
     #   docker-compose
     #   environs
-pytz==2022.2.1
+pytz==2022.6
     # via
     #   django
     #   djangorestframework
@@ -173,9 +173,9 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.6
+ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
-scipy==1.9.1
+scipy==1.9.3
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@nasctn-sea
     # via
@@ -196,17 +196,17 @@ six==1.16.0
     #   requests-mock
     #   sigmf
     #   websocket-client
-sqlparse==0.4.2
+sqlparse==0.4.3
     # via django
 tekrsa-api-wrap==1.2.3
     # via scos-tekrsa
-texttable==1.6.4
+texttable==1.6.7
     # via docker-compose
 uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   docker
     #   requests

@@ -1,6 +1,10 @@
+import logging
+
 from scos_actions.capabilities import capabilities
 
-from actions import by_name
+from utils.action_registrar import registered_actions
 
-capabilities = capabilities
-actions = by_name
+logger = logging.getLogger(__name__)
+logger.debug("********** Initializing capabilities **********")
+actions_by_name = registered_actions
+sensor_capabilities = capabilities

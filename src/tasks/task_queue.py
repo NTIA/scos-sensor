@@ -13,7 +13,7 @@ class TaskQueue(list):
     """A priority queue for tasks."""
 
     def __init__(self, *args, **kwargs):
-        super(TaskQueue, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         heapq.heapify(self)
 
     def enter(self, time, priority, action, schedule_entry_name, task_id):

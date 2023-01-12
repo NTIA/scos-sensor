@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import logging
 
 from django.apps import AppConfig
 from django.db.models.signals import post_delete, post_save
-from scos_actions.actions.interfaces.signals import (
+from scos_actions.signals import (
     location_action_completed,
     measurement_action_completed,
     monitor_action_completed,

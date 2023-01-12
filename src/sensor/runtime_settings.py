@@ -8,9 +8,8 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 
-!!!!!!NOTE!!!!!: This file is replaced when scos-sensor runs in docker. migration_settings.py is used when migrations are
-run and runtime_settings is used when scos sensor is run in docker.
-Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
+!!!!!!NOTE!!!!!: This file is used when scos-sensor runs in docker. migration_settings.py is used when migrations are
+run in docker. Make sure migration_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
 
 """
 
@@ -366,7 +365,6 @@ LOGGING = {
         "tasks": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_actions": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
-        "scos_tekrsa": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_sensor_keysight": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_tekrsa": {"handlers": ["console"], "level": LOGLEVEL},
     },
