@@ -13,3 +13,4 @@ requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
 scos_actions @ git+https://github.com/NTIA/scos-actions@nasctn-sea
 scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@nasctn-sea
+
