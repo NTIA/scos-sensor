@@ -6,10 +6,11 @@ drf-yasg>=1.0, <2.0
 environs>=9.0, <10.0
 gunicorn>=20.0, <21.0
 jsonfield>=3.0, <4.0
-oauthlib>=3.0, <4.0
+oauthlib>=3.2.1, <4.0
 psycopg2-binary>=2.0, <3.0
-pyjwt>=2.0, <3.0
+pyjwt>=2.4.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@sea-prototype-v0.1
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@sea-prototype-v0.1
+scos_actions @ git+https://github.com/NTIA/scos-actions@nasctn-sea
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@nasctn-sea
+

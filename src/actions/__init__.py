@@ -2,7 +2,7 @@ import importlib
 import logging
 import pkgutil
 
-from scos_actions.actions.interfaces.signals import register_action
+from scos_actions.signals import register_action
 from scos_actions.discover import test_actions
 
 from sensor import settings

@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from scos_actions.actions.interfaces.signals import register_action
+from scos_actions.signals import register_action
 
 registered_actions = OrderedDict()
 

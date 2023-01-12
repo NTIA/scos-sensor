@@ -41,3 +41,4 @@ repos:
       - id: markdownlint
         types: [file, markdown]
         exclude: GitHubRepoPublicReleaseApproval.md|LICENSE.md
+        args: [-s, .ml_style.rb]
