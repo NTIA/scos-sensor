@@ -61,15 +61,15 @@ you will see a frontend to the API that allows you to do anything the JSON API a
 Relationships in the API are represented by URLs which you can click to navigate from
 endpoint to endpoint. The full API is *discoverable* simply by following these links:
 
-![Browsable API Root](/docs/img/browsable_api_root.jpg?raw=true)
+![Browsable API Root](/docs/img/browsable_api_root.png?raw=true)
 
 Scheduling an *action* is as simple as filling out a short form on `/schedule`:
 
-![Browsable API Submission](/docs/img/browsable_api_submit.jpg?raw=true)
+![Browsable API Submission](/docs/img/browsable_api_submit.png?raw=true)
 
 *Actions* that have been scheduled show up in the *schedule entry* list:
 
-![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.jpg?raw=true)
+![Browsable API Schedule List](/docs/img/browsable_api_schedule_list.png?raw=true)
 
 We have tried to remove the most common hurdles to remotely deploying a sensor while
 maintaining flexibility in two key areas. First, the API itself is hardware agnostic,
