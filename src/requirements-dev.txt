@@ -21,7 +21,7 @@ bcrypt==4.0.1
     #   paramiko
 black==22.10.0
     # via -r requirements-dev.in
-certifi==2022.9.24
+certifi==2022.12.7
     # via
     #   -r requirements.txt
     #   requests
@@ -103,8 +103,6 @@ environs==9.5.0
     #   -r requirements.txt
     #   scos-actions
     #   scos-usrp
-exceptiongroup==1.0.4
-    # via pytest
 filelock==3.8.0
     # via
     #   tox
@@ -264,10 +262,6 @@ ruamel-yaml==0.17.21
     #   -r requirements.txt
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
-    # via
-    #   -r requirements.txt
-    #   ruamel-yaml
 scipy==1.9.3
     # via
     #   -r requirements.txt
@@ -306,16 +300,8 @@ texttable==1.6.7
     #   docker-compose
 toml==0.10.2
     # via pre-commit
-tomli==2.0.1
-    # via
-    #   black
-    #   coverage
-    #   pytest
-    #   tox
 tox==3.27.1
     # via -r requirements-dev.in
-typing-extensions==4.4.0
-    # via black
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
