@@ -299,10 +299,6 @@ ruamel-yaml==0.17.21
     #   -r requirements.txt
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
-    # via
-    #   -r requirements.txt
-    #   ruamel-yaml
 scipy==1.9.3
     # via
     #   -r requirements.txt
@@ -351,8 +347,6 @@ tomli==2.0.1
     #   tox
 tox==3.28.0
     # via -r requirements-dev.in
-typing-extensions==4.4.0
-    # via black
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
