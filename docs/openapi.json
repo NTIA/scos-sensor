@@ -1861,7 +1861,7 @@
                 },
                 "duration": {
                     "title": "Duration",
-                    "description": "Task duration in seconds",
+                    "description": "Task duration, in %H:%M:%S.%f format",
                     "type": "string"
                 },
                 "data": {
