@@ -30,7 +30,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==38.0.4
+cryptography==38.0.1
     # via paramiko
 defusedxml==0.7.1
     # via its-preselector
@@ -172,6 +172,9 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
+ruamel-yaml-clib==0.2.7
+    # via
+    #   ruamel-yaml
 scipy==1.9.3
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
