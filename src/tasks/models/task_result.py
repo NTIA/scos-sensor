@@ -42,8 +42,7 @@ class TaskResult(models.Model):
         help_text="The time the task finished",
     )
     duration = models.DurationField(
-        default=datetime.timedelta(),
-        help_text="Task duration, in %H:%M:%S.%f format",  # from DATETIME_FORMAT setting
+        default=datetime.timedelta(), help_text="Task duration in seconds"
     )
     status = models.CharField(
         default="in-progress",

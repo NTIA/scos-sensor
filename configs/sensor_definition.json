@@ -1,25 +1,19 @@
 {
-    "id": "seadog",
+    "id": "",
     "sensor_spec": {
-        "id": "seadog",
-        "model": "seadog"
+        "id": "",
+        "model": "greyhound"
     },
     "antenna": {
         "antenna_spec": {
             "id": "",
-            "model": "None"
+            "model": "L-com HG3512UP-NF"
         }
-    },
-    "preselector" : {
-        "preselector_spec" : {
-          "supplemental_information" : "Oldest rev preselector with no enclosure"
-        },
-        "cal_sources" : [ { "enr": 14.53 } ]
     },
     "signal_analyzer": {
         "sigan_spec": {
             "id": "",
-            "model": "Tektronix RSA 507A"
+            "model": "Ettus USRP B210"
         }
     },
     "computer_spec": {
