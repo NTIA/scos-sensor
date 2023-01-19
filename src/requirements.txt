@@ -120,7 +120,6 @@ packaging==22.0
     #   docker
     #   drf-yasg
     #   marshmallow
-    #   numexpr
 paramiko==2.12.0
     # via docker
 platformdirs==2.6.0
@@ -173,6 +172,9 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
+ruamel-yaml-clib==0.2.7
+    # via
+    #   ruamel-yaml
 scipy==1.9.3
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
@@ -187,7 +189,6 @@ six==1.16.0
     # via
     #   django-session-timeout
     #   dockerpty
-    #   grpcio
     #   jsonschema
     #   paramiko
     #   python-dateutil
