@@ -1,7 +1,7 @@
 # local settings
 env
 db.sqlite3
-
+drivers/cyusb.conf
 # Test generated files
 files/*
 
@@ -89,6 +89,7 @@ env
 venv/
 ENV/
 scos_sensor_venv/
+.venv/
 
 # Spyder project settings
 .spyderproject

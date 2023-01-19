@@ -1,0 +1,8 @@
+{
+	"scos_files": [
+		{
+			"source_path": "cyusb.conf",
+			"dest_path": "/etc/cyusb.conf"
+		}
+	]
+}
