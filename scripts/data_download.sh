@@ -38,7 +38,7 @@ if [ $doublecheck == "y" ]; then
     printf "Copy started: `date` \n"
     for i in $(seq $firstfile $lastfile); do
         start=$SECONDS
-        curl -o $filepath/$schedule\_$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/acquisitions/$schedule/$i/archive
+        curl -o $filepath/$schedule\_$i.sigmf -kLsS -H "Authorization: Token $token" https://$ip/api/v1/tasks/completed/$schedule/$i/archive
         remaining=$(( (((SECONDS - start) * (lastfile - firstfile - i) / 60) + remaining) / 2 ))
         printf "Downloaded ${schedule}_${i}.sigmf. ${remaining} mins remaining. \n"
     done

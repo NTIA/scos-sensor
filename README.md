@@ -282,6 +282,14 @@ docker-compose logs --follow api  # reattach terminal
 When running in a production environment or on a remote system, various settings will
 need to be configured.
 
+## docker-compose.yml
+
+- shm_size: This setting is overriding the default setting of 64 mb. If using
+  scos-sensor on a computer with lower memory, this may need to be decreased. This is
+  currently only used by the [NasctnSeaDataProduct action](
+  https://github.com/NTIA/scos-actions/blob/master/scos_actions/actions/acquire_sea_data_product.py
+  ).
+
 ### Environment File
 
 As explained in the [Quickstart](#quickstart) section, before running scos-sensor, an
