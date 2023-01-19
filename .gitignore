@@ -89,6 +89,7 @@ env
 venv/
 ENV/
 scos_sensor_venv/
+.venv/
 
 # Spyder project settings
 .spyderproject

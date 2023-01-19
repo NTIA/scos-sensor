@@ -14,7 +14,7 @@ services:
   api:
     healthcheck:
       test: test ! -e /sdr_unhealthy && test ! -e /scheduler_dead
-      interval: 10s
+      interval: 6s
       timeout: 3s
       retries: 1
     shm_size: '16gb'
