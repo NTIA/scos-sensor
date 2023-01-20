@@ -31,6 +31,7 @@ services:
         - DEBUG
         - DOCKER_GIT_CREDENTIALS
     environment:
+      - ADMIN_NAME
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
       - AUTHENTICATION

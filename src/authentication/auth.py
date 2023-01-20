@@ -3,44 +3,39 @@ import re
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from jwt import ExpiredSignatureError, InvalidSignatureError
 from rest_framework import authentication, exceptions
 from rest_framework.authentication import get_authorization_header
 
 logger = logging.getLogger(__name__)
 
 token_auth_enabled = (
-    "rest_framework.authentication.TokenAuthentication"
-    in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
+        "rest_framework.authentication.TokenAuthentication"
+        in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
 )
 certificate_authentication_enabled = (
-    "authentication.auth.CertificateAuthentication"
-    in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
+        "authentication.auth.CertificateAuthentication"
+        in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
 )
-
-
-
 
 
 class CertificateAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        auth_header = get_authorization_header(request)
-        if not auth_header:
-            logger.debug("no auth header")
-            return None
+        logger.debug("Authenticating certificate.")
         cert_dn = request.headers.get("X-Ssl-Client-Dn")
-        logger.info("DN:" + cert_dn)
-        cn = get_cn_from_dn(cert_dn)
-        logger.info("Cert cn: " + cn)
-        user_model = get_user_model()
-        user = None
-        try:
-            user = user_model.objects.get(username=cn)
-        except user_model.DoesNotExist:
-            user = user_model.objects.create_user(username=cn)
-            user.save()
+        if cert_dn:
+            logger.info("DN:" + cert_dn)
+            cn = get_cn_from_dn(cert_dn)
+            logger.info("Cert cn: " + cn)
+            user_model = get_user_model()
+            user = None
+            try:
+                user = user_model.objects.get(username=cn)
+            except user_model.DoesNotExist:
+                user = user_model.objects.create_user(username=cn)
+                user.save()
+            return user, None
+        return None, None
 
-        return user
 
 def get_cn_from_dn(cert_dn):
     p = re.compile("CN=(.*?)(?:,|\+|$)")
