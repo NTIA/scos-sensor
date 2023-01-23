@@ -371,38 +371,31 @@ authenticating when using a callback URL.
 
 ### Sensor Authentication And Permissions
 
-The sensor can be configured to authenticate using OAuth JWT access tokens from an
-external authorization server or using Django Rest Framework Token Authentication.
+The sensor can be configured to authenticate using mutual TLS with client certificates
+or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 
 This is the default authentication method. To enable Django Rest Framework
 Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
 (this will be enabled if `AUTHENTICATION` set to anything other
-than `JWT`).
+than `CERT`).
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
 token) matches a user's token.
 
-#### OAuth2 JWT Authentication
+#### Certificate  Authentication
 
-To enable OAuth 2 JWT Authentication, set `AUTHENTICATION` to `JWT` in the environment
-file. To authenticate, the client will need to send a JWT access token in the
-authorization header (using "Bearer " + access token). The token signature will be
-verified using the public key from the `PATH_TO_JWT_PUBLIC_KEY` setting. The expiration
-time will be checked. Only users who have an authority matching the `REQUIRED_ROLE`
-setting will be authorized.
-
-The token is expected to come from an OAuth2 authorization server. For more
-information, see <https://tools.ietf.org/html/rfc6749>.
+To enable Certificate Authentication, set `AUTHENTICATION` to `CERT` in the environment
+file. To authenticate, the client will need to send a trusted client certificate. The
+Common Name must match the username of a user in the database.
 
 #### Certificates
 
 Use this section to create self-signed certificates with customized organizational
 and host information. This section includes instructions for creating a self-signed
-root CA, SSL server certificates for the sensor, optional client certificates, and test
-JWT public/private key pair.
+root CA, SSL server certificates for the sensor, and optional client certificates.
 
 As described below, a self-signed CA can be created for testing. **For production, make
 sure to use certificates from a trusted CA.**
@@ -501,36 +494,11 @@ openssl pkcs12 -export -out client.pfx -inkey client.key -in client.pem -certfil
 Import client.pfx into web browser for use with the browsable API or use the client.pem
 or client.pfx when communicating with the API programmatically.
 
-##### Generating JWT Public/Private Key
-
-The JWT public key must correspond to the private key of the JWT issuer (OAuth
-authorization server). For manual testing, the instructions below could be used to
-create a public/private key pair for creating JWTs without an authorization
-server.
-
-###### Step 1: Create public/private key pair
-
-```bash
-openssl genrsa -out jwt.pem 4096
-```
-
-###### Step 2: Extract Public Key
-
-```bash
-openssl rsa -in jwt.pem -outform PEM -pubout -out jwt_public_key.pem
-```
-
-###### Step 3: Extract Private Key
-
-```bash
-openssl pkey -inform PEM -outform PEM -in jwt.pem -out jwt_private_key.pem
-```
-
 ###### Configure scos-sensor
 
 The Nginx web server can be set to require client certificates (mutual TLS). This can
-optionally be enabled. To require client certificates, uncomment
-`ssl_verify_client on;` in the [Nginx configuration file](nginx/conf.template). If you
+optionally be enabled. To require client certificates, make sure `ssl_verify_client` is
+set to `on` in the [Nginx configuration file](nginx/conf.template). If you
 use OCSP, also uncomment `ssl_ocsp on;`. Additional configuration may be needed for
 Nginx to check certificate revocation lists (CRL).
 
@@ -542,16 +510,10 @@ environment file) to the path of the sensor01_combined.pem relative to configs/c
 mutual TLS, also copy the CA certificate to the same directory. Then, set
 `SSL_CA_PATH` to the path of the CA certificate relative to `configs/certs`.
 
-If you are using JWT authentication, set `PATH_TO_JWT_PUBLIC_KEY` to the path of the
-JWT public key relative to configs/certs. This public key file should correspond to the
-private key used to sign the JWT. Alternatively, the JWT private key
-created above could be used to manually sign a JWT token for testing if
-`PATH_TO_JWT_PUBLIC_KEY` is set to the JWT public key created above.
-
 If you are using client certificates, use client.pfx to connect to the browsable API by
 importing this certificate into your browser.
 
-For callback functionality with an OAuth authorized callback URL, set
+For callback functionality with a server that uses certificate authentication, set
 `PATH_TO_CLIENT_CERT` and `PATH_TO_VERIFY_CERT`, both relative to configs/certs.
 Depending on the configuration of the callback URL server and the authorization server,
 the sensor server certificate could be used as a client certificate by setting
@@ -562,18 +524,15 @@ as used for `SSL_CA_PATH` (scostestca.pem).
 
 #### Permissions and Users
 
-The API requires the user to either have an authority in the JWT token matching the the
-`REQUIRED_ROLE` setting or that the user be a superuser. New users created using the
+The API requires the user to be a superuser. New users created using the
 API initially do not have superuser access. However, an admin can mark a user as a
-superuser in the Sensor Configuration Portal. When using JWT tokens, the user does not
-have to be pre-created using the sensor's API. The API will accept any user using a
-JWT token if they have an authority matching the required role setting.
+superuser in the Sensor Configuration Portal.
 
 ### Callback URL Authentication
 
-OAuth and Token authentication are supported for authenticating against the server
-pointed to by the callback URL. Callback SSL verification can be enabled
-or disabled using `CALLBACK_SSL_VERIFICATION` in the environment file.
+Certificate and token authentication are supported for authenticating against the
+server pointed to by the callback URL. Callback SSL verification can be enabled or
+disabled using `CALLBACK_SSL_VERIFICATION` in the environment file.
 
 #### Token
 
@@ -590,29 +549,20 @@ verify the callback URL server SSL certificate. If this is unset and
     https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
 used.
 
-#### OAuth
+#### Certificate
 
-The OAuth 2 password flow is supported for callback URL authentication. The following
-settings in the environment file are used to configure the OAuth 2 password flow
-authentication.
+Certificate authetnication (mutual TLS) is supported for callback URL authentication.
+The following settings in the environment file are used to configure certificate
+authentication for the callback URL.
 
-- `CALLBACK_AUTHENTICATION` - set to `OAUTH`.
-- `CLIENT_ID` - client ID used to authorize the client (the sensor) against the
-  authorization server.
-- `CLIENT_SECRET` - client secret used to authorize the client (the sensor) against the
-  authorization server.
-- `OAUTH_TOKEN_URL` - URL to get the access token.
+- `CALLBACK_AUTHENTICATION` - set to `CERT`.
 - `PATH_TO_CLIENT_CERT` - client certificate used to authenticate against the
-  authorization server.
-- `PATH_TO_VERIFY_CERT` - CA certificate to verify the authorization server and
-  callback URL server SSL certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`
-  is set to true, [standard trusted CAs](
+   callback URL server.
+- `PATH_TO_VERIFY_CERT` - CA certificate to verify the callback URL server SSL
+   certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`
+   is set to true, [standard trusted CAs](
     https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
-  used.
-
-In src/sensor/settings.py, the OAuth `USER_NAME` and `PASSWORD` are set to be the same
-as `CLIENT_ID` and `CLIENT_SECRET`. This may need to change depending on your
-authorization server.
+   used.
 
 ## Actions and Hardware Support
 
