@@ -4,6 +4,7 @@ import shutil
 
 from django.db import models
 from django.utils import timezone
+
 from schedule.models import ScheduleEntry
 from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
@@ -22,7 +23,7 @@ class TaskResult(models.Model):
         (SUCCESS, "success"),
         (FAILURE, "failure"),
         (IN_PROGRESS, "in-progress"),
-        (NOTIFICATION_FAILED, "notification_failed")
+        (NOTIFICATION_FAILED, "notification_failed"),
     )
 
     schedule_entry = models.ForeignKey(
@@ -41,7 +42,8 @@ class TaskResult(models.Model):
         help_text="The time the task finished",
     )
     duration = models.DurationField(
-        default=datetime.timedelta(), help_text="Task duration in seconds"
+        default=datetime.timedelta(),
+        help_text="Task duration, in %H:%M:%S.%f format",  # from DATETIME_FORMAT setting
     )
     status = models.CharField(
         default="in-progress",

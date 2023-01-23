@@ -1,11 +1,18 @@
+import logging
 import sys
 from itertools import count
 
 from django.core.validators import MaxValueValidator, MinValueValidator, ValidationError
 from django.db import models
 
-import actions
+from constants import MAX_ACTION_LENGTH
+from schedule import actions
 from scheduler import utils
+
+logger = logging.getLogger(__name__)
+logger.debug(
+    "************** scos-sensor/schedule/models/schedule_entry.py *****************"
+)
 
 if sys.version_info.major == 2:
     range = xrange  # noqa
@@ -31,7 +38,6 @@ class ScheduleEntry(models.Model):
     If two tasks are scheduled to run at the same time, they will be run in
     order of `priority`. If two tasks are scheduled to run at the same time and
     have the same `priority`, execution order is undefined.
-
     """
 
     # Implementation notes:
@@ -69,7 +75,7 @@ class ScheduleEntry(models.Model):
         help_text="[Required] The unique identifier used in URLs and filenames",
     )
     action = models.CharField(
-        max_length=actions.MAX_LENGTH,
+        max_length=MAX_ACTION_LENGTH,
         help_text="[Required] The name of the action to be scheduled",
     )
     priority = models.SmallIntegerField(
@@ -149,7 +155,7 @@ class ScheduleEntry(models.Model):
     def __init__(self, *args, **kwargs):
         relative_stop = kwargs.pop("relative_stop", None)
 
-        super(ScheduleEntry, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if relative_stop:
             self.stop = self.start + relative_stop
@@ -160,11 +166,11 @@ class ScheduleEntry(models.Model):
         # used by .save to detect whether to reset .next_task_times
         self.__start = self.start
         self.__interval = self.interval
-        if self.action not in actions.registered_actions:
-            raise ValidationError(self.action + ' does not exist')
+        if self.action not in actions:
+            raise ValidationError(self.action + " does not exist")
 
     def update(self, *args, **kwargs):
-        super(ScheduleEntry, self).update(*args, **kwargs)
+        super().update(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         if self.start != self.__start or self.interval != self.__interval:
@@ -172,7 +178,7 @@ class ScheduleEntry(models.Model):
             self.__start = self.start
             self.__interval = self.interval
 
-        super(ScheduleEntry, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def take_pending(self):
         """Take the range of times up to and including now."""

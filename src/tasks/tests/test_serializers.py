@@ -2,7 +2,7 @@ import pytest
 
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer, TaskResultsOverviewSerializer
-from tasks.tests.utils import create_task_results
+from test_utils.task_test_utils import create_task_results
 
 
 @pytest.mark.django_db
