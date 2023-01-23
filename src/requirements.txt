@@ -20,7 +20,7 @@ cffi==1.15.1
     # via
     #   cryptography
     #   pynacl
-charset-normalizer==2.1.1
+charset-normalizer==3.0.1
     # via requests
 click==8.1.3
     # via ray
@@ -30,7 +30,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==38.0.1
+cryptography==39.0.0
     # via paramiko
 defusedxml==0.7.1
     # via its-preselector
@@ -67,7 +67,7 @@ environs==9.5.0
     #   -r requirements.in
     #   scos-actions
     #   scos-tekrsa
-filelock==3.8.2
+filelock==3.9.0
     # via
     #   ray
     #   virtualenv
@@ -95,7 +95,7 @@ jsonschema==3.2.0
     # via
     #   docker-compose
     #   ray
-markupsafe==2.1.1
+markupsafe==2.1.2
     # via jinja2
 marshmallow==3.19.0
     # via environs
@@ -103,7 +103,7 @@ msgpack==1.0.4
     # via ray
 numexpr==2.8.4
     # via scos-actions
-numpy==1.24.0
+numpy==1.24.1
     # via
     #   numexpr
     #   ray
@@ -111,18 +111,14 @@ numpy==1.24.0
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
-oauthlib==3.2.2
-    # via
-    #   -r requirements.in
-    #   requests-oauthlib
-packaging==22.0
+packaging==23.0
     # via
     #   docker
     #   drf-yasg
     #   marshmallow
-paramiko==2.12.0
+paramiko==3.0.0
     # via docker
-platformdirs==2.6.0
+platformdirs==2.6.2
     # via virtualenv
 protobuf==4.21.12
     # via ray
@@ -136,15 +132,15 @@ pyjwt==2.6.0
     # via -r requirements.in
 pynacl==1.5.0
     # via paramiko
-pyrsistent==0.19.2
+pyrsistent==0.19.3
     # via jsonschema
 python-dateutil==2.8.2
     # via scos-actions
-python-dotenv==0.21.0
+python-dotenv==0.21.1
     # via
     #   docker-compose
     #   environs
-pytz==2022.7
+pytz==2022.7.1
     # via
     #   django
     #   djangorestframework
@@ -155,7 +151,7 @@ pyyaml==5.4.1
     #   ray
 ray==2.2.0
     # via scos-actions
-requests==2.28.1
+requests==2.28.2
     # via
     #   coreapi
     #   docker
@@ -163,19 +159,15 @@ requests==2.28.1
     #   its-preselector
     #   ray
     #   requests-mock
-    #   requests-oauthlib
 requests-mock==1.10.0
-    # via -r requirements.in
-requests-oauthlib==1.3.1
     # via -r requirements.in
 ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
 ruamel-yaml-clib==0.2.7
-    # via
-    #   ruamel-yaml
-scipy==1.9.3
+    # via ruamel-yaml
+scipy==1.10.0
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
     # via
@@ -190,7 +182,6 @@ six==1.16.0
     #   django-session-timeout
     #   dockerpty
     #   jsonschema
-    #   paramiko
     #   python-dateutil
     #   requests-mock
     #   sigmf
@@ -205,7 +196,7 @@ uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==1.26.13
+urllib3==1.26.14
     # via
     #   docker
     #   requests
