@@ -239,10 +239,9 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION = env("AUTHENTICATION", default="")
-if AUTHENTICATION == "JWT":
+if AUTHENTICATION == "CERT":
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "authentication.auth.OAuthJWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        "authentication.auth.CertificateAuthentication",
     )
 else:
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
