@@ -31,8 +31,7 @@ class CertificateAuthentication(authentication.BaseAuthentication):
             try:
                 user = user_model.objects.get(username=cn)
             except user_model.DoesNotExist:
-                user = user_model.objects.create_user(username=cn)
-                user.save()
+                raise exceptions.AuthenticationFailed("No matching username found!")
             return user, None
         return None, None
 

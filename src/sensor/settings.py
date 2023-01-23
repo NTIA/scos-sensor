@@ -246,9 +246,7 @@ REST_FRAMEWORK = {
 AUTHENTICATION = env("AUTHENTICATION", default="")
 if AUTHENTICATION == "CERT":
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "rest_framework.authentication.TokenAuthentication",
         "authentication.auth.CertificateAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
     )
 else:
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
