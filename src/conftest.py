@@ -8,12 +8,8 @@ from django.test.client import Client
 
 import scheduler
 from authentication.models import User
-from authentication.tests.utils import get_test_public_private_key
+from sensor.tests.certificate_auth_client import CertificateAuthClient
 from tasks.models import TaskResult
-
-PRIVATE_KEY, PUBLIC_KEY = get_test_public_private_key()
-Keys = namedtuple("KEYS", ["private_key", "public_key"])
-keys = Keys(PRIVATE_KEY.decode("utf-8"), PUBLIC_KEY.decode("utf-8"))
 
 
 @pytest.fixture(autouse=True)
@@ -24,7 +20,7 @@ def cleanup_db(db):
     shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def testclock():
     """Replace scheduler's timefn with manually steppable test timefn."""
     # Setup test clock
@@ -66,11 +62,18 @@ def user(db):
 @pytest.fixture
 def user_client(db, user):
     """A Django test client logged in as a normal user"""
-    client = Client()
+    client = CertificateAuthClient()
     client.login(username=user.username, password=user.password)
 
     return client
 
+@pytest.fixture
+def admin_client(db, admin_user):
+    """A Django test client logged in as an admin user"""
+    client = CertificateAuthClient()
+    client.login(username=admin_user.username, password=admin_user.password)
+
+    return client
 
 @pytest.fixture
 def alt_user(db):
@@ -92,7 +95,7 @@ def alt_user(db):
 @pytest.fixture
 def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
-    client = Client()
+    client = CertificateAuthClient()
     client.login(username=alt_user.username, password=alt_user.password)
 
     return client
@@ -129,16 +132,7 @@ def alt_admin_client(db, alt_admin_user):
     """A Django test client logged in as an admin user."""
     from django.test.client import Client
 
-    client = Client()
+    client = CertificateAuthClient()
     client.login(username=alt_admin_user.username, password="password")
 
     return client
-
-
-@pytest.fixture(autouse=True)
-def jwt_keys(settings):
-    with tempfile.NamedTemporaryFile() as jwt_public_key_file:
-        jwt_public_key_file.write(PUBLIC_KEY)
-        jwt_public_key_file.flush()
-        settings.PATH_TO_JWT_PUBLIC_KEY = jwt_public_key_file.name
-        yield keys

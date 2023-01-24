@@ -1,10 +1,8 @@
 import logging
 import re
-import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import authentication, exceptions
-from rest_framework.authentication import get_authorization_header
 
 logger = logging.getLogger(__name__)
 

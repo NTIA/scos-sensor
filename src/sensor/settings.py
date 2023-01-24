@@ -375,12 +375,7 @@ LOGGING = {
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # OAuth Password Flow Authentication
 CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
-CLIENT_ID = env("CLIENT_ID", default="")
-CLIENT_SECRET = env("CLIENT_SECRET", default="")
-USER_NAME = CLIENT_ID
-PASSWORD = CLIENT_SECRET
 
-OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
 CERTS_DIR = path.join(CONFIG_DIR, "certs")
 # Sensor certificate with private key used as client cert
 PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")

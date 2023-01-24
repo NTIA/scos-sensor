@@ -188,7 +188,7 @@ class Scheduler(threading.Thread):
                         data=json.dumps(result_json),
                         headers=headers,
                         verify=verify_ssl,
-                        cert=(settings.PATH_TO_CLIENT_CERT, settings.PATH_TO_CLIENT_KEY)
+                        cert=settings.PATH_TO_CLIENT_CERT
                     )
                     self._callback_response_handler(response, tr)
                 else:
