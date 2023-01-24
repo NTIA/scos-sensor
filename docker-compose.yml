@@ -51,9 +51,7 @@ services:
       - MAX_DISK_USAGE
       - MOCK_SIGAN
       - MOCK_SIGAN_RANDOM
-      - OAUTH_TOKEN_URL
       - PATH_TO_CLIENT_CERT
-      - PATH_TO_JWT_PUBLIC_KEY
       - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
       - SECRET_KEY

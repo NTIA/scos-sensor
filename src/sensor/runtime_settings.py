@@ -221,7 +221,7 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser",
+        "authentication.permissions.IsSuperuser",
     ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
@@ -389,12 +389,6 @@ if PATH_TO_CLIENT_CERT != "":
 PATH_TO_VERIFY_CERT = env("PATH_TO_VERIFY_CERT", default="")
 if PATH_TO_VERIFY_CERT != "":
     PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, PATH_TO_VERIFY_CERT)
-# Public key to verify JWT token
-PATH_TO_JWT_PUBLIC_KEY = env.str("PATH_TO_JWT_PUBLIC_KEY", default="")
-if PATH_TO_JWT_PUBLIC_KEY != "":
-    PATH_TO_JWT_PUBLIC_KEY = path.join(CERTS_DIR, PATH_TO_JWT_PUBLIC_KEY)
-# Required role from JWT token to access API
-REQUIRED_ROLE = "ROLE_MANAGER"
 
 PRESELECTOR_CONFIG = env.str(
     "PRESELECTOR_CONFIG", default=path.join(CONFIG_DIR, "preselector_config.json")
