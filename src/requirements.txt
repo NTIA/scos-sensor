@@ -173,15 +173,14 @@ ruamel-yaml==0.17.21
     #   drf-yasg
     #   scos-actions
 ruamel-yaml-clib==0.2.7
-    # via
-    #   ruamel-yaml
+    # via ruamel-yaml
 scipy==1.9.3
     # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
+scos_actions @ git+https://github.com/NTIA/scos-actions@cal_failure_recovery
     # via
     #   -r requirements.in
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.0
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@test
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions

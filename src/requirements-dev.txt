@@ -288,17 +288,17 @@ ruamel-yaml==0.17.21
     #   scos-actions
 ruamel-yaml-clib==0.2.7
     # via
-    #  -r requirements.txt
-    #  ruamel-yaml
+    #   -r requirements.txt
+    #   ruamel-yaml
 scipy==1.9.3
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
+scos_actions @ git+https://github.com/NTIA/scos-actions@cal_failure_recovery
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.0
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@test
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
