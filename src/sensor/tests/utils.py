@@ -1,6 +1,6 @@
 from rest_framework import status
 
-HTTPS_KWARG = {"wsgi.url_scheme": "https"}
+HTTPS_KWARG = {"wsgi.url_scheme": "https", "secure": True}
 
 
 def validate_response(response, expected_code=None):

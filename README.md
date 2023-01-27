@@ -460,8 +460,8 @@ cat sensor01_decrypted.key sensor01.pem > sensor01_combined.pem
 
 ##### Client Certificate
 
-This certificate is required for using the sensor with mutual TLS which is required if
-OAuth authentication is enabled.
+This certificate is required for using the sensor with mutual TLS certificate
+authentication.
 
 Replace the brackets with the information specific to your user and organization.
 
@@ -542,7 +542,7 @@ will send the user's (user who created the schedule) token in the authorization 
 the token against what it originally sent to the sensor when creating the schedule.
 This method of authentication for the callback URL is enabled by default. To verify it
 is enabled, set `CALLBACK_AUTHENTICATION` to `TOKEN` in the environment file (this will
-be enabled if `CALLBACK_AUTHENTICATION` set to anything other than `OAUTH`).
+be enabled if `CALLBACK_AUTHENTICATION` set to anything other than `CERT`).
 `PATH_TO_VERIFY_CERT`, in the environment file, can used to set a CA certificate to
 verify the callback URL server SSL certificate. If this is unset and
 `CALLBACK_SSL_VERIFICATION` is set to true, [standard trusted CAs](

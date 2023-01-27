@@ -372,7 +372,6 @@ LOGGING = {
 
 
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
-# OAuth Password Flow Authentication
 CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
 
 CERTS_DIR = path.join(CONFIG_DIR, "certs")

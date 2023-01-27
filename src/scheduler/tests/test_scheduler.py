@@ -415,15 +415,20 @@ def test_success_posted_to_callback_url(test_scheduler, settings):
 
 @pytest.mark.django_db
 def test_notification_failed_status_unknown_host(test_scheduler):
-    entry = create_entry("t", 1, 1, 100, 5, "logger", "https://badmgr.its.bldrdoc.gov")
-    entry.save()
-    entry.refresh_from_db()
-    print("entry = " + entry.name)
-    s = test_scheduler
-    advance_testclock(s.timefn, 1)
-    s.run(blocking=False)  # queue first 10 tasks
-    result = TaskResult.objects.first()
-    assert result.status == "notification_failed"
+    with requests_mock.Mocker() as m:
+        callback_url = "https://results"
+        entry = create_entry("t", 1, 1, 100, 5, "logger", callback_url)
+        entry.save()
+        token = entry.owner.auth_token
+        m.post(callback_url, request_headers={"Authorization": "Token " + str(token)}, text='Not Found', status_code=404)
+        
+        entry.refresh_from_db()
+        print("entry = " + entry.name)
+        s = test_scheduler
+        advance_testclock(s.timefn, 1)
+        s.run(blocking=False)  # queue first 10 tasks
+        result = TaskResult.objects.first()
+        assert result.status == "notification_failed"
 
 
 @pytest.mark.django_db

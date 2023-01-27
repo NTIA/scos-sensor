@@ -21,32 +21,41 @@ class CertificateAuthClient(Client):
         return kwargs
 
     def get(self, path, data=None, follow=False, secure=False, **extra):
+        assert secure
         return super().get(path, data, follow, secure, **self.get_kwargs(extra))
 
     def post(self, path, data=None, content_type=MULTIPART_CONTENT, follow=False, secure=False, **extra):
+        assert secure
         return super().post(path, data, content_type, follow, secure, **self.get_kwargs(extra))
 
     def head(self, path, data=None, follow=False, secure=False, **extra):
-        pass
+        assert secure
+        return super().head(path, data, follow, secure, **self.get_kwargs(extra))
 
     def options(self, path, data='', content_type='application/octet-stream', follow=False, secure=False, **extra):
-        pass
+        assert secure
+        return super().options(self, path, data, content_type, follow, secure, **self.get_kwargs(extra))
 
     def put(self, path, data='', content_type='application/octet-stream', follow=False, secure=False, **extra):
+        assert secure
         return super().put(path, data, content_type, follow, secure, **self.get_kwargs(extra))
 
     def patch(self, path, data='', content_type='application/octet-stream', follow=False, secure=False, **extra):
-        pass
+        assert secure
+        return super().patch(path, data, content_type, follow, secure, **self.get_kwargs(extra))
 
     def delete(self, path, data='', content_type='application/octet-stream', follow=False, secure=False, **extra):
+        assert secure
         return super().delete(path, data, content_type, follow, secure, **self.get_kwargs(extra))
 
     def trace(self, path, follow=False, secure=False, **extra):
-        pass
+        assert secure
+        return super().trace(path, follow, secure, **self.get_kwargs(extra))
 
     def login(self, **credentials):
         if cert_auth_enabled:
             assert "username" in credentials
             self.username = credentials["username"]
+            return True
         else:
-            super().login(**credentials)
+            return super().login(**credentials)

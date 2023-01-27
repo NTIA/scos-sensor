@@ -63,7 +63,7 @@ def user(db):
 def user_client(db, user):
     """A Django test client logged in as a normal user"""
     client = CertificateAuthClient()
-    client.login(username=user.username, password=user.password)
+    assert client.login(username=user.username, password=user.password)
 
     return client
 
@@ -71,7 +71,7 @@ def user_client(db, user):
 def admin_client(db, admin_user):
     """A Django test client logged in as an admin user"""
     client = CertificateAuthClient()
-    client.login(username=admin_user.username, password=admin_user.password)
+    assert client.login(username=admin_user.username, password="password")
 
     return client
 
@@ -96,7 +96,7 @@ def alt_user(db):
 def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
     client = CertificateAuthClient()
-    client.login(username=alt_user.username, password=alt_user.password)
+    assert client.login(username=alt_user.username, password=alt_user.password)
 
     return client
 
@@ -133,6 +133,6 @@ def alt_admin_client(db, alt_admin_user):
     from django.test.client import Client
 
     client = CertificateAuthClient()
-    client.login(username=alt_admin_user.username, password="password")
+    assert client.login(username=alt_admin_user.username, password="password")
 
     return client

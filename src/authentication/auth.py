@@ -21,15 +21,14 @@ class CertificateAuthentication(authentication.BaseAuthentication):
         logger.debug("Authenticating certificate.")
         cert_dn = request.headers.get("X-Ssl-Client-Dn")
         if cert_dn:
-            logger.info("DN:" + cert_dn)
-            cn = get_cn_from_dn(cert_dn)
-            logger.info("Cert cn: " + cn)
             user_model = get_user_model()
-            user = None
             try:
+                cn = get_cn_from_dn(cert_dn)
                 user = user_model.objects.get(username=cn)
             except user_model.DoesNotExist:
                 raise exceptions.AuthenticationFailed("No matching username found!")
+            except Exception:
+                raise exceptions.AuthenticationFailed("Error occurred during certificate authentication!")
             return user, None
         return None, None
 
@@ -40,7 +39,5 @@ def get_cn_from_dn(cert_dn):
     if not match:
         raise Exception("No CN found in certificate!")
     uid_raw = match.group()
-    # logger.debug(f"uid_raw = {uid_raw}")
     uid = uid_raw.split("=")[1].rstrip(",")
-    # logger.debug(f"uid = {uid}")
     return uid
