@@ -51,13 +51,17 @@ def test_no_client_cert_unauthorized_no_dn(live_server):
 @pytest.mark.django_db
 def test_client_cert_accepted(live_server, admin_user):
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_requests_ssl_dn_header("admin"))
+    response = client.get(
+        f"{live_server.url}", headers=get_requests_ssl_dn_header("admin")
+    )
     assert response.status_code == 200
 
 
 def test_mismatching_user_forbidden(live_server, admin_user):
     client = RequestsClient()
-    response = client.get(f"{live_server.url}", headers=get_requests_ssl_dn_header("user"))
+    response = client.get(
+        f"{live_server.url}", headers=get_requests_ssl_dn_header("user")
+    )
     assert response.status_code == 403
     assert "No matching username found!" in response.json()["detail"]
 

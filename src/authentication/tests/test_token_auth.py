@@ -161,7 +161,7 @@ def test_user_cannot_view_user_detail(settings, live_server, user_client, user):
     response = user_client.get(
         f"{live_server.url}{user_detail}",
         headers={"Authorization": f"Token {user.auth_token.key}"},
-        **HTTPS_KWARG
+        **HTTPS_KWARG,
     )
     assert response.status_code == 403
 

@@ -67,6 +67,7 @@ def user_client(db, user):
 
     return client
 
+
 @pytest.fixture
 def admin_client(db, admin_user):
     """A Django test client logged in as an admin user"""
@@ -74,6 +75,7 @@ def admin_client(db, admin_user):
     assert client.login(username=admin_user.username, password="password")
 
     return client
+
 
 @pytest.fixture
 def alt_user(db):

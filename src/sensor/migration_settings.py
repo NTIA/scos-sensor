@@ -252,44 +252,43 @@ else:
 
 # https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {},
+    "SECURITY_DEFINITIONS": {
+        "cert": {
+            "type": "cert",
+            "description": (
+                "Certificate based mutual TLS authentication. "
+                "AUTHENTICATION must be set to 'CERT'. "
+                "This is done by the client verifying the server certificate and the server verifying the client certificate. "
+                "The client certificate Common Name (CN) should contain the username of a user that exists in the database. "
+                "Client certificate verification is handled by NGINX. "
+                "For more information, see https://www.rfc-editor.org/rfc/rfc5246."
+            ),
+        },
+        "token": {
+            "type": "apiKey",
+            "description": (
+                "Tokens are automatically generated for all users. You can "
+                "view yours by going to your User Details view in the "
+                "browsable API at `/api/v1/users/me` and looking for the "
+                "`auth_token` key. New user accounts do not initially "
+                "have a password and so can not log in to the browsable API. "
+                "To set a password for a user (for testing purposes), an "
+                "admin can do that in the Sensor Configuration Portal, but "
+                "only the account's token should be stored and used for "
+                "general purpose API access. "
+                'Example cURL call: `curl -kLsS -H "Authorization: Token'
+                ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
+                "https://localhost/api/v1`. "
+                "AUTHENTICATION should be set to 'TOKEN'"
+            ),
+            "name": "Token",
+            "in": "header",
+        }
+    },
     "APIS_SORTER": "alpha",
     "OPERATIONS_SORTER": "method",
     "VALIDATOR_URL": None,
 }
-
-if AUTHENTICATION == "JWT":
-    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["oAuth2JWT"] = {
-        "type": "oauth2",
-        "description": (
-            "OAuth2 authentication using resource owner password flow."
-            "This is done by verifing JWT bearer tokens signed with RS256 algorithm."
-            "The JWT_PUBLIC_KEY_FILE setting controls the public key used for signature verification."
-            "Only authorizes users who have an authority matching the REQUIRED_ROLE setting."
-            "For more information, see https://tools.ietf.org/html/rfc6749#section-4.3."
-        ),
-        "flows": {"password": {"scopes": {}}},  # scopes are not used
-    }
-else:
-    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["token"] = {
-        "type": "apiKey",
-        "description": (
-            "Tokens are automatically generated for all users. You can "
-            "view yours by going to your User Details view in the "
-            "browsable API at `/api/v1/users/me` and looking for the "
-            "`auth_token` key. New user accounts do not initially "
-            "have a password and so can not log in to the browsable API. "
-            "To set a password for a user (for testing purposes), an "
-            "admin can do that in the Sensor Configuration Portal, but "
-            "only the account's token should be stored and used for "
-            "general purpose API access. "
-            'Example cURL call: `curl -kLsS -H "Authorization: Token'
-            ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
-            "https://localhost/api/v1`"
-        ),
-        "name": "Token",
-        "in": "header",
-    }
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -379,7 +378,7 @@ CERTS_DIR = path.join(CONFIG_DIR, "certs")
 PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")
 if PATH_TO_CLIENT_CERT != "":
     PATH_TO_CLIENT_CERT = path.join(CERTS_DIR, PATH_TO_CLIENT_CERT)
-# Trusted Certificate Authority certificate to verify authserver and callback URL server certificate
+# Trusted Certificate Authority certificate to verify callback URL server certificate
 PATH_TO_VERIFY_CERT = env("PATH_TO_VERIFY_CERT", default="")
 if PATH_TO_VERIFY_CERT != "":
     PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, PATH_TO_VERIFY_CERT)

@@ -420,8 +420,13 @@ def test_notification_failed_status_unknown_host(test_scheduler):
         entry = create_entry("t", 1, 1, 100, 5, "logger", callback_url)
         entry.save()
         token = entry.owner.auth_token
-        m.post(callback_url, request_headers={"Authorization": "Token " + str(token)}, text='Not Found', status_code=404)
-        
+        m.post(
+            callback_url,
+            request_headers={"Authorization": "Token " + str(token)},
+            text="Not Found",
+            status_code=404,
+        )
+
         entry.refresh_from_db()
         print("entry = " + entry.name)
         s = test_scheduler

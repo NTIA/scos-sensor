@@ -15,10 +15,12 @@ def validate_response(response, expected_code=None):
         rjson = response.json()
         return rjson
 
+
 def get_requests_ssl_dn_header(common_name):
     return {
         "X-Ssl-Client-Dn": f"C=TC,ST=test_state,L=test_locality,O=test_org,OU=test_ou,CN={common_name}",
     }
+
 
 def get_http_request_ssl_dn_header(common_name):
     return {

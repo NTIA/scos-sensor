@@ -187,7 +187,7 @@ def update_result_detail(client, schedule_entry_name, task_id, new_acquisition):
         "data": json.dumps(new_acquisition),
         "content_type": "application/json",
         "wsgi.url_scheme": "https",
-        "secure": True
+        "secure": True,
     }
 
     return client.put(url, **kwargs)
