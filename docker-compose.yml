@@ -38,8 +38,6 @@ services:
       - AUTHENTICATION
       - CALLBACK_AUTHENTICATION
       - CALLBACK_SSL_VERIFICATION
-      - CLIENT_ID
-      - CLIENT_SECRET
       - DEBUG
       - DOCKER_TAG
       - DOMAINS
