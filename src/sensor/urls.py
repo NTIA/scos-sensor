@@ -23,12 +23,13 @@ from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from . import settings
+from django.conf import settings
 from .views import api_v1_root, schema_view
 
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r"^api/(?P<version>v[0-9]+)/"
 DEFAULT_API_VERSION = settings.REST_FRAMEWORK["DEFAULT_VERSION"]
+AUTHENTICATION = settings.AUTHENTICATION
 
 api_urlpatterns = format_suffix_patterns(
     (
@@ -57,5 +58,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", RedirectView.as_view(url="/api/{}/".format(DEFAULT_API_VERSION))),
     re_path(API_PREFIX, include(api_urlpatterns)),
-    path("api/auth/", include("rest_framework.urls")),
 ]
+
+if AUTHENTICATION != "CERT":
+    urlpatterns.append(path("api/auth/", include("rest_framework.urls")))
