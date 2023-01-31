@@ -61,6 +61,7 @@ services:
     expose:
       - '8000'
     volumes:
+      - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
     cap_add:
       - SYS_PTRACE
