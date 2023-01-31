@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 
@@ -26,6 +27,8 @@ class CertificateAuthentication(authentication.BaseAuthentication):
             try:
                 cn = get_cn_from_dn(cert_dn)
                 user = user_model.objects.get(username=cn)
+                user.last_login = datetime.datetime.now()
+                user.save()
             except user_model.DoesNotExist:
                 raise exceptions.AuthenticationFailed("No matching username found!")
             except Exception:
