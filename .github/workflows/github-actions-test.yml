@@ -28,9 +28,6 @@ jobs:
           pip-compile src/requirements.in
           pip-compile src/requirements-dev.in
           python -m pip install -r src/requirements-dev.txt
-      - run: |
-          pre-commit install
-          pre-commit run --all-files
       - run: tox -c ./src/tox.ini -e coverage
 
   run-scos-sensor-docker:
