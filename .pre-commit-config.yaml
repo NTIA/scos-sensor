@@ -1,4 +1,4 @@
-exclude: src/static/*|LICENSE.md|.+\.pem|.+\.crt|.vscode/*
+exclude: src/static/.+|.+\.pem|.+\.crt|.vscode/.+
 default_language_version:
   python: python3.8
 repos:
