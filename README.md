@@ -282,6 +282,14 @@ docker-compose logs --follow api  # reattach terminal
 When running in a production environment or on a remote system, various settings will
 need to be configured.
 
+## docker-compose.yml
+
+- shm_size: This setting is overriding the default setting of 64 mb. If using
+  scos-sensor on a computer with lower memory, this may need to be decreased. This is
+  currently only used by the [NasctnSeaDataProduct action](
+  https://github.com/NTIA/scos-actions/blob/master/scos_actions/actions/acquire_sea_data_product.py
+  ).
+
 ### Environment File
 
 As explained in the [Quickstart](#quickstart) section, before running scos-sensor, an
@@ -642,6 +650,32 @@ re-uses the common actions in scos-actions.
 For more information on adding actions and hardware support, see [scos-actions](
 https://github.com/ntia/scos-actions#development).
 
+## Preselector Support
+Scos-sensor can be configured to support
+[preselectors](http://www.github.com/ntia/Preselector).
+By default, scos-sensor will look in the configs directory for
+a file named preselector_config.json. This location/name can be
+changed by setting PRESELECTOR_CONFIG in docker-compose.yaml.
+By default, scos-sensor will use a
+[WebRelayPreselector](http://www.github.com/ntia/Preselector).
+This can be changed by setting PRESELECTOR_MODULE
+in docker-compose.yaml to the python module that contains the
+preselector implementation you specify in PRESELECTOR_CLASS in
+docker-compose.yaml.
+
+## Relay Support
+Scos-sensor can be configured with zero or more [network controlled relays](https://www.controlbyweb.com/webrelay/).
+The default relay configuration directory is configs/switches.
+Relay support is provided by the
+[its_preselector](http://www.github.com/ntia/Preselector) package.
+Any relay configs placed in the relay configuration
+directory will be used to create an instance of a ControlByWebWebRelay
+and added into a switches dictionary in scos-actions.hardware.
+In addition, each relay is registered to provide status through
+the scos-sensor status endpoint as specified in the relay
+config file (see [its_preselector](http://www.github.com/ntia/Preselector) for
+additional details).
+
 ## Development
 
 ### Running the Sensor in Development
@@ -698,19 +732,23 @@ For more information about pip-tools, see <https://pip-tools.readthedocs.io/en/l
 
 #### Running Tests
 
-Ideally, you should add a test that covers any new feature that you add. If you've done
-that, then running the included test suite is the easiest way to check that everything
-is working. In any case, all tests should be run after making any local modifications
-to ensure that you haven't caused a regression.
+Ideally, you should add a test that covers any new feature that you add.
+If you've done that, then running the included test suite is the easiest
+way to check that everything is working. In any case, all tests should be
+run after making any local modifications to ensure that you haven't
+caused a regression.
 
-`scos-sensor` uses [pytest](https://docs.pytest.org/en/latest/) and [pytest-django](
-https://pytest-django.readthedocs.io/en/latest/) for testing. Tests are organized by
+`scos-sensor` uses [pytest](https://docs.pytest.org/en/latest/)
+and [pytest-django](
+https://pytest-django.readthedocs.io/en/latest/) for testing.
+Tests are organized by
 [application](
-https://docs.djangoproject.com/en/dev/ref/applications/#projects-and-applications), so
-tests related to the scheduler are in `./src/scheduler/tests`. [tox](
-https://tox.readthedocs.io/en/latest/) is a tool that can run all available tests in a
-virtual environment against all supported versions of Python. Running `pytest` directly
-is faster, but running `tox` is a more thorough test.
+https://docs.djangoproject.com/en/dev/ref/applications/#projects-and-applications)
+, so tests related to the scheduler are in `./src/scheduler/tests`. [tox](
+https://tox.readthedocs.io/en/latest/) is a tool that can run all available
+tests in a virtual environment against all supported versions of Python.
+Running `pytest` directly is faster, but running `tox` is a more thorough
+test.
 
 The following commands install the sensor's development requirements. We highly
 recommend you initialize a virtual development environment using a tool such a `conda`
@@ -726,9 +764,11 @@ tox -e coverage # check where test coverage lacks
 
 #### Running Docker with Local Changes
 
-The docker-compose file and application code look for information from the environment
-when run, so it's necessary to source the following file in each shell that you intend
-to launch the sensor from. (HINT: it can be useful to add the `source` command to a
+The docker-compose file and application code look for information
+from the environment when run, so it's necessary to source the
+following file in each shell that you intend
+to launch the sensor from.
+(HINT: it can be useful to add the `source` command to a
 post-activate file in whatever virtual environment you're using).
 
 ```bash

@@ -4,7 +4,7 @@ from rest_framework import status
 
 from sensor.tests.utils import HTTPS_KWARG, validate_response
 from tasks.models import Acquisition, TaskResult
-from tasks.tests.utils import (
+from test_utils.task_test_utils import (
     create_task_results,
     reverse_result_detail,
     simulate_frequency_fft_acquisitions,

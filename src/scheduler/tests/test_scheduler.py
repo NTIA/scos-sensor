@@ -3,8 +3,8 @@ import threading
 import time
 
 import pytest
-import requests_mock
 import requests
+import requests_mock
 from django import conf
 
 from scheduler.scheduler import Scheduler, minimum_duration

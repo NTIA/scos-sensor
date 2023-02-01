@@ -5,8 +5,10 @@ import logging
 import threading
 from contextlib import contextmanager
 from pathlib import Path
+
 import requests
 from django.utils import timezone
+
 from authentication import oauth
 from schedule.models import ScheduleEntry
 from sensor import settings

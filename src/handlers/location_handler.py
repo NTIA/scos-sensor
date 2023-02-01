@@ -1,5 +1,6 @@
-from status.models import GPS_LOCATION_DESCRIPTION, Location
 from scos_actions.capabilities import capabilities
+
+from status.models import GPS_LOCATION_DESCRIPTION, Location
 
 
 def location_action_completed_callback(sender, **kwargs):

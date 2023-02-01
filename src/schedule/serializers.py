@@ -7,14 +7,18 @@ from scos_actions.utils import (
     parse_datetime_iso_format_str,
 )
 
-import actions
 from sensor import V1
 from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
 
+from . import get_action_with_summary, registered_actions
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = "Lower number is higher priority (default={})".format(DEFAULT_PRIORITY)
+CHOICES = []
+actions = sorted(registered_actions.keys())
+for action in actions:
+    CHOICES.append((action, get_action_with_summary(action)))
 
 
 def datetimes_to_timestamps(validated_data):
@@ -44,7 +48,7 @@ class DateTimeFromTimestampField(serializers.DateTimeField):
         if dt_str is None:
             return None
 
-        dt = super(DateTimeFromTimestampField, self).to_internal_value(dt_str)
+        dt = super().to_internal_value(dt_str)
         return get_timestamp_from_datetime(dt)
 
 
@@ -103,7 +107,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     )
     # action choices is modified in schedule/views.py based on user
     action = serializers.ChoiceField(
-        choices=actions.CHOICES,
+        choices=CHOICES,
         help_text="[Required] The name of the action to be scheduled",
     )
     # priority min_value is modified in schedule/views.py based on user
@@ -170,7 +174,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         if self.validated_data.get("validate_only"):
             return
 
-        super(ScheduleEntrySerializer, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def validate(self, data):
         """Do object-level validation."""
