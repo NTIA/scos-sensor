@@ -1,29 +1,83 @@
 {
-    "id": "seadog",
+    "id": "11.11.11.111",
     "sensor_spec": {
-        "id": "seadog",
-        "model": "seadog"
+      "id": "Default",
+      "model": "Default",
+      "version": "vD.f.t",
+      "description": "Default"
     },
     "antenna": {
-        "antenna_spec": {
-            "id": "",
-            "model": "None"
-        }
+      "antenna_spec": {
+        "model": "Default",
+        "description": "Default"
+      },
+      "type": "Default",
+      "frequency_low": 0,
+      "frequency_high": 9999999,
+      "gain": 99,
+      "polarization": "Default",
+      "horizontal_beam_width": 360,
+      "vertical_beam_width": 90,
+      "voltage_standing_wave_ratio": 9.9,
+      "steerable": false
     },
-    "preselector" : {
-        "preselector_spec" : {
-          "supplemental_information" : "Oldest rev preselector with no enclosure"
-        },
-        "cal_sources" : [ { "enr": 14.53 } ]
+    "preselector": {
+      "cal_sources": [
+        {
+          "cal_source_spec": {
+            "description": "Default"
+          },
+          "enr": 14.53
+        }
+      ],
+      "filters": [
+        {
+          "filter_spec": {
+            "id": "default",
+            "model": "default",
+            "supplemental_information": "default"
+          },
+          "frequency_low_passband": 9999999,
+          "frequency_high_passband": 99999999,
+          "frequency_low_stopband": 999999,
+          "frequency_high_stopband": 999999999
+        }
+      ],
+      "amplifiers": [
+        {
+          "amplifier_spec": {}
+        }
+      ],
+      "rf_paths": [
+        {
+          "name": "default",
+          "filter_id": "default"
+        }
+      ]
     },
     "signal_analyzer": {
-        "sigan_spec": {
-            "id": "",
-            "model": "Tektronix RSA 507A"
-        }
+      "sigan_spec": {
+        "id": "Default",
+        "model": "Default",
+        "supplemental_information": "Default"
+      },
+      "frequency_low": 9999999999,
+      "frequency_high": 0,
+      "noise_figure": 99,
+      "a2d_bits": 99
     },
     "computer_spec": {
-        "id": "",
-        "model": "Intel NUC"
+      "id": "default",
+      "description": "Default"
+    },
+    "location": {
+      "x": -199,
+      "y": 99,
+      "z": 9999,
+      "speed": 0,
+      "description": "default"
+    },
+    "environment": {
+      "category": "Default"
     }
 }
