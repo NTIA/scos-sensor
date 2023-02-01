@@ -1,6 +1,6 @@
 name: 'scos-sensor test'
 
-on: 
+on:
   workflow_dispatch:
   push:
   pull_request:
@@ -24,10 +24,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install pip-tools
+          pip-compile src/requirements.in
+          pip-compile src/requirements-dev.in
           python -m pip install -r src/requirements-dev.txt
-      - run: black --check ./src
+      - run: |
+          pre-commit install
+          pre-commit run --all-files
       - run: tox -c ./src/tox.ini -e coverage
-  
+
   run-scos-sensor-docker:
     runs-on: ubuntu-20.04
     steps:
@@ -42,7 +47,7 @@ jobs:
         run: sh create_localhost_cert.sh
 
       - name: Create Fake USB # Create fake usb device node to make api container happy
-        run : | 
+        run : |
           sudo mkdir -p /dev/bus/usb/001
           sudo mknod /dev/bus/usb/001/001 c 189 260
 
