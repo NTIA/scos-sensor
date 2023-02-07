@@ -56,9 +56,6 @@ jobs:
           - "3.9"
           - "3.10"
     steps:
-      - name: Install ubuntu packages
-        run: sudo apt-get install -y docker-compose docker.io containerd runc
-
       - name: Checkout
         uses: actions/checkout@v3
 
