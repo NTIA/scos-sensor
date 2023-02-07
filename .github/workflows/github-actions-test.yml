@@ -13,12 +13,17 @@ concurrency:
 
 jobs:
   run-scos-sensor-tests:
-    name: Test Py ${{ matrix.python-version }} on Ubuntu
-    runs-on: ubuntu-20.04
+    name: Test / Py ${{ matrix.python-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-
+        os:
+          - ubuntu-20.04
+        py:
+          - "3.8"
+          - "3.9"
+          - "3.10"
     steps:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -39,7 +44,17 @@ jobs:
           SWITCH_CONFIGS_DIR: ../configs/switches
 
   run-scos-sensor-docker:
-    runs-on: ubuntu-20.04
+    name: Run SCOS Sensor / Py ${{ matrix.py }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+        py:
+          - "3.8"
+          - "3.9"
+          - "3.10"
     steps:
       - name: Install ubuntu packages
         run: sudo apt-get install -y docker-compose docker.io containerd runc
