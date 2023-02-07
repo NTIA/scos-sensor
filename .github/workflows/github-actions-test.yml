@@ -44,17 +44,13 @@ jobs:
           SWITCH_CONFIGS_DIR: ../configs/switches
 
   run-scos-sensor-docker:
-    name: Run SCOS Sensor / Py ${{ matrix.py }} / ${{ matrix.os }}
+    name: Run SCOS Sensor / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os:
           - ubuntu-20.04
-        py:
-          - "3.8"
-          - "3.9"
-          - "3.10"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -63,7 +59,7 @@ jobs:
         working-directory: ./scripts
         run: sh create_localhost_cert.sh
 
-      - name: Create Fake USB # Create fake usb device node to make api container happy
+      - name: Create Fake USB Device # Required by API container
         run : |
           sudo mkdir -p /dev/bus/usb/001
           sudo mknod /dev/bus/usb/001/001 c 189 260
