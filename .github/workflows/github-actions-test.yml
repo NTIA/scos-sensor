@@ -7,16 +7,17 @@ on:
 
 jobs:
   run-scos-sensor-tests:
+    name: Test Py ${{ matrix.python-version }} on Ubuntu
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-      - name: Checkout
+      - name: Checkout SCOS Sensor
         uses: actions/checkout@v3
 
-      - name: Setup python
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
