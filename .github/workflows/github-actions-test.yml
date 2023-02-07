@@ -55,20 +55,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Create Certs
+      - name: Create localhost certs
         working-directory: ./scripts
         run: sh create_localhost_cert.sh
 
-      - name: Create Fake USB Device # Required by API container
+      - name: Create fake USB device # Required by API container
         run : |
           sudo mkdir -p /dev/bus/usb/001
           sudo mknod /dev/bus/usb/001/001 c 189 260
 
-      - name: Run Docker
-        run: source ./env.template && export MOCK_SIGAN=1 && export MOCK_SIGAN_RANDOM=1 && docker-compose up -d --build
+      - name: Build and run Docker container
+        run: |
+          source ./env.template
+          export MOCK_SIGAN=1
+          export MOCK_SIGAN_RANDOM=1
+          docker-compose build --no-cache
+          docker-compose up -d
 
       - name: Pause # wait for containers to finish starting
-        run: sleep 15
+        run: sleep 20
 
       - name: Check Logs
         run: docker-compose logs
