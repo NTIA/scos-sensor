@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   run-scos-sensor-tests:
-    name: Test / Py ${{ matrix.python-version }} / ${{ matrix.os }}
+    name: Test / Py ${{ matrix.py }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -25,10 +25,10 @@ jobs:
           - "3.9"
           - "3.10"
     steps:
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.py }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.py }}
       - name: Checkout scos-sensor
         uses: actions/checkout@v3
       - name: Install tox-gh
