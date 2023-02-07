@@ -37,7 +37,6 @@ jobs:
           AUTHENTICATION: TOKEN
           CALLBACK_AUTHENTICATION: TOKEN
           SWITCH_CONFIGS_DIR: ../configs/switches
-          DJANGO_SETTINGS_MODULE: sensor.settings
 
   run-scos-sensor-docker:
     runs-on: ubuntu-20.04
