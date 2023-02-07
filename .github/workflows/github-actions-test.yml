@@ -14,22 +14,24 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-      - name: Checkout SCOS Sensor
-        uses: actions/checkout@v3
-
-      - name: Setup Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pip-tools
-          pip-compile src/requirements.in
-          pip-compile src/requirements-dev.in
-          python -m pip install -r src/requirements-dev.txt
-      - run: tox -c ./src/tox.ini -e coverage
+      - name: Checkout scos-sensor
+        uses: actions/checkout@v3
+      - name: Install tox-gh
+        run: python -m pip install tox-gh
+      - name: Set up test suite
+        run: tox r --notest -c ./src/tox.ini -e coverage
+      - name: Run test suite
+        run: tox r -c ./src/tox.ini -e coverage
+        env:
+          PYTEST_ADDOPTS: "-vv --durations=0"
+          AUTHENTICATION: TOKEN
+          CALLBACK_AUTHENTICATION: TOKEN
+          SWITCH_CONFIGS_DIR: ../configs/switches
+          DJANGO_SETTINGS_MODULE: sensor.settings
 
   run-scos-sensor-docker:
     runs-on: ubuntu-20.04
