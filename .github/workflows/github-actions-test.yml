@@ -46,9 +46,6 @@ jobs:
   run-scos-sensor-docker:
     name: Run SCOS Sensor / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    env:
-      MOCK_SIGAN: 1
-      MOCK_SIGAN_RANDOM: 1
     strategy:
       fail-fast: false
       matrix:
@@ -67,13 +64,13 @@ jobs:
           sudo mkdir -p /dev/bus/usb/001
           sudo mknod /dev/bus/usb/001/001 c 189 260
 
-      - name: Build Docker containers
+      - name: Build and run Docker containers
         run: |
           source ./env.template
+          export MOCK_SIGAN=1
+          export MOCK_SIGAN_RANDOM=1
           docker-compose build --no-cache
-
-      - name: Start Docker containers
-        run: docker-compose up -d
+          docker-compose up -d
 
       - name: Wait for containers # wait for containers to finish starting
         run: sleep 20
