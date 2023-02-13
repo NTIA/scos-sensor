@@ -72,20 +72,10 @@ jobs:
         with:
           path: ./env.template
 
-      - name: Build and run Docker container
-        run: |
-          docker-compose build --no-cache
-          docker-compose up -d
-
-      - name: Pause # wait for containers to finish starting
-        run: sleep 20
-
-      - name: Check Logs
-        run: docker-compose logs
+      - name: Docker compose
+        uses: isband/compose-action@v1.4.1
+        with:
+          up-flags: "-d --build --force-recreate"
 
       - name: Check Container
         run: docker ps | grep api | grep -q healthy
-
-      - name: Stop containers
-        if: always()
-        run: docker-compose down
