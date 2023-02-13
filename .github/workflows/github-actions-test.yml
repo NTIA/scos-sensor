@@ -73,7 +73,7 @@ jobs:
           path: ./env.template
 
       - name: Docker compose
-        uses: isband/compose-action@v1.4.1
+        uses: isbang/compose-action@v1.4.1
         with:
           up-flags: "-d --build --force-recreate"
 
