@@ -30,15 +30,17 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==38.0.1
-    # via paramiko
+cryptography==39.0.1
+    # via
+    #   -r requirements.in
+    #   paramiko
 defusedxml==0.7.1
     # via its-preselector
 distlib==0.3.6
     # via virtualenv
 distro==1.8.0
     # via docker-compose
-django==3.2.16
+django==3.2.17
     # via
     #   -r requirements.in
     #   django-session-timeout
