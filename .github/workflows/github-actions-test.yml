@@ -68,9 +68,7 @@ jobs:
           sudo mknod /dev/bus/usb/001/001 c 189 260
 
       - name: Read environment variables
-        uses: falti/dotenv-action@v1.0.2
-        with:
-          path: ./env.template
+        run: source ./env.template
 
       - name: Docker compose
         uses: isbang/compose-action@v1.4.1
