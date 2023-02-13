@@ -46,6 +46,9 @@ jobs:
   run-scos-sensor-docker:
     name: Run SCOS Sensor / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      MOCK_SIGAN: 1
+      MOCK_SIGAN_RANDOM: 1
     strategy:
       fail-fast: false
       matrix:
@@ -71,8 +74,6 @@ jobs:
 
       - name: Build and run Docker container
         run: |
-          export MOCK_SIGAN=1
-          export MOCK_SIGAN_RANDOM=1
           docker-compose build --no-cache
           docker-compose up -d
 
