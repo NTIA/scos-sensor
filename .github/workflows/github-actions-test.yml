@@ -64,9 +64,13 @@ jobs:
           sudo mkdir -p /dev/bus/usb/001
           sudo mknod /dev/bus/usb/001/001 c 189 260
 
+      - name: Read environment variables
+        uses: falti/dotenv-action@v1.0.2
+        with:
+          path: ./env.template
+
       - name: Build and run Docker container
         run: |
-          source ./env.template
           export MOCK_SIGAN=1
           export MOCK_SIGAN_RANDOM=1
           docker-compose build --no-cache
