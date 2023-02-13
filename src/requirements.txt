@@ -71,7 +71,6 @@ environs==9.5.0
     #   scos-tekrsa
 filelock==3.9.0
     # via
-    #   -r requirements.in
     #   ray
     #   virtualenv
 frozenlist==1.3.3
@@ -120,7 +119,6 @@ oauthlib==3.2.2
     #   requests-oauthlib
 packaging==23.0
     # via
-    #   -r requirements.in
     #   docker
     #   drf-yasg
     #   marshmallow
