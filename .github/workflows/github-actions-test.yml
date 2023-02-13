@@ -73,7 +73,7 @@ jobs:
           docker-compose build --no-cache
 
       - name: Start Docker containers
-          docker-compose up -d
+        run: docker-compose up -d
 
       - name: Wait for containers # wait for containers to finish starting
         run: sleep 20
