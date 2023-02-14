@@ -24,7 +24,6 @@ def load_location(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("status", "0002_location_height"),
     ]
