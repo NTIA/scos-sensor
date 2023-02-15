@@ -8,5 +8,4 @@ logger = logging.getLogger(__name__)
 
 
 class ActionsConfig(AppConfig):
-
     name = "actions"

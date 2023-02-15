@@ -9,7 +9,6 @@ from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [("schedule", "0001_initial")]
