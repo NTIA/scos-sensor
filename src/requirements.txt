@@ -20,7 +20,7 @@ cffi==1.15.1
     # via
     #   cryptography
     #   pynacl
-charset-normalizer==2.1.1
+charset-normalizer==3.0.1
     # via requests
 click==8.1.3
     # via ray
@@ -30,7 +30,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==38.0.4
+cryptography==39.0.1
     # via
     #   -r requirements.in
     #   paramiko
@@ -40,7 +40,7 @@ distlib==0.3.6
     # via virtualenv
 distro==1.8.0
     # via docker-compose
-django==3.2.16
+django==3.2.18
     # via
     #   -r requirements.in
     #   django-session-timeout
@@ -62,7 +62,7 @@ dockerpty==0.4.1
     # via docker-compose
 docopt==0.6.2
     # via docker-compose
-drf-yasg==1.21.4
+drf-yasg==1.21.5
     # via -r requirements.in
 environs==9.5.0
     # via
@@ -78,7 +78,7 @@ frozenlist==1.3.3
     # via
     #   aiosignal
     #   ray
-grpcio==1.51.1
+grpcio==1.51.3
     # via ray
 gunicorn==20.1.0
     # via -r requirements.in
@@ -98,7 +98,7 @@ jsonschema==3.2.0
     # via
     #   docker-compose
     #   ray
-markupsafe==2.1.1
+markupsafe==2.1.2
     # via jinja2
 marshmallow==3.19.0
     # via environs
@@ -106,7 +106,7 @@ msgpack==1.0.4
     # via ray
 numexpr==2.8.4
     # via scos-actions
-numpy==1.24.0
+numpy==1.24.2
     # via
     #   numexpr
     #   ray
@@ -124,11 +124,11 @@ packaging==23.0
     #   docker
     #   drf-yasg
     #   marshmallow
-paramiko==2.12.0
+paramiko==3.0.0
     # via docker
-platformdirs==2.6.2
+platformdirs==3.0.0
     # via virtualenv
-protobuf==4.21.12
+protobuf==4.22.0
     # via ray
 psutil==5.9.4
     # via scos-actions
@@ -140,15 +140,15 @@ pyjwt==2.6.0
     # via -r requirements.in
 pynacl==1.5.0
     # via paramiko
-pyrsistent==0.19.2
+pyrsistent==0.19.3
     # via jsonschema
 python-dateutil==2.8.2
     # via scos-actions
-python-dotenv==0.21.0
+python-dotenv==0.21.1
     # via
     #   docker-compose
     #   environs
-pytz==2022.7
+pytz==2022.7.1
     # via
     #   django
     #   djangorestframework
@@ -157,9 +157,9 @@ pyyaml==5.4.1
     # via
     #   docker-compose
     #   ray
-ray==2.2.0
+ray==2.3.0
     # via scos-actions
-requests==2.28.1
+requests==2.28.2
     # via
     #   coreapi
     #   docker
@@ -178,7 +178,7 @@ ruamel-yaml==0.17.21
     #   scos-actions
 ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
-scipy==1.9.3
+scipy==1.10.1
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@6.1.0
     # via
@@ -193,7 +193,6 @@ six==1.16.0
     #   django-session-timeout
     #   dockerpty
     #   jsonschema
-    #   paramiko
     #   python-dateutil
     #   requests-mock
     #   sigmf
@@ -208,11 +207,11 @@ uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==1.26.13
+urllib3==1.26.14
     # via
     #   docker
     #   requests
-virtualenv==20.17.1
+virtualenv==20.20.0
     # via ray
 websocket-client==0.59.0
     # via
