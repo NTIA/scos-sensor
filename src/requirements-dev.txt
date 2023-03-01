@@ -4,24 +4,27 @@
 #
 #    pip-compile requirements-dev.in
 #
-asgiref==3.5.2
+aiosignal==1.3.1
+    # via
+    #   -r requirements.txt
+    #   ray
+asgiref==3.6.0
     # via
     #   -r requirements.txt
     #   django
-aspy-refactor-imports==3.0.2
-    # via seed-isort-config
-attrs==22.1.0
+attrs==22.2.0
     # via
     #   -r requirements.txt
     #   jsonschema
     #   pytest
+    #   ray
 bcrypt==4.0.1
     # via
     #   -r requirements.txt
     #   paramiko
-black==22.10.0
-    # via -r requirements-dev.in
-certifi==2022.9.24
+cachetools==5.3.0
+    # via tox
+certifi==2022.12.7
     # via
     #   -r requirements.txt
     #   requests
@@ -32,12 +35,23 @@ cffi==1.15.1
     #   pynacl
 cfgv==3.3.1
     # via pre-commit
+chardet==5.1.0
+    # via tox
 charset-normalizer==2.1.1
     # via
     #   -r requirements.txt
     #   requests
 click==8.1.3
-    # via black
+    # via
+    #   -r requirements.txt
+    #   ray
+colorama==0.4.6
+    # via
+    #   -r requirements.txt
+    #   click
+    #   docker-compose
+    #   pytest
+    #   tox
 coreapi==2.3.3
     # via
     #   -r requirements.txt
@@ -47,9 +61,9 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.5.0
+coverage[toml]==7.0.0
     # via pytest-cov
-cryptography==38.0.4
+cryptography==38.0.1
     # via
     #   -r requirements.txt
     #   paramiko
@@ -58,7 +72,9 @@ defusedxml==0.7.1
     #   -r requirements.txt
     #   its-preselector
 distlib==0.3.6
-    # via virtualenv
+    # via
+    #   -r requirements.txt
+    #   virtualenv
 distro==1.8.0
     # via
     #   -r requirements.txt
@@ -66,15 +82,11 @@ distro==1.8.0
 django==3.2.16
     # via
     #   -r requirements.txt
-    #   django-extensions
     #   django-session-timeout
     #   djangorestframework
     #   drf-yasg
     #   jsonfield
     #   scos-actions
-    #   scos-usrp
-django-extensions==3.2.1
-    # via -r requirements-dev.in
 django-session-timeout==0.1.0
     # via -r requirements.txt
 djangorestframework==3.14.0
@@ -101,16 +113,27 @@ environs==9.5.0
     # via
     #   -r requirements.txt
     #   scos-actions
-    #   scos-usrp
+    #   scos-tekrsa
 exceptiongroup==1.0.4
     # via pytest
-filelock==3.8.0
+filelock==3.9.0
     # via
+    #   -r requirements.txt
+    #   ray
     #   tox
     #   virtualenv
+frozenlist==1.3.3
+    # via
+    #   -r requirements.txt
+    #   aiosignal
+    #   ray
+grpcio==1.51.1
+    # via
+    #   -r requirements.txt
+    #   ray
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.9
+identify==2.5.11
     # via pre-commit
 idna==3.4
     # via
@@ -122,9 +145,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==1.1.1
     # via pytest
-isort==5.10.1
-    # via -r requirements-dev.in
-its-preselector @ git+https://github.com/NTIA/Preselector@2.1.0
+its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -142,6 +163,7 @@ jsonschema==3.2.0
     # via
     #   -r requirements.txt
     #   docker-compose
+    #   ray
 markupsafe==2.1.1
     # via
     #   -r requirements.txt
@@ -150,44 +172,47 @@ marshmallow==3.19.0
     # via
     #   -r requirements.txt
     #   environs
-mypy-extensions==0.4.3
-    # via black
+msgpack==1.0.4
+    # via
+    #   -r requirements.txt
+    #   ray
 nodeenv==1.7.0
     # via pre-commit
 numexpr==2.8.4
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.23.5
+numpy==1.24.0
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
     #   numexpr
+    #   ray
     #   scipy
     #   scos-actions
-    #   scos-usrp
     #   sigmf
+    #   tekrsa-api-wrap
 oauthlib==3.2.2
     # via
     #   -r requirements.txt
     #   requests-oauthlib
-packaging==21.3
+packaging==23.0
     # via
     #   -r requirements.txt
     #   docker
     #   drf-yasg
     #   marshmallow
+    #   pyproject-api
     #   pytest
     #   tox
 paramiko==2.12.0
     # via
     #   -r requirements.txt
     #   docker
-pathspec==0.10.2
-    # via black
-platformdirs==2.5.4
+platformdirs==2.6.2
     # via
-    #   black
+    #   -r requirements.txt
+    #   tox
     #   virtualenv
 pluggy==1.0.0
     # via
@@ -195,10 +220,16 @@ pluggy==1.0.0
     #   tox
 pre-commit==2.20.0
     # via -r requirements-dev.in
+protobuf==4.21.12
+    # via
+    #   -r requirements.txt
+    #   ray
+psutil==5.9.4
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 psycopg2-binary==2.9.5
     # via -r requirements.txt
-py==1.11.0
-    # via tox
 pycparser==2.21
     # via
     #   -r requirements.txt
@@ -209,10 +240,8 @@ pynacl==1.5.0
     # via
     #   -r requirements.txt
     #   paramiko
-pyparsing==3.0.9
-    # via
-    #   -r requirements.txt
-    #   packaging
+pyproject-api==1.5.0
+    # via tox
 pyrsistent==0.19.2
     # via
     #   -r requirements.txt
@@ -234,7 +263,7 @@ python-dotenv==0.21.0
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2022.6
+pytz==2022.7
     # via
     #   -r requirements.txt
     #   django
@@ -245,6 +274,11 @@ pyyaml==5.4.1
     #   -r requirements.txt
     #   docker-compose
     #   pre-commit
+    #   ray
+ray==2.2.0
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 requests==2.28.1
     # via
     #   -r requirements.txt
@@ -252,6 +286,7 @@ requests==2.28.1
     #   docker
     #   docker-compose
     #   its-preselector
+    #   ray
     #   requests-mock
     #   requests-oauthlib
 requests-mock==1.10.0
@@ -271,14 +306,12 @@ scipy==1.9.3
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@4.0.2
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.1.0
     # via
     #   -r requirements.txt
-    #   scos-usrp
-scos_usrp @ git+https://github.com/NTIA/scos-usrp@2.0.1
+    #   scos-tekrsa
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.1
     # via -r requirements.txt
-seed-isort-config==2.2.0
-    # via -r requirements-dev.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
     #   -r requirements.txt
@@ -293,12 +326,15 @@ six==1.16.0
     #   python-dateutil
     #   requests-mock
     #   sigmf
-    #   tox
     #   websocket-client
 sqlparse==0.4.3
     # via
     #   -r requirements.txt
     #   django
+tekrsa-api-wrap==1.3.1
+    # via
+    #   -r requirements.txt
+    #   scos-tekrsa
 texttable==1.6.7
     # via
     #   -r requirements.txt
@@ -307,14 +343,12 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
     #   coverage
+    #   pyproject-api
     #   pytest
     #   tox
-tox==3.27.1
+tox==4.4.4
     # via -r requirements-dev.in
-typing-extensions==4.4.0
-    # via black
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
@@ -325,9 +359,11 @@ urllib3==1.26.13
     #   -r requirements.txt
     #   docker
     #   requests
-virtualenv==20.17.0
+virtualenv==20.17.1
     # via
+    #   -r requirements.txt
     #   pre-commit
+    #   ray
     #   tox
 websocket-client==0.59.0
     # via

@@ -35,7 +35,6 @@ def test_admin_can_view_all_entries(admin_client, alt_admin_client):
 
 
 def test_admin_can_delete_all_entries(admin_client, alt_admin_client):
-
     # admin user schedule entry
     alt_admin_rjson = post_schedule(alt_admin_client, TEST_PRIVATE_SCHEDULE_ENTRY)
     alt_admin_entry_name = alt_admin_rjson["name"]

@@ -1,23 +1,29 @@
 {
-    "id": "",
-    "sensor_spec": {
-        "id": "",
-        "model": "greyhound"
-    },
-    "antenna": {
-        "antenna_spec": {
-            "id": "",
-            "model": "L-com HG3512UP-NF"
-        }
-    },
-    "signal_analyzer": {
-        "sigan_spec": {
-            "id": "",
-            "model": "Ettus USRP B210"
-        }
-    },
-    "computer_spec": {
-        "id": "",
-        "model": "Intel NUC"
-    }
+  "id": "seadog",
+  "sensor_spec": {
+      "id": "seadog",
+      "model": "seadog"
+  },
+  "antenna": {
+      "antenna_spec": {
+          "id": "",
+          "model": "None"
+      }
+  },
+  "preselector" : {
+      "preselector_spec" : {
+        "supplemental_information" : "Oldest rev preselector with no enclosure"
+      },
+      "cal_sources" : [ { "enr": 14.53 } ]
+  },
+  "signal_analyzer": {
+      "sigan_spec": {
+          "id": "",
+          "model": "Tektronix RSA 507A"
+      }
+  },
+  "computer_spec": {
+      "id": "",
+      "model": "Intel NUC"
+  }
 }

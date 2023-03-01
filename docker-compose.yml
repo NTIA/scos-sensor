@@ -14,9 +14,10 @@ services:
   api:
     healthcheck:
       test: test ! -e /sdr_unhealthy && test ! -e /scheduler_dead
-      interval: 10s
+      interval: 6s
       timeout: 3s
       retries: 1
+    shm_size: '16gb'
     restart: always
     depends_on:
       - db
@@ -62,6 +63,7 @@ services:
     expose:
       - '8000'
     volumes:
+      - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
     tmpfs:
       - /scos_tmp

@@ -1,10 +1,8 @@
 -rrequirements.txt
-black>=22.0, <23.0
-django-extensions>=3.0, <4.0
-isort>=5.0, <6.0
-numpy>=1.22, <2.0
+
+cryptography>=36.0, <39.0
+numpy>=1.0, <2.0
 pre-commit>=2.0, <3.0
 pytest-cov>=3.0, <4.0
 pytest-django>=4.0, <5.0
-seed-isort-config>=2.0, <3.0
-tox>=3.0, <4.0
+tox>=4.0,<5.0
