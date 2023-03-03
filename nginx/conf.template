@@ -26,6 +26,7 @@ server {
     # reduce "upstream response is buffered to a temporary file" warnings
     proxy_buffers 16 16k;
     proxy_buffer_size 16k;
+    proxy_read_timeout 120s;
 
     ssl_session_tickets off;
     ssl_certificate /etc/ssl/certs/ssl-cert.pem;
