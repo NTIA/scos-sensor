@@ -5,6 +5,7 @@ RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive \
                    apt-get install -qy --no-install-recommends \
                    libusb-1.0-0 libpython3.8 \
+                   smartmontools \
                    git python3-pip python3-setuptools python3.8 \
 		   swig gcc python3.8-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
