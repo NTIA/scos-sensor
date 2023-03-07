@@ -28,12 +28,12 @@ class Location(models.Model):
     latitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
-        help_text="Longitude of the sensor in decimal degrees.",
+        help_text="Longitude of the sensor in decimal degrees (WGS84).",
     )
     longitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
-        help_text="Longitude of the sensor in decimal degrees.",
+        help_text="Longitude of the sensor in decimal degrees (WGS84).",
     )
     height = models.DecimalField(
         null=True,
