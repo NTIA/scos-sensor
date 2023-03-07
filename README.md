@@ -618,9 +618,11 @@ authorization server.
 The data file is encrypted on disk by default using cryptography Fernet module. Note
 that the Fernet encryption module is not suitable for large data files. In testing,
 it seems to work fine with 1 second acquisition data files with size around 120 MB. It
-does not work with 10 second acquisition data files with size around 1 GB. The metadata
+does not work with 10 second acquisition data files with size around 1 GB. This likely
+depends on the available memory in the system. The metadata
 files are not encrypted. Note that the `SCOS_TMP` setting controls where data will be
-written unecrypted when decrypting the file. Defaults to `/scos_tmp` docker tmpfs. Set
+written unecrypted when decrypting the file and creating the SigMF archive. Defaults to
+`/scos_tmp` docker tmpfs mount, so the data should only be stored in host memory. Set
 the `ENCRYPTION_KEY`  environment variable to control the encryption key used for
 encryption. The env file will generate a random key. Use the `ENCRYPT_DATA_FILES`
 setting in the env file to disable encryption.
