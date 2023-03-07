@@ -64,6 +64,11 @@ jobs:
           sudo mkdir -p /dev/bus/usb/001
           sudo mknod /dev/bus/usb/001/001 c 189 260
 
+      - name: Create fake SSD device  # Required by API container
+        run: |
+          sudo mkdir -p /dev/nvme0n1
+          sudo mknod /dev/nvme0n1 b 259 0
+
       - name: Build and run Docker containers
         run: |
           source ./env.template
