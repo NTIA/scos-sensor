@@ -65,6 +65,8 @@ services:
       - ${REPO_ROOT}/drivers:/drivers:ro
     cap_add:
       - SYS_PTRACE
+      - SYS_RAWIO  # required for smartctl SMART disk health checks
+      - SYS_ADMIN  # required for ^ with NVMe drives
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
     extra_hosts:
