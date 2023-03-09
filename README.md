@@ -615,17 +615,19 @@ authorization server.
 
 ### Data File Encryption
 
-The data file is encrypted on disk by default using cryptography Fernet module. Note
-that the Fernet encryption module is not suitable for large data files. In testing,
-it seems to work fine with 1 second acquisition data files with size around 120 MB. It
-does not work with 10 second acquisition data files with size around 1 GB. This likely
-depends on the available memory in the system. The metadata
-files are not encrypted. Note that the `SCOS_TMP` setting controls where data will be
-written unecrypted when decrypting the file and creating the SigMF archive. Defaults to
-`/scos_tmp` docker tmpfs mount, so the data should only be stored in host memory. Set
-the `ENCRYPTION_KEY`  environment variable to control the encryption key used for
-encryption. The env file will generate a random key. Use the `ENCRYPT_DATA_FILES`
-setting in the env file to disable encryption.
+The data files are encrypted on disk by default using Cryptography Fernet module. The
+Fernet encryption module may not be suitable for large data files. According to the
+[Cryptography documentation for Fernet encryption](https://cryptography.io/en/latest/fernet/#limitations),
+the entire message contents must fit in memory. ***Note that the SigMF metadata is
+currently not encrypted.*** The `SCOS_TMP` setting controls where data will be written
+when decrypting the file and creating the SigMF archive. Defaults to `/scos_tmp` docker
+tmpfs mount. Set the `ENCRYPTION_KEY` environment variable to control the encryption
+key used for encryption. The env.template file will generate a random encryption key
+for testing. ***When used in production, it is recommended to store the encryption key
+in a safe location to prevent data loss and to prevent data from being compromised.***
+Use the `ENCRYPT_DATA_FILES` setting in the env.template file to disable encryption.
+The `SCOS_TMP` location is used to create the SigMF archive regardless of whether
+encryption is enabled.
 
 ## Actions and Hardware Support
 
