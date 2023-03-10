@@ -815,7 +815,7 @@ installed python dev requirements from [Requirements and Configuration](
 ```bash
 docker-compose up -d db
 cd src
-export MOCK_RADIO=1 MOCK_RADIO_RANDOM=1 # if running without usrp
+export MOCK_SIGAN=1 MOCK_SIGAN_RANDOM=1 # if running without signal analyzer attached
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py createsuperuser
