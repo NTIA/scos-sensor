@@ -4,6 +4,7 @@ db.sqlite3
 drivers/cyusb.conf
 # Test generated files
 files/*
+!files/README.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
