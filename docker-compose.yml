@@ -63,6 +63,7 @@ services:
     volumes:
       - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
+      - ${REPO_ROOT}/files:/files:rw
     cap_add:
       - SYS_PTRACE
     devices:
