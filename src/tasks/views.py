@@ -209,7 +209,6 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
     multirecording = len(acquisitions) > 1
 
     for acq in acquisitions:
-        tmp_file_path = ""
         with tempfile.NamedTemporaryFile(dir=settings.SCOS_TMP, delete=True) as tmpdata:
             if acq.data_encrypted:
                 if not settings.ENCRYPTION_KEY:
@@ -227,11 +226,8 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
             if multirecording:
                 name += "-" + str(acq.recording_id)
             sigmf_file = sigmf.sigmffile.SigMFFile(metadata=acq.metadata, name=name)
-            tmp_file_path = tmpdata.name
             sigmf_file.set_data_file(tmpdata.name)
 
             sigmf.archive.SigMFArchive(sigmf_file, path=name, fileobj=fileobj)
-        if os.path.exists(tmp_file_path):
-            os.remove(tmp_file_path)
 
     logger.debug("sigmf archive built")
