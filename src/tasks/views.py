@@ -25,8 +25,6 @@ from .models.task_result import TaskResult
 from .serializers.task import TaskSerializer
 from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSerializer
 
-ENCRYPTION_KEY = settings.ENCRYPTION_KEY
-
 logger = logging.getLogger(__name__)
 
 
@@ -214,9 +212,9 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
         tmp_file_path = ""
         with tempfile.NamedTemporaryFile(dir=settings.SCOS_TMP, delete=True) as tmpdata:
             if acq.data_encrypted:
-                if not ENCRYPTION_KEY:
+                if not settings.ENCRYPTION_KEY:
                     raise Exception("No value set for ENCRYPTION_KEY!")
-                fernet = Fernet(ENCRYPTION_KEY)
+                fernet = Fernet(settings.ENCRYPTION_KEY)
                 raw_data = acq.data.read()
                 data = fernet.decrypt(raw_data)
                 del raw_data

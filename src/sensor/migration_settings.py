@@ -93,7 +93,6 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 # IP when the first request comes in.
 INTERNAL_IPS = ["127.0.0.1"]
 
-ENCRYPT_DATA_FILES = env.bool("ENCRYPT_DATA_FILES", default=True)
 
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
@@ -109,7 +108,6 @@ else:
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
-ENCRYPTION_KEY = Fernet.generate_key()
 
 SESSION_COOKIE_AGE = 900  # seconds
 SESSION_EXPIRE_SECONDS = 900  # seconds

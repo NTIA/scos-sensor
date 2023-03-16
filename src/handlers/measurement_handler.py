@@ -6,8 +6,6 @@ from django.core.files.base import ContentFile
 
 from tasks.models import TaskResult
 
-ENCRYPTION_KEY = settings.ENCRYPTION_KEY
-
 logger = logging.getLogger(__name__)
 
 
@@ -42,9 +40,9 @@ def measurement_action_completed_callback(sender, **kwargs):
         acquisition = Acquisition(task_result=task_result, metadata=metadata)
 
     if settings.ENCRYPT_DATA_FILES:
-        if not ENCRYPTION_KEY:
+        if not settings.ENCRYPTION_KEY:
             raise Exception("No value set for ENCRYPTION_KEY!")
-        fernet = Fernet(ENCRYPTION_KEY)
+        fernet = Fernet(settings.ENCRYPTION_KEY)
         _data = bytes(data)
         del data
         del kwargs["data"]
