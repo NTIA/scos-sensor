@@ -82,7 +82,9 @@ class TaskResult(models.Model):
                 disk_space = shutil.disk_usage(data_path)
                 percent_used = (disk_space.used / disk_space.total) * 100
                 if percent_used > self.max_disk_usage:
-                    logger.info("Max disk usage exceeded, deleting oldest task result!")
+                    logger.warning(
+                        "Max disk usage exceeded, deleting oldest task result!"
+                    )
                     same_entry_results[0].delete()
 
         super().save()
