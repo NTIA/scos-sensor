@@ -1,9 +1,12 @@
 import logging
+import os
 import tempfile
 from functools import partial
 
 import sigmf.archive
 import sigmf.sigmffile
+from cryptography.fernet import Fernet
+from django.conf import settings
 from django.http import FileResponse, Http404
 from rest_framework import filters, status
 from rest_framework.decorators import action, api_view
@@ -16,7 +19,6 @@ from rest_framework.viewsets import GenericViewSet
 
 from schedule.models import ScheduleEntry
 from scheduler import scheduler
-from sensor import settings
 
 from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
@@ -144,7 +146,7 @@ class TaskResultListViewSet(ListModelMixin, GenericViewSet):
         fname = settings.FQDN + "_" + schedule_entry_name + ".sigmf"
 
         # FileResponse handles closing the file
-        tmparchive = tempfile.TemporaryFile()
+        tmparchive = tempfile.TemporaryFile(dir=settings.SCOS_TMP)
         build_sigmf_archive(tmparchive, schedule_entry_name, acquisitions)
         content_type = "application/x-tar"
         response = FileResponse(
@@ -184,7 +186,7 @@ class TaskResultInstanceViewSet(
             raise Http404
 
         # FileResponse handles closing the file
-        tmparchive = tempfile.TemporaryFile()
+        tmparchive = tempfile.TemporaryFile(dir=settings.SCOS_TMP)
         build_sigmf_archive(tmparchive, schedule_entry_name, acquisitions)
         content_type = "application/x-tar"
         response = FileResponse(
@@ -207,8 +209,18 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
     multirecording = len(acquisitions) > 1
 
     for acq in acquisitions:
-        with tempfile.NamedTemporaryFile() as tmpdata:
-            tmpdata.write(acq.data.read())
+        with tempfile.NamedTemporaryFile(dir=settings.SCOS_TMP, delete=True) as tmpdata:
+            if acq.data_encrypted:
+                if not settings.ENCRYPTION_KEY:
+                    raise Exception("No value set for ENCRYPTION_KEY!")
+                fernet = Fernet(settings.ENCRYPTION_KEY)
+                raw_data = acq.data.read()
+                data = fernet.decrypt(raw_data)
+                del raw_data
+                tmpdata.write(data)  # decrypted data will be stored on disk in tmp file
+                del data
+            else:
+                tmpdata.write(acq.data.read())
             tmpdata.seek(0)  # move fd ptr to start of data for reading
             name = schedule_entry_name + "_" + str(acq.task_result.task_id)
             if multirecording:

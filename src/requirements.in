@@ -1,7 +1,8 @@
-django>=3.2.15, <4.0
+cryptography>=39.0.1
+django>=3.2.18, <4.0
 djangorestframework>=3.0, <4.0
 django-session-timeout>=0.1, <1.0
-docker-compose>=1.0, <2.0
+docker-compose>=1.0
 drf-yasg>=1.0, <2.0
 environs>=9.0, <10.0
 filelock>=3.9, <4.0

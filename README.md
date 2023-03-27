@@ -246,10 +246,14 @@ Intel-based host computer should work.
 1. Copy the environment template file and *modify* the copy if necessary, then source
 it. The settings in this file are set for running in a development environment on your
 local system. For running in a production environment, many of the settings will need
-to be modified. See [Configuration](#configuration) section. Also, you are strongly
-encouraged to change the default `ADMIN_EMAIL` and `ADMIN_PASSWORD` before running
-scos-sensor. Finally, source the file before running scos-sensor to load the settings
-into your environment.
+to be modified. Some of the values, including the ENCRYPTION_KEY, POSTGRES_PASSWORD,
+and the Django SECRET_KEY are randomly generated in this file. Therefore, if the source
+command is run a second time, the old values will be lost. Make sure to hardcode and
+backup these environment variables to enable scos-sensor to decrypt the data files
+stored in scos-sensor and access the database. See [Configuration](#configuration)
+section. Also, you are strongly encouraged to change the default `ADMIN_EMAIL` and
+`ADMIN_PASSWORD` before running scos-sensor. Finally, source the file before running
+scos-sensor to load the settings into your environment.
 
     ```bash
     cp env.template env
@@ -305,6 +309,10 @@ settings in the environment file:
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
   <https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts>).
+- ENCRYPT_DATA_FILES: If set to true, sigmf-data files will be encrypted when stored in
+  the api container by scos-sensor.
+- ENCRYPTION_KEY: Encryption key to encrypt sigmf-data files if ENCRYPT_DATA_FILES is
+  set to true. The env.template file sets to a randomly generated value.
 - GIT_BRANCH: Current branch of scos-sensor being used.
 - GUNICORN_LOG_LEVEL: Log level for Gunicorn log messages.
 - IPS: A space separated list of IP addresses. Used to generate [ALLOWED_HOSTS](
@@ -315,11 +323,12 @@ settings in the environment file:
   `shutil.disk_usage` function) may not match the usage reported by the Linux `df`
   command.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
-  Change in production.
+  Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
   unpredictable value. See
-  <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>.
+  <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
+  file sets to a randomly generated value.
 - SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
   scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
@@ -613,6 +622,22 @@ In src/sensor/settings.py, the OAuth `USER_NAME` and `PASSWORD` are set to be th
 as `CLIENT_ID` and `CLIENT_SECRET`. This may need to change depending on your
 authorization server.
 
+### Data File Encryption
+
+The data files are encrypted on disk by default using Cryptography Fernet module. The
+Fernet encryption module may not be suitable for large data files. According to the
+[Cryptography documentation for Fernet encryption](https://cryptography.io/en/latest/fernet/#limitations),
+the entire message contents must fit in memory. ***Note that the SigMF metadata is
+currently not encrypted.*** The `SCOS_TMP` setting controls where data will be written
+when decrypting the file and creating the SigMF archive. Defaults to `/scos_tmp` docker
+tmpfs mount. Set the `ENCRYPTION_KEY` environment variable to control the encryption
+key used for encryption. The env.template file will generate a random encryption key
+for testing. ***When used in production, it is recommended to store the encryption key
+in a safe location to prevent data loss and to prevent data from being compromised.***
+Use the `ENCRYPT_DATA_FILES` setting in the env.template file to disable encryption.
+The `SCOS_TMP` location is used to create the SigMF archive regardless of whether
+encryption is enabled.
+
 ## Actions and Hardware Support
 
 "Actions" are one of the main concepts used by scos-sensor. At a high level, they are
@@ -691,7 +716,7 @@ It is highly recommended that you first initialize a virtual development environ
 using a tool such a conda or venv. The following commands create a virtual environment
 using venv and install the required dependencies for development and testing.
 
-```python
+```bash
 python3 -m venv ./venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip # upgrade to pip>=18.1
@@ -799,6 +824,7 @@ installed python dev requirements from [Requirements and Configuration](
 ```bash
 docker-compose up -d db
 cd src
+export MOCK_SIGAN=1 MOCK_SIGAN_RANDOM=1 # if running without signal analyzer attached
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py createsuperuser

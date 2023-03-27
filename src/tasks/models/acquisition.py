@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields.files import FileField
 from django.db.models.signals import pre_delete
 from jsonfield import JSONField
 
@@ -27,7 +28,8 @@ class Acquisition(models.Model):
         default=1, help_text="The id of the recording relative to the task"
     )
     metadata = JSONField(help_text="The sigmf meta data for the acquisition")
-    data = models.FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)
+    data = FileField(upload_to="blob/%Y/%m/%d/%H/%M/%S", null=True)
+    data_encrypted = models.BooleanField(default=False)
 
     class Meta:
         db_table = "acquisitions"
