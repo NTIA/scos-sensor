@@ -37,7 +37,7 @@ cfgv==3.3.1
     # via pre-commit
 chardet==5.1.0
     # via tox
-charset-normalizer==2.1.1
+charset-normalizer==3.0.1
     # via
     #   -r requirements.txt
     #   requests
@@ -56,11 +56,10 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==7.0.0
+coverage[toml]==7.2.1
     # via pytest-cov
-cryptography==38.0.1
+cryptography==39.0.1
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
     #   paramiko
 defusedxml==0.7.1
@@ -103,14 +102,14 @@ docopt==0.6.2
     # via
     #   -r requirements.txt
     #   docker-compose
-drf-yasg==1.21.4
+drf-yasg==1.21.5
     # via -r requirements.txt
 environs==9.5.0
     # via
     #   -r requirements.txt
     #   scos-actions
     #   scos-tekrsa
-exceptiongroup==1.0.4
+exceptiongroup==1.1.0
     # via pytest
 filelock==3.9.0
     # via
@@ -123,13 +122,13 @@ frozenlist==1.3.3
     #   -r requirements.txt
     #   aiosignal
     #   ray
-grpcio==1.51.1
+grpcio==1.51.3
     # via
     #   -r requirements.txt
     #   ray
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.11
+identify==2.5.18
     # via pre-commit
 idna==3.4
     # via
@@ -139,7 +138,7 @@ inflection==0.5.1
     # via
     #   -r requirements.txt
     #   drf-yasg
-iniconfig==1.1.1
+iniconfig==2.0.0
     # via pytest
 its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
     # via
@@ -160,7 +159,7 @@ jsonschema==3.2.0
     #   -r requirements.txt
     #   docker-compose
     #   ray
-markupsafe==2.1.1
+markupsafe==2.1.2
     # via
     #   -r requirements.txt
     #   jinja2
@@ -178,9 +177,8 @@ numexpr==2.8.4
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.24.0
+numpy==1.24.2
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
     #   numexpr
     #   ray
@@ -201,11 +199,11 @@ packaging==23.0
     #   pyproject-api
     #   pytest
     #   tox
-paramiko==2.12.0
+paramiko==3.0.0
     # via
     #   -r requirements.txt
     #   docker
-platformdirs==2.6.2
+platformdirs==3.0.0
     # via
     #   -r requirements.txt
     #   tox
@@ -214,9 +212,9 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-pre-commit==2.20.0
+pre-commit==2.21.0
     # via -r requirements-dev.in
-protobuf==4.21.12
+protobuf==4.22.0
     # via
     #   -r requirements.txt
     #   ray
@@ -238,11 +236,11 @@ pynacl==1.5.0
     #   paramiko
 pyproject-api==1.5.0
     # via tox
-pyrsistent==0.19.2
+pyrsistent==0.19.3
     # via
     #   -r requirements.txt
     #   jsonschema
-pytest==7.2.0
+pytest==7.2.1
     # via
     #   pytest-cov
     #   pytest-django
@@ -254,12 +252,12 @@ python-dateutil==2.8.2
     # via
     #   -r requirements.txt
     #   scos-actions
-python-dotenv==0.21.0
+python-dotenv==0.21.1
     # via
     #   -r requirements.txt
     #   docker-compose
     #   environs
-pytz==2022.7
+pytz==2022.7.1
     # via
     #   -r requirements.txt
     #   django
@@ -271,11 +269,11 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray==2.2.0
+ray==2.3.0
     # via
     #   -r requirements.txt
     #   scos-actions
-requests==2.28.1
+requests==2.28.2
     # via
     #   -r requirements.txt
     #   coreapi
@@ -298,7 +296,7 @@ ruamel-yaml-clib==0.2.7
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.9.3
+scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -318,7 +316,6 @@ six==1.16.0
     #   django-session-timeout
     #   dockerpty
     #   jsonschema
-    #   paramiko
     #   python-dateutil
     #   requests-mock
     #   sigmf
@@ -335,27 +332,25 @@ texttable==1.6.7
     # via
     #   -r requirements.txt
     #   docker-compose
-toml==0.10.2
-    # via pre-commit
 tomli==2.0.1
     # via
     #   coverage
     #   pyproject-api
     #   pytest
     #   tox
-tox==4.4.4
+tox==4.4.6
     # via -r requirements-dev.in
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.13
+urllib3==1.26.14
     # via
     #   -r requirements.txt
     #   docker
     #   requests
-virtualenv==20.17.1
+virtualenv==20.20.0
     # via
     #   -r requirements.txt
     #   pre-commit

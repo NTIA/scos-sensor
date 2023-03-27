@@ -1,5 +1,7 @@
 import logging
 
+from cryptography.fernet import Fernet
+from django.conf import settings
 from django.core.files.base import ContentFile
 
 from tasks.models import TaskResult
@@ -36,6 +38,22 @@ def measurement_action_completed_callback(sender, **kwargs):
         )
     else:
         acquisition = Acquisition(task_result=task_result, metadata=metadata)
-    acquisition.data.save(name, ContentFile(data))
+
+    if settings.ENCRYPT_DATA_FILES:
+        if not settings.ENCRYPTION_KEY:
+            raise Exception("No value set for ENCRYPTION_KEY!")
+        fernet = Fernet(settings.ENCRYPTION_KEY)
+        _data = bytes(data)
+        del data
+        del kwargs["data"]
+        assert "data" not in kwargs
+        encrypted = fernet.encrypt(_data)
+        del _data
+        acquisition.data.save(name, ContentFile(encrypted))
+        acquisition.data_encrypted = True
+    else:
+        acquisition.data.save(name, ContentFile(data))
+        acquisition.data_encrypted = False
     acquisition.save()
+
     logger.debug("Saved new file at {}".format(acquisition.data.path))

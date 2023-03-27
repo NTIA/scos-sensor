@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import shutil
 
@@ -10,6 +11,8 @@ from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
 
 UTC = timezone.timezone.utc
+
+logger = logging.getLogger(__name__)
 
 
 class TaskResult(models.Model):
@@ -79,6 +82,9 @@ class TaskResult(models.Model):
                 disk_space = shutil.disk_usage(data_path)
                 percent_used = (disk_space.used / disk_space.total) * 100
                 if percent_used > self.max_disk_usage:
+                    logger.warning(
+                        "Max disk usage exceeded, deleting oldest task result!"
+                    )
                     same_entry_results[0].delete()
 
         super().save()
