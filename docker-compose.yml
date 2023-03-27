@@ -42,6 +42,8 @@ services:
       - DEBUG
       - DOCKER_TAG
       - DOMAINS
+      - ENCRYPT_DATA_FILES
+      - ENCRYPTION_KEY
       - FQDN
       - GIT_BRANCH
       - GUNICORN_LOG_LEVEL
@@ -64,6 +66,8 @@ services:
       - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
       - ${REPO_ROOT}/files:/files:rw
+    tmpfs:
+      - /scos_tmp
     cap_add:
       - SYS_PTRACE
     devices:
