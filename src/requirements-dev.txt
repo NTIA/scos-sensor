@@ -22,6 +22,8 @@ bcrypt==4.0.1
     # via
     #   -r requirements.txt
     #   paramiko
+cachetools==5.3.0
+    # via tox
 certifi==2022.12.7
     # via
     #   -r requirements.txt
@@ -33,6 +35,8 @@ cffi==1.15.1
     #   pynacl
 cfgv==3.3.1
     # via pre-commit
+chardet==5.1.0
+    # via tox
 charset-normalizer==3.0.1
     # via
     #   -r requirements.txt
@@ -41,6 +45,8 @@ click==8.1.3
     # via
     #   -r requirements.txt
     #   ray
+colorama==0.4.6
+    # via tox
 coreapi==2.3.3
     # via
     #   -r requirements.txt
@@ -50,11 +56,10 @@ coreschema==0.0.4
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==7.0.5
+coverage[toml]==7.2.1
     # via pytest-cov
-cryptography==39.0.0
+cryptography==39.0.1
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
     #   paramiko
 defusedxml==0.7.1
@@ -69,7 +74,7 @@ distro==1.8.0
     # via
     #   -r requirements.txt
     #   docker-compose
-django==3.2.16
+django==3.2.18
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -97,7 +102,7 @@ docopt==0.6.2
     # via
     #   -r requirements.txt
     #   docker-compose
-drf-yasg==1.21.4
+drf-yasg==1.21.5
     # via -r requirements.txt
 environs==9.5.0
     # via
@@ -117,13 +122,13 @@ frozenlist==1.3.3
     #   -r requirements.txt
     #   aiosignal
     #   ray
-grpcio==1.51.1
+grpcio==1.51.3
     # via
     #   -r requirements.txt
     #   ray
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.15
+identify==2.5.18
     # via pre-commit
 idna==3.4
     # via
@@ -135,7 +140,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==2.0.0
     # via pytest
-its-preselector @ git+https://github.com/NTIA/Preselector@3.0.0
+its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -172,9 +177,8 @@ numexpr==2.8.4
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.24.1
+numpy==1.24.2
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
     #   numexpr
     #   ray
@@ -188,15 +192,17 @@ packaging==23.0
     #   docker
     #   drf-yasg
     #   marshmallow
+    #   pyproject-api
     #   pytest
     #   tox
 paramiko==3.0.0
     # via
     #   -r requirements.txt
     #   docker
-platformdirs==2.6.2
+platformdirs==3.0.0
     # via
     #   -r requirements.txt
+    #   tox
     #   virtualenv
 pluggy==1.0.0
     # via
@@ -204,7 +210,7 @@ pluggy==1.0.0
     #   tox
 pre-commit==2.21.0
     # via -r requirements-dev.in
-protobuf==4.21.12
+protobuf==4.22.0
     # via
     #   -r requirements.txt
     #   ray
@@ -214,8 +220,6 @@ psutil==5.9.4
     #   scos-actions
 psycopg2-binary==2.9.5
     # via -r requirements.txt
-py==1.11.0
-    # via tox
 pycparser==2.21
     # via
     #   -r requirements.txt
@@ -224,6 +228,8 @@ pynacl==1.5.0
     # via
     #   -r requirements.txt
     #   paramiko
+pyproject-api==1.5.0
+    # via tox
 pyrsistent==0.19.3
     # via
     #   -r requirements.txt
@@ -257,7 +263,7 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray==2.2.0
+ray==2.3.0
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -281,15 +287,15 @@ ruamel-yaml-clib==0.2.7
     # via
     #   -r requirements.txt
     #   ruamel-yaml
-scipy==1.10.0
+scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.1.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.0
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.1
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -304,13 +310,12 @@ six==1.16.0
     #   python-dateutil
     #   requests-mock
     #   sigmf
-    #   tox
     #   websocket-client
 sqlparse==0.4.3
     # via
     #   -r requirements.txt
     #   django
-tekrsa-api-wrap==1.3.0
+tekrsa-api-wrap==1.3.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
@@ -321,9 +326,10 @@ texttable==1.6.7
 tomli==2.0.1
     # via
     #   coverage
+    #   pyproject-api
     #   pytest
     #   tox
-tox==3.28.0
+tox==4.4.6
     # via -r requirements-dev.in
 uritemplate==4.1.1
     # via
@@ -335,7 +341,7 @@ urllib3==1.26.14
     #   -r requirements.txt
     #   docker
     #   requests
-virtualenv==20.17.1
+virtualenv==20.20.0
     # via
     #   -r requirements.txt
     #   pre-commit

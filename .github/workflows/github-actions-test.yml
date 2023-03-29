@@ -1,0 +1,79 @@
+name: 'scos-sensor test'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  run-scos-sensor-tests:
+    name: Test / Py ${{ matrix.py }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+        py:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+    steps:
+      - name: Set up Python ${{ matrix.py }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+      - name: Checkout scos-sensor
+        uses: actions/checkout@v3
+      - name: Install tox-gh
+        run: python -m pip install tox-gh
+      - name: Set up test suite
+        run: tox r --notest -c ./src/tox.ini -e coverage
+      - name: Run test suite
+        run: tox r -c ./src/tox.ini -e coverage
+        env:
+          PYTEST_ADDOPTS: "-vv --durations=0"
+          AUTHENTICATION: TOKEN
+          CALLBACK_AUTHENTICATION: TOKEN
+          SWITCH_CONFIGS_DIR: ../configs/switches
+
+  run-scos-sensor-docker:
+    name: Run SCOS Sensor / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create localhost certs
+        working-directory: ./scripts
+        run: sh create_localhost_cert.sh
+
+      - name: Create fake USB device # Required by API container
+        run : |
+          sudo mkdir -p /dev/bus/usb/001
+          sudo mknod /dev/bus/usb/001/001 c 189 260
+
+      - name: Build and run Docker containers
+        run: |
+          source ./env.template
+          export MOCK_SIGAN=1
+          export MOCK_SIGAN_RANDOM=1
+          docker-compose build --no-cache
+          docker-compose up -d
+
+      - name: Wait for containers # wait for containers to finish starting
+        run: sleep 20
+
+      - name: Check API container
+        run: docker ps | grep api | grep -q healthy

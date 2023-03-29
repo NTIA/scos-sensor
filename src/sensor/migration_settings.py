@@ -18,6 +18,8 @@ import os
 import sys
 from os import path
 
+from cryptography.fernet import Fernet
+from django.core.management.utils import get_random_secret_key
 from environs import Env
 
 env = Env()
@@ -91,9 +93,10 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 # IP when the first request comes in.
 INTERNAL_IPS = ["127.0.0.1"]
 
+
 # See /env.template
 if not IN_DOCKER or RUNNING_TESTS:
-    SECRET_KEY = "!j1&*$wnrkrtc-74cc7_^#n6r3om$6s#!fy=zkd_xp(gkikl+8"
+    SECRET_KEY = get_random_secret_key()
     DEBUG = True
     ALLOWED_HOSTS = []
 else:

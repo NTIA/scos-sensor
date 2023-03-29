@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 logger.debug("scos-sensor/capabilities/views.py")
 
 
-def get_actions(include_admin_actions=False):
+def get_actions():
     serialized_actions = []
     for action in actions_by_name:
         serialized_actions.append(
@@ -29,7 +29,7 @@ def get_actions(include_admin_actions=False):
 @api_view()
 def capabilities_view(request, version, format=None):
     """The capabilites of the sensor."""
-    filtered_actions = get_actions(include_admin_actions=request.user.is_staff)
+    filtered_actions = get_actions()
     filtered_capabilities = copy.deepcopy(sensor_capabilities)
     filtered_capabilities["actions"] = filtered_actions
     return Response(filtered_capabilities)

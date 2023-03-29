@@ -41,6 +41,8 @@ services:
       - DEBUG
       - DOCKER_TAG
       - DOMAINS
+      - ENCRYPT_DATA_FILES
+      - ENCRYPTION_KEY
       - FQDN
       - GIT_BRANCH
       - GUNICORN_LOG_LEVEL
@@ -58,7 +60,10 @@ services:
     expose:
       - '8000'
     volumes:
+      - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
+    tmpfs:
+      - /scos_tmp
     cap_add:
       - SYS_PTRACE
     devices:
