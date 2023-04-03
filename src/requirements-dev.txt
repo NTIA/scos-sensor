@@ -300,7 +300,7 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@sea-metadata-v0.4
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa

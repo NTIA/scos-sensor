@@ -180,7 +180,7 @@ ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@sea-metadata-v0.4
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.0
     # via
     #   -r requirements.in
     #   scos-tekrsa
