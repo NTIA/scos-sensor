@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             name="height",
             field=models.DecimalField(
                 decimal_places=3,
-                help_text="Height of the sensor in meters above sea level.",
+                help_text="Altitude of the sensor in meters above the WGS84 ellipsoid.",
                 max_digits=9,
                 null=True,
             ),
