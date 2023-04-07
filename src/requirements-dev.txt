@@ -300,7 +300,7 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@fix-cal-load-and-add-sensor-def-hash
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
