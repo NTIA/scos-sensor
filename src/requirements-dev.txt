@@ -304,7 +304,7 @@ scos_actions @ git+https://github.com/NTIA/scos-actions@fix-cal-load-and-add-sen
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.2
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@scos-actions-6.2.1
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
