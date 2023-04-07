@@ -1,29 +1,74 @@
 {
-  "id": "seadog",
+  "id": "OVERWRITTEN BY FQDN ENVIRONMENT VARIABLE",
+  "location": {
+    "x": -105.26208,
+    "y": 39.99473,
+    "z": 1700.0,
+    "description": "SENSOR LOCATION, X=LON, Y=LAT, Z=ALTITUDE"
+  },
   "sensor_spec": {
-      "id": "seadog",
-      "model": "seadog"
+      "id": "UNIQUE SENSOR ID",
+      "model": "SENSOR MODEL",
+      "version": "SENSOR VERSION"
   },
   "antenna": {
       "antenna_spec": {
-          "id": "",
-          "model": "None"
+          "id": "UNIQUE ANTENNA ID",
+          "model": "ANTENNA MODEL"
       }
   },
   "preselector" : {
       "preselector_spec" : {
-        "supplemental_information" : "Oldest rev preselector with no enclosure"
+        "id": "UNIQUE PRESELECTOR ID",
+        "model": "PRESELECTOR MODEL",
+        "version": "PRESELECTOR VERSION"
       },
-      "cal_sources" : [ { "enr": 14.53 } ]
+      "cal_sources" : [
+        {
+            "cal_source_spec": {
+                "id": "UNIQUE NOISE SOURCE ID",
+                "model": "NOISE SOURCE MODEL"
+            },
+            "type": "NOISE SOURCE TYPE",
+            "enr": -999.9
+        }
+    ],
+    "amplifiers": [
+        {
+            "amplifier_spec": {
+                "id": "UNIQUE AMPLIFIER ID",
+                "model": "AMPLIFIER MODEL"
+            },
+            "gain": 1.0,
+            "noise_figure": 0.0
+        }
+    ],
+    "filters": [
+        {
+            "filter_spec": {
+                "id": "UNIQUE FILTER ID",
+                "model": "FILTER MODEL"
+            }
+        }
+    ],
+    "rf_paths": [
+        {
+            "name": "EXAMPLE RF PATH",
+            "cal_source_id": "UNIQUE NOISE SOURCE ID",
+            "filter_id": "UNIQUE NOISE SOURCE ID",
+            "amplifier_id": "UNIQUE AMPLIFIER ID"
+        }
+    ]
   },
   "signal_analyzer": {
       "sigan_spec": {
-          "id": "",
-          "model": "Tektronix RSA 507A"
+          "id": "UNIQUE SIGNAL ANALYZER ID",
+          "model": "SIGNAL ANALYZER MODEL"
       }
   },
   "computer_spec": {
-      "id": "",
-      "model": "Intel NUC"
-  }
+      "id": "UNIQUE COMPUTER ID",
+      "model": "COMPUTER MODEL"
+  },
+  "mobile": false
 }
