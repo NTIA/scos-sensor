@@ -13,9 +13,9 @@ def get_datetime_from_timestamp(ts):
     return datetime.fromtimestamp(ts)
 
 
-def get_timestamp_from_datetime(dt):
+def get_timestamp_from_datetime(dt: datetime):
     """Assumes UTC datetime."""
-    return int(dt.strftime("%s"))
+    return int(dt.strftime("%S"))
 
 
 def parse_datetime_str(d):
