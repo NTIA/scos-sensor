@@ -50,14 +50,6 @@
                 "model": "FILTER MODEL"
             }
         }
-    ],
-    "rf_paths": [
-        {
-            "name": "EXAMPLE RF PATH",
-            "cal_source_id": "UNIQUE NOISE SOURCE ID",
-            "filter_id": "UNIQUE NOISE SOURCE ID",
-            "amplifier_id": "UNIQUE AMPLIFIER ID"
-        }
     ]
   },
   "signal_analyzer": {
