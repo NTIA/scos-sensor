@@ -384,10 +384,9 @@ or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 
-This is the default authentication method. To enable Django Rest Framework
-Authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment file
-(this will be enabled if `AUTHENTICATION` set to anything other
-than `CERT`).
+To enable Django Rest Framework token and session authentication, make sure
+`AUTHENTICATION` is set to `TOKEN` in the environment file (this will be enabled if
+`AUTHENTICATION` set to anything other than `CERT`).
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
@@ -395,7 +394,8 @@ token) matches a user's token.
 
 #### Certificate  Authentication
 
-To enable Certificate Authentication, set `AUTHENTICATION` to `CERT` in the environment
+This is the default authentication method. To enable Certificate Authentication, make
+sure `AUTHENTICATION` is set to `CERT` in the environment
 file. To authenticate, the client will need to send a trusted client certificate. The
 Common Name must match the username of a user in the database.
 
@@ -504,11 +504,31 @@ or client.pfx when communicating with the API programmatically.
 
 ###### Configure scos-sensor
 
-The Nginx web server can be set to require client certificates (mutual TLS). This can
-optionally be enabled. To require client certificates, make sure `ssl_verify_client` is
-set to `on` in the [Nginx configuration file](nginx/conf.template). If you
-use OCSP, also uncomment `ssl_ocsp on;`. Additional configuration may be needed for
-Nginx to check certificate revocation lists (CRL).
+The Nginx web server is configured by default to require client certificates (mutual
+TLS). To require client certificates, make sure `ssl_verify_client` is set to `on` in
+the [Nginx configuration file](nginx/conf.template). Comment out this line or set to
+`off` to disable client certificates. This can also be set to `optional` or
+`optional_no_ca`, but if a client certificate is not provided, scos-sensor
+`AUTHENTICATION` setting must be set to `TOKEN` which requires a token for the API or a
+username and password for the browsable API. If you use OCSP, also uncomment
+`ssl_ocsp on;`. Additional configuration may be needed for Nginx to check certificate
+revocation lists (CRL). Adjust the other Nginx parameters, such as `ssl_verify_depth`,
+as desired. See the
+[Nginx documentation](https://nginx.org/en/docs/http/ngx_http_ssl_module.html) for
+more information about configuring Nginx.
+
+To disable client certificate authentication, comment out the
+following in [nginx/conf.template](nginx/conf.template):
+
+```
+ssl_client_certificate /etc/ssl/certs/ca.crt;
+ssl_verify_client on;
+ssl_ocsp on;
+...
+    if ($ssl_client_verify != SUCCESS) { # under location @proxy_to_wsgi_server {
+        return 403;
+    }
+```
 
 Copy the server certificate and server private key (sensor01_combined.pem) to
 `scos-sensor/configs/certs`. Then set `SSL_CERT_PATH` and `SSL_KEY_PATH` (in the
