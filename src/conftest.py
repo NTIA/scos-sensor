@@ -24,7 +24,7 @@ def cleanup_db(db):
     shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def testclock():
     """Replace scheduler's timefn with manually steppable test timefn."""
     # Setup test clock

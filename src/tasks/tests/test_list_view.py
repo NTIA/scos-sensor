@@ -35,7 +35,7 @@ def test_user_cannot_view_result_list(admin_client, user_client):
     url = reverse_result_list(entry_name)
     response = user_client.get(url, **HTTPS_KWARG)
     rjson = validate_response(response, status.HTTP_403_FORBIDDEN)
-    return "results" not in rjson
+    assert "results" not in rjson
 
 
 @pytest.mark.django_db
