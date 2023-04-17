@@ -17,13 +17,13 @@ Including another URLconf
 
 """
 
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from django.conf import settings
 from .views import api_v1_root, schema_view
 
 # Matches api/v1, api/v2, etc...
@@ -60,5 +60,5 @@ urlpatterns = [
     re_path(API_PREFIX, include(api_urlpatterns)),
 ]
 
-if AUTHENTICATION != "CERT":
-    urlpatterns.append(path("api/auth/", include("rest_framework.urls")))
+# logout/login does not do anything if AUTHENTICATION is set to "CERT"
+urlpatterns.append(path("api/auth/", include("rest_framework.urls")))
