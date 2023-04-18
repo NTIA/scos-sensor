@@ -10,6 +10,12 @@ services:
       - '127.0.0.1:5432:5432'
     volumes:
       - ./dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 10s
+      timeout: 3s
+      retries: 1
+      start_period: 30s
 
   api:
     healthcheck:
@@ -20,7 +26,8 @@ services:
     shm_size: '16gb'
     restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
