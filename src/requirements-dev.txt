@@ -300,11 +300,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.1
+scos_actions @ git+https://github.com/NTIA/scos-actions@trigger_api_restart_after_failed_powercycle
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.3
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@update_scos_actions_version
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
