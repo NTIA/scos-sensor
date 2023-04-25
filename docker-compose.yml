@@ -42,6 +42,8 @@ services:
       - DEBUG
       - DOCKER_TAG
       - DOMAINS
+      - ENCRYPT_DATA_FILES
+      - ENCRYPTION_KEY
       - FQDN
       - GIT_BRANCH
       - GUNICORN_LOG_LEVEL
@@ -61,11 +63,17 @@ services:
     expose:
       - '8000'
     volumes:
+      - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
+    tmpfs:
+      - /scos_tmp
     cap_add:
       - SYS_PTRACE
+      - SYS_RAWIO  # required for smartctl SMART disk health checks
+      - SYS_ADMIN  # required for ^ with NVMe drives
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
+      - /dev/nvme0n1:/dev/nvme0n1:ro
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh

@@ -163,7 +163,6 @@ class Scheduler(threading.Thread):
         return status, detail[:MAX_DETAIL_LEN]
 
     def _finalize_task_result(self, started, finished, status, detail):
-
         tr = self.task_result
         tr.started = started
         tr.finished = finished

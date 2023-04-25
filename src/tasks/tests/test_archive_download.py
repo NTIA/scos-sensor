@@ -90,6 +90,5 @@ def test_all_acquisitions_archive_download(admin_client, test_scheduler, tmpdir)
         for content in response.streaming_content:
             tf.write(content)
         tf.flush()
-
         sigmf_archive_contents = sigmf.archive.extract(tf.name)
         assert len(sigmf_archive_contents) == 3

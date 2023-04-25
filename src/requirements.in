@@ -1,16 +1,23 @@
-django>=3.2.15, <4.0
+django>=3.2.18, <4.0
 djangorestframework>=3.0, <4.0
 django-session-timeout>=0.1, <1.0
-docker-compose>=1.0, <2.0
+docker-compose>=1.0
 drf-yasg>=1.0, <2.0
 environs>=9.0, <10.0
+filelock>=3.9, <4.0
 gunicorn>=20.0, <21.0
 jsonfield>=3.0, <4.0
 oauthlib>=3.2.1, <4.0
+packaging>=23.0, <24.0
 psycopg2-binary>=2.0, <3.0
 pyjwt>=2.4.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.0.1
-#scos_usrp @ git+https://github.com/NTIA/scos-usrp@3.0.0
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.0
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.5
+
+# The following are sub-dependencies for which SCOS Sensor enforces a
+# higher minimum patch version than the dependencies which require them.
+# This is done to ensure the inclusion of specific security patches.
+cryptography>=39.0.1  # CVE-2023-0286
+sqlparse>=0.4.4       # CVE-2023-30608

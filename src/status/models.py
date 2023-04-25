@@ -28,18 +28,18 @@ class Location(models.Model):
     latitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
-        help_text="Longitude of the sensor in decimal degrees.",
+        help_text="Latitude of the sensor in decimal degrees (WGS84).",
     )
     longitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
-        help_text="Longitude of the sensor in decimal degrees.",
+        help_text="Longitude of the sensor in decimal degrees (WGS84).",
     )
     height = models.DecimalField(
         null=True,
         max_digits=9,
         decimal_places=3,
-        help_text="Height of the sensor in meters above sea level.",
+        help_text="Altitude of the sensor in meters above the WGS84 ellipsoid.",
     )
 
     def save(self, *args, **kwargs):

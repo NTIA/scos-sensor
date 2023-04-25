@@ -1,6 +1,6 @@
 # NTIA/ITS SCOS Sensor
 
-[![Travis CI Build Status][travis-badge]][travis-link]
+[![GitHub Actions Status][github-actions-badge]][github-actions-link]
 [![API Docs Build Status][api-docs-badge]][api-docs-link]
 
 `scos-sensor` is a  work-in-progress reference implementation of the [IEEE 802.15.22.3
@@ -11,8 +11,8 @@ resultant data.
 
 [NTIA/ITS]: https://its.bldrdoc.gov/
 [ieee-link]: https://standards.ieee.org/standard/802_15_22_3-2020.html
-[travis-link]: https://travis-ci.org/NTIA/scos-sensor
-[travis-badge]: https://travis-ci.org/NTIA/scos-sensor.svg?branch=master
+[github-actions-link]: https://github.com/NTIA/scos-sensor/actions
+[github-actions-badge]: https://github.com/NTIA/scos-sensor/actions/workflows/github-actions-test.yml/badge.svg
 [api-docs-link]: https://ntia.github.io/scos-sensor/
 [api-docs-badge]: https://img.shields.io/badge/docs-available-brightgreen.svg
 
@@ -21,7 +21,7 @@ resultant data.
 - [Introduction](#introduction)
 - [Glossary](#glossary)
 - [Architecture](#architecture)
-- [Overview of scos-sensor Repo Structure](#Overview-of-scos-sensor-Repo-Structure)
+- [Overview of scos-sensor Repo Structure](#overview-of-scos-sensor-repo-structure)
 - [Quickstart](#quickstart)
 - [Configuration](#configuration)
 - [Security](#security)
@@ -142,8 +142,8 @@ This section provides an overview of high-level concepts used by `scos-sensor`.
   stored in a local database. The full metadata can be read directly through the
   self-hosted website or retrieved in plain text via a single API call. Our metadata
   and data format is an extension of, and compatible with, the [SigMF](
-  https://github.com/gnuradio/sigmf) specification - see [sigmf-ns-ntia](
-  https://github.com/NTIA/sigmf-ns-ntia).
+  <https://github.com/gnuradio/sigmf>) specification - see [sigmf-ns-ntia](
+  <https://github.com/NTIA/sigmf-ns-ntia>).
 
 - *task result*: A record of the outcome of a task. A result is recorded for each task
   after the action function returns, and includes metadata such as when the task
@@ -199,29 +199,29 @@ actions.
 - configs: This folder is used to store the sensor_definition.json file.
 - docker: Contains the docker files used by scos-sensor.
 - docs: Documentation including the [documentation hosted on GitHub pages](
-  https://ntia.github.io/scos-sensor/) generated from the OpenAPI specification.
+  <https://ntia.github.io/scos-sensor/>) generated from the OpenAPI specification.
 - entrypoints: Docker entrypoint scripts which are executed when starting a container.
 - gunicorn: Gunicorn configuration file.
 - nginx: Nginx configuration template and SSL certificates.
 - schemas: JSON schema files.
 - scripts: Various utility scripts.
 - src: Contains the scos-sensor source code.
-   - actions: Code to discover actions in plugins and to perform a simple logger action.
-   - authentication: Code related to user authentication.
-   - capabilities: Code used to generate capabilities endpoint.
-   - handlers: Code to handle signals received from actions.
-   - schedule: Schedule API endpoint for scheduling actions.
-   - scheduler: Scheduler responsible for executing actions.
-   - sensor: Core app which contains the settings, generates the API root endpoint.
-   - static: Django will collect static files (JavaScript, CSS, …) from all apps to this
+  - actions: Code to discover actions in plugins and to perform a simple logger action.
+  - authentication: Code related to user authentication.
+  - capabilities: Code used to generate capabilities endpoint.
+  - handlers: Code to handle signals received from actions.
+  - schedule: Schedule API endpoint for scheduling actions.
+  - scheduler: Scheduler responsible for executing actions.
+  - sensor: Core app which contains the settings, generates the API root endpoint.
+  - static: Django will collect static files (JavaScript, CSS, …) from all apps to this
      location.
-   - status: Status endpoint.
-   - tasks: Tasks endpoint used to display upcoming and completed tasks.
-   - templates: HTML templates used by the browsable API.
-   - conftest.py: Used to configure pytest fixtures.
-   - manage.py: Django’s command line tool for administrative tasks.
-   - requirements.txt and requirements-dev.txt: Python dependencies.
-   - tox.ini: Used to configure tox.
+  - status: Status endpoint.
+  - tasks: Tasks endpoint used to display upcoming and completed tasks.
+  - templates: HTML templates used by the browsable API.
+  - conftest.py: Used to configure pytest fixtures.
+  - manage.py: Django’s command line tool for administrative tasks.
+  - requirements.txt and requirements-dev.txt: Python dependencies.
+  - tox.ini: Used to configure tox.
 - docker-compose.yml: Used by docker-compose to create services from containers. This
   is needed to run scos-sensor.
 - env.template: Template file for setting environment variables used to configure
@@ -234,29 +234,33 @@ This section describes how to spin up a production-grade sensor in just a few co
 We currently support Ettus USRP B2xx signal analyzers out of the box, and any
 Intel-based host computer should work.
 
-1) Install `git`, `Docker`, and `docker-compose`.
+1. Install `git`, `Docker`, and `docker-compose`.
 
-2) Clone the repository.
+1. Clone the repository.
 
-```bash
-git clone https://github.com/NTIA/scos-sensor.git
-cd scos-sensor
-```
+    ```bash
+    git clone https://github.com/NTIA/scos-sensor.git
+    cd scos-sensor
+    ```
 
-3) Copy the environment template file and *modify* the copy if necessary, then source
+1. Copy the environment template file and *modify* the copy if necessary, then source
 it. The settings in this file are set for running in a development environment on your
 local system. For running in a production environment, many of the settings will need
-to be modified. See [Configuration](#configuration) section. Also, you are strongly
-encouraged to change the default `ADMIN_EMAIL` and `ADMIN_PASSWORD` before running
-scos-sensor. Finally, source the file before running scos-sensor to load the settings
-into your environment.
+to be modified. Some of the values, including the ENCRYPTION_KEY, POSTGRES_PASSWORD,
+and the Django SECRET_KEY are randomly generated in this file. Therefore, if the source
+command is run a second time, the old values will be lost. Make sure to hardcode and
+backup these environment variables to enable scos-sensor to decrypt the data files
+stored in scos-sensor and access the database. See [Configuration](#configuration)
+section. Also, you are strongly encouraged to change the default `ADMIN_EMAIL` and
+`ADMIN_PASSWORD` before running scos-sensor. Finally, source the file before running
+scos-sensor to load the settings into your environment.
 
-```bash
-cp env.template env
-source ./env
-```
+    ```bash
+    cp env.template env
+    source ./env
+    ```
 
-4) Create sensor certificate. Running the script in the below command will create
+1. Create sensor certificate. Running the script in the below command will create
 a certificate authority and localhost SSL certificate for the sensor. The certificate
 authority and the sensor certificate will have dummy values for the subject and
 password. To create a certificate specific to your host and organization, see the
@@ -264,18 +268,17 @@ password. To create a certificate specific to your host and organization, see th
 'create_localhost_cert.sh' should only be used for testing purposes when connecting to
 scos-sensor website from the same computer as where it is hosted.
 
-```bash
-cd scripts/
-./create_localhost_cert.sh
-```
+    ```bash
+    cd scripts/
+    ./create_localhost_cert.sh
+    ```
 
-4) Run a Dockerized stack.
+1. Run a Dockerized stack.
 
-```bash
-docker-compose up -d --build  # start in background
-docker-compose logs --follow api  # reattach terminal
-
-```
+    ```bash
+    docker-compose up -d --build  # start in background
+    docker-compose logs --follow api  # reattach terminal
+    ```
 
 ## Configuration
 
@@ -287,7 +290,7 @@ need to be configured.
 - shm_size: This setting is overriding the default setting of 64 mb. If using
   scos-sensor on a computer with lower memory, this may need to be decreased. This is
   currently only used by the [NasctnSeaDataProduct action](
-  https://github.com/NTIA/scos-actions/blob/master/scos_actions/actions/acquire_sea_data_product.py
+  <https://github.com/NTIA/scos-actions/blob/master/scos_actions/actions/acquire_sea_data_product.py>
   ).
 
 ### Environment File
@@ -305,22 +308,27 @@ settings in the environment file:
 - DEBUG: Django debug mode. Set to False in production.
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
-  https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
+  <https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts>).
+- ENCRYPT_DATA_FILES: If set to true, sigmf-data files will be encrypted when stored in
+  the api container by scos-sensor.
+- ENCRYPTION_KEY: Encryption key to encrypt sigmf-data files if ENCRYPT_DATA_FILES is
+  set to true. The env.template file sets to a randomly generated value.
 - GIT_BRANCH: Current branch of scos-sensor being used.
 - GUNICORN_LOG_LEVEL: Log level for Gunicorn log messages.
 - IPS: A space separated list of IP addresses. Used to generate [ALLOWED_HOSTS](
-  https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts).
+  <https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts>).
 - FQDN: The server’s fully qualified domain name.
 - MAX_DISK_USAGE: The maximum disk usage percentage allowed before overwriting old
   results. Defaults to 85%. This disk usage detected by scos-sensor (using the Python
   `shutil.disk_usage` function) may not match the usage reported by the Linux `df`
   command.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
-  Change in production.
+  Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
   unpredictable value. See
-  <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>.
+  <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
+  file sets to a randomly generated value.
 - SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
   scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
@@ -331,7 +339,7 @@ settings in the environment file:
 This file contains information on the sensor and components being used. It is used in
 the SigMF metadata to identify the hardware used for the measurement. It should follow
 the [sigmf-ns-ntia Sensor Object format](
-https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object
+<https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object>
 ). See an example below. Overwrite the [example
 file in scos-sensor/configs](configs/sensor_definition.json) with the information
 specific to the sensor you are using.
@@ -587,7 +595,7 @@ be enabled if `CALLBACK_AUTHENTICATION` set to anything other than `OAUTH`).
 `PATH_TO_VERIFY_CERT`, in the environment file, can used to set a CA certificate to
 verify the callback URL server SSL certificate. If this is unset and
 `CALLBACK_SSL_VERIFICATION` is set to true, [standard trusted CAs](
-    https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
+    <https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates>) will be
 used.
 
 #### OAuth
@@ -607,12 +615,28 @@ authentication.
 - `PATH_TO_VERIFY_CERT` - CA certificate to verify the authorization server and
   callback URL server SSL certificate. If this is unset and `CALLBACK_SSL_VERIFICATION`
   is set to true, [standard trusted CAs](
-    https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
+    <https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates>) will be
   used.
 
 In src/sensor/settings.py, the OAuth `USER_NAME` and `PASSWORD` are set to be the same
 as `CLIENT_ID` and `CLIENT_SECRET`. This may need to change depending on your
 authorization server.
+
+### Data File Encryption
+
+The data files are encrypted on disk by default using Cryptography Fernet module. The
+Fernet encryption module may not be suitable for large data files. According to the
+[Cryptography documentation for Fernet encryption](https://cryptography.io/en/latest/fernet/#limitations),
+the entire message contents must fit in memory. ***Note that the SigMF metadata is
+currently not encrypted.*** The `SCOS_TMP` setting controls where data will be written
+when decrypting the file and creating the SigMF archive. Defaults to `/scos_tmp` docker
+tmpfs mount. Set the `ENCRYPTION_KEY` environment variable to control the encryption
+key used for encryption. The env.template file will generate a random encryption key
+for testing. ***When used in production, it is recommended to store the encryption key
+in a safe location to prevent data loss and to prevent data from being compromised.***
+Use the `ENCRYPT_DATA_FILES` setting in the env.template file to disable encryption.
+The `SCOS_TMP` location is used to create the SigMF archive regardless of whether
+encryption is enabled.
 
 ## Actions and Hardware Support
 
@@ -648,9 +672,10 @@ It can also be used as an example of a plugin which adds new hardware support an
 re-uses the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
-https://github.com/ntia/scos-actions#development).
+<https://github.com/ntia/scos-actions#development>).
 
 ## Preselector Support
+
 Scos-sensor can be configured to support
 [preselectors](http://www.github.com/ntia/Preselector).
 By default, scos-sensor will look in the configs directory for
@@ -664,6 +689,7 @@ preselector implementation you specify in PRESELECTOR_CLASS in
 docker-compose.yaml.
 
 ## Relay Support
+
 Scos-sensor can be configured with zero or more [network controlled relays](https://www.controlbyweb.com/webrelay/).
 The default relay configuration directory is configs/switches.
 Relay support is provided by the
@@ -690,7 +716,7 @@ It is highly recommended that you first initialize a virtual development environ
 using a tool such a conda or venv. The following commands create a virtual environment
 using venv and install the required dependencies for development and testing.
 
-```python
+```bash
 python3 -m venv ./venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip # upgrade to pip>=18.1
@@ -740,12 +766,12 @@ caused a regression.
 
 `scos-sensor` uses [pytest](https://docs.pytest.org/en/latest/)
 and [pytest-django](
-https://pytest-django.readthedocs.io/en/latest/) for testing.
+<https://pytest-django.readthedocs.io/en/latest/>) for testing.
 Tests are organized by
 [application](
-https://docs.djangoproject.com/en/dev/ref/applications/#projects-and-applications)
+<https://docs.djangoproject.com/en/dev/ref/applications/#projects-and-applications>)
 , so tests related to the scheduler are in `./src/scheduler/tests`. [tox](
-https://tox.readthedocs.io/en/latest/) is a tool that can run all available
+<https://tox.readthedocs.io/en/latest/>) is a tool that can run all available
 tests in a virtual environment against all supported versions of Python.
 Running `pytest` directly is faster, but running `tox` is a more thorough
 test.
@@ -798,6 +824,7 @@ installed python dev requirements from [Requirements and Configuration](
 ```bash
 docker-compose up -d db
 cd src
+export MOCK_SIGAN=1 MOCK_SIGAN_RANDOM=1 # if running without signal analyzer attached
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py createsuperuser
