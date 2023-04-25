@@ -109,7 +109,7 @@ environs==9.5.0
     #   -r requirements.txt
     #   scos-actions
     #   scos-tekrsa
-exceptiongroup==1.1.0
+exceptiongroup==1.1.1
     # via pytest
 filelock==3.9.0
     # via
@@ -300,11 +300,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.2
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.4
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.5
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -320,7 +320,7 @@ six==1.16.0
     #   requests-mock
     #   sigmf
     #   websocket-client
-sqlparse==0.4.3
+sqlparse==0.4.4
     # via
     #   -r requirements.txt
     #   django
