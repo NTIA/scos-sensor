@@ -17,6 +17,8 @@ from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
 
+from scos_actions.signals import trigger_api_restart
+
 from . import utils
 
 logger = logging.getLogger(__name__)
@@ -44,6 +46,8 @@ class Scheduler(threading.Thread):
         self.entry = None  # ScheduleEntry that created the current task
         self.task = None  # Task object describing current task
         self.task_result = None  # TaskResult object for current task
+        self.last_status = ""
+        self.consecutive_failures = 0
 
     @property
     def schedule(self):
@@ -128,6 +132,18 @@ class Scheduler(threading.Thread):
             status, detail = self._call_task_action()
             finished = timezone.now()
             self._finalize_task_result(started, finished, status, detail)
+            if status == "failure" and self.last_status == "failure":
+                consecutive_failures = consecutive_failures + 1
+            elif status == "failure":
+                self.consecutive_failures = 1
+            else:
+                self.consecutive_failures = 0
+            if consecutive_failures >= settings.MAX_FAILURES:
+                trigger_api_restart.send(sender=self.__class__)
+
+            self.last_status = status
+
+
 
     def _initialize_task_result(self):
         """Initalize an 'in-progress' result so it exists when action runs."""
