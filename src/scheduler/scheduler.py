@@ -133,12 +133,12 @@ class Scheduler(threading.Thread):
             finished = timezone.now()
             self._finalize_task_result(started, finished, status, detail)
             if status == "failure" and self.last_status == "failure":
-                consecutive_failures = consecutive_failures + 1
+                self.consecutive_failures = self.consecutive_failures + 1
             elif status == "failure":
                 self.consecutive_failures = 1
             else:
                 self.consecutive_failures = 0
-            if consecutive_failures >= settings.MAX_FAILURES:
+            if self.consecutive_failures >= settings.MAX_FAILURES:
                 trigger_api_restart.send(sender=self.__class__)
 
             self.last_status = status
