@@ -20,6 +20,12 @@ django.setup()  # this is necessary because we need to handle our own thread
 from scheduler import scheduler  # noqa
 from sensor import settings  # noqa
 
+if settings.DEBUG:
+    # Handle segmentation faults in DEBUG mode
+    import faulthandler
+
+    faulthandler.enable()
+
 application = get_wsgi_application()
 
 if not settings.IN_DOCKER:
