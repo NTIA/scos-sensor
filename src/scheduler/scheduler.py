@@ -45,13 +45,6 @@ class Scheduler(threading.Thread):
         self.task = None  # Task object describing current task
         self.task_result = None  # TaskResult object for current task
 
-        if settings.DEBUG:
-            # Start Ray with the dashboard for extra debug tools
-            # (web dashboard not exposed, but more CLI tools enabled)
-            import ray
-
-            ray.init(include_dashboard=True)
-
     @property
     def schedule(self):
         """An updated view of the current schedule"""
