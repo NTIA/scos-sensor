@@ -8,6 +8,7 @@ from pathlib import Path
 
 import requests
 from django.utils import timezone
+from scos_actions.signals import trigger_api_restart
 
 from authentication import oauth
 from schedule.models import ScheduleEntry
@@ -16,8 +17,6 @@ from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
-
-from scos_actions.signals import trigger_api_restart
 
 from . import utils
 
@@ -142,8 +141,6 @@ class Scheduler(threading.Thread):
                 trigger_api_restart.send(sender=self.__class__)
 
             self.last_status = status
-
-
 
     def _initialize_task_result(self):
         """Initalize an 'in-progress' result so it exists when action runs."""
