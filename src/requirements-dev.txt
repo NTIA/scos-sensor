@@ -251,7 +251,7 @@ pluggy==1.0.0
     #   tox
 pre-commit==2.21.0
     # via -r requirements-dev.in
-prometheus-client==0.16.0
+prometheus-client==0.13.1
     # via ray
 protobuf==4.22.0
     # via
@@ -321,7 +321,7 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray[default]==2.4.0
+ray[default]==2.2.0
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
