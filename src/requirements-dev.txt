@@ -321,7 +321,7 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray[default]==2.2.0
+ray[default]==2.4.0
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
