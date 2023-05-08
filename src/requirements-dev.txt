@@ -356,11 +356,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@sea-action-garbage-collection
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.4
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@sea-action-garbage-collection
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.6
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
