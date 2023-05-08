@@ -165,8 +165,8 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ("next_task_time",)
         write_only_fields = ("relative_stop", "validate_only")
-        # FIXME: This is required by drf_yasg, but may not be required for
-        #        built-in DRF 3.10+ OpenAPI generation
+        # This is required by drf_spectacular, following from drf_yasg
+        # https://github.com/tfranzel/drf-spectacular/issues/27
         ref_name = "ScheduleEntry"
 
     def save(self, *args, **kwargs):

@@ -17,14 +17,14 @@ Including another URLconf
 
 """
 
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
+from drf_spectacular.views import SpectacularRedocView
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import settings
-from .views import api_v1_root, schema_view
+from .views import api_v1_root
 
 # Matches api/v1, api/v2, etc...
 API_PREFIX = r"^api/(?P<version>v[0-9]+)/"
@@ -38,9 +38,7 @@ api_urlpatterns = format_suffix_patterns(
         path("status", include("status.urls")),
         path("users/", include("authentication.urls")),
         path("tasks/", include("tasks.urls")),
-        path(
-            "schema/", schema_view.with_ui("redoc", cache_timeout=0), name="api_schema"
-        ),
+        path("schema/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     )
 )
 

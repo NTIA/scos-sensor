@@ -1,12 +1,8 @@
 from functools import partial
 
-from drf_yasg import openapi
-from drf_yasg.views import get_schema_view
-from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework.settings import api_settings
 
 from . import settings
 
@@ -30,16 +26,3 @@ def api_v1_root(request, version, format=None):
         settings.INTERNAL_IPS.append(nginx_container_ip)
 
     return Response(list_endpoints)
-
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title=settings.API_TITLE,
-        default_version=api_settings.DEFAULT_VERSION,
-        description=settings.API_DESCRIPTION,
-        contact=openapi.Contact(email="sms@ntia.doc.gov"),
-        license=openapi.License(name="NTIA/ITS", url=settings.LICENSE_URL),
-    ),
-    public=False,
-    permission_classes=(permissions.IsAuthenticated,),
-)
