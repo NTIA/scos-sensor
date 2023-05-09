@@ -1,6 +1,7 @@
-from auth import oauth_jwt_authentication_enabled, token_auth_enabled
 from drf_spectacular.extensions import OpenApiAuthenticationExtension
 from drf_spectacular.openapi import AutoSchema
+
+from authentication.auth import oauth_jwt_authentication_enabled, token_auth_enabled
 
 if token_auth_enabled:
 
