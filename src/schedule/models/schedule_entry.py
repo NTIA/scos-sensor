@@ -14,9 +14,6 @@ logger.debug(
     "************** scos-sensor/schedule/models/schedule_entry.py *****************"
 )
 
-if sys.version_info.major == 2:
-    range = xrange  # noqa
-
 DEFAULT_PRIORITY = 10
 
 
