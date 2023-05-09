@@ -149,7 +149,7 @@ class Scheduler(threading.Thread):
         schedule_entry_json["id"] = entry_name
 
         try:
-            logger.debug("running task {}/{}".format(entry_name, task_id))
+            logger.debug(f"running task {entry_name}/{task_id}")
             detail = self.task.action_caller(schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
@@ -157,7 +157,7 @@ class Scheduler(threading.Thread):
                 detail = ""
         except Exception as err:
             detail = str(err)
-            logger.exception("action failed: {}".format(detail))
+            logger.exception(f"action failed: {detail}")
             status = "failure"
 
         return status, detail[:MAX_DETAIL_LEN]
@@ -212,7 +212,7 @@ class Scheduler(threading.Thread):
     @staticmethod
     def _callback_response_handler(resp, task_result):
         if resp.ok:
-            logger.info("POSTed to {}".format(resp.url))
+            logger.info(f"POSTed to {resp.url}")
         else:
             msg = "Failed to POST to {}: {}"
             logger.warning(msg.format(resp.url, resp.reason))
@@ -284,7 +284,7 @@ class Scheduler(threading.Thread):
 
     def _cancel_if_completed(self, entry):
         if not entry.has_remaining_times():
-            msg = "no times remaining in {}, removing".format(entry.name)
+            msg = f"no times remaining in {entry.name}, removing"
             logger.debug(msg)
             self.cancel(entry)
 
@@ -296,7 +296,7 @@ class Scheduler(threading.Thread):
 
     def __repr__(self):
         s = "running" if self.running else "stopped"
-        return "<{} status={}>".format(self.__class__.__name__, s)
+        return f"<{self.__class__.__name__} status={s}>"
 
 
 @contextmanager
