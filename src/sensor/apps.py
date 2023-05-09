@@ -5,6 +5,6 @@ class SensorConfig(AppConfig):
     name = "sensor"
 
     def ready(self) -> None:
-        import authentication.schema
+        import sensor.schema
 
         return
