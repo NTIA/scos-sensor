@@ -18,24 +18,36 @@ charset-normalizer==3.0.1
     # via requests
 click==8.1.3
     # via ray
+<<<<<<< HEAD
 cryptography==41.0.6
     # via -r requirements.in
+=======
+cryptography==39.0.1
+    # via
+    #   -r requirements.in
+    #   django-rest-knox
+    #   paramiko
+>>>>>>> Use django-rest-knox for token authentication
 defusedxml==0.7.1
     # via its-preselector
 django==3.2.23
     # via
     #   -r requirements.in
+    #   django-rest-knox
     #   django-session-timeout
     #   djangorestframework
     #   drf-spectacular
     #   drf-spectacular-sidecar
     #   jsonfield
     #   scos-actions
+django-rest-knox==4.2.0
+    # via -r requirements.in
 django-session-timeout==0.1.0
     # via -r requirements.in
 djangorestframework==3.14.0
     # via
     #   -r requirements.in
+    #   django-rest-knox
     #   drf-spectacular
 drf-spectacular[sidecar]==0.26.2
     # via -r requirements.in
