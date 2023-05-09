@@ -52,6 +52,7 @@ coverage[toml]==7.2.1
 cryptography==39.0.1
     # via
     #   -r requirements.txt
+    #   django-rest-knox
     #   paramiko
 defusedxml==0.7.1
     # via
@@ -68,17 +69,21 @@ distro==1.8.0
 django==3.2.18
     # via
     #   -r requirements.txt
+    #   django-rest-knox
     #   django-session-timeout
     #   djangorestframework
     #   drf-spectacular
     #   drf-spectacular-sidecar
     #   jsonfield
     #   scos-actions
+django-rest-knox==4.2.0
+    # via -r requirements.txt
 django-session-timeout==0.1.0
     # via -r requirements.txt
 djangorestframework==3.14.0
     # via
     #   -r requirements.txt
+    #   django-rest-knox
     #   drf-spectacular
 docker[ssh]==6.0.1
     # via

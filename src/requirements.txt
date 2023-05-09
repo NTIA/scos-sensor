@@ -27,6 +27,7 @@ click==8.1.3
 cryptography==39.0.1
     # via
     #   -r requirements.in
+    #   django-rest-knox
     #   paramiko
 defusedxml==0.7.1
     # via its-preselector
@@ -37,17 +38,21 @@ distro==1.8.0
 django==3.2.18
     # via
     #   -r requirements.in
+    #   django-rest-knox
     #   django-session-timeout
     #   djangorestframework
     #   drf-spectacular
     #   drf-spectacular-sidecar
     #   jsonfield
     #   scos-actions
+django-rest-knox==4.2.0
+    # via -r requirements.in
 django-session-timeout==0.1.0
     # via -r requirements.in
 djangorestframework==3.14.0
     # via
     #   -r requirements.in
+    #   django-rest-knox
     #   drf-spectacular
 docker[ssh]==6.0.1
     # via docker-compose
