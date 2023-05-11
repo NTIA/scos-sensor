@@ -10,7 +10,7 @@ from rest_framework.authentication import get_authorization_header
 logger = logging.getLogger(__name__)
 
 token_auth_enabled = (
-    "knox.auth.TokenAuthentication"
+    "rest_framework.authentication.TokenAuthentication"
     in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]
 )
 oauth_jwt_authentication_enabled = (

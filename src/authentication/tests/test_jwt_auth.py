@@ -385,7 +385,8 @@ def test_token_hidden(live_server, jwt_keys):
     response = client.get(f"{live_server.url}{user_detail}", headers=headers)
     assert response.status_code == 200
     assert (
-        response.json()["auth_token"] == "knox.auth.TokenAuthentication is not enabled"
+        response.json()["auth_token"]
+        == "rest_framework.authentication.TokenAuthentication is not enabled"
     )
 
 

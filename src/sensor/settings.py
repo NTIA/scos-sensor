@@ -4,7 +4,6 @@ Last updated for the following versions:
     Django 3.2.18
     djangorestframework 3.14.0
     drf-spectacular 0.26.2
-    django-rest-knox 4.2.0
 
 For more information on this file, see
 https://docs.djangoproject.com/en/3.2/topics/settings/
@@ -181,7 +180,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "knox",  # django-rest-knox used for token auth
+    "rest_framework.authtoken",
     "drf_spectacular",  # OpenAPI generator
     "drf_spectacular_sidecar",  # required for Django collectstatic discovery
     # project-local apps
@@ -262,7 +261,7 @@ if AUTHENTICATION == "JWT":
     )
 else:
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "knox.auth.TokenAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     )
 
@@ -324,13 +323,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "authentication.User"
-
-# https://james1345.github.io/django-rest-knox/settings/
-REST_KNOX = {
-    "TOKEN_TTL": None,  # Token does not expire
-    "USER_SERIALIZER": AUTH_USER_MODEL,
-    "AUTH_HEADER_PREFIX": "Token",
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

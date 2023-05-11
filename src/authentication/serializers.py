@@ -72,7 +72,7 @@ class UserDetailsSerializer(UserProfileSerializer):
         if token_auth_enabled:
             return obj.auth_token.key
         else:
-            return "knox.auth.TokenAuthentication is not enabled"
+            return "rest_framework.authentication.TokenAuthentication is not enabled"
 
     def get_has_usable_password(self, obj):
         return obj.has_usable_password()

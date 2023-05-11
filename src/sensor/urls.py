@@ -55,5 +55,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", RedirectView.as_view(url=f"/api/{DEFAULT_API_VERSION}/")),
     re_path(API_PREFIX, include(api_urlpatterns)),
-    path("api/auth/", include("knox.urls")),
+    path(f"api/auth/", include("rest_framework.urls")),
 ]
