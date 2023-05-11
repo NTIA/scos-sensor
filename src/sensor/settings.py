@@ -401,3 +401,6 @@ SWITCH_CONFIGS_DIR = env.str(
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
+
+# https://docs.djangoproject.com/en/3.2/releases/3.2/#customizing-type-of-auto-created-primary-keys
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
