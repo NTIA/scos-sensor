@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from scos_actions.utils import (
@@ -215,7 +216,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
 
         return data
 
-    def get_task_results(self, obj):
+    def get_task_results(self, obj) -> OpenApiTypes.URI:
         request = self.context["request"]
         kws = {"schedule_entry_name": obj.name}
         kws.update(V1)

@@ -1,3 +1,5 @@
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -34,6 +36,9 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ("schedule_entries", "date_joined", "last_login")
 
+    @extend_schema_field(
+        field=serializers.ListSerializer(child=serializers.CharField())
+    )
     def get_schedule_entries(self, obj):
         """Filter private schedule entries if requester is not an admin."""
         request = self.context["request"]
@@ -56,7 +61,7 @@ class UserDetailsSerializer(UserProfileSerializer):
     has_usable_password = serializers.SerializerMethodField()
     is_admin = serializers.SerializerMethodField()
 
-    def get_is_admin(self, obj):
+    def get_is_admin(self, obj) -> OpenApiTypes.BOOL:
         return obj.is_staff
 
     class Meta(UserProfileSerializer.Meta):
@@ -68,11 +73,11 @@ class UserDetailsSerializer(UserProfileSerializer):
         )
         read_only_fields = UserProfileSerializer.Meta.read_only_fields + ("auth_token",)
 
-    def get_auth_token(self, obj):
+    def get_auth_token(self, obj) -> OpenApiTypes.STR:
         if token_auth_enabled:
             return obj.auth_token.key
         else:
             return "rest_framework.authentication.TokenAuthentication is not enabled"
 
-    def get_has_usable_password(self, obj):
+    def get_has_usable_password(self, obj) -> OpenApiTypes.BOOL:
         return obj.has_usable_password()
