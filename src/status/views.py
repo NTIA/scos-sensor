@@ -15,10 +15,11 @@ from scos_actions.utils import (
 )
 
 from scheduler import scheduler
-from utils.docs import FORMAT_QUERY_KWARGS, view_docstring
+from utils.docs import API_RESPONSE_405, FORMAT_QUERY_KWARGS, view_docstring
 
 from . import sensor_cal, start_time
-from .serializers import LocationSerializer
+from .serializers import StatusSerializer
+from .serializers.status import LocationSerializer
 from .utils import get_location
 
 logger = logging.getLogger(__name__)
@@ -61,6 +62,7 @@ status_view_desc = (
     description=status_view_desc,
     summary="Sensor Status",
     tags=["Discover"],
+    responses={200: StatusSerializer(), **API_RESPONSE_405},
     **FORMAT_QUERY_KWARGS,
 )
 @api_view()
