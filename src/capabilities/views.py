@@ -1,31 +1,32 @@
 import copy
 import logging
 
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiExample, extend_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from utils import get_summary
-from utils.docs import FORMAT_QUERY_KWARGS, view_docstring
+from utils.docs import API_RESPONSE_405, FORMAT_QUERY_KWARGS, view_docstring
 
 from . import actions_by_name, sensor_capabilities
+from .serializers import CapabilitiesSerializer
 
 logger = logging.getLogger(__name__)
 logger.debug("scos-sensor/capabilities/views.py")
 
 
-def get_actions():
-    serialized_actions = []
-    for action in actions_by_name:
-        serialized_actions.append(
-            {
-                "name": action,
-                "summary": get_summary(actions_by_name[action]),
-                "description": actions_by_name[action].description,
-            }
-        )
-
-    return serialized_actions
+def get_capabilities() -> dict:
+    filtered_actions = [
+        {
+            "name": name,
+            "summary": get_summary(action),
+            "description": action.description,
+        }
+        for name, action in actions_by_name.items()
+    ]
+    filtered_capabilities = copy.deepcopy(sensor_capabilities)
+    filtered_capabilities["actions"] = filtered_actions
+    return filtered_capabilities
 
 
 # CAPABILITIES VIEW
@@ -39,13 +40,11 @@ capabilities_view_desc = (
     description=capabilities_view_desc,
     summary="Sensor Capabilities",
     tags=["Discover"],
+    responses={200: CapabilitiesSerializer(), **API_RESPONSE_405},
     **FORMAT_QUERY_KWARGS,
 )
 @api_view()
+# @authentication_classes()  # TODO: maybe this?
 @view_docstring(capabilities_view_desc)
 def capabilities_view(request, version, format=None):
-    """The capabilites of the sensor."""
-    filtered_actions = get_actions()
-    filtered_capabilities = copy.deepcopy(sensor_capabilities)
-    filtered_capabilities["actions"] = filtered_actions
-    return Response(filtered_capabilities)
+    return Response(get_capabilities())

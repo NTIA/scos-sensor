@@ -31,12 +31,10 @@ FORMAT_QUERY_KWARGS = {
         )
     ],
     "request": OpenApiRequest("GET"),
-    "responses": {
-        200: OpenApiResponse(description="OK"),
-        405: OpenApiResponse(description="Method Not Allowed"),
-    },
     # auth = # TODO
 }
+
+API_RESPONSE_405 = {405: OpenApiResponse(description="Method Not Allowed")}
 
 
 def view_docstring(docstring: str):
