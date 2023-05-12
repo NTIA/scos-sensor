@@ -271,6 +271,9 @@ else:
 # https://drf-spectacular.readthedocs.io/en/latest/settings.html
 SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": API_PREFIX_REGEX,
+    "REDOC_UI_SETTINGS": {
+        "showObjectSchemaExamples": True,
+    },
     "REDOC_DIST": "SIDECAR",  # Self host Redoc with drf-spectacular-sidecar
     "SERVE_PUBLIC": False,  # Include only endpoints available to user
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
