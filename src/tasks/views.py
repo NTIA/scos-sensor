@@ -8,6 +8,7 @@ import sigmf.sigmffile
 from cryptography.fernet import Fernet
 from django.conf import settings
 from django.http import FileResponse, Http404
+from drf_spectacular.utils import extend_schema
 from rest_framework import filters, status
 from rest_framework.decorators import action, api_view
 from rest_framework.generics import get_object_or_404
@@ -19,6 +20,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from schedule.models import ScheduleEntry
 from scheduler import scheduler
+from utils.docs import FORMAT_QUERY_KWARGS, view_docstring
 
 from .models.acquisition import Acquisition
 from .models.task_result import TaskResult
@@ -27,10 +29,21 @@ from .serializers.task_result import TaskResultSerializer, TaskResultsOverviewSe
 
 logger = logging.getLogger(__name__)
 
+# TASK ROOT VIEW
+task_root_desc = (
+    "The `tasks` endpoint provides links to both upcoming and completed tasks."
+)
 
+
+@extend_schema(
+    description=task_root_desc,
+    summary="All Tasks",
+    tags=["Discover"],
+    **FORMAT_QUERY_KWARGS,
+)
 @api_view()
-def task_root(request, version, format=None):
-    """Provides links to upcoming and completed tasks"""
+@view_docstring(task_root_desc)
+def task_root_view(request, version, format=None):
     reverse_ = partial(reverse, request=request, format=format)
     task_endpoints = {
         "upcoming": reverse_("upcoming-tasks"),
@@ -40,9 +53,21 @@ def task_root(request, version, format=None):
     return Response(task_endpoints)
 
 
+# UPCOMING TASKS VIEW
+upcoming_tasks_desc = (
+    "The `tasks/upcoming` endpoint provides a snapshot of upcoming tasks."
+)
+
+
+@extend_schema(
+    description=upcoming_tasks_desc,
+    summary="Upcoming Tasks",
+    tags=["Discover"],
+    **FORMAT_QUERY_KWARGS,
+)
 @api_view()
-def upcoming_tasks(request, version, format=None):
-    """Returns a snapshot of upcoming tasks."""
+@view_docstring(upcoming_tasks_desc)
+def upcoming_tasks_view(request, version, format=None):
     context = {"request": request}
     taskq = scheduler.thread.task_queue.to_list()[: settings.MAX_TASK_QUEUE]
     taskq_serializer = TaskSerializer(taskq, many=True, context=context)

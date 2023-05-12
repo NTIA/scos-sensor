@@ -20,25 +20,28 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
-from drf_spectacular.views import SpectacularRedocView
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import settings
-from .views import api_v1_root
+from .views import api_v1_root_view
 
-# Matches api/v1, api/v2, etc...
-API_PREFIX = r"^api/(?P<version>v[0-9]+)/"
 DEFAULT_API_VERSION = settings.REST_FRAMEWORK["DEFAULT_VERSION"]
 
 api_urlpatterns = format_suffix_patterns(
     (
-        path("", api_v1_root, name="api-root"),
+        path("", api_v1_root_view, name="api-root"),
         path("capabilities/", include("capabilities.urls")),
         path("schedule/", include("schedule.urls")),
         path("status", include("status.urls")),
         path("users/", include("authentication.urls")),
         path("tasks/", include("tasks.urls")),
-        path("schema/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+        path(
+            "schema/",
+            SpectacularAPIView.as_view(api_version=DEFAULT_API_VERSION),
+            name="schema",
+        ),
+        path("docs/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     )
 )
 
@@ -54,6 +57,6 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/api/")),
     path("admin/", admin.site.urls),
     path("api/", RedirectView.as_view(url=f"/api/{DEFAULT_API_VERSION}/")),
-    re_path(API_PREFIX, include(api_urlpatterns)),
+    re_path(settings.API_PREFIX_REGEX, include(api_urlpatterns)),
     path(f"api/auth/", include("rest_framework.urls")),
 ]

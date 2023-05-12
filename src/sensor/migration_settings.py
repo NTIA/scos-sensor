@@ -46,6 +46,9 @@ else:
     if VERSION_STRING.startswith("v"):
         VERSION_STRING = VERSION_STRING[1:]
 
+# Matches api/v1, api/v2, etc...
+API_PREFIX_REGEX = r"^api/(?P<version>v[0-9]+)/"
+
 STATIC_ROOT = path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
@@ -258,6 +261,7 @@ else:
 
 # https://drf-spectacular.readthedocs.io/en/latest/settings.html
 SPECTACULAR_SETTINGS = {
+    "SCHEMA_PATH_PREFIX": API_PREFIX_REGEX,
     "REDOC_DIST": "SIDECAR",  # Self host Redoc with drf-spectacular-sidecar
     "SERVE_PUBLIC": False,  # Include only endpoints available to user
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
@@ -268,6 +272,7 @@ SPECTACULAR_SETTINGS = {
     "CONTACT": {"email": "sms@ntia.doc.gov"},
     "LICENSE": {"name": "NTIA/ITS", "url": LICENSE_URL},
     "VERSION": None,  # Render only the request version
+    "PREPROCESSING_HOOKS": ["drf_spectacular.hooks.preprocess_exclude_path_format"],
 }
 
 # Database

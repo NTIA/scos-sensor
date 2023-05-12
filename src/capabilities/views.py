@@ -1,10 +1,12 @@
 import copy
 import logging
 
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from utils import get_summary
+from utils.docs import FORMAT_QUERY_KWARGS, view_docstring
 
 from . import actions_by_name, sensor_capabilities
 
@@ -26,7 +28,21 @@ def get_actions():
     return serialized_actions
 
 
+# CAPABILITIES VIEW
+capabilities_view_desc = (
+    "The `capabilities` endpoint provides descriptions of the physical "
+    "sensor and a list of actions the sensor is capable of performing."
+)
+
+
+@extend_schema(
+    description=capabilities_view_desc,
+    summary="Sensor Capabilities",
+    tags=["Discover"],
+    **FORMAT_QUERY_KWARGS,
+)
 @api_view()
+@view_docstring(capabilities_view_desc)
 def capabilities_view(request, version, format=None):
     """The capabilites of the sensor."""
     filtered_actions = get_actions()

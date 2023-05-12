@@ -2,6 +2,7 @@ import datetime
 import logging
 import shutil
 
+from drf_spectacular.utils import extend_schema
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
@@ -14,6 +15,7 @@ from scos_actions.utils import (
 )
 
 from scheduler import scheduler
+from utils.docs import FORMAT_QUERY_KWARGS, view_docstring
 
 from . import sensor_cal, start_time
 from .serializers import LocationSerializer
@@ -48,9 +50,22 @@ def get_days_up():
     return round(days + fractional_day, 4)
 
 
+# STATUS VIEW
+status_view_desc = (
+    "The `status` endpoint provides dynamic status information "
+    "related to the sensor and its components."
+)
+
+
+@extend_schema(
+    description=status_view_desc,
+    summary="Sensor Status",
+    tags=["Discover"],
+    **FORMAT_QUERY_KWARGS,
+)
 @api_view()
-def status(request, version, format=None):
-    """The status overview of the sensor."""
+@view_docstring(status_view_desc)
+def status_view(request, version, format=None):
     healthy = True
     status_json = {
         "scheduler": scheduler.thread.status,
