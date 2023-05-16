@@ -2,7 +2,7 @@
 
 services:
   db:
-    image: postgres:12-alpine
+    image: docker.io/library/postgres:12-alpine
     restart: always
     environment:
       - POSTGRES_PASSWORD
@@ -73,7 +73,7 @@ services:
       - SYS_ADMIN  # required for ^ with NVMe drives
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
-      - /dev/nvme0n1:/dev/nvme0n1:ro
+      - /dev/nvme0n1:/dev/nvme0n1:r
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
