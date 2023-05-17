@@ -8,16 +8,6 @@ upstream wsgi-server {
 }
 
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    # Redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
-    #return 301 https://$host$request_uri;
-    # For testing, use 307 so that redirect is not cached in browser
-    return 307 https://$host$request_uri;
-}
-
-server {
     # SSL configuration
     listen 443 ssl;
     listen [::]:443 ssl;
