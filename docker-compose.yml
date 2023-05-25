@@ -10,6 +10,9 @@ services:
       - '127.0.0.1:5432:5432'
     volumes:
       - ./dbdata:/var/lib/postgresql/data
+    networks:
+      - scos
+    rm: true
 
   api:
     healthcheck:
@@ -18,6 +21,7 @@ services:
       timeout: 3s
       retries: 1
     shm_size: '16gb'
+    rm: true
     restart: always
     depends_on:
       - db
@@ -77,6 +81,8 @@ services:
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
+    networks:
+      - scos
 
   nginx:
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
@@ -101,21 +107,27 @@ services:
       - ./configs/certs/${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
+    networks:
+      - scos
+    rm: true
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
   #
   # https://github.com/moby/moby/issues/28400
   # https://github.com/willfarrell/docker-autoheal
-  autoheal:
-    image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
-    restart: always
-    depends_on:
-      - api
-    build:
-      context: .
-      dockerfile: docker/Dockerfile-autoheal
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
-    command: /entrypoints/autoheal_entrypoint.sh
+  # autoheal:
+  #   image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
+  #   restart: always
+  #   depends_on:
+  #     - api
+  #   build:
+  #     context: .
+  #     dockerfile: docker/Dockerfile-autoheal
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
+  #   command: /entrypoints/autoheal_entrypoint.sh
+
+networks:
+  scos:
