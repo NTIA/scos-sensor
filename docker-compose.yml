@@ -13,6 +13,12 @@ services:
     networks:
       - scos
     rm: true
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 10s
+      timeout: 3s
+      retries: 1
+      start_period: 30s
 
   api:
     healthcheck:
@@ -24,7 +30,8 @@ services:
     rm: true
     restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
