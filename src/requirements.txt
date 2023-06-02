@@ -30,7 +30,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==39.0.1
+cryptography==41.0.0
     # via
     #   -r requirements.in
     #   paramiko
@@ -124,6 +124,7 @@ packaging==23.0
     #   docker
     #   drf-yasg
     #   marshmallow
+    #   ray
 paramiko==3.0.0
     # via docker
 platformdirs==3.0.0
@@ -176,8 +177,6 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
-    # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
