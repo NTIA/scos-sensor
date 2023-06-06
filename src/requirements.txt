@@ -30,7 +30,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==39.0.1
+cryptography==41.0.0
     # via
     #   -r requirements.in
     #   paramiko
