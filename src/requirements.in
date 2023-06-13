@@ -13,8 +13,8 @@ psycopg2-binary>=2.0, <3.0
 pyjwt>=2.4.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.5
+scos_actions @ git+https://github.com/NTIA/scos-actions@update-sigmf-ns-ntia
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@update-sigmf-ns-ntia
 
 # The following are sub-dependencies for which SCOS Sensor enforces a
 # higher minimum patch version than the dependencies which require them.
