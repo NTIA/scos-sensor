@@ -6,7 +6,7 @@
     "description": "SENSOR LOCATION, X=LON, Y=LAT, Z=ALTITUDE"
   },
   "sensor_spec": {
-      "id": "UNIQUE SENSOR ID, OVERWRITTEN BY FQDN ENVIRONMENT VARIABLE",
+      "id": "UNIQUE SENSOR ID",
       "model": "SENSOR MODEL",
       "version": "SENSOR VERSION"
   },
