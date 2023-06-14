@@ -21,7 +21,7 @@ def measurement_action_completed_callback(sender, **kwargs):
 
     logger.debug("Storing acquisition in database")
 
-    schedule_entry_name = metadata["global"]["ntia-scos:schedule"]["name"]
+    schedule_entry_name = metadata["global"]["ntia-scos:schedule"].name
 
     task_result = TaskResult.objects.get(
         schedule_entry__name=schedule_entry_name, task_id=task_id
