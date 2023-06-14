@@ -203,7 +203,6 @@ actions.
 - entrypoints: Docker entrypoint scripts which are executed when starting a container.
 - gunicorn: Gunicorn configuration file.
 - nginx: Nginx configuration template and SSL certificates.
-- schemas: JSON schema files.
 - scripts: Various utility scripts.
 - src: Contains the scos-sensor source code.
   - actions: Code to discover actions in plugins and to perform a simple logger action.
