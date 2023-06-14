@@ -214,7 +214,7 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-pre-commit==2.21.0
+pre-commit==3.3.3
     # via -r requirements-dev.in
 protobuf==4.22.0
     # via
