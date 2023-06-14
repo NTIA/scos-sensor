@@ -169,6 +169,10 @@ msgpack==1.0.4
     # via
     #   -r requirements.txt
     #   ray
+msgspec==0.16.0
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 nodeenv==1.7.0
     # via pre-commit
 numexpr==2.8.4

@@ -101,6 +101,8 @@ marshmallow==3.19.0
     # via environs
 msgpack==1.0.4
     # via ray
+msgspec==0.16.0
+    # via scos-actions
 numexpr==2.8.4
     # via scos-actions
 numpy==1.24.2
