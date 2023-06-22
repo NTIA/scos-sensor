@@ -138,7 +138,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==2.0.0
     # via pytest
-its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
+its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -275,7 +275,7 @@ ray==2.5.0
     # via
     #   -r requirements.txt
     #   scos-actions
-requests==2.28.2
+requests==2.31.0
     # via
     #   -r requirements.txt
     #   coreapi
@@ -302,11 +302,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@update-sigmf-ns-ntia
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.3.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@update-sigmf-ns-ntia
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
