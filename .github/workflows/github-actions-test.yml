@@ -77,7 +77,7 @@ jobs:
           docker-compose up -d
 
       - name: Wait for containers # wait for containers to finish starting
-        run: sleep 20
+        run: sleep 30
 
       - name: Check API container
         run: docker ps | grep api | grep -q healthy
