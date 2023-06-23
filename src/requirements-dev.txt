@@ -58,7 +58,7 @@ coreschema==0.0.4
     #   drf-yasg
 coverage[toml]==7.2.1
     # via pytest-cov
-cryptography==39.0.1
+cryptography==41.0.0
     # via
     #   -r requirements.txt
     #   paramiko
@@ -67,9 +67,7 @@ defusedxml==0.7.1
     #   -r requirements.txt
     #   its-preselector
 distlib==0.3.6
-    # via
-    #   -r requirements.txt
-    #   virtualenv
+    # via virtualenv
 distro==1.8.0
     # via
     #   -r requirements.txt
@@ -140,7 +138,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==2.0.0
     # via pytest
-its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
+its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -171,6 +169,10 @@ msgpack==1.0.4
     # via
     #   -r requirements.txt
     #   ray
+msgspec==0.16.0
+    # via
+    #   -r requirements.txt
+    #   scos-actions
 nodeenv==1.7.0
     # via pre-commit
 numexpr==2.8.4
@@ -198,6 +200,7 @@ packaging==23.0
     #   marshmallow
     #   pyproject-api
     #   pytest
+    #   ray
     #   tox
 paramiko==3.0.0
     # via
@@ -205,14 +208,13 @@ paramiko==3.0.0
     #   docker
 platformdirs==3.0.0
     # via
-    #   -r requirements.txt
     #   tox
     #   virtualenv
 pluggy==1.0.0
     # via
     #   pytest
     #   tox
-pre-commit==2.21.0
+pre-commit==3.3.3
     # via -r requirements-dev.in
 protobuf==4.22.0
     # via
@@ -269,11 +271,11 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray==2.3.0
+ray==2.5.0
     # via
     #   -r requirements.txt
     #   scos-actions
-requests==2.28.2
+requests==2.31.0
     # via
     #   -r requirements.txt
     #   coreapi
@@ -300,11 +302,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.3.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.5
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -352,9 +354,7 @@ urllib3==1.26.14
     #   requests
 virtualenv==20.20.0
     # via
-    #   -r requirements.txt
     #   pre-commit
-    #   ray
     #   tox
 websocket-client==0.59.0
     # via
