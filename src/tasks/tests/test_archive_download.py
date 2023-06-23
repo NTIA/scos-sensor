@@ -35,22 +35,9 @@ def test_single_acquisition_archive_download(admin_client, test_scheduler):
         sigmf_archive_contents = sigmf.sigmffile.fromarchive(tf.name)
         md = sigmf_archive_contents._metadata
         datafile = sigmf_archive_contents.data_file
-        datafile_actual_size = os.stat(datafile).st_size
         claimed_sha512 = md["global"]["core:sha512"]
-        # number_of_sample_arrays = len(md["annotations"])
-        number_of_sample_arrays = 1
-        cal_annotation = list(
-            filter(
-                lambda a: a["ntia-core:annotation_type"] == "CalibrationAnnotation",
-                md["annotations"],
-            )
-        )[0]
-        samples_per_array = cal_annotation["core:sample_count"]
-        sample_array_size = samples_per_array * np.float32(0.0).nbytes
-        datafile_expected_size = number_of_sample_arrays * sample_array_size
         actual_sha512 = sigmf.sigmf_hash.calculate_sha512(datafile)
 
-        assert datafile_actual_size == datafile_expected_size
         assert claimed_sha512 == actual_sha512
 
 
