@@ -74,10 +74,10 @@ jobs:
           export MOCK_SIGAN=1
           export MOCK_SIGAN_RANDOM=1
           docker-compose build --no-cache
-          docker-compose up -d --force-recreate
+          docker-compose up -d
 
       - name: Wait for containers # wait for containers to finish starting
-        run: sleep 60
+        run: sleep 30
 
       - name: Check API container
-        run: docker ps | grep api | grep healthy
+        run: docker ps | grep api | grep -q healthy
