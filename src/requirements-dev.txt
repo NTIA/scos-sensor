@@ -417,6 +417,7 @@ urllib3==1.26.14
 virtualenv==20.20.0
     # via
     #   pre-commit
+    #   ray
     #   tox
 wcwidth==0.2.6
     # via blessed
