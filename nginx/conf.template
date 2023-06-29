@@ -32,6 +32,10 @@ server {
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
+    location /healthcheck {
+        return 200;
+    }
+
     location / {
       # checks for static file, if not found proxy to wsgi server
       try_files $uri @proxy_to_wsgi_server;
@@ -45,5 +49,4 @@ server {
         proxy_redirect off;
         proxy_pass   http://wsgi-server;
     }
-
 }

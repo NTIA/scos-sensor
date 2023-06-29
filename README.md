@@ -234,7 +234,9 @@ This section describes how to spin up a production-grade sensor in just a few co
 We currently support Ettus USRP B2xx signal analyzers out of the box, and any
 Intel-based host computer should work.
 
-1. Install `git`, `Docker`, and `docker-compose`.
+1. Install `git`, `podman`, and `podman-compose`. See
+ [here](https://podman.io/docs/installation) more information about installing podman.
+ For older Linux distributions, consider installing using Homebrew.
 
 1. Clone the repository.
 
@@ -273,11 +275,11 @@ scos-sensor website from the same computer as where it is hosted.
     ./create_localhost_cert.sh
     ```
 
-1. Run a Dockerized stack.
+1. Run a podman stack.
 
     ```bash
-    docker-compose up -d --build  # start in background
-    docker-compose logs --follow api  # reattach terminal
+    podman-compose --podman-run-args="--health-on-failure=restart" up -d --build  # start in background
+    podman-compose logs --follow api  # reattach terminal
     ```
 
 ## Configuration

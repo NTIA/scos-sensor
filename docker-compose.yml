@@ -78,13 +78,8 @@ services:
       - ${REPO_ROOT}/drivers:/drivers:ro
     tmpfs:
       - /scos_tmp
-    cap_add:
-      - SYS_PTRACE
-      - SYS_RAWIO  # required for smartctl SMART disk health checks
-      - SYS_ADMIN  # required for ^ with NVMe drives
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
-      - /dev/nvme0n1:/dev/nvme0n1:r
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
@@ -92,6 +87,11 @@ services:
       - scos
 
   nginx:
+    healthcheck:
+      test: wget --ca-certificate /etc/ssl/certs/ca.crt --certificate /etc/ssl/certs/ssl-cert.pem --private-key /etc/ssl/private/ssl-cert.key https://localhost/healthcheck
+      interval: 100s
+      timeout: 3s
+      retries: 1
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
     restart: always
     depends_on:
@@ -117,24 +117,6 @@ services:
     networks:
       - scos
     rm: true
-
-  # This is a stop-gap until Docker adds the capability to restart unhealthy
-  # containers natively.
-  #
-  # https://github.com/moby/moby/issues/28400
-  # https://github.com/willfarrell/docker-autoheal
-  # autoheal:
-  #   image: smsntia/autoheal:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
-  #   restart: always
-  #   depends_on:
-  #     - api
-  #   build:
-  #     context: .
-  #     dockerfile: docker/Dockerfile-autoheal
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
-  #   command: /entrypoints/autoheal_entrypoint.sh
 
 networks:
   scos:

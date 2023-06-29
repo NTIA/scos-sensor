@@ -269,7 +269,7 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray==2.3.0
+ray==2.4.0
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -300,11 +300,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
+scos_actions @ git+https://github.com/NTIA/scos-actions@podman_updates
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.5
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@podman_updates
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via

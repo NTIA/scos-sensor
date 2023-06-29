@@ -3,3 +3,4 @@ FROM docker.io/library/nginx:1.23.4-alpine
 RUN mkdir -p /var/www/scos-sensor/static
 COPY --chown=nginx:nginx ./src/static/ /var/www/scos-sensor/static/
 COPY --chown=root:root ./nginx/conf.template /etc/nginx/nginx.conf.template
+RUN apk add wget --no-cache
