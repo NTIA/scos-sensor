@@ -192,7 +192,7 @@ marshmallow==3.19.0
     # via
     #   -r requirements.txt
     #   environs
-msgpack==1.0.4
+msgpack==1.0.5
     # via
     #   -r requirements.txt
     #   ray
@@ -255,13 +255,13 @@ pre-commit==3.3.3
     # via -r requirements-dev.in
 prometheus-client==0.13.1
     # via ray
-protobuf==4.22.0
+protobuf==4.23.3
     # via
     #   -r requirements.txt
     #   google-api-core
     #   googleapis-common-protos
     #   ray
-psutil==5.9.4
+psutil==5.9.5
     # via
     #   -r requirements.txt
     #   gpustat
@@ -323,7 +323,7 @@ pyyaml==5.4.1
     #   docker-compose
     #   pre-commit
     #   ray
-ray[default]==2.5.0
+ray[default]==2.5.1
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -358,11 +358,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@troubleshoot-segfaults
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.3.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@troubleshoot-segfaults
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.1
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
