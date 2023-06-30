@@ -42,4 +42,4 @@ class TaskQueue(list):
         return self.to_list()[item]
 
     def __repr__(self):
-        return "<{} {!r}>".format(self.__class__.__name__, list(self))
+        return f"<{self.__class__.__name__} {list(self)!r}>"
