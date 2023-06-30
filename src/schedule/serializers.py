@@ -14,7 +14,7 @@ from . import get_action_with_summary, registered_actions
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 action_help = "[Required] The name of the action to be scheduled"
-priority_help = "Lower number is higher priority (default={})".format(DEFAULT_PRIORITY)
+priority_help = f"Lower number is higher priority (default={DEFAULT_PRIORITY})"
 CHOICES = []
 actions = sorted(registered_actions.keys())
 for action in actions:

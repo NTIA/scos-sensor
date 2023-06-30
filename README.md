@@ -203,7 +203,6 @@ actions.
 - entrypoints: Docker entrypoint scripts which are executed when starting a container.
 - gunicorn: Gunicorn configuration file.
 - nginx: Nginx configuration template and SSL certificates.
-- schemas: JSON schema files.
 - scripts: Various utility scripts.
 - src: Contains the scos-sensor source code.
   - actions: Code to discover actions in plugins and to perform a simple logger action.
@@ -339,14 +338,13 @@ settings in the environment file:
 This file contains information on the sensor and components being used. It is used in
 the SigMF metadata to identify the hardware used for the measurement. It should follow
 the [sigmf-ns-ntia Sensor Object format](
-<https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object>
+<https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#01-the-sensor-object>
 ). See an example below. Overwrite the [example
 file in scos-sensor/configs](configs/sensor_definition.json) with the information
 specific to the sensor you are using.
 
 ```json
 {
-    "id": "",
     "sensor_spec": {
         "id": "",
         "model": "greyhound"

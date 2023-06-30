@@ -30,7 +30,7 @@ def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):
     url = reverse("schedule-list", kwargs=V1)
     r = client.post(url, **kwargs)
 
-    err = "Got status {}, expected {}".format(r.status_code, expected_status)
+    err = f"Got status {r.status_code}, expected {expected_status}"
     assert r.status_code == expected_status, err
 
     if r.status_code == status.HTTP_204_NO_CONTENT:
