@@ -85,6 +85,9 @@ services:
     command: /entrypoints/api_entrypoint.sh
     networks:
       - scos
+    # privileged is needed to refresh usb when container restarts
+    # https://github.com/containers/podman/pull/14483
+    privileged: true
 
   nginx:
     healthcheck:
