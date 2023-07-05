@@ -38,7 +38,7 @@ defusedxml==0.7.1
     # via its-preselector
 distro==1.8.0
     # via docker-compose
-django==3.2.19
+django==3.2.20
     # via
     #   -r requirements.in
     #   django-session-timeout
@@ -174,8 +174,6 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
-    # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
 scos_actions @ git+https://github.com/NTIA/scos-actions@6.3.1
