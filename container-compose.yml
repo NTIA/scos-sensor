@@ -3,15 +3,12 @@
 services:
   db:
     image: docker.io/library/postgres:12-alpine
-    restart: always
     environment:
       - POSTGRES_PASSWORD
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
       - ./dbdata:/var/lib/postgresql/data
-    networks:
-      - scos
     rm: true
     healthcheck:
       test: pg_isready -U postgres
@@ -28,7 +25,6 @@ services:
       retries: 1
     shm_size: '16gb'
     rm: true
-    restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -83,8 +79,6 @@ services:
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
-    networks:
-      - scos
     # privileged is needed to refresh usb when container restarts
     # https://github.com/containers/podman/pull/14483
     privileged: true
@@ -96,7 +90,6 @@ services:
       timeout: 3s
       retries: 1
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
-    restart: always
     depends_on:
       - api
     ports:
@@ -117,9 +110,4 @@ services:
       - ./configs/certs/${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
-    networks:
-      - scos
     rm: true
-
-networks:
-  scos:
