@@ -6,8 +6,8 @@ rm -f ~/.config/systemd/user/container-scos-sensor_api_1.service
 rm -f ~/.config/systemd/user/container-scos-sensor_db_1.service
 rm -f ~/.config/systemd/user/container-scos-sensor_nginx_1.service
 rm -f ~/.config/systemd/user/default.target.wants/pod_scos-sensor.service
-systemctl daemon-reload
-systemctl reset-failed
+systemctl --user daemon-reload
+systemctl --user reset-failed
 cd $REPO_ROOT
 rm -f *.service
 podman pod rm pod_scos-sensor
