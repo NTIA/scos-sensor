@@ -14,6 +14,7 @@ sudo rm -rf dbdata
 podman-compose --in-pod scos_pod --pod-args="--infra=true" --podman-run-args="--health-on-failure=restart" up --build --no-start
 # use --new in below command to have systemd create the containers (above command wouldn't be needed)
 podman generate systemd --files --name --pod-prefix "" pod_scos-sensor # may need to clear out old service files first
+mkdir -p ~/.config/systemd/user
 cp *.service ~/.config/systemd/user
 systemctl --user enable pod_scos-sensor.service
 systemctl --user daemon-reload
