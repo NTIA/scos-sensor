@@ -20,5 +20,5 @@ scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@scos-actions-6.3.2
 # higher minimum patch version than the dependencies which require them.
 # This is done to ensure the inclusion of specific security patches.
 certifi>=2023.07.22   # CVE-2023-37920
-cryptography>=41.0.2  # CVE-2023-38325
+cryptography>=41.0.3  # GHSA-jm77-qphf-c4w8
 sqlparse>=0.4.4       # CVE-2023-30608
