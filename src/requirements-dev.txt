@@ -4,8 +4,9 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.8.4
+aiohttp==3.8.5
     # via
+    #   -r requirements-dev.in
     #   aiohttp-cors
     #   ray
 aiohttp-cors==0.7.0
@@ -38,7 +39,7 @@ cachetools==5.3.0
     # via
     #   google-auth
     #   tox
-certifi==2022.12.7
+certifi==2023.7.22
     # via
     #   -r requirements.txt
     #   requests
@@ -75,7 +76,7 @@ coreschema==0.0.4
     #   drf-yasg
 coverage[toml]==7.2.1
     # via pytest-cov
-cryptography==41.0.0
+cryptography==41.0.3
     # via
     #   -r requirements.txt
     #   paramiko
@@ -89,7 +90,7 @@ distro==1.8.0
     # via
     #   -r requirements.txt
     #   docker-compose
-django==3.2.19
+django==3.2.20
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -317,7 +318,7 @@ pytz==2022.7.1
     #   django
     #   djangorestframework
     #   drf-yasg
-pyyaml==5.4.1
+pyyaml==5.3.1
     # via
     #   -r requirements.txt
     #   docker-compose
@@ -358,11 +359,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.3.1
+scos-actions @ git+https://github.com/NTIA/scos-actions@6.3.2
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.1
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.2
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
