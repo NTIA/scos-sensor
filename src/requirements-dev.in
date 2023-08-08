@@ -5,3 +5,8 @@ pytest-cov>=3.0, <4.0
 pytest-django>=4.0, <5.0
 ray[default]>=2.5.0
 tox>=4.0,<5.0
+
+# The following are sub-dependencies for which SCOS Sensor enforces a
+# higher minimum patch version than the dependencies which require them.
+# This is done to ensure the inclusion of specific security patches.
+aiohttp>=3.8.5        # CVE-2023-37276
