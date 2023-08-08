@@ -22,3 +22,8 @@ scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.2
 certifi>=2023.07.22   # CVE-2023-37920
 cryptography>=41.0.3  # GHSA-jm77-qphf-c4w8
 sqlparse>=0.4.4       # CVE-2023-30608
+
+# PyYAML 5.4 is broken: https://github.com/yaml/pyyaml/issues/724
+# And docker-compose requires <6.0
+# This should be removed once the docker-compose dependency is dropped
+pyyaml==5.3.1
