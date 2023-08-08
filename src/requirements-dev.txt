@@ -359,11 +359,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@tagged-unions-processing-info
+scos-actions @ git+https://github.com/NTIA/scos-actions@6.3.2
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@scos-actions-6.3.2
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.2
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
