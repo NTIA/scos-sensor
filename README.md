@@ -221,7 +221,7 @@ actions.
   - manage.py: Django’s command line tool for administrative tasks.
   - requirements.txt and requirements-dev.txt: Python dependencies.
   - tox.ini: Used to configure tox.
-- docker-compose.yml: Used by  to create services from containers. This
+- docker-compose.yml: Used by Docker Compose to create services from containers. This
   is needed to run scos-sensor.
 - env.template: Template file for setting environment variables used to configure
   scos-sensor.
