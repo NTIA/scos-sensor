@@ -221,7 +221,7 @@ actions.
   - manage.py: Django’s command line tool for administrative tasks.
   - requirements.txt and requirements-dev.txt: Python dependencies.
   - tox.ini: Used to configure tox.
-- docker-compose.yml: Used by docker-compose to create services from containers. This
+- docker-compose.yml: Used by Docker Compose to create services from containers. This
   is needed to run scos-sensor.
 - env.template: Template file for setting environment variables used to configure
   scos-sensor.
@@ -233,7 +233,7 @@ This section describes how to spin up a production-grade sensor in just a few co
 We currently support Ettus USRP B2xx signal analyzers out of the box, and any
 Intel-based host computer should work.
 
-1. Install `git`, `Docker`, and `docker-compose`.
+1. Install `git`, Docker, and [Docker Compose](https://github.com/docker/compose).
 
 1. Clone the repository.
 
