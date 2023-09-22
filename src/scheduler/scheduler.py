@@ -216,18 +216,18 @@ class Scheduler(threading.Thread):
         else:
             task_result.save()
 
-        self.task_status_lock.acquire()
-        if status == "failure" and self.last_status == "failure":
-            self.consecutive_failures = self.consecutive_failures + 1
-        elif status == "failure":
-            self.consecutive_failures = 1
-        else:
-            self.consecutive_failures = 0
-        if self.consecutive_failures >= settings.MAX_FAILURES:
-            trigger_api_restart.send(sender=self.__class__)
+        with self.task_status_lock:
+            if status == "failure" and self.last_status == "failure":
+                self.consecutive_failures = self.consecutive_failures + 1
+            elif status == "failure":
+                self.consecutive_failures = 1
+            else:
+                self.consecutive_failures = 0
+            if self.consecutive_failures >= settings.MAX_FAILURES:
+                trigger_api_restart.send(sender=self.__class__)
 
-        self.last_status = status
-        self.task_status_lock.release()
+            self.last_status = status
+
 
     @staticmethod
     def _callback_response_handler(resp, task_result):
