@@ -28,7 +28,7 @@ class Scheduler(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.task_status_lock = threading.lock()
+        self.task_status_lock = threading.Lock()
         self.timefn = utils.timefn
         self.delayfn = utils.delayfn
 
