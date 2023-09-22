@@ -193,6 +193,7 @@ class Scheduler(threading.Thread):
                         data=json.dumps(result_json),
                         headers=headers,
                         verify=verify_ssl,
+                        timeout=CALLBACK_TIMEOUT,
                     )
                     self._callback_response_handler(response, task_result)
                 else:
@@ -204,6 +205,7 @@ class Scheduler(threading.Thread):
                         json=result_json,
                         headers=headers,
                         verify=verify_ssl,
+                        timeout=settings.CALLBACK_TIMEOUT,
                     )
                     logger.info("posted")
                     self._callback_response_handler(response, task_result)
