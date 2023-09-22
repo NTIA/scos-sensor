@@ -130,17 +130,8 @@ class Scheduler(threading.Thread):
             started = timezone.now()
             status, detail = self._call_task_action()
             finished = timezone.now()
-            self._finalize_task_result(started, finished, status, detail)
-            if status == "failure" and self.last_status == "failure":
-                self.consecutive_failures = self.consecutive_failures + 1
-            elif status == "failure":
-                self.consecutive_failures = 1
-            else:
-                self.consecutive_failures = 0
-            if self.consecutive_failures >= settings.MAX_FAILURES:
-                trigger_api_restart.send(sender=self.__class__)
+            finalize_task_thread = threading.Thread(target=self.finalize_task_result, args=(started,finished,status,detail), daemon=True)
 
-            self.last_status = status
 
     def _initialize_task_result(self):
         """Initalize an 'in-progress' result so it exists when action runs."""
@@ -182,6 +173,8 @@ class Scheduler(threading.Thread):
         tr.duration = finished - started
         tr.status = status
         tr.detail = detail
+        tr.save()
+
 
         if self.entry.callback_url:
             try:
@@ -221,6 +214,17 @@ class Scheduler(threading.Thread):
                 tr.save()
         else:
             tr.save()
+
+        if status == "failure" and self.last_status == "failure":
+            self.consecutive_failures = self.consecutive_failures + 1
+        elif status == "failure":
+            self.consecutive_failures = 1
+        else:
+            self.consecutive_failures = 0
+        if self.consecutive_failures >= settings.MAX_FAILURES:
+            trigger_api_restart.send(sender=self.__class__)
+
+        self.last_status = status
 
     @staticmethod
     def _callback_response_handler(resp, task_result):
