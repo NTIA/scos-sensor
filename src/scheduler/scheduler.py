@@ -130,7 +130,7 @@ class Scheduler(threading.Thread):
             started = timezone.now()
             status, detail = self._call_task_action()
             finished = timezone.now()
-            finalize_task_thread = threading.Thread(target=self.finalize_task_result, args=(started,finished,status,detail), daemon=True)
+            finalize_task_thread = threading.Thread(target=self._finalize_task_result, args=(started,finished,status,detail), daemon=True)
 
 
     def _initialize_task_result(self):
