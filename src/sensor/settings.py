@@ -103,6 +103,7 @@ if not IN_DOCKER or RUNNING_TESTS:
     DEBUG = True
     ALLOWED_HOSTS = []
     ENCRYPTION_KEY = Fernet.generate_key()
+    ASYNC_CALLBACK = False
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
@@ -110,6 +111,7 @@ else:
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
     ENCRYPTION_KEY = env.str("ENCRYPTION_KEY")
+    ASYNC_CALLBACK = env.bool("ASYNC_CALLBACK", default=True)
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
