@@ -16,21 +16,21 @@ aiosignal==1.3.1
     #   -r requirements.txt
     #   aiohttp
     #   ray
-asgiref==3.6.0
+asgiref==3.7.2
     # via
     #   -r requirements.txt
     #   django
-async-timeout==4.0.2
+async-timeout==4.0.3
     # via aiohttp
-attrs==22.2.0
+attrs==23.1.0
     # via
     #   -r requirements.txt
     #   aiohttp
     #   jsonschema
-    #   pytest
+    #   referencing
 blessed==1.20.0
     # via gpustat
-cachetools==5.3.0
+cachetools==5.3.1
     # via
     #   google-auth
     #   tox
@@ -42,16 +42,16 @@ cffi==1.15.1
     # via
     #   -r requirements.txt
     #   cryptography
-cfgv==3.3.1
+cfgv==3.4.0
     # via pre-commit
-chardet==5.1.0
+chardet==5.2.0
     # via tox
-charset-normalizer==3.0.1
+charset-normalizer==3.2.0
     # via
     #   -r requirements.txt
     #   aiohttp
     #   requests
-click==8.1.3
+click==8.1.7
     # via
     #   -r requirements.txt
     #   ray
@@ -59,16 +59,7 @@ colorama==0.4.6
     # via tox
 colorful==0.5.5
     # via ray
-coreapi==2.3.3
-    # via
-    #   -r requirements.txt
-    #   drf-yasg
-coreschema==0.0.4
-    # via
-    #   -r requirements.txt
-    #   coreapi
-    #   drf-yasg
-coverage[toml]==7.2.1
+coverage[toml]==7.3.1
     # via pytest-cov
 cryptography==41.0.4
     # via -r requirements.txt
@@ -76,9 +67,9 @@ defusedxml==0.7.1
     # via
     #   -r requirements.txt
     #   its-preselector
-distlib==0.3.6
+distlib==0.3.7
     # via virtualenv
-django==3.2.20
+django==3.2.21
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -92,7 +83,7 @@ djangorestframework==3.14.0
     # via
     #   -r requirements.txt
     #   drf-yasg
-drf-yasg==1.21.5
+drf-yasg==1.21.7
     # via -r requirements.txt
 environs==9.5.0
     # via
@@ -101,39 +92,44 @@ environs==9.5.0
     #   scos-tekrsa
 exceptiongroup==1.1.3
     # via pytest
-filelock==3.9.0
+filelock==3.12.4
     # via
     #   -r requirements.txt
     #   ray
     #   tox
     #   virtualenv
-frozenlist==1.3.3
+frozenlist==1.4.0
     # via
     #   -r requirements.txt
     #   aiohttp
     #   aiosignal
     #   ray
-google-api-core==2.11.0
+google-api-core==2.12.0
     # via opencensus
-google-auth==2.17.3
+google-auth==2.23.1
     # via google-api-core
-googleapis-common-protos==1.59.0
+googleapis-common-protos==1.60.0
     # via google-api-core
-gpustat==1.1
+gpustat==1.1.1
     # via ray
-grpcio==1.51.3
+grpcio==1.58.0
     # via
     #   -r requirements.txt
     #   ray
 gunicorn==20.1.0
     # via -r requirements.txt
-identify==2.5.18
+identify==2.5.29
     # via pre-commit
 idna==3.4
     # via
     #   -r requirements.txt
     #   requests
     #   yarl
+importlib-resources==6.1.0
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+    #   jsonschema-specifications
 inflection==0.5.1
     # via
     #   -r requirements.txt
@@ -144,33 +140,25 @@ its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
     # via
     #   -r requirements.txt
     #   scos-actions
-itypes==1.2.0
-    # via
-    #   -r requirements.txt
-    #   coreapi
-jinja2==3.1.2
-    # via
-    #   -r requirements.txt
-    #   coreschema
 jsonfield==3.1.0
     # via -r requirements.txt
-jsonschema==3.2.0
+jsonschema==4.19.1
     # via
     #   -r requirements.txt
     #   ray
-markupsafe==2.1.2
+jsonschema-specifications==2023.7.1
     # via
     #   -r requirements.txt
-    #   jinja2
-marshmallow==3.19.0
+    #   jsonschema
+marshmallow==3.20.1
     # via
     #   -r requirements.txt
     #   environs
-msgpack==1.0.5
+msgpack==1.0.6
     # via
     #   -r requirements.txt
     #   ray
-msgspec==0.16.0
+msgspec==0.18.2
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -178,13 +166,13 @@ multidict==6.0.4
     # via
     #   aiohttp
     #   yarl
-nodeenv==1.7.0
+nodeenv==1.8.0
     # via pre-commit
-numexpr==2.8.4
+numexpr==2.8.6
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==1.24.2
+numpy==1.24.4
     # via
     #   -r requirements.txt
     #   numexpr
@@ -193,13 +181,13 @@ numpy==1.24.2
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
-nvidia-ml-py==11.525.112
+nvidia-ml-py==12.535.108
     # via gpustat
-opencensus==0.11.2
+opencensus==0.11.3
     # via ray
 opencensus-context==0.1.3
     # via opencensus
-packaging==23.0
+packaging==23.1
     # via
     #   -r requirements.txt
     #   drf-yasg
@@ -208,19 +196,23 @@ packaging==23.0
     #   pytest
     #   ray
     #   tox
-platformdirs==3.0.0
+pkgutil-resolve-name==1.3.10
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+platformdirs==3.10.0
     # via
     #   tox
     #   virtualenv
-pluggy==1.0.0
+pluggy==1.3.0
     # via
     #   pytest
     #   tox
-pre-commit==3.3.3
+pre-commit==3.4.0
     # via -r requirements-dev.in
-prometheus-client==0.13.1
+prometheus-client==0.17.1
     # via ray
-protobuf==4.23.3
+protobuf==4.24.3
     # via
     #   -r requirements.txt
     #   google-api-core
@@ -231,7 +223,7 @@ psutil==5.9.5
     #   -r requirements.txt
     #   gpustat
     #   scos-actions
-psycopg2-binary==2.9.5
+psycopg2-binary==2.9.7
     # via -r requirements.txt
 py-spy==0.3.14
     # via ray
@@ -245,15 +237,11 @@ pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
-pydantic==1.10.7
+pydantic==1.10.12
     # via ray
-pyproject-api==1.5.0
+pyproject-api==1.5.4
     # via tox
-pyrsistent==0.19.3
-    # via
-    #   -r requirements.txt
-    #   jsonschema
-pytest==7.2.1
+pytest==7.4.2
     # via
     #   pytest-cov
     #   pytest-django
@@ -265,11 +253,11 @@ python-dateutil==2.8.2
     # via
     #   -r requirements.txt
     #   scos-actions
-python-dotenv==0.21.1
+python-dotenv==1.0.0
     # via
     #   -r requirements.txt
     #   environs
-pytz==2022.7.1
+pytz==2023.3.post1
     # via
     #   -r requirements.txt
     #   django
@@ -278,29 +266,38 @@ pytz==2022.7.1
 pyyaml==6.0.1
     # via
     #   -r requirements.txt
+    #   drf-yasg
     #   pre-commit
     #   ray
-ray[default]==2.6.3
+ray[default]==2.7.0
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
     #   scos-actions
+referencing==0.30.2
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+    #   jsonschema-specifications
 requests==2.31.0
     # via
     #   -r requirements.txt
-    #   coreapi
     #   google-api-core
     #   its-preselector
     #   ray
     #   requests-mock
-requests-mock==1.10.0
+requests-mock==1.11.0
     # via -r requirements.txt
-rsa==4.9
-    # via google-auth
-ruamel-yaml==0.17.21
+rpds-py==0.10.3
     # via
     #   -r requirements.txt
-    #   drf-yasg
+    #   jsonschema
+    #   referencing
+rsa==4.9
+    # via google-auth
+ruamel-yaml==0.17.32
+    # via
+    #   -r requirements.txt
     #   scos-actions
 ruamel-yaml-clib==0.2.7
     # via
@@ -325,12 +322,10 @@ six==1.16.0
     #   -r requirements.txt
     #   blessed
     #   django-session-timeout
-    #   google-auth
-    #   jsonschema
     #   python-dateutil
     #   requests-mock
     #   sigmf
-smart-open==6.3.0
+smart-open==6.4.0
     # via ray
 sqlparse==0.4.4
     # via
@@ -346,20 +341,23 @@ tomli==2.0.1
     #   pyproject-api
     #   pytest
     #   tox
-tox==4.4.6
+tox==4.5.1.1
     # via -r requirements-dev.in
-typing-extensions==4.5.0
-    # via pydantic
+typing-extensions==4.8.0
+    # via
+    #   -r requirements.txt
+    #   asgiref
+    #   pydantic
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
-    #   coreapi
     #   drf-yasg
-urllib3==1.26.14
+urllib3==2.0.5
     # via
     #   -r requirements.txt
+    #   google-auth
     #   requests
-virtualenv==20.20.0
+virtualenv==20.21.0
     # via
     #   pre-commit
     #   ray
@@ -368,6 +366,10 @@ wcwidth==0.2.6
     # via blessed
 yarl==1.9.2
     # via aiohttp
+zipp==3.17.0
+    # via
+    #   -r requirements.txt
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
