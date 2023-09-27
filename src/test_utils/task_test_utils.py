@@ -143,7 +143,7 @@ def reverse_result_detail(schedule_entry_name, task_id):
 def reverse_archive(schedule_entry_name, task_id):
     rf = RequestFactory()
     entry_name = schedule_entry_name
-    url = "/tasks/completed/{}/{!s}/archive".format(entry_name, task_id)
+    url = f"/tasks/completed/{entry_name}/{task_id!s}/archive"
     request = rf.get(url, **HTTPS_KWARG)
     kws = {"schedule_entry_name": entry_name, "task_id": task_id}
     kws.update(V1)
@@ -153,7 +153,7 @@ def reverse_archive(schedule_entry_name, task_id):
 def reverse_archive_all(schedule_entry_name):
     rf = RequestFactory()
     entry_name = schedule_entry_name
-    url = "/tasks/completed/{}/archive".format(entry_name)
+    url = f"/tasks/completed/{entry_name}/archive"
     request = rf.get(url, **HTTPS_KWARG)
     kws = {"schedule_entry_name": entry_name}
     kws.update(V1)

@@ -13,7 +13,7 @@ def test_api_docs_up_to_date(admin_client):
     docs_dir = path.dirname(settings.OPENAPI_FILE)
     if not path.exists(docs_dir):
         # Probably running in Docker container for Jenkins... test should pass
-        print("{} doesn't exist, not in src tree.".format(docs_dir))
+        print(f"{docs_dir} doesn't exist, not in src tree.")
         return True
 
     schema_url = reverse("api_schema", kwargs=V1) + "?format=openapi"

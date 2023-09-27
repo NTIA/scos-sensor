@@ -56,7 +56,7 @@ admin.site.index_title = "SCOS Sensor Configuration Portal"
 urlpatterns = [
     path("", RedirectView.as_view(url="/api/")),
     path("admin/", admin.site.urls),
-    path("api/", RedirectView.as_view(url="/api/{}/".format(DEFAULT_API_VERSION))),
+    path("api/", RedirectView.as_view(url=f"/api/{DEFAULT_API_VERSION}/")),
     re_path(API_PREFIX, include(api_urlpatterns)),
 ]
 

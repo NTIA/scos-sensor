@@ -56,4 +56,4 @@ def measurement_action_completed_callback(sender, **kwargs):
         acquisition.data_encrypted = False
     acquisition.save()
 
-    logger.debug("Saved new file at {}".format(acquisition.data.path))
+    logger.debug(f"Saved new file at {acquisition.data.path}")

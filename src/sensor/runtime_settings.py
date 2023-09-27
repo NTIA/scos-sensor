@@ -36,7 +36,10 @@ FQDN = env("FQDN", "fqdn.unset")
 
 DOCKER_TAG = env("DOCKER_TAG", default=None)
 GIT_BRANCH = env("GIT_BRANCH", default=None)
+SCOS_SENSOR_GIT_TAG = env("SCOS_SENSOR_GIT_TAG", default="Unknown")
+
 if not DOCKER_TAG or DOCKER_TAG == "latest":
+
     VERSION_STRING = GIT_BRANCH
 else:
     VERSION_STRING = DOCKER_TAG
@@ -405,3 +408,4 @@ SWITCH_CONFIGS_DIR = env.str(
 )
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
+MAX_FAILURES = env("MAX_FAILURES", default=2)
