@@ -518,7 +518,7 @@ more information about configuring Nginx.
 To disable client certificate authentication, comment out the
 following in [nginx/conf.template](nginx/conf.template):
 
-```
+```text
 ssl_client_certificate /etc/ssl/certs/ca.crt;
 ssl_verify_client on;
 ssl_ocsp on;

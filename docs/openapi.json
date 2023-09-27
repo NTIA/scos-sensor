@@ -649,13 +649,13 @@
             },
             "parameters": [
                 {
-                    "name": "format",
+                    "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
                     "type": "string"
                 },
                 {
-                    "name": "schedule_entry_name",
+                    "name": "format",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -760,12 +760,6 @@
             },
             "parameters": [
                 {
-                    "name": "format",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
                     "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
@@ -777,6 +771,12 @@
                     "description": "The id of the task relative to the result",
                     "required": true,
                     "type": "integer"
+                },
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 }
             ]
         },
@@ -812,12 +812,6 @@
             },
             "parameters": [
                 {
-                    "name": "format",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
                     "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
@@ -829,6 +823,12 @@
                     "description": "The id of the task relative to the result",
                     "required": true,
                     "type": "integer"
+                },
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 }
             ]
         },
@@ -918,13 +918,13 @@
             },
             "parameters": [
                 {
-                    "name": "format",
+                    "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
                     "type": "string"
                 },
                 {
-                    "name": "schedule_entry_name",
+                    "name": "format",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -1577,17 +1577,17 @@
             },
             "parameters": [
                 {
-                    "name": "format",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
                     "name": "id",
                     "in": "path",
                     "description": "A unique integer value identifying this user.",
                     "required": true,
                     "type": "integer"
+                },
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 }
             ]
         },
