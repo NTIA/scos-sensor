@@ -135,7 +135,7 @@ class Scheduler(threading.Thread):
             else:
                 self._finalize_task_result(task_result, started, finished, status, detail)
 
-    def _initialize_task_result(self):
+    def _initialize_task_result(self) -> TaskResult:
         """Initalize an 'in-progress' result so it exists when action runs."""
         tid = self.task.task_id
         task_result = TaskResult(schedule_entry=self.entry, task_id=tid)
