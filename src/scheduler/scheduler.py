@@ -28,7 +28,7 @@ class Scheduler(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-
+        self.task_status_lock = threading.Lock()
         self.timefn = utils.timefn
         self.delayfn = utils.delayfn
 
@@ -44,7 +44,6 @@ class Scheduler(threading.Thread):
         # Cache the currently running task state
         self.entry = None  # ScheduleEntry that created the current task
         self.task = None  # Task object describing current task
-        self.task_result = None  # TaskResult object for current task
         self.last_status = ""
         self.consecutive_failures = 0
 
@@ -126,27 +125,22 @@ class Scheduler(threading.Thread):
             entry_name = task.schedule_entry_name
             self.task = task
             self.entry = ScheduleEntry.objects.get(name=entry_name)
-            self._initialize_task_result()
+            task_result = self._initialize_task_result()
             started = timezone.now()
             status, detail = self._call_task_action()
             finished = timezone.now()
-            self._finalize_task_result(started, finished, status, detail)
-            if status == "failure" and self.last_status == "failure":
-                self.consecutive_failures = self.consecutive_failures + 1
-            elif status == "failure":
-                self.consecutive_failures = 1
+            if settings.ASYNC_CALLBACK:
+                finalize_task_thread = threading.Thread(target=self._finalize_task_result, args=(task_result, started,finished,status,detail), daemon=True)
+                finalize_task_thread.start()
             else:
-                self.consecutive_failures = 0
-            if self.consecutive_failures >= settings.MAX_FAILURES:
-                trigger_api_restart.send(sender=self.__class__)
+                self._finalize_task_result(task_result, started, finished, status, detail)
 
-            self.last_status = status
-
-    def _initialize_task_result(self):
+    def _initialize_task_result(self) -> TaskResult:
         """Initalize an 'in-progress' result so it exists when action runs."""
         tid = self.task.task_id
-        self.task_result = TaskResult(schedule_entry=self.entry, task_id=tid)
-        self.task_result.save()
+        task_result = TaskResult(schedule_entry=self.entry, task_id=tid)
+        task_result.save()
+        return task_result
 
     def _call_task_action(self):
         entry_name = self.task.schedule_entry_name
@@ -175,19 +169,20 @@ class Scheduler(threading.Thread):
 
         return status, detail[:MAX_DETAIL_LEN]
 
-    def _finalize_task_result(self, started, finished, status, detail):
-        tr = self.task_result
-        tr.started = started
-        tr.finished = finished
-        tr.duration = finished - started
-        tr.status = status
-        tr.detail = detail
+    def _finalize_task_result(self, task_result, started, finished, status, detail):
+        task_result.started = started
+        task_result.finished = finished
+        task_result.duration = finished - started
+        task_result.status = status
+        task_result.detail = detail
+        task_result.save()
+
 
         if self.entry.callback_url:
             try:
                 logger.info("Trying callback to URL: " + self.entry.callback_url)
                 context = {"request": self.entry.request}
-                result_json = TaskResultSerializer(tr, context=context).data
+                result_json = TaskResultSerializer(task_result, context=context).data
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
                 if settings.CALLBACK_SSL_VERIFICATION:
                     if settings.PATH_TO_VERIFY_CERT != "":
@@ -201,8 +196,9 @@ class Scheduler(threading.Thread):
                         data=json.dumps(result_json),
                         headers=headers,
                         verify=verify_ssl,
+                        timeout=settings.CALLBACK_TIMEOUT,
                     )
-                    self._callback_response_handler(response, tr)
+                    self._callback_response_handler(response, task_result)
                 else:
                     logger.info("Posting with token")
                     token = self.entry.owner.auth_token
@@ -212,15 +208,29 @@ class Scheduler(threading.Thread):
                         json=result_json,
                         headers=headers,
                         verify=verify_ssl,
+                        timeout=settings.CALLBACK_TIMEOUT,
                     )
                     logger.info("posted")
-                    self._callback_response_handler(response, tr)
+                    self._callback_response_handler(response, task_result)
             except Exception as err:
                 logger.error(str(err))
-                tr.status = "notification_failed"
-                tr.save()
+                task_result.status = "notification_failed"
+                task_result.save()
         else:
-            tr.save()
+            task_result.save()
+
+        with self.task_status_lock:
+            if status == "failure" and self.last_status == "failure":
+                self.consecutive_failures = self.consecutive_failures + 1
+            elif status == "failure":
+                self.consecutive_failures = 1
+            else:
+                self.consecutive_failures = 0
+            if self.consecutive_failures >= settings.MAX_FAILURES:
+                trigger_api_restart.send(sender=self.__class__)
+
+            self.last_status = status
+
 
     @staticmethod
     def _callback_response_handler(resp, task_result):
