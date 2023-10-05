@@ -145,7 +145,7 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
+ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
@@ -172,8 +172,10 @@ uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==1.26.14
-    # via requests
+urllib3==1.26.17
+    # via
+    #   -r requirements.in
+    #   requests
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

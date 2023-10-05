@@ -311,7 +311,7 @@ ruamel-yaml==0.17.21
     #   -r requirements.txt
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
+ruamel-yaml-clib==0.2.8
     # via
     #   -r requirements.txt
     #   ruamel-yaml
@@ -364,7 +364,7 @@ uritemplate==4.1.1
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.14
+urllib3==1.26.17
     # via
     #   -r requirements.txt
     #   requests
