@@ -145,13 +145,15 @@ ruamel-yaml==0.17.21
     # via
     #   drf-yasg
     #   scos-actions
+ruamel-yaml-clib==0.2.8
+    # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@6.3.3
+scos_actions @ git+https://github.com/NTIA/scos-actions@6.3.3
     # via
     #   -r requirements.in
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.3
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.3
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
@@ -171,7 +173,9 @@ uritemplate==4.1.1
     #   coreapi
     #   drf-yasg
 urllib3==1.26.17
-    # via requests
+    # via
+    #   -r requirements.in
+    #   requests
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
