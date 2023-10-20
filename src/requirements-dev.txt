@@ -321,7 +321,7 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@add-sea-action-cui-markings
+scos-actions @ git+https://github.com/NTIA/scos-actions@6.4.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
