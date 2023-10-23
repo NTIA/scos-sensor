@@ -149,9 +149,9 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@6.4.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@6.4.1
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@adjust-iq-capture-threading-lock
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.4
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
