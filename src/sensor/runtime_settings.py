@@ -39,7 +39,6 @@ GIT_BRANCH = env("GIT_BRANCH", default=None)
 SCOS_SENSOR_GIT_TAG = env("SCOS_SENSOR_GIT_TAG", default="Unknown")
 
 if not DOCKER_TAG or DOCKER_TAG == "latest":
-
     VERSION_STRING = GIT_BRANCH
 else:
     VERSION_STRING = DOCKER_TAG
