@@ -130,10 +130,16 @@ class Scheduler(threading.Thread):
             status, detail = self._call_task_action()
             finished = timezone.now()
             if settings.ASYNC_CALLBACK:
-                finalize_task_thread = threading.Thread(target=self._finalize_task_result, args=(task_result, started,finished,status,detail), daemon=True)
+                finalize_task_thread = threading.Thread(
+                    target=self._finalize_task_result,
+                    args=(task_result, started, finished, status, detail),
+                    daemon=True,
+                )
                 finalize_task_thread.start()
             else:
-                self._finalize_task_result(task_result, started, finished, status, detail)
+                self._finalize_task_result(
+                    task_result, started, finished, status, detail
+                )
 
     def _initialize_task_result(self) -> TaskResult:
         """Initalize an 'in-progress' result so it exists when action runs."""
@@ -177,10 +183,9 @@ class Scheduler(threading.Thread):
         task_result.detail = detail
         task_result.save()
 
-
         if self.entry.callback_url:
             try:
-                logger.info("Trying callback to URL: " + self.entry.callback_url)
+                logger.debug("Trying callback to URL: " + self.entry.callback_url)
                 context = {"request": self.entry.request}
                 result_json = TaskResultSerializer(task_result, context=context).data
                 verify_ssl = settings.CALLBACK_SSL_VERIFICATION
@@ -200,7 +205,7 @@ class Scheduler(threading.Thread):
                     )
                     self._callback_response_handler(response, task_result)
                 else:
-                    logger.info("Posting with token")
+                    logger.debug("Posting callback with token")
                     token = self.entry.owner.auth_token
                     headers = {"Authorization": "Token " + str(token)}
                     response = requests.post(
@@ -210,7 +215,7 @@ class Scheduler(threading.Thread):
                         verify=verify_ssl,
                         timeout=settings.CALLBACK_TIMEOUT,
                     )
-                    logger.info("posted")
+                    logger.debug("posted callback")
                     self._callback_response_handler(response, task_result)
             except Exception as err:
                 logger.error(str(err))
@@ -231,11 +236,10 @@ class Scheduler(threading.Thread):
 
             self.last_status = status
 
-
     @staticmethod
     def _callback_response_handler(resp, task_result):
         if resp.ok:
-            logger.info(f"POSTed to {resp.url}")
+            logger.debug(f"POSTed to {resp.url}")
         else:
             msg = "Failed to POST to {}: {}"
             logger.warning(msg.format(resp.url, resp.reason))
@@ -308,7 +312,7 @@ class Scheduler(threading.Thread):
     def _cancel_if_completed(self, entry):
         if not entry.has_remaining_times():
             msg = f"no times remaining in {entry.name}, removing"
-            logger.debug(msg)
+            logger.info(msg)
             self.cancel(entry)
 
     @property
