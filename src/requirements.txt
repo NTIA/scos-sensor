@@ -14,17 +14,17 @@ attrs==23.1.0
     #   referencing
 certifi==2023.7.22
     # via requests
-cffi==1.15.1
+cffi==1.16.0
     # via cryptography
-charset-normalizer==3.2.0
+charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via ray
-cryptography==41.0.4
+cryptography==41.0.5
     # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
-django==3.2.21
+django==3.2.23
     # via
     #   -r requirements.in
     #   django-session-timeout
@@ -45,7 +45,7 @@ environs==9.5.0
     #   -r requirements.in
     #   scos-actions
     #   scos-tekrsa
-filelock==3.12.4
+filelock==3.13.1
     # via
     #   -r requirements.in
     #   ray
@@ -53,7 +53,7 @@ frozenlist==1.4.0
     # via
     #   aiosignal
     #   ray
-grpcio==1.58.0
+grpcio==1.59.2
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
@@ -69,15 +69,15 @@ its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
     # via scos-actions
 jsonfield==3.1.0
     # via -r requirements.in
-jsonschema==4.19.1
+jsonschema==4.19.2
     # via ray
 jsonschema-specifications==2023.7.1
     # via jsonschema
 marshmallow==3.20.1
     # via environs
-msgpack==1.0.6
+msgpack==1.0.7
     # via ray
-msgspec==0.18.2
+msgspec==0.18.4
     # via scos-actions
 numexpr==2.8.6
     # via scos-actions
@@ -89,7 +89,7 @@ numpy==1.24.4
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
-packaging==23.1
+packaging==23.2
     # via
     #   -r requirements.in
     #   drf-yasg
@@ -97,11 +97,11 @@ packaging==23.1
     #   ray
 pkgutil-resolve-name==1.3.10
     # via jsonschema
-protobuf==4.24.3
+protobuf==4.24.4
     # via ray
-psutil==5.9.5
+psutil==5.9.6
     # via scos-actions
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.9
     # via -r requirements.in
 pycparser==2.21
     # via cffi
@@ -119,7 +119,7 @@ pyyaml==6.0.1
     #   -r requirements.in
     #   drf-yasg
     #   ray
-ray==2.7.0
+ray==2.7.1
     # via scos-actions
 referencing==0.30.2
     # via
@@ -132,10 +132,12 @@ requests==2.31.0
     #   requests-mock
 requests-mock==1.11.0
     # via -r requirements.in
-rpds-py==0.10.3
+rpds-py==0.10.6
     # via
-    #   drf-yasg
-    #   scos-actions
+    #   jsonschema
+    #   referencing
+ruamel-yaml==0.18.3
+    # via scos-actions
 ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
@@ -160,8 +162,10 @@ typing-extensions==4.8.0
     # via asgiref
 uritemplate==4.1.1
     # via drf-yasg
-urllib3==2.0.5
-    # via requests
+urllib3==2.0.7
+    # via
+    #   -r requirements.in
+    #   requests
 zipp==3.17.0
     # via importlib-resources
 
