@@ -20,7 +20,7 @@ from .serializers import LocationSerializer
 from .utils import get_location
 
 logger = logging.getLogger(__name__)
-logger.info("Loading status/views")
+logger.debug("Loading status/views")
 
 
 def serialize_location():
@@ -33,13 +33,15 @@ def serialize_location():
 
 
 def disk_usage():
+    """Return the total disk usage as a percentage."""
     usage = shutil.disk_usage("/")
     percent_used = round(100 * usage.used / usage.total)
-    logger.info(str(percent_used) + " disk used")
+    logger.debug(str(percent_used) + " disk used")
     return round(percent_used, 2)
 
 
 def get_days_up():
+    """Return the number of days SCOS has been running."""
     elapsed = datetime.datetime.utcnow() - start_time
     days = elapsed.days
     fractional_day = elapsed.seconds / (60 * 60 * 24)

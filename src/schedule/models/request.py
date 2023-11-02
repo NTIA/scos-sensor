@@ -15,7 +15,7 @@ class Request(models.Model):
 
     def build_absolute_uri(self, location=None):
         """Called from within Django reverse."""
-        scheme_host = "{}://{}".format(self.scheme, self.host)
+        scheme_host = f"{self.scheme}://{self.host}"
         return iri_to_uri(scheme_host + location)
 
     def from_drf_request(self, request, commit=True):

@@ -36,6 +36,8 @@ FQDN = env("FQDN", "fqdn.unset")
 
 DOCKER_TAG = env("DOCKER_TAG", default=None)
 GIT_BRANCH = env("GIT_BRANCH", default=None)
+SCOS_SENSOR_GIT_TAG = env("SCOS_SENSOR_GIT_TAG", default="Unknown")
+
 if not DOCKER_TAG or DOCKER_TAG == "latest":
     VERSION_STRING = GIT_BRANCH
 else:
@@ -100,6 +102,7 @@ if not IN_DOCKER or RUNNING_TESTS:
     DEBUG = True
     ALLOWED_HOSTS = []
     ENCRYPTION_KEY = Fernet.generate_key()
+    ASYNC_CALLBACK = False
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
@@ -107,6 +110,7 @@ else:
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
     ENCRYPTION_KEY = env.str("ENCRYPTION_KEY")
+    ASYNC_CALLBACK = env.bool("ASYNC_CALLBACK", default=True)
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
@@ -385,6 +389,7 @@ LOGGING = {
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # OAuth Password Flow Authentication
 CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
+CALLBACK_TIMEOUT = env.int("CALLBACK_TIMEOUT", default=3)
 CLIENT_ID = env("CLIENT_ID", default="")
 CLIENT_SECRET = env("CLIENT_SECRET", default="")
 USER_NAME = CLIENT_ID
@@ -419,3 +424,4 @@ SWITCH_CONFIGS_DIR = env.str(
 )
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
+MAX_FAILURES = env("MAX_FAILURES", default=2)

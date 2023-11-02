@@ -2,7 +2,7 @@
 
 services:
   db:
-    image: postgres:12-alpine
+    image: postgres:15-alpine
     restart: always
     environment:
       - POSTGRES_PASSWORD
@@ -44,6 +44,7 @@ services:
       - AUTHENTICATION
       - CALLBACK_AUTHENTICATION
       - CALLBACK_SSL_VERIFICATION
+      - CALLBACK_TIMEOUT
       - CLIENT_ID
       - CLIENT_SECRET
       - DEBUG
@@ -64,6 +65,7 @@ services:
       - PATH_TO_JWT_PUBLIC_KEY
       - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
+      - SCOS_SENSOR_GIT_TAG
       - SECRET_KEY
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
@@ -72,6 +74,7 @@ services:
     volumes:
       - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
+      - ${REPO_ROOT}/files:/files:rw
     tmpfs:
       - /scos_tmp
     cap_add:

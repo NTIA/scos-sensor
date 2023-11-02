@@ -4,27 +4,37 @@
 #
 #    pip-compile requirements-dev.in
 #
+aiohttp==3.8.5
+    # via
+    #   -r requirements-dev.in
+    #   aiohttp-cors
+    #   ray
+aiohttp-cors==0.7.0
+    # via ray
 aiosignal==1.3.1
     # via
     #   -r requirements.txt
+    #   aiohttp
     #   ray
 asgiref==3.6.0
     # via
     #   -r requirements.txt
     #   django
+async-timeout==4.0.2
+    # via aiohttp
 attrs==22.2.0
     # via
     #   -r requirements.txt
+    #   aiohttp
     #   jsonschema
     #   pytest
-    #   ray
-bcrypt==4.0.1
-    # via
-    #   -r requirements.txt
-    #   paramiko
+blessed==1.20.0
+    # via gpustat
 cachetools==5.3.0
-    # via tox
-certifi==2022.12.7
+    # via
+    #   google-auth
+    #   tox
+certifi==2023.7.22
     # via
     #   -r requirements.txt
     #   requests
@@ -32,7 +42,6 @@ cffi==1.15.1
     # via
     #   -r requirements.txt
     #   cryptography
-    #   pynacl
 cfgv==3.3.1
     # via pre-commit
 chardet==5.1.0
@@ -40,6 +49,7 @@ chardet==5.1.0
 charset-normalizer==3.0.1
     # via
     #   -r requirements.txt
+    #   aiohttp
     #   requests
 click==8.1.3
     # via
@@ -47,6 +57,8 @@ click==8.1.3
     #   ray
 colorama==0.4.6
     # via tox
+colorful==0.5.5
+    # via ray
 coreapi==2.3.3
     # via
     #   -r requirements.txt
@@ -57,24 +69,18 @@ coreschema==0.0.4
     #   coreapi
     #   drf-yasg
 coverage[toml]==7.2.1
-    # via pytest-cov
-cryptography==39.0.1
     # via
-    #   -r requirements.txt
-    #   paramiko
+    #   coverage
+    #   pytest-cov
+cryptography==41.0.4
+    # via -r requirements.txt
 defusedxml==0.7.1
     # via
     #   -r requirements.txt
     #   its-preselector
 distlib==0.3.6
-    # via
-    #   -r requirements.txt
-    #   virtualenv
-distro==1.8.0
-    # via
-    #   -r requirements.txt
-    #   docker-compose
-django==3.2.18
+    # via virtualenv
+django==3.2.20
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -88,20 +94,6 @@ djangorestframework==3.14.0
     # via
     #   -r requirements.txt
     #   drf-yasg
-docker[ssh]==6.0.1
-    # via
-    #   -r requirements.txt
-    #   docker-compose
-docker-compose==1.29.2
-    # via -r requirements.txt
-dockerpty==0.4.1
-    # via
-    #   -r requirements.txt
-    #   docker-compose
-docopt==0.6.2
-    # via
-    #   -r requirements.txt
-    #   docker-compose
 drf-yasg==1.21.5
     # via -r requirements.txt
 environs==9.5.0
@@ -109,7 +101,7 @@ environs==9.5.0
     #   -r requirements.txt
     #   scos-actions
     #   scos-tekrsa
-exceptiongroup==1.1.0
+exceptiongroup==1.1.3
     # via pytest
 filelock==3.9.0
     # via
@@ -120,8 +112,17 @@ filelock==3.9.0
 frozenlist==1.3.3
     # via
     #   -r requirements.txt
+    #   aiohttp
     #   aiosignal
     #   ray
+google-api-core==2.11.0
+    # via opencensus
+google-auth==2.17.3
+    # via google-api-core
+googleapis-common-protos==1.59.0
+    # via google-api-core
+gpustat==1.1
+    # via ray
 grpcio==1.51.3
     # via
     #   -r requirements.txt
@@ -134,13 +135,14 @@ idna==3.4
     # via
     #   -r requirements.txt
     #   requests
+    #   yarl
 inflection==0.5.1
     # via
     #   -r requirements.txt
     #   drf-yasg
 iniconfig==2.0.0
     # via pytest
-its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
+its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -157,7 +159,6 @@ jsonfield==3.1.0
 jsonschema==3.2.0
     # via
     #   -r requirements.txt
-    #   docker-compose
     #   ray
 markupsafe==2.1.2
     # via
@@ -167,10 +168,18 @@ marshmallow==3.19.0
     # via
     #   -r requirements.txt
     #   environs
-msgpack==1.0.4
+msgpack==1.0.5
     # via
     #   -r requirements.txt
     #   ray
+msgspec==0.16.0
+    # via
+    #   -r requirements.txt
+    #   scos-actions
+multidict==6.0.4
+    # via
+    #   aiohttp
+    #   yarl
 nodeenv==1.7.0
     # via pre-commit
 numexpr==2.8.4
@@ -186,54 +195,66 @@ numpy==1.24.2
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
+nvidia-ml-py==11.525.112
+    # via gpustat
 oauthlib==3.2.2
     # via
     #   -r requirements.txt
     #   requests-oauthlib
+opencensus==0.11.2
+    # via ray
+opencensus-context==0.1.3
+    # via opencensus
 packaging==23.0
     # via
     #   -r requirements.txt
-    #   docker
     #   drf-yasg
     #   marshmallow
     #   pyproject-api
     #   pytest
+    #   ray
     #   tox
-paramiko==3.0.0
-    # via
-    #   -r requirements.txt
-    #   docker
 platformdirs==3.0.0
     # via
-    #   -r requirements.txt
     #   tox
     #   virtualenv
 pluggy==1.0.0
     # via
     #   pytest
     #   tox
-pre-commit==2.21.0
+pre-commit==3.3.3
     # via -r requirements-dev.in
-protobuf==4.22.0
+prometheus-client==0.13.1
+    # via ray
+protobuf==4.23.3
     # via
     #   -r requirements.txt
+    #   google-api-core
+    #   googleapis-common-protos
     #   ray
-psutil==5.9.4
+psutil==5.9.5
     # via
     #   -r requirements.txt
+    #   gpustat
     #   scos-actions
 psycopg2-binary==2.9.5
     # via -r requirements.txt
+py-spy==0.3.14
+    # via ray
+pyasn1==0.5.0
+    # via
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.3.0
+    # via google-auth
 pycparser==2.21
     # via
     #   -r requirements.txt
     #   cffi
+pydantic==1.10.7
+    # via ray
 pyjwt==2.6.0
     # via -r requirements.txt
-pynacl==1.5.0
-    # via
-    #   -r requirements.txt
-    #   paramiko
 pyproject-api==1.5.0
     # via tox
 pyrsistent==0.19.3
@@ -255,7 +276,6 @@ python-dateutil==2.8.2
 python-dotenv==0.21.1
     # via
     #   -r requirements.txt
-    #   docker-compose
     #   environs
 pytz==2022.7.1
     # via
@@ -263,22 +283,21 @@ pytz==2022.7.1
     #   django
     #   djangorestframework
     #   drf-yasg
-pyyaml==5.4.1
+pyyaml==6.0.1
     # via
     #   -r requirements.txt
-    #   docker-compose
     #   pre-commit
     #   ray
-ray==2.3.0
+ray[default]==2.6.3
     # via
+    #   -r requirements-dev.in
     #   -r requirements.txt
     #   scos-actions
-requests==2.28.2
+requests==2.31.0
     # via
     #   -r requirements.txt
     #   coreapi
-    #   docker
-    #   docker-compose
+    #   google-api-core
     #   its-preselector
     #   ray
     #   requests-mock
@@ -287,12 +306,14 @@ requests-mock==1.10.0
     # via -r requirements.txt
 requests-oauthlib==1.3.1
     # via -r requirements.txt
+rsa==4.9
+    # via google-auth
 ruamel-yaml==0.17.21
     # via
     #   -r requirements.txt
     #   drf-yasg
     #   scos-actions
-ruamel-yaml-clib==0.2.7
+ruamel-yaml-clib==0.2.8
     # via
     #   -r requirements.txt
     #   ruamel-yaml
@@ -300,11 +321,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@fix_host_reboot_error
+scos-actions @ git+https://github.com/NTIA/scos-actions@6.4.2
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@update_scos_actions_version
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.5
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -313,14 +334,16 @@ sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
 six==1.16.0
     # via
     #   -r requirements.txt
+    #   blessed
     #   django-session-timeout
-    #   dockerpty
+    #   google-auth
     #   jsonschema
     #   python-dateutil
     #   requests-mock
     #   sigmf
-    #   websocket-client
-sqlparse==0.4.3
+smart-open==6.3.0
+    # via ray
+sqlparse==0.4.4
     # via
     #   -r requirements.txt
     #   django
@@ -328,10 +351,6 @@ tekrsa-api-wrap==1.3.2
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-texttable==1.6.7
-    # via
-    #   -r requirements.txt
-    #   docker-compose
 tomli==2.0.1
     # via
     #   coverage
@@ -340,27 +359,26 @@ tomli==2.0.1
     #   tox
 tox==4.4.6
     # via -r requirements-dev.in
+typing-extensions==4.5.0
+    # via pydantic
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.14
+urllib3==1.26.18
     # via
     #   -r requirements.txt
-    #   docker
     #   requests
 virtualenv==20.20.0
     # via
-    #   -r requirements.txt
     #   pre-commit
     #   ray
     #   tox
-websocket-client==0.59.0
-    # via
-    #   -r requirements.txt
-    #   docker
-    #   docker-compose
+wcwidth==0.2.6
+    # via blessed
+yarl==1.9.2
+    # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

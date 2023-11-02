@@ -3,7 +3,7 @@ default_language_version:
   python: python3.8
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-ast
         types: [file, python]
@@ -19,10 +19,10 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.15.0
     hooks:
       - id: pyupgrade
-        args: ["--py3-plus"]
+        args: ["--py38-plus"]
   - repo: https://github.com/pycqa/isort
     rev: 5.12.0
     hooks:
@@ -31,12 +31,12 @@ repos:
         types: [file, python]
         args: ["--profile", "black", "--filter-files", "--gitignore"]
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 23.10.1
     hooks:
       - id: black
         types: [file, python]
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.33.0
+    rev: v0.37.0
     hooks:
       - id: markdownlint
         types: [file, markdown]

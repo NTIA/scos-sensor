@@ -17,5 +17,5 @@ class Command(BaseCommand):
             self.stdout.write(key)
         else:
             self.stdout.write(
-                "No user with username={} found in the database.".format(username)
+                f"No user with username={username} found in the database."
             )

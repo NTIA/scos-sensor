@@ -1,8 +1,7 @@
-cryptography>=39.0.1
-django>=3.2.18, <4.0
+cryptography>=41.0.4
+django>=3.2.20, <4.0
 djangorestframework>=3.0, <4.0
 django-session-timeout>=0.1, <1.0
-docker-compose>=1.0
 drf-yasg>=1.0, <2.0
 environs>=9.0, <10.0
 filelock>=3.9, <4.0
@@ -14,5 +13,10 @@ psycopg2-binary>=2.0, <3.0
 pyjwt>=2.4.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_actions @ git+https://github.com/NTIA/scos-actions@fix_host_reboot_error
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@update_scos_actions_version
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.5
+
+# The following are sub-dependencies for which SCOS Sensor enforces a
+# higher minimum patch version than the dependencies which require them.
+# This is done to ensure the inclusion of specific security patches.
+pyyaml>=5.4.0         # CVE-2020-14343
+urllib3>=1.26.18      # CVE-2023-45803
