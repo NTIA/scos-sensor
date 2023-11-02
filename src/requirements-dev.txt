@@ -69,9 +69,7 @@ coreschema==0.0.4
     #   coreapi
     #   drf-yasg
 coverage[toml]==7.2.1
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 cryptography==41.0.4
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -123,7 +121,7 @@ googleapis-common-protos==1.59.0
     # via google-api-core
 gpustat==1.1
     # via ray
-grpcio==1.51.3
+grpcio==1.59.2
     # via
     #   -r requirements.txt
     #   ray
