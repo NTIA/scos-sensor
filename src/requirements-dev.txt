@@ -80,7 +80,7 @@ defusedxml==0.7.1
     #   its-preselector
 distlib==0.3.6
     # via virtualenv
-django==3.2.20
+django==3.2.23
     # via
     #   -r requirements.txt
     #   django-session-timeout
