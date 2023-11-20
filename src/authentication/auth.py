@@ -40,10 +40,10 @@ class CertificateAuthentication(authentication.BaseAuthentication):
 
 
 def get_cn_from_dn(cert_dn):
-    p = re.compile(r"CN=(.*?)(?:,|\+|$)")
+    p = re.compile(r"CN=[a-zA-Z0-9\s.]*")
     match = p.search(cert_dn)
     if not match:
         raise Exception("No CN found in certificate!")
-    uid_raw = match.group()
-    uid = uid_raw.split("=")[1].rstrip(",")
-    return uid
+    cn = match.group()
+    cn = cn[3:]
+    return cn

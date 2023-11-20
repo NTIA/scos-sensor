@@ -179,3 +179,23 @@ def test_empty_dn_unauthorized(live_server, admin_user):
     }
     response = client.get(f"{live_server.url}", headers=headers)
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_dn_with_uid(live_server, admin_user):
+    client = RequestsClient()
+    headers = {
+        "X-Ssl-Client-Dn": f"C=TC,ST=test_state,L=test_locality,O=test_org,OU=test_ou,CN={admin_user.username}+UID=11111",
+    }
+    response = client.get(f"{live_server.url}", headers=headers)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_dn_cn_space_reverse_order(live_server, alt_admin_user):
+    client = RequestsClient()
+    headers = {
+        "X-Ssl-Client-Dn": f"CN={alt_admin_user.username}+UID=111111,OU=test_ou,O=test_org,L=test_locality,ST=test_state,C=TC",
+    }
+    response = client.get(f"{live_server.url}", headers=headers)
+    assert response.status_code == 200

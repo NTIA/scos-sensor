@@ -197,10 +197,13 @@ actions.
 ## Overview of scos-sensor Repo Structure
 
 - configs: This folder is used to store the sensor_definition.json file.
+  - certs: CA, server, and client certificates.
 - docker: Contains the docker files used by scos-sensor.
 - docs: Documentation including the [documentation hosted on GitHub pages](
   <https://ntia.github.io/scos-sensor/>) generated from the OpenAPI specification.
+- drivers: Driver files for signal anaylzers.
 - entrypoints: Docker entrypoint scripts which are executed when starting a container.
+- files: Folder where task results are stored.
 - gunicorn: Gunicorn configuration file.
 - nginx: Nginx configuration template and SSL certificates.
 - scripts: Various utility scripts.
@@ -208,6 +211,7 @@ actions.
   - actions: Code to discover actions in plugins and to perform a simple logger action.
   - authentication: Code related to user authentication.
   - capabilities: Code used to generate capabilities endpoint.
+  - constants: Constants shared by the other source code folders.
   - handlers: Code to handle signals received from actions.
   - schedule: Schedule API endpoint for scheduling actions.
   - scheduler: Scheduler responsible for executing actions.
@@ -217,9 +221,13 @@ actions.
   - status: Status endpoint.
   - tasks: Tasks endpoint used to display upcoming and completed tasks.
   - templates: HTML templates used by the browsable API.
+  - test_utils: Utility code used in tests.
+  - utils: Utility code shared by the other source code folders.
   - conftest.py: Used to configure pytest fixtures.
   - manage.py: Django’s command line tool for administrative tasks.
-  - requirements.txt and requirements-dev.txt: Python dependencies.
+  - requirements.in and requirements-dev.in: Direct Python dependencies.
+  - requirements.txt and requirements-dev.txt: Python dependencies including transitive
+    dependencies.
   - tox.ini: Used to configure tox.
 - docker-compose.yml: Used by Docker Compose to create services from containers. This
   is needed to run scos-sensor.
@@ -299,11 +307,19 @@ environment (env) file is created from the env.template file. These settings can
 be set in the environment file or set directly in docker-compose.yml. Here are the
 settings in the environment file:
 
+- ADDITIONAL_USER_NAMES: Comma separated list of additional admin usernames.
+- ADDITIONAL_USER_PASSWORD: Password for additional admin users.
+- ADMIN_NAME: Username for the admin user.
 - ADMIN_EMAIL: Email used to generate admin user. Change in production.
 - ADMIN_PASSWORD: Password used to generate admin user. Change in production.
+- AUTHENTICATION: Authentication method used for scos-sensor. Supports `TOKEN` or
+  `CERT`.
 - BASE_IMAGE: Base docker image used to build the API container.
+- CALLBACK_AUTHENTICATION: Sets how to authenticate to the callback URL. Supports
+  `TOKEN` or `CERT`.
 - CALLBACK_SSL_VERIFICATION: Set to “true” in production environment. If false, the SSL
   certificate validation will be ignored when posting results to the callback URL.
+- CALLBACK_TIMEOUT: The timeout for the requests sent to the callback URL.
 - DEBUG: Django debug mode. Set to False in production.
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
@@ -321,9 +337,14 @@ settings in the environment file:
   results. Defaults to 85%. This disk usage detected by scos-sensor (using the Python
   `shutil.disk_usage` function) may not match the usage reported by the Linux `df`
   command.
+- PATH_TO_CLIENT_CERT: Path to file containing certificate and private key used as
+  client certificate when CALLBACK_AUTHENTICATION is `CERT`.
+- PATH_TO_VERIFY_CERT: Trusted CA certificate to verify callback URL server
+  certificate.
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
+- SCOS_SENSOR_GIT_TAG: The scos-sensor branch name.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
   unpredictable value. See
   <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
@@ -332,6 +353,8 @@ settings in the environment file:
   scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
   certificate in production.
+- SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
+  certificate(s) when authentication is set to CERT.
 
 ### Sensor Definition File
 
@@ -388,7 +411,8 @@ To enable Django Rest Framework token and session authentication, make sure
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
-token) matches a user's token.
+token) matches a user's token. Login session authentication with username and password
+is used for the browsable API.
 
 #### Certificate  Authentication
 
@@ -413,16 +437,16 @@ Below instructions adapted from
 
 This is the SSL certificate used for the scos-sensor web server and is always required.
 
-To be able to sign server-side and client-side certificates, we need to create our own
-self-signed root CA certificate first. The command will prompt you to enter a
-password and the values for the CA subject.
+To be able to sign server-side and client-side certificates in this example, we need to
+create our own self-signed root CA certificate first. The command will prompt you to
+enter a password and the values for the CA subject.
 
 ```bash
 openssl req -x509 -sha512 -days 365 -newkey rsa:4096 -keyout scostestca.key -out scostestca.pem
 ```
 
-Generate a host certificate signing request. Replace the values in square brackets in the
-subject for the server certificate.
+Generate a host certificate signing request. Replace the values in square brackets in
+the subject for the server certificate.
 
 ```bash
 openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "/C=[2 letter country code]/ST=[state or province]/L=[locality]/O=[organization]/OU=[organizational unit]/CN=[common name]"
@@ -430,20 +454,20 @@ openssl req -new -newkey rsa:4096 -keyout sensor01.key -out sensor01.csr -subj "
 
 Before we proceed with openssl, we need to create a configuration file -- sensor01.ext.
 It'll store some additional parameters needed when signing the certificate. Adjust the
-settings, especially DNS names and IP addresses, in the below example for your sensor:
+settings, especially DNS names, in the below example for your sensor. For more
+information and to customize your certificate, see the X.509 standard
+[here](https://www.rfc-editor.org/rfc/rfc5280).
 
 ```text
-authorityKeyIdentifier=keyid,issuer:always
+authorityKeyIdentifier=keyid
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 subjectKeyIdentifier = hash
 keyUsage = critical, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth, clientAuth
+extendedKeyUsage = serverAuth, # add , clientAuth to use as client SSL cert (2-way SSL)
 [alt_names]
-DNS.1 = sensor01.domain
-DNS.2 = localhost
-IP.1 = xxx.xxx.xxx.xxx
-IP.2 = 127.0.0.1
+DNS.1 = localhost
+# Add additional DNS names as needed, e.g. DNS.2, DNS.3, etc
 ```
 
 Sign the host certificate.
@@ -467,7 +491,8 @@ cat sensor01_decrypted.key sensor01.pem > sensor01_combined.pem
 ##### Client Certificate
 
 This certificate is required for using the sensor with mutual TLS certificate
-authentication.
+authentication (2 way SSL, AUTHENTICATION=CERT). This example uses the same self-signed
+CA used for creating the example scos-sensor server certificate.
 
 Replace the brackets with the information specific to your user and organization.
 
@@ -480,8 +505,8 @@ Create client.ext with the following:
 ```text
 basicConstraints = CA:FALSE
 subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer
-keyUsage = digitalSignature
+authorityKeyIdentifier = keyid
+keyUsage = critical, digitalSignature
 extendedKeyUsage = clientAuth
 ```
 
@@ -539,20 +564,21 @@ mutual TLS, also copy the CA certificate to the same directory. Then, set
 If you are using client certificates, use client.pfx to connect to the browsable API by
 importing this certificate into your browser.
 
-For callback functionality with a server that uses certificate authentication, set
-`PATH_TO_CLIENT_CERT` and `PATH_TO_VERIFY_CERT`, both relative to configs/certs.
-Depending on the configuration of the callback URL server and the authorization server,
-the sensor server certificate could be used as a client certificate by setting
-`PATH_TO_CLIENT_CERT` to the path of sensor01_combined.pem relative to configs/certs.
-Also the CA used to verify the client certificate could potentially be used to verify
-the callback URL server certificate by setting `PATH_TO_VERIFY_CERT` to the same file
-as used for `SSL_CA_PATH` (scostestca.pem).
-
 #### Permissions and Users
 
 The API requires the user to be a superuser. New users created using the
 API initially do not have superuser access. However, an admin can mark a user as a
 superuser in the Sensor Configuration Portal.
+
+When scos-sensor starts, an admin user is created using the ADMIN_NAME, ADMIN_EMAIL and
+ADMIN_PASSWORD environment variables. The ADMIN_NAME is the username for the admin
+user. Additional admin users can be created using the ADDITIONAL_USER_NAMES and
+ADDITIONAL_USER_PASSWORD environment variables. ADDITIONAL_USER_NAMES is a comma
+separated list. ADDITIONAL_USER_PASSWORD is a single password used for each additional
+admin user. If ADDITIONAL_USER_PASSWORD is not specified, the additional users will
+be created with an unusable password, which is sufficient if only using certificates
+or tokens to authenticate. However, a password is required to access the Sensor
+Configuration Portal.
 
 ### Callback URL Authentication
 
@@ -577,7 +603,7 @@ used.
 
 #### Certificate
 
-Certificate authetnication (mutual TLS) is supported for callback URL authentication.
+Certificate authentication (mutual TLS) is supported for callback URL authentication.
 The following settings in the environment file are used to configure certificate
 authentication for the callback URL.
 
@@ -589,6 +615,19 @@ authentication for the callback URL.
    is set to true, [standard trusted CAs](
     https://requests.readthedocs.io/en/master/user/advanced/#ca-certificates) will be
    used.
+
+Set `PATH_TO_CLIENT_CERT` and `PATH_TO_VERIFY_CERT` relative to configs/certs.
+Depending on the configuration of the callback URL server, the scos-sensor server
+certificate could be used as a client certificate (if created with clientAuth extended
+key usage) by setting `PATH_TO_CLIENT_CERT` to the same value as `SSL_CERT_PATH`
+if the private key is bundled with the certificate. Also
+the CA used to verify the scos-sensor client certificate(s) could potentially be used
+to verify the callback URL server certificate by setting `PATH_TO_VERIFY_CERT` to the
+same file as used for `SSL_CA_PATH`. This would require the callback URL server
+certificate to be issued by the same CA as the scos-sensor client certficate(s) or have
+the callback URL server's CA cert bundled with the scos-sensor client CA cert. Make
+sure to consider the security implications of these configurations and settings,
+especially using the same files for multiple settings.
 
 ### Data File Encryption
 
