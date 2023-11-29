@@ -65,7 +65,7 @@ idna==3.4
     # via requests
 inflection==0.5.1
     # via drf-yasg
-its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
+its-preselector @ git+https://github.com/NTIA/Preselector@analog_inputs
     # via scos-actions
 itypes==1.2.0
     # via coreapi
@@ -149,7 +149,7 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@6.4.2
+scos-actions @ git+https://github.com/NTIA/scos-actions@switch_diagnostics
     # via scos-tekrsa
 scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.1.5
     # via -r requirements.in
