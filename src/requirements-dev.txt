@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.8.5
+aiohttp==3.9.0
     # via
     #   -r requirements-dev.in
     #   aiohttp-cors
@@ -49,7 +49,6 @@ chardet==5.1.0
 charset-normalizer==3.0.1
     # via
     #   -r requirements.txt
-    #   aiohttp
     #   requests
 click==8.1.3
     # via
