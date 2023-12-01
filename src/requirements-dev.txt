@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.8.6
+aiohttp==3.9.0
     # via
     #   -r requirements-dev.in
     #   aiohttp-cors
@@ -49,7 +49,6 @@ chardet==5.2.0
 charset-normalizer==3.3.2
     # via
     #   -r requirements.txt
-    #   aiohttp
     #   requests
 click==8.1.7
     # via
@@ -59,9 +58,20 @@ colorama==0.4.6
     # via tox
 colorful==0.5.5
     # via ray
+coreapi==2.3.3
+    # via
+    #   -r requirements.txt
+    #   drf-yasg
+coreschema==0.0.4
+    # via
+    #   -r requirements.txt
+    #   coreapi
+    #   drf-yasg
 coverage[toml]==7.3.2
-    # via pytest-cov
-cryptography==41.0.5
+    # via
+    #   coverage
+    #   pytest-cov
+cryptography==41.0.6
     # via -r requirements.txt
 defusedxml==0.7.1
     # via

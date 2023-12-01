@@ -20,7 +20,13 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via ray
-cryptography==41.0.5
+coreapi==2.3.3
+    # via drf-yasg
+coreschema==0.0.4
+    # via
+    #   coreapi
+    #   drf-yasg
+cryptography==41.0.6
     # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
