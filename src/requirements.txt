@@ -12,7 +12,7 @@ attrs==23.1.0
     # via
     #   jsonschema
     #   referencing
-certifi==2023.7.22
+certifi==2023.11.17
     # via requests
 cffi==1.16.0
     # via cryptography
@@ -20,13 +20,7 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via ray
-coreapi==2.3.3
-    # via drf-yasg
-coreschema==0.0.4
-    # via
-    #   coreapi
-    #   drf-yasg
-cryptography==41.0.6
+cryptography==41.0.7
     # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
@@ -59,13 +53,13 @@ frozenlist==1.4.0
     # via
     #   aiosignal
     #   ray
-grpcio==1.59.2
+grpcio==1.59.3
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
-idna==3.4
+idna==3.6
     # via requests
-importlib-resources==6.1.0
+importlib-resources==6.1.1
     # via
     #   jsonschema
     #   jsonschema-specifications
@@ -75,9 +69,9 @@ its-preselector @ git+https://github.com/NTIA/Preselector@3.0.2
     # via scos-actions
 jsonfield==3.1.0
     # via -r requirements.in
-jsonschema==4.19.2
+jsonschema==4.20.0
     # via ray
-jsonschema-specifications==2023.7.1
+jsonschema-specifications==2023.11.2
     # via jsonschema
 marshmallow==3.20.1
     # via environs
@@ -103,7 +97,7 @@ packaging==23.2
     #   ray
 pkgutil-resolve-name==1.3.10
     # via jsonschema
-protobuf==4.24.4
+protobuf==4.25.1
     # via ray
 psutil==5.9.6
     # via scos-actions
@@ -125,9 +119,9 @@ pyyaml==6.0.1
     #   -r requirements.in
     #   drf-yasg
     #   ray
-ray==2.7.1
+ray==2.8.1
     # via scos-actions
-referencing==0.30.2
+referencing==0.31.1
     # via
     #   jsonschema
     #   jsonschema-specifications
@@ -138,11 +132,11 @@ requests==2.31.0
     #   requests-mock
 requests-mock==1.11.0
     # via -r requirements.in
-rpds-py==0.10.6
+rpds-py==0.13.2
     # via
     #   jsonschema
     #   referencing
-ruamel-yaml==0.18.3
+ruamel-yaml==0.18.5
     # via scos-actions
 ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
@@ -168,7 +162,7 @@ typing-extensions==4.8.0
     # via asgiref
 uritemplate==4.1.1
     # via drf-yasg
-urllib3==2.0.7
+urllib3==2.1.0
     # via
     #   -r requirements.in
     #   requests
