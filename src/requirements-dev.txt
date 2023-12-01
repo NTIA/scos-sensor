@@ -268,7 +268,7 @@ pyyaml==6.0.1
     #   drf-yasg
     #   pre-commit
     #   ray
-ray[default]==2.8.1
+ray[default]==2.6.3
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt

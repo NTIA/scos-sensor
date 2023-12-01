@@ -54,7 +54,9 @@ frozenlist==1.4.0
     #   aiosignal
     #   ray
 grpcio==1.59.3
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   ray
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.6
@@ -119,7 +121,7 @@ pyyaml==6.0.1
     #   -r requirements.in
     #   drf-yasg
     #   ray
-ray==2.8.1
+ray==2.6.3
     # via scos-actions
 referencing==0.31.1
     # via
