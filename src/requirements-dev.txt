@@ -330,11 +330,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@7.0.1
+scos-actions @ git+https://github.com/NTIA/scos-actions@empty_calibration_params
     # via
     #   -r requirements.txt
     #   scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@scos-actions-7.0.0
+scos-usrp @ git+https://github.com/NTIA/scos-usrp@empty_calibration_params
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
