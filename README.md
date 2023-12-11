@@ -368,6 +368,173 @@ specific to the sensor you are using.
 }
 ```
 
+### Sensor Calibration File
+By default, scos-sensor will use `configs/sensor_calibration.json` as the sensor calibration file.
+Sensor calibration files allow scos-sensor to apply a gain based on a laboratory calibration of
+the signal analyzer and may also contain other useful metadata that characterizes the sensor performance. 
+The default calibration file is shown below:  
+```json
+{
+  "calibration_data":{
+    "datetime": "1970-01-01T00:00:00.000000Z",
+    "gain": 0,
+    "noise_figure": null,
+    "1db_compression_point": null,
+    "enbw": null,
+    "temperature": 26.85
+  },
+  "last_calibration_datetime": "1970-01-01T00:00:00.000000Z",
+  "calibration_parameters": [],
+  "clock_rate_lookup_by_sample_rate": [
+  ],
+  "sensor_uid": "DEFAULT CALIBRATION",
+  "calibration_reference": "noise source output"
+}
+```
+The `calibration_parameters` key lists the parameters that will be used to obtain
+the calibration data. In the case of the default calibration, there are no
+`calibration_parameters` so the calibration data is found directly within the 
+`calibration_data` element and by default scos-sensor will not apply any additional
+gain. Typically, a sensor would be calibrated at particular
+sensing parameters. For example, the calibration below provides an example of a 
+sensor calibrated at a sample rate of 14000000.0 at several frequencies with a 
+signal analyzer reference level setting of -25. 
+```json
+{
+	"calibration_parameters": [
+		"sample_rate",
+		"frequency",
+		"reference_level"
+	],
+	"calibration_datetime": "2020-11-18T23:13:09.156274Z",
+	"calibration_data": {
+		"14000000.0":{
+			"3555000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3565000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3575000000":{
+				
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3585000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3595000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3605000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3615000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3625000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3635000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3645000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3655000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3665000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3675000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3685000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			},
+			"3695000000":{
+				"-25":{
+					"noise_figure": 46.03993010994134,
+					"enbw": 15723428.858731967,
+					"gain": 0.40803345928877379
+				}
+			}
+		}
+	},
+	"clock_rate_lookup_by_sample_rate": [
+		{
+			"sample_rate": 3500000.0,
+			"clock_frequency": 3500000.0
+		},
+		{
+			"sample_rate": 28000000.0,
+			"clock_frequency": 28000000.0
+		}
+	],
+	"sensor_uid": "US55120115"
+}
+
+```
+When an action is run with the above calibration, scos will expect the action to have 
+a sample_rate, frequency, and reference_level specified in the action config. The values
+specified for these parameters will then be used to retrieve the calibration data. 
+
 ## Security
 
 This section covers authentication, permissions, and certificates used to access the
