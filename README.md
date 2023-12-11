@@ -371,8 +371,9 @@ specific to the sensor you are using.
 ### Sensor Calibration File
 By default, scos-sensor will use `configs/sensor_calibration.json` as the sensor calibration file.
 Sensor calibration files allow scos-sensor to apply a gain based on a laboratory calibration of
-the signal analyzer and may also contain other useful metadata that characterizes the sensor performance. 
-The default calibration file is shown below:  
+the sensor and may also contain other useful metadata that characterizes the sensor performance. For additional
+information on the calibration data, see the [NTIA-Sensor SigMF Calibration Object](https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#08-the-calibration-object).
+The default calibration file is shown below:
 ```json
 {
   "calibration_data":{
@@ -393,12 +394,12 @@ The default calibration file is shown below:
 ```
 The `calibration_parameters` key lists the parameters that will be used to obtain
 the calibration data. In the case of the default calibration, there are no
-`calibration_parameters` so the calibration data is found directly within the 
+`calibration_parameters` so the calibration data is found directly within the
 `calibration_data` element and by default scos-sensor will not apply any additional
 gain. Typically, a sensor would be calibrated at particular
-sensing parameters. For example, the calibration below provides an example of a 
-sensor calibrated at a sample rate of 14000000.0 at several frequencies with a 
-signal analyzer reference level setting of -25. 
+sensing parameters. For example, the calibration below provides an example of a
+sensor calibrated at a sample rate of 14000000.0 at several frequencies with a
+signal analyzer reference level setting of -25.
 ```json
 {
 	"calibration_parameters": [
@@ -424,7 +425,7 @@ signal analyzer reference level setting of -25.
 				}
 			},
 			"3575000000":{
-				
+
 				"-25":{
 					"noise_figure": 46.03993010994134,
 					"enbw": 15723428.858731967,
@@ -531,9 +532,9 @@ signal analyzer reference level setting of -25.
 }
 
 ```
-When an action is run with the above calibration, scos will expect the action to have 
+When an action is run with the above calibration, scos will expect the action to have
 a sample_rate, frequency, and reference_level specified in the action config. The values
-specified for these parameters will then be used to retrieve the calibration data. 
+specified for these parameters will then be used to retrieve the calibration data.
 
 ## Security
 
