@@ -18,15 +18,8 @@ charset-normalizer==3.0.1
     # via requests
 click==8.1.3
     # via ray
-<<<<<<< HEAD
 cryptography==41.0.6
     # via -r requirements.in
-=======
-cryptography==39.0.1
-    # via
-    #   -r requirements.in
-    #   paramiko
->>>>>>> Use django-rest-knox for token authentication
 defusedxml==0.7.1
     # via its-preselector
 django==3.2.23
@@ -45,7 +38,9 @@ djangorestframework==3.14.0
     #   -r requirements.in
     #   drf-spectacular
 drf-spectacular[sidecar]==0.26.2
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   drf-spectacular
 drf-spectacular-sidecar==2023.5.1
     # via drf-spectacular
 environs==9.5.0
@@ -122,8 +117,9 @@ pytz==2022.7.1
     # via
     #   django
     #   djangorestframework
-pyyaml==6.0.1
+pyyaml==5.4.1
     # via
+    #   -r requirements.in
     #   drf-spectacular
     #   ray
 ray==2.6.3

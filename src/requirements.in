@@ -2,7 +2,6 @@ cryptography>=41.0.6
 django>=3.2.23, <4.0
 djangorestframework>=3.0, <4.0
 django-session-timeout>=0.1, <1.0
-docker-compose>=1.0
 drf-spectacular[sidecar]>=0.26.2, <0.27.0
 environs>=9.0, <10.0
 filelock>=3.9, <4.0

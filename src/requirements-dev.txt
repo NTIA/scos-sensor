@@ -60,15 +60,10 @@ colorful==0.5.5
     # via ray
 coverage[toml]==7.2.1
     # via
-<<<<<<< HEAD
     #   coverage
     #   pytest-cov
 cryptography==41.0.6
     # via -r requirements.txt
-=======
-    #   -r requirements.txt
-    #   paramiko
->>>>>>> Use django-rest-knox for token authentication
 defusedxml==0.7.1
     # via
     #   -r requirements.txt
@@ -91,7 +86,9 @@ djangorestframework==3.14.0
     #   -r requirements.txt
     #   drf-spectacular
 drf-spectacular[sidecar]==0.26.2
-    # via -r requirements.txt
+    # via
+    #   -r requirements.txt
+    #   drf-spectacular
 drf-spectacular-sidecar==2023.5.1
     # via
     #   -r requirements.txt
@@ -270,10 +267,9 @@ pytz==2022.7.1
     #   -r requirements.txt
     #   django
     #   djangorestframework
-pyyaml==6.0.1
+pyyaml==5.4.1
     # via
     #   -r requirements.txt
-    #   docker-compose
     #   drf-spectacular
     #   pre-commit
     #   ray
@@ -285,6 +281,7 @@ ray[default]==2.6.3
 requests==2.31.0
     # via
     #   -r requirements.txt
+    #   google-api-core
     #   its-preselector
     #   ray
     #   requests-mock
