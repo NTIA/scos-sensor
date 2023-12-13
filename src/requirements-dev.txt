@@ -85,7 +85,7 @@ djangorestframework==3.14.0
     # via
     #   -r requirements.txt
     #   drf-spectacular
-drf-spectacular[sidecar]==0.26.2
+drf-spectacular[sidecar]==0.27.0
     # via
     #   -r requirements.txt
     #   drf-spectacular
@@ -342,8 +342,11 @@ tomli==2.0.1
     #   tox
 tox==4.4.6
     # via -r requirements-dev.in
-typing-extensions==4.5.0
-    # via pydantic
+typing-extensions==4.9.0
+    # via
+    #   -r requirements.txt
+    #   drf-spectacular
+    #   pydantic
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
