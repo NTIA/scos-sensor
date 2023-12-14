@@ -1,73 +1,15 @@
-from datetime import datetime
-
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from scos_actions.utils import (
-    convert_datetime_to_millisecond_iso_format,
-    parse_datetime_iso_format_str,
-)
 
 from sensor import V1
-from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
 
-from . import get_action_with_summary, registered_actions
-from .models import DEFAULT_PRIORITY, ScheduleEntry
+from .. import get_action_with_summary, registered_actions
+from ..models import DEFAULT_PRIORITY, ScheduleEntry
+from .timestamps import DateTimeFromTimestampField, ISOMillisecondDateTimeFormatField
 
-action_help = "[Required] The name of the action to be scheduled"
-priority_help = f"Lower number is higher priority (default={DEFAULT_PRIORITY})"
-CHOICES = []
-actions = sorted(registered_actions.keys())
-for action in actions:
-    CHOICES.append((action, get_action_with_summary(action)))
-
-
-def datetimes_to_timestamps(validated_data):
-    """Covert datetimes to timestamp integers in validated_data."""
-    for k, v in validated_data.items():
-        if type(v) is datetime:
-            validated_data[k] = get_timestamp_from_datetime(v)
-
-    return validated_data
-
-
-class DateTimeFromTimestampField(serializers.DateTimeField):
-    """DateTimeField with integer timestamp as internal value."""
-
-    def to_representation(self, ts):
-        """Convert integer timestamp to an ISO 8601 datetime string."""
-        if ts is None:
-            return None
-
-        dt = get_datetime_from_timestamp(ts)
-        dt_str = convert_datetime_to_millisecond_iso_format(dt)
-
-        return dt_str
-
-    def to_internal_value(self, dt_str):
-        """Parse an ISO 8601 datetime string and return a timestamp integer."""
-        if dt_str is None:
-            return None
-
-        dt = super().to_internal_value(dt_str)
-        return get_timestamp_from_datetime(dt)
-
-
-class ISOMillisecondDateTimeFormatField(serializers.DateTimeField):
-    def to_representation(self, dt):
-        """Convert integer timestamp to an ISO 8601 datetime string."""
-        if dt is None:
-            return None
-
-        dt_str = convert_datetime_to_millisecond_iso_format(dt)
-        return dt_str
-
-    def to_internal_value(self, dt_str):
-        """Parse an ISO 8601 datetime string and return a timestamp integer."""
-        if dt_str is None:
-            return None
-
-        return parse_datetime_iso_format_str(dt_str)
+# Create the list of registered actions used by the ChoiceField
+_CHOICES = [(a, get_action_with_summary(a)) for a in sorted(registered_actions)]
 
 
 class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
@@ -108,7 +50,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
     )
     # action choices is modified in schedule/views.py based on user
     action = serializers.ChoiceField(
-        choices=CHOICES,
+        choices=_CHOICES,
         help_text="[Required] The name of the action to be scheduled",
     )
     # priority min_value is modified in schedule/views.py based on user
@@ -117,7 +59,7 @@ class ScheduleEntrySerializer(serializers.HyperlinkedModelSerializer):
         allow_null=True,
         min_value=-20,
         max_value=19,
-        help_text=priority_help,
+        help_text=f"Lower number is higher priority (default={DEFAULT_PRIORITY})",
     )
 
     # validate_only is a serializer-only field
