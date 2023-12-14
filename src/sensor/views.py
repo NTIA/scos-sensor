@@ -5,9 +5,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from utils.docs import FORMAT_QUERY_KWARGS, view_docstring
+from utils.docs import API_RESPONSE_405, FORMAT_QUERY_KWARGS, view_docstring
 
 from . import settings
+from .serializers import ApiRootSerializer
 
 # API ROOT VIEW
 api_root_view_desc = (
@@ -20,6 +21,7 @@ api_root_view_desc = (
     description=api_root_view_desc,
     summary="SCOS Sensor (API Root)",
     tags=["Discover"],
+    responses={200: ApiRootSerializer(), **API_RESPONSE_405},
     **FORMAT_QUERY_KWARGS,
 )
 @api_view()
