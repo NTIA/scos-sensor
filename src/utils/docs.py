@@ -31,7 +31,6 @@ FORMAT_QUERY_KWARGS = {
         )
     ],
     "request": OpenApiRequest("GET"),
-    # auth = # TODO
 }
 
 API_RESPONSE_405 = {405: OpenApiResponse(description="Method Not Allowed")}

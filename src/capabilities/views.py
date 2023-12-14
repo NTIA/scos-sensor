@@ -1,7 +1,7 @@
 import copy
 import logging
 
-from drf_spectacular.utils import OpenApiExample, extend_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -44,7 +44,6 @@ capabilities_view_desc = (
     **FORMAT_QUERY_KWARGS,
 )
 @api_view()
-# @authentication_classes()  # TODO: maybe this?
 @view_docstring(capabilities_view_desc)
 def capabilities_view(request, version, format=None):
     return Response(get_capabilities())
