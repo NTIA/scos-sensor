@@ -68,11 +68,17 @@ OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
+DEFAULT_CALIBRATION_FILE= path.join(CONFIG_DIR, "default_calibration.json")
 # JSON configs
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
+else:
+    SENSOR_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
     SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
+else:
+    SIGAN_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
+
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
