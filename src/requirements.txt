@@ -153,7 +153,7 @@ scipy==1.10.1
     # via scos-actions
 scos-actions @ git+https://github.com/NTIA/scos-actions@7.0.0
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@4.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@restart_container_after_connect_fail
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
