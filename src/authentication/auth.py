@@ -30,8 +30,11 @@ class CertificateAuthentication(authentication.BaseAuthentication):
                 user.last_login = datetime.datetime.now()
                 user.save()
             except user_model.DoesNotExist:
+                logger.error("No matching username found!")
                 raise exceptions.AuthenticationFailed("No matching username found!")
-            except Exception:
+            except Exception as ex:
+                logger.error("Error occurred during certificate authentication!")
+                logger.error(ex)
                 raise exceptions.AuthenticationFailed(
                     "Error occurred during certificate authentication!"
                 )

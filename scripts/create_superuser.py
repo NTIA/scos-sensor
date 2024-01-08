@@ -67,6 +67,6 @@ except KeyError:
 if additional_user_names != "" and additional_user_password != "":
     if "," in additional_user_names:
         for additional_user_name in additional_user_names.split(","):
-            add_user(additional_user_name, additional_user_password)
+            add_user(additional_user_name.strip(), additional_user_password)
     else:
         add_user(additional_user_names, additional_user_password)

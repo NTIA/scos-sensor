@@ -405,9 +405,9 @@ or using Django Rest Framework Token Authentication.
 
 #### Django Rest Framework Token Authentication
 
-To enable Django Rest Framework token and session authentication, make sure
-`AUTHENTICATION` is set to `TOKEN` in the environment file (this will be enabled if
-`AUTHENTICATION` set to anything other than `CERT`).
+This is the default authentication method. To enable Django Rest Framework token and
+session authentication, make sure `AUTHENTICATION` is set to `TOKEN` in the environment
+file (this will be enabled if `AUTHENTICATION` set to anything other than `CERT`).
 
 A token is automatically created for each user. Django Rest Framework Token
 Authentication will check that the token in the Authorization header ("Token " +
@@ -416,10 +416,9 @@ is used for the browsable API.
 
 #### Certificate  Authentication
 
-This is the default authentication method. To enable Certificate Authentication, make
-sure `AUTHENTICATION` is set to `CERT` in the environment
-file. To authenticate, the client will need to send a trusted client certificate. The
-Common Name must match the username of a user in the database.
+To enable Certificate Authentication, make sure `AUTHENTICATION` is set to `CERT` in
+the environment file. To authenticate, the client will need to send a trusted client
+certificate. The Common Name must match the username of a user in the database.
 
 #### Certificates
 
@@ -527,7 +526,7 @@ or client.pfx when communicating with the API programmatically.
 
 ###### Configure scos-sensor
 
-The Nginx web server is configured by default to require client certificates (mutual
+The Nginx web server is not configured by default to require client certificates (mutual
 TLS). To require client certificates, make sure `ssl_verify_client` is set to `on` in
 the [Nginx configuration file](nginx/conf.template). Comment out this line or set to
 `off` to disable client certificates. This can also be set to `optional` or
