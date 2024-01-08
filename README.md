@@ -369,8 +369,9 @@ specific to the sensor you are using.
 ```
 
 ### Sensor Calibration File
-By default, scos-sensor will use `configs/sensor_calibration.json` as the sensor calibration file.
-Sensor calibration files allow scos-sensor to apply a gain based on a laboratory calibration of
+By default, scos-sensor will use `configs/default_calibration.json` as the sensor calibration file. However, if
+`configs/sensor_calibration.json` or `configs/sigan_calibration.json` exist they will be used instead of the default
+calibration file. Sensor calibration files allow scos-sensor to apply a gain based on a laboratory calibration of
 the sensor and may also contain other useful metadata that characterizes the sensor performance. For additional
 information on the calibration data, see the [NTIA-Sensor SigMF Calibration Object](https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#08-the-calibration-object).
 The default calibration file is shown below:
@@ -397,9 +398,11 @@ the calibration data. In the case of the default calibration, there are no
 `calibration_parameters` so the calibration data is found directly within the
 `calibration_data` element and by default scos-sensor will not apply any additional
 gain. Typically, a sensor would be calibrated at particular
-sensing parameters. For example, the calibration below provides an example of a
-sensor calibrated at a sample rate of 14000000.0 at several frequencies with a
-signal analyzer reference level setting of -25.
+sensing parameters. The calibration data for specific parameters should be listed
+within the calibration_data object and accessed by the values of the settings listed in the 
+calibration_parameters element. For example, the calibration below provides an example of a
+sensor calibrated at a sample rate of 14000000.0 samples per second at several 
+frequencies with a signal analyzer reference level setting of -25.
 ```json
 {
 	"calibration_parameters": [
