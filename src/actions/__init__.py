@@ -37,5 +37,8 @@ else:
 
 logger.debug(f"Loading actions in {settings.ACTIONS_DIR}")
 yaml_actions, yaml_test_actions = init(sigan=signal_analyzer_monitor.signal_analyzer, yaml_dir=settings.ACTIONS_DIR)
+for name, action in yaml_actions.items():
+    logger.debug("action: " + name + "=" + str(action))
+    register_action.send(sender=__name__, action=action)
 logger.debug("Finished loading actions")
 
