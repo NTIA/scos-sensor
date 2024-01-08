@@ -2,7 +2,7 @@ import importlib
 import logging
 import pkgutil
 
-from scos_actions.hardware import signa_analyzer_monitor
+from scos_actions.status import signal_analyzer_monitor
 from scos_actions.discover import test_actions
 from scos_actions.signals import register_action
 from scos_actions.discover import init
