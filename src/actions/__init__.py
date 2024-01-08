@@ -2,8 +2,11 @@ import importlib
 import logging
 import pkgutil
 
+from scos_actions.hardware import signa_analyzer_monitor
 from scos_actions.discover import test_actions
 from scos_actions.signals import register_action
+from scos_actions.discover import init
+
 
 from sensor import settings
 from sensor.utils import copy_driver_files
@@ -31,4 +34,7 @@ else:
         for name, action in discover.actions.items():
             logger.debug("action: " + name + "=" + str(action))
             register_action.send(sender=__name__, action=action)
+
+yaml_actions, yaml_test_actions = init(sigan=signa_analyzer_monitor.signal_analyzer, yaml_dir=settings.ACTIONS_DIR)
 logger.debug("Finished loading actions")
+
