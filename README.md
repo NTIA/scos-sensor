@@ -526,30 +526,30 @@ or client.pfx when communicating with the API programmatically.
 
 ###### Configure scos-sensor
 
-The Nginx web server is not configured by default to require client certificates (mutual
-TLS). To require client certificates, make sure `ssl_verify_client` is set to `on` in
-the [Nginx configuration file](nginx/conf.template). Comment out this line or set to
-`off` to disable client certificates. This can also be set to `optional` or
-`optional_no_ca`, but if a client certificate is not provided, scos-sensor
-`AUTHENTICATION` setting must be set to `TOKEN` which requires a token for the API or a
-username and password for the browsable API. If you use OCSP, also uncomment
-`ssl_ocsp on;`. Additional configuration may be needed for Nginx to check certificate
-revocation lists (CRL). Adjust the other Nginx parameters, such as `ssl_verify_depth`,
-as desired. See the
-[Nginx documentation](https://nginx.org/en/docs/http/ngx_http_ssl_module.html) for
-more information about configuring Nginx.
-
-To disable client certificate authentication, comment out the
-following in [nginx/conf.template](nginx/conf.template):
+The Nginx web server is not configured by default to require client certificates
+(mutual TLS). To require client certificates, uncomment out the following in
+[nginx/conf.template](nginx/conf.template):
 
 ```text
 ssl_client_certificate /etc/ssl/certs/ca.crt;
 ssl_verify_client on;
-ssl_ocsp on;
-...
-    if ($ssl_client_verify != SUCCESS) { # under location @proxy_to_wsgi_server {
-        return 403;
-    }
+```
+
+Note that additional configuration may be needed for Nginx to
+use OCSP validation and/or check certificate revocation lists (CRL). Adjust the other
+Nginx parameters, such as `ssl_verify_depth`, as desired. See the
+[Nginx documentation](https://nginx.org/en/docs/http/ngx_http_ssl_module.html) for more
+information about configuring Nginx SSL settings. The `ssl_verify_client` setting can
+also be set to `optional` or `optional_no_ca`, but if a client certificate is not
+provided, scos-sensor `AUTHENTICATION` setting must be set to `TOKEN` which requires a
+token for the API or a username and password for the browsable API.
+
+To disable client certificate authentication, comment out the following in
+[nginx/conf.template](nginx/conf.template):
+
+```text
+# ssl_client_certificate /etc/ssl/certs/ca.crt;
+# ssl_verify_client on;
 ```
 
 Copy the server certificate and server private key (sensor01_combined.pem) to
