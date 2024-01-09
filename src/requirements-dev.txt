@@ -327,11 +327,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@SiganMonitor
+scos-actions @ git+https://github.com/NTIA/scos-actions@CoreSiganMonitor
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@SiganMonitor
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@CoreSiganMonitor
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
