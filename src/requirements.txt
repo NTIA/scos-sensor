@@ -151,9 +151,9 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@CoreSiganMonitor
+scos-actions @ git+https://github.com/NTIA/scos-actions@master
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@CoreSiganMonitor
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@empty_calibration_params
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
