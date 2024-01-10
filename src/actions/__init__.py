@@ -10,7 +10,7 @@ from scos_actions.discover import init
 from sensor import settings
 from sensor.utils import copy_driver_files
 
-from utils.component_registrat import (
+from utils.component_registrar import (
     sigan_monitor,
     gps_monitor
 )
