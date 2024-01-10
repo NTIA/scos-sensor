@@ -12,8 +12,8 @@ class GpsMonitor:
         """
         Registers the GPS so other scos components may access it. The
         registered GPS will be accessible by importing
-        gps_monitor from scos_actions.core and accessing the
-        gps property.
+        gps_monitor from utils.component_registrar
+        and accessing the gps property.
 
         :param gps: the instance of a GPSInterface to register.
         """

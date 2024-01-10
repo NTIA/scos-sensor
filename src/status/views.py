@@ -7,7 +7,7 @@ from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
-from scos_actions.core import status_registrar
+from scos_actions.status import status_registrar
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,

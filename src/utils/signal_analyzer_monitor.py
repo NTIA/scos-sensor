@@ -12,7 +12,7 @@ class SignalAnalyzerMonitor:
         """
         Registers the signal analyzer so other scos components may access it. The
         registered signal analyzer will be accessible by importing
-        signal_analyzer_monitor from scos_actions.core and accessing the
+        signal_analyzer_monitor from utils.component_registrar and accessing the
         signal_analyzer property.
 
         :param sigan: the instance of a SignalAnalyzerInterface to register.
