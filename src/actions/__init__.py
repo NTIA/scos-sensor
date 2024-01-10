@@ -2,7 +2,6 @@ import importlib
 import logging
 import pkgutil
 
-from scos_actions.core import signal_analyzer_monitor
 from scos_actions.discover import test_actions
 from scos_actions.signals import register_action
 from scos_actions.discover import init
@@ -10,6 +9,11 @@ from scos_actions.discover import init
 
 from sensor import settings
 from sensor.utils import copy_driver_files
+
+from utils.component_registrat import (
+    sigan_monitor,
+    gps_monitor
+)
 
 logger = logging.getLogger(__name__)
 logger.debug("********** Initializing actions **********")
@@ -36,7 +40,7 @@ else:
             register_action.send(sender=__name__, action=action)
 
 logger.debug(f"Loading actions in {settings.ACTIONS_DIR}")
-yaml_actions, yaml_test_actions = init(sigan=signal_analyzer_monitor.signal_analyzer, yaml_dir=settings.ACTIONS_DIR)
+yaml_actions, yaml_test_actions = init(sigan=sigan_monitor.signal_analyzer, yaml_dir=settings.ACTIONS_DIR)
 for name, action in yaml_actions.items():
     logger.debug("action: " + name + "=" + str(action))
     register_action.send(sender=__name__, action=action)

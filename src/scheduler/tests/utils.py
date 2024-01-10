@@ -8,7 +8,7 @@ from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
 from sensor import V1
-from utils.action_registrar import registered_actions
+from utils.component_registrar import registered_actions
 
 BAD_ACTION_STR = "testing expected failure"
 

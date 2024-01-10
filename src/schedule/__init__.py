@@ -1,7 +1,7 @@
 import logging
 
 from utils import get_summary
-from utils.action_registrar import registered_actions
+from utils.component_registrar import registered_actions
 
 
 def get_action_with_summary(action):
