@@ -344,6 +344,7 @@ file in scos-sensor/configs](configs/sensor_definition.json) with the informatio
 specific to the sensor you are using.
 
 ```json
+
 {
     "sensor_spec": {
         "id": "",
@@ -366,16 +367,23 @@ specific to the sensor you are using.
         "model": "Intel NUC"
     }
 }
+
 ```
 
 ### Sensor Calibration File
-By default, scos-sensor will use `configs/default_calibration.json` as the sensor calibration file. However, if
-`configs/sensor_calibration.json` or `configs/sigan_calibration.json` exist they will be used instead of the default
-calibration file. Sensor calibration files allow scos-sensor to apply a gain based on a laboratory calibration of
-the sensor and may also contain other useful metadata that characterizes the sensor performance. For additional
-information on the calibration data, see the [NTIA-Sensor SigMF Calibration Object](https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#08-the-calibration-object).
+
+By default, scos-sensor will use `configs/default_calibration.json` as the sensor
+calibration file. However, if`configs/sensor_calibration.json` or
+`configs/sigan_calibration.json` exist they will be used instead of the default
+calibration file. Sensor calibration files allow scos-sensor to apply a gain
+based on a laboratory calibration of the sensor and may also contain other useful
+metadata that characterizes the sensor performance. For additional
+information on the calibration data, see the
+[NTIA-Sensor SigMF Calibration Object](https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#08-the-calibration-object).
 The default calibration file is shown below:
+
 ```json
+
 {
   "calibration_data":{
     "datetime": "1970-01-01T00:00:00.000000Z",
@@ -392,149 +400,155 @@ The default calibration file is shown below:
   "sensor_uid": "DEFAULT CALIBRATION",
   "calibration_reference": "noise source output"
 }
+
 ```
+
 The `calibration_parameters` key lists the parameters that will be used to obtain
 the calibration data. In the case of the default calibration, there are no
 `calibration_parameters` so the calibration data is found directly within the
 `calibration_data` element and by default scos-sensor will not apply any additional
 gain. Typically, a sensor would be calibrated at particular
 sensing parameters. The calibration data for specific parameters should be listed
-within the calibration_data object and accessed by the values of the settings listed in the 
-calibration_parameters element. For example, the calibration below provides an example of a
-sensor calibrated at a sample rate of 14000000.0 samples per second at several 
-frequencies with a signal analyzer reference level setting of -25.
-```json
-{
-	"calibration_parameters": [
-		"sample_rate",
-		"frequency",
-		"reference_level"
-	],
-	"calibration_datetime": "2020-11-18T23:13:09.156274Z",
-	"calibration_data": {
-		"14000000.0":{
-			"3555000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3565000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3575000000":{
+within the calibration_data object and accessed by the values of the settings listed
+in the calibration_parameters element. For example, the calibration below provides
+an example of a sensor calibrated with the preamp enabled, a reference level of -25,
+0 attenuation, at sample rate of 14000000.0 samples per second at several
+frequencies.
 
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3585000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3595000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3605000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3615000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3625000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3635000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3645000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3655000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3665000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3675000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3685000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			},
-			"3695000000":{
-				"-25":{
-					"noise_figure": 46.03993010994134,
-					"enbw": 15723428.858731967,
-					"gain": 0.40803345928877379
-				}
-			}
-		}
-	},
-	"clock_rate_lookup_by_sample_rate": [
-		{
-			"sample_rate": 3500000.0,
-			"clock_frequency": 3500000.0
-		},
-		{
-			"sample_rate": 28000000.0,
-			"clock_frequency": 28000000.0
-		}
-	],
-	"sensor_uid": "US55120115"
+```json
+
+{
+  "last_calibration_datetime": "2024-01-10T19:33:01.189Z",
+  "calibration_parameters": [
+     "preamp_enable",
+     "reference_level",
+     "attenuation",
+     "sample_rate",
+     "frequency"
+   ],
+  "clock_rate_lookup_by_sample_rate": [],
+  "calibration_data": {
+     "datetime": "1970-01-01T00:00:00.000000Z",
+     "gain": 0,
+     "noise_figure": 0.0,
+     "1db_compression_point": null,
+     "enbw": null,
+     "temperature": 26.85,
+     "true": {
+       "-25": {
+          "0": {
+            "14000000.0": {
+              "3545000000.0": {
+                "datetime": "2024-01-10T19:31:50.063Z",
+                "gain": 38.92501500263934,
+                "noise_figure": 4.239148534012305,
+                "temperature": 26.8
+              },
+              "3555000000.0": {
+                "datetime": "2024-01-10T19:31:55.363Z",
+                "gain": 38.866468105575979,
+                "noise_figure": 4.122770022675986,
+                "temperature": 26.8
+              },
+              "3565000000.0": {
+                "datetime": "2024-01-10T19:31:59.437Z",
+                "gain": 38.975919985719219,
+                "noise_figure": 3.9109354704716026,
+                "temperature": 26.7
+              },
+              "3575000000.0": {
+                "datetime": "2024-01-10T19:32:03.766Z",
+                "gain": 38.7313929563515,
+                "noise_figure": 3.920576640543585,
+                "temperature": 26.8
+              },
+              "3585000000.0": {
+                "datetime": "2024-01-10T19:32:08.364Z",
+                "gain": 39.25301219900189,
+                "noise_figure": 3.7310361469192308,
+                "temperature": 26.8
+              },
+              "3595000000.0": {
+                "datetime": "2024-01-10T19:32:12.261Z",
+                "gain": 39.24335537433244,
+                "noise_figure": 3.8627233312905386,
+                "temperature": 26.8
+              },
+              "3605000000.0": {
+                "datetime": "2024-01-10T19:32:17.535Z",
+                "gain": 39.284616465349888,
+                "noise_figure": 3.765574297856486,
+                "temperature": 26.8
+              },
+              "3615000000.0": {
+                "datetime": "2024-01-10T19:32:21.395Z",
+                "gain": 39.50037627424618,
+                "noise_figure": 3.707517942267642,
+                "temperature": 26.8
+              },
+              "3625000000.0": {
+                "datetime": "2024-01-10T19:32:25.215Z",
+                "gain": 39.109043510926387,
+                "noise_figure": 3.7815375494063288,
+                "temperature": 26.8
+              },
+              "3635000000.0": {
+                "datetime": "2024-01-10T19:32:29.531Z",
+                "gain": 39.24508578375391,
+                "noise_figure": 3.6863725756676137,
+                "temperature": 26.8
+              },
+              "3645000000.0": {
+                "datetime": "2024-01-10T19:32:34.096Z",
+                "gain": 38.80146815920121,
+                "noise_figure": 3.8854377615990476,
+                "temperature": 26.8
+              },
+              "3655000000.0": {
+                "datetime": "2024-01-10T19:32:39.321Z",
+                "gain": 38.93497729183679,
+                "noise_figure": 3.7700377634684085,
+                "temperature": 26.8
+              },
+              "3665000000.0": {
+                "datetime": "2024-01-10T19:32:43.174Z",
+                "gain": 39.11198841591042,
+                "noise_figure": 3.874855458760329,
+                "temperature": 26.8
+              },
+              "3675000000.0": {
+                "datetime": "2024-01-10T19:32:47.039Z",
+                "gain": 39.02076121080246,
+                "noise_figure": 3.9104428648340456,
+                "temperature": 26.8
+              },
+              "3685000000.0": {
+                "datetime": "2024-01-10T19:32:51.354Z",
+                "gain": 38.6726602555396,
+                "noise_figure": 4.184282601718,
+                "temperature": 26.8
+              },
+              "3695000000.0": {
+                "datetime": "2024-01-10T19:32:56.668Z",
+                "gain": 38.57619192098707,
+                "noise_figure": 4.23159948252897,
+                "temperature": 26.8
+              },
+              "3705000000.0": {
+                "datetime": "2024-01-10T19:33:01.189Z",
+                "gain": 37.98002177204276,
+                "noise_figure": 4.745381229264361,
+                "temperature": 26.8
+              }
+            }
+          }
+       }
+     }
+  }
 }
 
 ```
+
 When an action is run with the above calibration, scos will expect the action to have
 a sample_rate, frequency, and reference_level specified in the action config. The values
 specified for these parameters will then be used to retrieve the calibration data.
