@@ -69,7 +69,7 @@ CONFIG_DIR = path.join(REPO_ROOT, "configs")
 ACTIONS_DIR = path.join(CONFIG_DIR, "actions")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
-DEFAULT_CALIBRATION_FILE= path.join(CONFIG_DIR, "default_calibration.json")
+DEFAULT_CALIBRATION_FILE = path.join(CONFIG_DIR, "default_calibration.json")
 # JSON configs
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
