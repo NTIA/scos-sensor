@@ -8,7 +8,11 @@ from pathlib import Path
 
 import requests
 from django.utils import timezone
-from scos_actions.signals import trigger_api_restart
+from scos_actions.hardware import SignalAnalyzerInterface
+from scos_actions.signals import (
+    trigger_api_restart,
+    register_signal_analyzer
+)
 
 from authentication import oauth
 from schedule.models import ScheduleEntry
@@ -17,6 +21,7 @@ from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
+
 
 from . import utils
 
@@ -46,6 +51,11 @@ class Scheduler(threading.Thread):
         self.task = None  # Task object describing current task
         self.last_status = ""
         self.consecutive_failures = 0
+        self._signal_analyzer = None
+
+    @property
+    def signal_analyzer(self, sigan: SignalAnalzyerInterface):
+        self._signal_analyzer = sigan
 
     @property
     def schedule(self):
@@ -343,3 +353,9 @@ def minimum_duration(blocking):
 # of running it in its own microservice is that we _must not_ run the
 # application server in multiple processes (multiple threads are fine).
 thread = Scheduler()
+
+#def register_sigan(sender, **kwargs):
+#    thread.signal_analzyzer = kwargs["signal_analyzer"])
+
+#register_signal_analyzer.connect(register_sigan)
+#logger.debug("Connected register_signal_analyzer signal")
