@@ -48,21 +48,21 @@ else:
         if hasattr(discover, "gps") and discover.gps is not None:
             gps = discover.gps
 
-if sigan is None:
+if signal_analyzer is None:
     raise Exception("No signal analyzer found.")
 #Ensure all actions have a sigan
 logger.debug("Ensuring actions have signal analyzer.")
 for name, action in discovered_actions.items():
     if action.signal_analzyer is None:
         logger.debug(f"Setting signal analyzer for {name}")
-        action.set_signal_analyzer(sigan)
+        action.set_signal_analyzer(signal_analyzer)
     if gps is not None and action.gps is None:
         logger.debug(f"Setting gps for {name}")
         action.gps = gps
 
 
 logger.debug(f"Loading actions in {settings.ACTIONS_DIR}")
-yaml_actions, yaml_test_actions = init(sigan=sigan, action_classes = action_types, yaml_dir=settings.ACTIONS_DIR)
+yaml_actions, yaml_test_actions = init(sigan=signal_analyzer, action_classes = action_types, yaml_dir=settings.ACTIONS_DIR)
 discovered_actions.update(yaml_actions)
 
 for name, action in discovered_actions.items():
