@@ -8,7 +8,6 @@ from pathlib import Path
 
 import requests
 from django.utils import timezone
-from scos_actions.hardware import SignalAnalyzerInterface
 from scos_actions.signals import (
     trigger_api_restart,
     register_signal_analyzer
