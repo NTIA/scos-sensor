@@ -55,9 +55,9 @@ if signal_analyzer is None:
 #Ensure all actions have a sigan
 logger.debug("Ensuring actions have signal analyzer.")
 for name, action in discovered_actions.items():
-    if action.signal_analzyer is None:
+    if action.signal_analyzer is None:
         logger.debug(f"Setting signal analyzer for {name}")
-        action.set_signal_analyzer(signal_analyzer)
+        action.signal_analyzer = signal_analyzer
     if gps is not None and action.gps is None:
         logger.debug(f"Setting gps for {name}")
         action.gps = gps
