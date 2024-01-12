@@ -35,7 +35,7 @@ def post_worker_init(worker):
     from scheduler import scheduler
     sigan_module_setting = env("SIGAN_MODULE")
     sigan_module = importlib.import_module(sigan_module_setting)
-    logger.info("Creating " + env("SIGAN_CLASS") + " from " + sigan_module)
+    logger.info("Creating " + env("SIGAN_CLASS") + " from " + env("SIGAN_MODULE"))
     sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
     sigan = sigan_constructor()
     scheduler.signal_analyzer = sigan
