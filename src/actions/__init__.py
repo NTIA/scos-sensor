@@ -41,15 +41,17 @@ else:
                 discovered_actions[name] = action
         if hasattr(discover, "action_types") and discover.action_types is not None:
             action_types.update(discover.action_types)
-            if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
-                if signal_analyzer is not None:
-                    raise Exception("Multiple signal analyzers discovered.")
-                signal_analyzer = discover.signal_analyzer
+        logger.debug("Checking for signal analyzer.")
+        if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
+            if signal_analyzer is not None:
+                raise Exception("Multiple signal analyzers discovered.")
+            logger.debug("signal analyzer found")
+            signal_analyzer = discover.signal_analyzer
         if hasattr(discover, "gps") and discover.gps is not None:
             gps = discover.gps
 
 if signal_analyzer is None:
-    raise Exception("No signal analyzer found.")
+    logger.error("No signal analyzer found.")
 #Ensure all actions have a sigan
 logger.debug("Ensuring actions have signal analyzer.")
 for name, action in discovered_actions.items():
