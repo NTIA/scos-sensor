@@ -1,6 +1,9 @@
+import importlib
+import logging
 import os
 import sys
 from multiprocessing import cpu_count
+
 
 bind = ":8000"
 workers = 1
@@ -8,7 +11,7 @@ worker_class = "gthread"
 threads = cpu_count()
 
 loglevel = os.environ.get("GUNICORN_LOG_LEVEL", "info")
-
+logger = logging.getLogger(__name__)
 
 def _modify_path():
     """Ensure Django project is on sys.path."""
@@ -27,9 +30,14 @@ def post_worker_init(worker):
     import django
 
     django.setup()
-
+    env = Env()
     from scheduler import scheduler
-
+    sigan_module_setting = env("SIGAN_MODULE")
+    sigan_module = importlib.import_module(sigan_module_setting)
+    logger.info("Creating " + env("SIGAN_CLASS") + " from " + sigan_module)
+    sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
+    sigan = sigan_constructor()
+    scheduler.signal_analyzer = sigan
     scheduler.thread.start()
 
 

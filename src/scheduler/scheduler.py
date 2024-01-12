@@ -47,6 +47,23 @@ class Scheduler(threading.Thread):
         self.last_status = ""
         self.consecutive_failures = 0
         self._signal_analyzer = None
+        self._gps = None
+
+    @property
+    def signal_analyzer(self):
+        return self._signal_analyzer
+
+    @signal_analyzer.setter
+    def signal_analzyer(self, sigan):
+        self._signal_analyzer = sigan
+
+    @property
+    def gps(self):
+        return self._gps
+
+    @gps.setter
+    def gps(self, gps):
+        self._gps = gps
 
     @property
     def schedule(self):
@@ -164,7 +181,7 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug(f"running task {entry_name}/{task_id}")
-            detail = self.task.action_caller(schedule_entry_json, task_id)
+            detail = self.task.action_caller(self.signal_analzyer, self.gps, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):
