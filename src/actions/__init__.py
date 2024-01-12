@@ -41,10 +41,10 @@ else:
                 discovered_actions[name] = action
         if hasattr(discover, "action_types") and discover.action_types is not None:
             action_types.update(discover.action_types)
-            if hasattr(discover, "signal_analzyer") and discover.signal_analyzer is not None:
+            if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
                 if signal_analyzer is not None:
                     raise Exception("Multiple signal analyzers discovered.")
-                signal_analyzer = discover.signal_analzyer
+                signal_analyzer = discover.signal_analyzer
         if hasattr(discover, "gps") and discover.gps is not None:
             gps = discover.gps
 
