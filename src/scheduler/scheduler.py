@@ -345,8 +345,3 @@ def minimum_duration(blocking):
 # application server in multiple processes (multiple threads are fine).
 thread = Scheduler()
 
-#def register_sigan(sender, **kwargs):
-#    thread.signal_analzyzer = kwargs["signal_analyzer"])
-
-#register_signal_analyzer.connect(register_sigan)
-#logger.debug("Connected register_signal_analyzer signal")

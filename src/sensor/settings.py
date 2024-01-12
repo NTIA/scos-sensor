@@ -434,3 +434,6 @@ SWITCH_CONFIGS_DIR = env.str(
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
+DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
+SIGAN_MODULE = env.str("SIGAN_MDOULE", default="scos_tekrsa.tekrsa_sigan")
+SIGAN_CLASS = env.str("SIGAN_CLASS", default="TekRSASigan")
