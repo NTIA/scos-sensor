@@ -4,7 +4,6 @@ import pkgutil
 
 from scos_actions.actions import action_classes
 from scos_actions.discover import test_actions
-from scos_actions.signals import register_action
 from scos_actions.discover import init
 
 
@@ -30,7 +29,6 @@ actions = {}
 if settings.MOCK_SIGAN or settings.RUNNING_TESTS:
     for name, action in test_actions.items():
         logger.debug("test_action: " + name + "=" + str(action))
-        register_action.send(sender=__name__, action=action)
 else:
     for name, module in discovered_plugins.items():
         logger.debug("Looking for actions in " + name + ": " + str(module))
