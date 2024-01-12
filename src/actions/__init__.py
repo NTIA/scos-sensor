@@ -23,8 +23,6 @@ discovered_plugins = {
 logger.debug(discovered_plugins)
 action_types = {}
 action_types.update(action_classes)
-signal_analyzer = None
-gps = None
 actions = {}
 if settings.MOCK_SIGAN or settings.RUNNING_TESTS:
     for name, action in test_actions.items():
@@ -39,30 +37,10 @@ else:
                 actions[name] = action
         if hasattr(discover, "action_types") and discover.action_types is not None:
             action_types.update(discover.action_types)
-        logger.debug("Checking for signal analyzer.")
-        if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
-            if signal_analyzer is not None:
-                raise Exception("Multiple signal analyzers discovered.")
-            logger.debug("signal analyzer found")
-            signal_analyzer = discover.signal_analyzer
-        if hasattr(discover, "gps") and discover.gps is not None:
-            gps = discover.gps
-
-if signal_analyzer is None:
-    logger.error("No signal analyzer found.")
-#Ensure all actions have a sigan
-logger.debug("Ensuring actions have signal analyzer.")
-for name, action in actions.items():
-    if action.signal_analyzer is None:
-        logger.debug(f"Setting signal analyzer for {name}")
-        action.signal_analyzer = signal_analyzer
-    if gps is not None and action.gps is None:
-        logger.debug(f"Setting gps for {name}")
-        action.gps = gps
 
 
 logger.debug(f"Loading actions in {settings.ACTIONS_DIR}")
-yaml_actions, yaml_test_actions = init(sigan=signal_analyzer, action_classes = action_types, yaml_dir=settings.ACTIONS_DIR)
+yaml_actions, yaml_test_actions = init(action_classes = action_types, yaml_dir=settings.ACTIONS_DIR)
 actions.update(yaml_actions)
 logger.debug("Finished loading  and registering actions")
 
