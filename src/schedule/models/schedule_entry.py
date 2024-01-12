@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, Validat
 from django.db import models
 
 from constants import MAX_ACTION_LENGTH
-from schedule import actions
+from actions import actions
 from scheduler import utils
 
 logger = logging.getLogger(__name__)

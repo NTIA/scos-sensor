@@ -6,17 +6,17 @@ from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     parse_datetime_iso_format_str,
 )
-
+from actions import actions
 from sensor import V1
 from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetime
 
-from . import get_action_with_summary, registered_actions
+from . import get_action_with_summary
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = f"Lower number is higher priority (default={DEFAULT_PRIORITY})"
 CHOICES = []
-actions = sorted(registered_actions.keys())
+actions = sorted(actions.keys())
 for action in actions:
     CHOICES.append((action, get_action_with_summary(action)))
 
