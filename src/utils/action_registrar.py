@@ -11,7 +11,7 @@ registered_actions = OrderedDict()
 
 def add_action_handler(sender, **kwargs):
     action = kwargs["action"]
-    logger.debug("adding action " + action)
+    logger.debug(f"adding action {action}")
     registered_actions[action.name] = action
 
 logger.debug("Connected register action handler")
