@@ -49,10 +49,6 @@ class Scheduler(threading.Thread):
         self._signal_analyzer = None
 
     @property
-    def signal_analyzer(self, sigan: SignalAnalzyerInterface):
-        self._signal_analyzer = sigan
-
-    @property
     def schedule(self):
         """An updated view of the current schedule"""
         return ScheduleEntry.objects.filter(is_active=True).all()
