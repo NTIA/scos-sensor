@@ -8,7 +8,7 @@ from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
 from sensor import V1
-from utils.action_registrar import registered_actions
+from actions import actions
 
 BAD_ACTION_STR = "testing expected failure"
 
@@ -122,7 +122,7 @@ def create_bad_action():
     def bad_action(schedule_entry_json, task_id):
         raise Exception(BAD_ACTION_STR)
 
-    registered_actions["bad_action"] = bad_action
+    actions["bad_action"] = bad_action
     return bad_action
 
 

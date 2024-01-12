@@ -6,7 +6,7 @@ import sys
 
 import django
 
-from utils.action_registrar import registered_actions
+from actions import actions
 
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
 
@@ -16,7 +16,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()
 
 
-action_names = sorted(registered_actions.keys())
+action_names = sorted(actions.keys())
 
 
 if __name__ == "__main__":
@@ -28,4 +28,4 @@ if __name__ == "__main__":
     ),
 
     args = parser.parse_args()
-    print(registered_actions[args.action].description)
+    print(actions[args.action].description)
