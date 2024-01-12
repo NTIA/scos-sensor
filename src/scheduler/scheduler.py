@@ -54,7 +54,8 @@ class Scheduler(threading.Thread):
         return self._signal_analyzer
 
     @signal_analyzer.setter
-    def signal_analzyer(self, sigan):
+    def signal_analyzer(self, sigan):
+        logger.debug(f"Set scheduler sigan to {sigan}")
         self._signal_analyzer = sigan
 
     @property
@@ -180,8 +181,8 @@ class Scheduler(threading.Thread):
         schedule_entry_json["id"] = entry_name
 
         try:
-            logger.debug(f"running task {entry_name}/{task_id}")
-            detail = self.task.action_caller(self.signal_analzyer, self.gps, schedule_entry_json, task_id)
+            logger.debug(f"running task {entry_name}/{task_id} with sigan: {self.signal_analyzer}")
+            detail = self.task.action_caller(self.signal_analyzer, self.gps, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):

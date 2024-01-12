@@ -38,7 +38,7 @@ def post_worker_init(worker):
     logger.info("Creating " + env("SIGAN_CLASS") + " from " + env("SIGAN_MODULE"))
     sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
     sigan = sigan_constructor()
-    register_component_with_status.send(__name__, component=sigan)
+    register_component_with_status.send(sigan, component=sigan)
     scheduler.signal_analyzer = sigan
     scheduler.thread.start()
 
