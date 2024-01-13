@@ -8,10 +8,6 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 
-!!!!!!NOTE!!!!!: This file is replaced when scos-sensor runs in docker. migration_settings.py is used when migrations are
-run and runtime_settings is used when scos sensor is run in docker.
-Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
-
 """
 import importlib
 import hashlib
@@ -22,7 +18,7 @@ import pkgutil
 import shutil
 import sys
 from os import path
-
+from pathlib import Path
 
 from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
@@ -444,9 +440,9 @@ PRESELECTOR_MODULE = env.str(
     "PRESELECTOR_MODULE", default="its_preselector.web_relay_preselector"
 )
 PRESELECTOR_CLASS = env.str("PRESELECTOR_CLASS", default="WebRelayPreselector")
-SWITCH_CONFIGS_DIR = env.str(
+SWITCH_CONFIGS_DIR = Path(env.str(
     "SWITCH_CONFIGS_DIR", default=path.join(CONFIG_DIR, "switches")
-)
+))
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
