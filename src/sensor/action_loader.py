@@ -4,75 +4,8 @@ import logging
 import pkgutil
 import os
 import shutil
-from django.conf import settings
 from scos_actions.actions import action_classes
 from scos_actions.discover import test_actions
 from scos_actions.discover import init
 
 logger = logging.getLogger(__name__)
-
-def copy_driver_files(driver_dir):
-    """Copy driver files where they need to go"""
-    for root, dirs, files in os.walk(driver_dir):
-        for filename in files:
-            name_without_ext, ext = os.path.splitext(filename)
-            if ext.lower() == ".json":
-                json_data = {}
-                file_path = os.path.join(root, filename)
-                with open(file_path) as json_file:
-                    json_data = json.load(json_file)
-                if type(json_data) == dict and "scos_files" in json_data:
-                    scos_files = json_data["scos_files"]
-                    for scos_file in scos_files:
-                        source_path = os.path.join(
-                            driver_dir, scos_file["source_path"]
-                        )
-                        if not os.path.isfile(source_path):
-                            logger.error(f"Unable to find file at {source_path}")
-                            continue
-                        dest_path = scos_file["dest_path"]
-                        dest_dir = os.path.dirname(dest_path)
-                        try:
-                            if not os.path.isdir(dest_dir):
-                                os.makedirs(dest_dir)
-                            logger.debug(f"copying {source_path} to {dest_path}")
-                            shutil.copyfile(source_path, dest_path)
-                        except Exception as e:
-                            logger.error(f"Failed to copy {source_path} to {dest_path}")
-                            logger.error(e)
-
-
-def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
-    logger.debug("********** Initializing actions **********")
-
-    copy_driver_files(driver_dir)  # copy driver files before loading plugins
-
-    discovered_plugins = {
-        name: importlib.import_module(name)
-        for finder, name, ispkg in pkgutil.iter_modules()
-        if name.startswith("scos_") and name != "scos_actions"
-    }
-    logger.debug(discovered_plugins)
-    action_types = {}
-    action_types.update(action_classes)
-    actions = {}
-    if mock_sigan or running_tests:
-        for name, action in test_actions.items():
-            logger.debug("test_action: " + name + "=" + str(action))
-    else:
-        for name, module in discovered_plugins.items():
-            logger.debug("Looking for actions in " + name + ": " + str(module))
-            discover = importlib.import_module(name + ".discover")
-            if hasattr(discover, "actions"):
-                for name, action in discover.actions.items():
-                    logger.debug("action: " + name + "=" + str(action))
-                    actions[name] = action
-            if hasattr(discover, "action_types") and discover.action_types is not None:
-                action_types.update(discover.action_types)
-
-    logger.debug(f"Loading actions in {action_dir}")
-    yaml_actions, yaml_test_actions = init(action_classes = action_types, yaml_dir=settings.ACTIONS_DIR)
-    actions.update(yaml_actions)
-    logger.debug("Finished loading  and registering actions")
-    return actions
-
