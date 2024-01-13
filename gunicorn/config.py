@@ -40,13 +40,14 @@ def post_worker_init(worker):
         load_preselector,
         load_switches,
     )
+    from django.conf import settings
     sigan_module_setting = env("SIGAN_MODULE")
     sigan_module = importlib.import_module(sigan_module_setting)
     logger.info("Creating " + env("SIGAN_CLASS") + " from " + env("SIGAN_MODULE"))
     sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
     sigan = sigan_constructor()
     register_component_with_status.send(sigan, component=sigan)
-    switches = load_switches(env("SWITCH_CONFIGS_DIR"))
+    switches = load_switches(settings.SWITCH_CONFIGS_DIR)
     for key, switch in switches:
         register_component_with_status(switch, component=switch)
     capabilities = env("CAPABILITIES")

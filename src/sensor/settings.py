@@ -451,7 +451,6 @@ SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
 
-
 def copy_driver_files(driver_dir):
     """Copy driver files where they need to go"""
     for root, dirs, files in os.walk(driver_dir):
