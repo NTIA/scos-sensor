@@ -26,6 +26,7 @@ from environs import Env
 from scos_actions.actions import action_classes
 from scos_actions.discover import test_actions
 from scos_actions.discover import init
+from scos_actions.utils import load_from_json
 
 logger = logging.getLogger(__name__)
 logger.debug("Initializing scos-sensor settings.")
@@ -520,7 +521,7 @@ def load_capabilities(sensor_definition_file):
 
     logger.debug(f"Loading {sensor_definition_file}")
     try:
-        capabilities["sensor"] = utils.load_from_json(sensor_definition_file)
+        capabilities["sensor"] = load_from_json(sensor_definition_file)
     except Exception as e:
         logger.warning(
             f"Failed to load sensor definition file: {sensor_definition_file}"

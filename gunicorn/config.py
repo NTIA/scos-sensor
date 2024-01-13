@@ -35,7 +35,6 @@ def post_worker_init(worker):
     import django
 
     django.setup()
-    env = Env()
     from scheduler import scheduler
     from initialization import (
         load_preselector,
