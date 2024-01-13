@@ -59,5 +59,7 @@ def load_preselector(preselector_config, module, preselector_class_name, sensor_
         ps = None
     return ps
 
+import logging
+from os import path
 
 
