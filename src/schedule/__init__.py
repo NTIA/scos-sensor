@@ -3,7 +3,7 @@ import logging
 from utils import get_summary
 from django.conf import settings
 
-actions = settings.actions
+actions = settings.ACTIONS
 
 def get_action_with_summary(action):
     """Given an action, return the string 'action_name - summary'."""

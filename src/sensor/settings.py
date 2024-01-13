@@ -520,7 +520,7 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     return actions
 
 
-actions = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
+ACTIONS = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
 
 
 

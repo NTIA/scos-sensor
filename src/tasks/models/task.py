@@ -8,7 +8,7 @@ import logging
 from collections import namedtuple
 from django.conf import settings
 
-actions = settings.actions
+actions = settings.ACTIONS
 logger = logging.getLogger(__name__)
 
 logger.debug("*********** scos-sensor/models/task.py ****************")

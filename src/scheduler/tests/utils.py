@@ -11,7 +11,7 @@ from sensor import V1
 from django.conf import settings
 from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
 
-actions = settings.actions
+actions = settings.ACTIONS
 BAD_ACTION_STR = "testing expected failure"
 
 logger = logging.getLogger(__name__)

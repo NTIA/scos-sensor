@@ -13,7 +13,7 @@ from sensor.utils import get_datetime_from_timestamp, get_timestamp_from_datetim
 from . import get_action_with_summary
 from .models import DEFAULT_PRIORITY, ScheduleEntry
 
-actions = settings.actions
+actions = settings.ACTIONS
 action_help = "[Required] The name of the action to be scheduled"
 priority_help = f"Lower number is higher priority (default={DEFAULT_PRIORITY})"
 CHOICES = []

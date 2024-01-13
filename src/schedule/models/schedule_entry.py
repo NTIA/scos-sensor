@@ -9,7 +9,7 @@ from constants import MAX_ACTION_LENGTH
 from django.conf import settings
 from scheduler import utils
 
-actions = settings.actions
+actions = settings.ACTIONS
 logger = logging.getLogger(__name__)
 logger.debug(
     "************** scos-sensor/schedule/models/schedule_entry.py *****************"
