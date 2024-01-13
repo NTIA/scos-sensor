@@ -208,7 +208,6 @@ INSTALLED_APPS = [
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
     "sensor.apps.SensorConfig",  # global settings/utils, etc
-    "actions.apps.ActionsConfig",
 ]
 
 MIDDLEWARE = [
@@ -512,7 +511,7 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
                 action_types.update(discover.action_types)
 
     logger.debug(f"Loading actions in {action_dir}")
-    yaml_actions, yaml_test_actions = init(action_classes = action_types, yaml_dir=settings.ACTIONS_DIR)
+    yaml_actions, yaml_test_actions = init(action_classes = action_types, yaml_dir=action_dir)
     actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
     return actions

@@ -3,7 +3,6 @@ import importlib
 import json
 import logging
 from pathlib import Path
-from from django.conf import settings
 from its_preselector.configuration_exception import ConfigurationException
 from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
 
