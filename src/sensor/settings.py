@@ -14,6 +14,7 @@ Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/a
 
 """
 import importlib
+import hashlib
 import json
 import logging
 import os
@@ -548,6 +549,7 @@ def load_capabilities(sensor_definition_file):
 
 ACTIONS = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
 CAPABILITIES = load_capabilities(SENSOR_DEFINITION_FILE)
+SENSOR_DEFINITION_HASH = CAPABILITIES["sensor"]["sensor_sha512"]
 
 
 

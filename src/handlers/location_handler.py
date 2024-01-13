@@ -1,7 +1,5 @@
-from scos_actions.capabilities import capabilities
-
 from status.models import GPS_LOCATION_DESCRIPTION, Location
-
+from django.conf import settings
 
 def location_action_completed_callback(sender, **kwargs):
     """Update database and capabilities when GPS is synced or database is updated"""
@@ -31,12 +29,13 @@ def location_action_completed_callback(sender, **kwargs):
 
 def db_location_updated(sender, **kwargs):
     instance = kwargs["instance"]
+    capabilities = settings.CAPABILITIES
     if isinstance(instance, Location) and instance.active:
         if (
             "location" not in capabilities["sensor"]
             or capabilities["sensor"]["location"] is None
         ):
-            capabilities["sensor"]["location"] = {}
+        capabilities["sensor"]["location"] = {}
         capabilities["sensor"]["location"]["x"] = instance.longitude
         capabilities["sensor"]["location"]["y"] = instance.latitude
         capabilities["sensor"]["location"]["z"] = instance.height
