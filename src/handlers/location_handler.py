@@ -35,16 +35,16 @@ def db_location_updated(sender, **kwargs):
             "location" not in capabilities["sensor"]
             or capabilities["sensor"]["location"] is None
         ):
-        capabilities["sensor"]["location"] = {}
-        capabilities["sensor"]["location"]["x"] = instance.longitude
-        capabilities["sensor"]["location"]["y"] = instance.latitude
-        capabilities["sensor"]["location"]["z"] = instance.height
-        capabilities["sensor"]["location"]["gps"] = instance.gps
-        capabilities["sensor"]["location"]["description"] = instance.description
+            capabilities["sensor"]["location"] = {}
+            capabilities["sensor"]["location"]["x"] = instance.longitude
+            capabilities["sensor"]["location"]["y"] = instance.latitude
+            capabilities["sensor"]["location"]["z"] = instance.height
+            capabilities["sensor"]["location"]["gps"] = instance.gps
+            capabilities["sensor"]["location"]["description"] = instance.description
 
 
 def db_location_deleted(sender, **kwargs):
     instance = kwargs["instance"]
     if isinstance(instance, Location):
-        if "location" in capabilities["sensor"] and instance.active:
-            capabilities["sensor"]["location"] = None
+        if "location" in settings.CAPABILITIES["sensor"] and instance.active:
+            settings.CAPABILITIES["sensor"]["location"] = None
