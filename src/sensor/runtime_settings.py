@@ -537,3 +537,4 @@ def load_capabilities(sensor_definition_file):
     return capabilities
 
 ACTIONS = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
+CAPABILITIES = load_capabilities(SENSOR_DEFINITION_FILE)
