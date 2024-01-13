@@ -8,7 +8,6 @@ from its_preselector.configuration_exception import ConfigurationException
 from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
 
 from scos_actions import utils
-from scos_actions.metadata.utils import construct_geojson_point
 from scos_actions.signals import register_component_with_status
 
 logger = logging.getLogger(__name__)

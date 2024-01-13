@@ -3,12 +3,6 @@ import logging
 import os
 import sys
 from environs import Env
-from initialization import (
-    load_preselector,
-    load_switches,
-    load_capabilities,
-
-)
 from multiprocessing import cpu_count
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
@@ -42,6 +36,11 @@ def post_worker_init(worker):
     django.setup()
     env = Env()
     from scheduler import scheduler
+    from initialization import (
+        load_preselector,
+        load_switches,
+        load_capabilities,
+    )
     sigan_module_setting = env("SIGAN_MODULE")
     sigan_module = importlib.import_module(sigan_module_setting)
     logger.info("Creating " + env("SIGAN_CLASS") + " from " + env("SIGAN_MODULE"))

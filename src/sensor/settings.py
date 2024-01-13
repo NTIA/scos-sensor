@@ -26,8 +26,6 @@ from os import path
 from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
-
-
 from scos_actions.actions import action_classes
 from scos_actions.discover import test_actions
 from scos_actions.discover import init

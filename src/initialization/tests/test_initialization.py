@@ -1,4 +1,4 @@
-from initialization import load_preselector
+from src.initialization import load_preselector
 
 def test_load_preselector():
     preselector = load_preselector(
