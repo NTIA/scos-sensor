@@ -23,9 +23,10 @@ def get_sigan_calibration(sigan_cal_file_path: str, default_cal_file_path: str) 
                 sigan_cal_file_path + " does not exist. Not loading sigan calibration file."
             )
         else:
-        logger.debug(f"Loading sigan cal file: {sigan_cal_file_path}")
-        check_for_default_calibration(sigan_cal_file_path,default_cal_file_path, "Sigan")
-        sigan_cal = load_from_json(sigan_cal_file_path)
+            logger.debug(f"Loading sigan cal file: {sigan_cal_file_path}")
+            default = check_for_default_calibration(sigan_cal_file_path,default_cal_file_path, "Sigan")
+            sigan_cal = load_from_json(sigan_cal_file_path)
+            sigan_cal.is_default = default
     except Exception:
         sigan_cal = None
         logger.exception("Unable to load sigan calibration data, reverting to none")
@@ -54,20 +55,22 @@ def get_sensor_calibration(sensor_cal_file_path: str, default_cal_file_path: str
             )
         else:
             logger.debug(f"Loading sensor cal file: {sensor_cal_file_path}")
-            check_for_default_calibration(
+            default = check_for_default_calibration(
                 sensor_cal_file_path, default_cal_file_path, "Sensor"
             )
         sensor_cal = load_from_json(sensor_cal_file_path)
+        sensor_cal.is_default = default
     except Exception:
         sensor_cal = None
         logger.exception("Unable to load sensor calibration data, reverting to none")
     return sensor_cal
 
 
-def check_for_default_calibration(cal_file_path: str,default_cal_path: str, cal_type: str):
+def check_for_default_calibration(cal_file_path: str,default_cal_path: str, cal_type: str) -> bool:
     default_cal = False
     if cal_file_path == default_cal_path:
         default_cal = True
         logger.warning(
             f"***************LOADING DEFAULT {cal_type} CALIBRATION***************"
         )
+    return default_cal
