@@ -39,7 +39,6 @@ def post_worker_init(worker):
     from initialization import (
         load_preselector,
         load_switches,
-        load_capabilities,
     )
     sigan_module_setting = env("SIGAN_MODULE")
     sigan_module = importlib.import_module(sigan_module_setting)
@@ -47,10 +46,10 @@ def post_worker_init(worker):
     sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
     sigan = sigan_constructor()
     register_component_with_status.send(sigan, component=sigan)
-    capabilities = load_capabilities(env("SENSOR_DEFINITION_FILE"))
     switches = load_switches(env("SWITCH_CONFIGS_DIR"))
     for key, switch in switches:
         register_component_with_status(switch, component=switch)
+    capabilities = env("CAPABILITIES")
     preselector = load_preselector(env("PRESELECTOR_CONFIG"), env("PRESELEDTOR_MODULE"), env("PRESELECTOR_CLASS"), capabilities["sensor"])
     register_component_with_status(preselector, component=preselector)
     if "location" in capabilities["sensor"]:

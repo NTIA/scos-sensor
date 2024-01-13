@@ -497,4 +497,33 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     return actions
 
 
+def load_capabilities(sensor_definition_file):
+    capabilities = {}
+    SENSOR_DEFINITION_HASH = None
+    SENSOR_LOCATION = None
+
+    logger.debug(f"Loading {sensor_definition_file}")
+    try:
+        capabilities["sensor"] = utils.load_from_json(sensor_definition_file)
+    except Exception as e:
+        logger.warning(
+            f"Failed to load sensor definition file: {sensor_definition_file}"
+            + "\nAn empty sensor definition will be used"
+        )
+        capabilities["sensor"] = {"sensor_spec": {"id": "unknown"}}
+        capabilities["sensor"]["sensor_sha512"] = "UNKNOWN SENSOR DEFINITION"
+
+    # Generate sensor definition file hash (SHA 512)
+    try:
+        if "sensor_sha512" not in capabilities["sensor"]:
+            sensor_def = json.dumps(capabilities["sensor"], sort_keys=True)
+            SENSOR_DEFINITION_HASH = hashlib.sha512(sensor_def.encode("UTF-8")).hexdigest()
+            capabilities["sensor"]["sensor_sha512"] = SENSOR_DEFINITION_HASH
+    except:
+        capabilities["sensor"]["sensor_sha512"] = "ERROR GENERATING HASH"
+        # SENSOR_DEFINITION_HASH is None, do not raise Exception
+        logger.exception(f"Unable to generate sensor definition hash")
+
+    return capabilities
+
 ACTIONS = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
