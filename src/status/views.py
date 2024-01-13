@@ -2,12 +2,13 @@ import datetime
 import logging
 import shutil
 
+from . import status_monitor
+from . import signal_analyzers
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
-from scos_actions.status import status_monitor
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,
@@ -15,7 +16,7 @@ from scos_actions.utils import (
 
 from scheduler import scheduler
 
-from . import sensor_cal, start_time
+from . import start_time
 from .serializers import LocationSerializer
 from .utils import get_location
 
@@ -57,7 +58,7 @@ def status(request, version, format=None):
         "location": serialize_location(),
         "system_time": get_datetime_str_now(),
         "start_time": convert_datetime_to_millisecond_iso_format(start_time),
-        "last_calibration_datetime": sensor_cal.last_calibration_datetime,
+        "last_calibration_datetime": signal_analyzers[0].signal_analyzer.sensor_calibration.last_calibration_datetime,
         "disk_usage": disk_usage(),
         "days_up": get_days_up(),
     }
