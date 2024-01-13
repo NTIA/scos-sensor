@@ -22,6 +22,7 @@ from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 
+from .action_loader import load_actions
 from src.sensor.action_loader import load_actions
 
 env = Env()

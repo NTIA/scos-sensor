@@ -14,14 +14,18 @@ Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/a
 
 """
 
+import logging
 import os
 import sys
 from os import path
 
+from .action_loader import  load_actions
 from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 
+logger = logging.getLogger(__name__)
+logger.debug("Initializing scos-sensor settings.")
 env = Env()
 
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -440,6 +444,7 @@ SWITCH_CONFIGS_DIR = env.str(
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
+actions = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
 
 
 

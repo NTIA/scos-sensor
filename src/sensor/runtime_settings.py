@@ -16,7 +16,7 @@ run in docker. Make sure migration_settings.py and this stay in sync as needed. 
 import os
 import sys
 from os import path
-from action_loader import load_actions
+from .action_loader import load_actions
 from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
