@@ -22,6 +22,8 @@ from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 
+from src.sensor.action_loader import load_actions
+
 env = Env()
 
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -422,3 +424,4 @@ SWITCH_CONFIGS_DIR = env.str(
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
+actions = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)

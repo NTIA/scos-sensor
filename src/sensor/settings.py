@@ -326,6 +326,9 @@ if RUNNING_TESTS or RUNNING_DEMO:
             "NAME": "test.db",  # temporary workaround for https://github.com/pytest-dev/pytest-django/issues/783
         }
     }
+    DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
+    SIGAN_MODULE ="scos_actions.hardware.mocks.mock_sigan"
+    SIGAN_CLASS = "MockSignalAnalyzer"
 else:
     DATABASES = {
         "default": {
@@ -337,6 +340,9 @@ else:
             "PORT": "5432",
         }
     }
+    DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
+    SIGAN_MODULE = env.str("SIGAN_MDOULE", default="scos_tekrsa.hardware.tekrsa_sigan")
+    SIGAN_CLASS = env.str("SIGAN_CLASS", default="TekRSASigan")
 
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
@@ -434,6 +440,8 @@ SWITCH_CONFIGS_DIR = env.str(
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
-DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
-SIGAN_MODULE = env.str("SIGAN_MDOULE", default="scos_tekrsa.hardware.tekrsa_sigan")
-SIGAN_CLASS = env.str("SIGAN_CLASS", default="TekRSASigan")
+
+
+
+
+

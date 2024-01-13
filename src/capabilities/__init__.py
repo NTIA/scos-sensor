@@ -1,10 +1,10 @@
 import logging
 
 from scos_actions.capabilities import capabilities
-from actions import actions
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
 logger.debug("********** Initializing capabilities **********")
-actions_by_name = actions
+actions_by_name = settings.actions
 sensor_capabilities = capabilities

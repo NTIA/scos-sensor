@@ -3,8 +3,17 @@ import logging
 import os
 import sys
 from environs import Env
+from initialization import (
+    load_preselector,
+    load_switches,
+    load_capabilities,
+
+)
 from multiprocessing import cpu_count
+from scos_actions.hardware.sensor import Sensor
+from scos_actions.metadata.utils import construct_geojson_point
 from scos_actions.signals import register_component_with_status
+
 
 bind = ":8000"
 workers = 1
@@ -39,7 +48,25 @@ def post_worker_init(worker):
     sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
     sigan = sigan_constructor()
     register_component_with_status.send(sigan, component=sigan)
-    scheduler.thread.signal_analyzer = sigan
+    capabilities = load_capabilities(env("SENSOR_DEFINITION_FILE"))
+    switches = load_switches(env("SWITCH_CONFIGS_DIR"))
+    for key, switch in switches:
+        register_component_with_status(switch, component=switch)
+    preselector = load_preselector(env("PRESELECTOR_CONFIG"), env("PRESELEDTOR_MODULE"), env("PRESELECTOR_CLASS"), capabilities["sensor"])
+    register_component_with_status(preselector, component=preselector)
+    if "location" in capabilities["sensor"]:
+        try:
+            sensor_loc = capabilities["sensor"].pop("location")
+            location = construct_geojson_point(
+                sensor_loc["x"],
+                sensor_loc["y"],
+                sensor_loc["z"] if "z" in sensor_loc else None,
+            )
+        except:
+            logger.exception("Failed to get sensor location from sensor definition.")
+
+    sensor = Sensor(signal_analyzer=sigan, preselector = preselector, switches = switches, capabilities = capabilities, location = location)
+    scheduler.thread.sensor = sensor
     scheduler.thread.start()
 
 

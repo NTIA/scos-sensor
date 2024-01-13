@@ -10,6 +10,7 @@ import scheduler
 from authentication.models import User
 from authentication.tests.utils import get_test_public_private_key
 from tasks.models import TaskResult
+from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
 
 PRIVATE_KEY, PUBLIC_KEY = get_test_public_private_key()
 Keys = namedtuple("KEYS", ["private_key", "public_key"])
@@ -42,6 +43,7 @@ def testclock():
 def test_scheduler(rf, testclock):
     """Instantiate test scheduler with fake request context and testclock."""
     s = scheduler.scheduler.Scheduler()
+    s.signal_analyzer = MockSignalAnalyzer()
     s.request = rf.post("mock://cburl/schedule")
     return s
 

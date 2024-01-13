@@ -16,7 +16,7 @@ run in docker. Make sure migration_settings.py and this stay in sync as needed. 
 import os
 import sys
 from os import path
-
+from action_loader import load_actions
 from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
@@ -196,7 +196,6 @@ INSTALLED_APPS = [
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
     "sensor.apps.SensorConfig",  # global settings/utils, etc
-    "actions.apps.ActionsConfig",
 ]
 
 MIDDLEWARE = [
@@ -432,3 +431,4 @@ SWITCH_CONFIGS_DIR = env.str(
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
+actions = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
