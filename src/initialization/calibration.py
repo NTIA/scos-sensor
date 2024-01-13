@@ -1,3 +1,4 @@
+import logging
 from os import path
 
 from scos_actions.calibration.calibration import Calibration, load_from_json

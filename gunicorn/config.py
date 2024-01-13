@@ -55,7 +55,7 @@ def post_worker_init(worker):
     sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal)
     register_component_with_status.send(sigan, component=sigan)
     register_signal_analyzer.send(sigan, signal_analyzer=sigan)
-    
+
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
     for key, switch in switches:
         register_component_with_status(switch, component=switch)
