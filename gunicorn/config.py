@@ -57,7 +57,7 @@ def post_worker_init(worker):
 
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
     for key, switch in switches.items():
-        register_component_with_status(switch, component=switch)
+        register_component_with_status.send(switch, component=switch)
     capabilities = settings.CAPABILITIES
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELEDTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
     register_component_with_status(preselector, component=preselector)

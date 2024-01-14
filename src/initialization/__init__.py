@@ -52,14 +52,8 @@ def load_preselector(preselector_config, module, preselector_class_name, sensor_
         preselector_module = importlib.import_module(module)
         preselector_constructor = getattr(preselector_module, preselector_class_name)
         ps = preselector_constructor(sensor_definition, preselector_config)
-        if ps and ps.name:
-            logger.debug(f"Registering {ps.name} as status provider")
-            register_component_with_status.send(__name__, component=ps)
     else:
         ps = None
     return ps
-
-import logging
-from os import path
 
 
