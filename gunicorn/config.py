@@ -73,7 +73,7 @@ def post_worker_init(worker):
 
     sensor = Sensor(signal_analyzer=sigan, preselector = preselector, switches = switches, capabilities = capabilities, location = location)
     scheduler.thread.sensor = sensor
-    register_sensor.send(sensor=sensor)
+    register_sensor.send(sensor, sensor=sensor)
     scheduler.thread.start()
 
 
