@@ -26,7 +26,7 @@ def get_sigan_calibration(sigan_cal_file_path: str, default_cal_file_path: str) 
         else:
             logger.debug(f"Loading sigan cal file: {sigan_cal_file_path}")
             default = check_for_default_calibration(sigan_cal_file_path,default_cal_file_path, "Sigan")
-            sigan_cal = load_from_json(sigan_cal_file_path)
+            sigan_cal = load_from_json(sigan_cal_file_path, default)
             sigan_cal.is_default = default
     except Exception:
         sigan_cal = None
@@ -59,7 +59,7 @@ def get_sensor_calibration(sensor_cal_file_path: str, default_cal_file_path: str
             default = check_for_default_calibration(
                 sensor_cal_file_path, default_cal_file_path, "Sensor"
             )
-        sensor_cal = load_from_json(sensor_cal_file_path)
+        sensor_cal = load_from_json(sensor_cal_file_path, default)
         sensor_cal.is_default = default
     except Exception:
         sensor_cal = None
