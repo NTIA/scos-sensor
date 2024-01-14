@@ -58,7 +58,7 @@ def status(request, version, format=None):
         "location": serialize_location(),
         "system_time": get_datetime_str_now(),
         "start_time": convert_datetime_to_millisecond_iso_format(start_time),
-        "last_calibration_datetime": signal_analyzers[0].signal_analyzer.sensor_calibration.last_calibration_datetime,
+        "last_calibration_datetime": signal_analyzers[0].sensor_calibration.last_calibration_datetime,
         "disk_usage": disk_usage(),
         "days_up": get_days_up(),
     }
