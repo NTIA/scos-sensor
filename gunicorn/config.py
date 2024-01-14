@@ -56,11 +56,8 @@ def post_worker_init(worker):
     register_signal_analyzer.send(sigan, signal_analyzer=sigan)
 
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-    for key, switch in switches.items():
-        register_component_with_status.send(switch, component=switch)
     capabilities = settings.CAPABILITIES
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
-    register_component_with_status.send(preselector, component=preselector)
     if "location" in capabilities["sensor"]:
         try:
             sensor_loc = capabilities["sensor"].pop("location")

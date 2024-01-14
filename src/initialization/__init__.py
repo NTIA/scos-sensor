@@ -54,6 +54,7 @@ def load_preselector(preselector_config: str, module: str, preselector_class_nam
         preselector_constructor = getattr(preselector_module, preselector_class_name)
         preselector_config = utils.load_from_json(preselector_config)
         ps = preselector_constructor(sensor_definition, preselector_config)
+        register_component_with_status.send(ps, component=ps)
     else:
         ps = None
     return ps
