@@ -7,7 +7,7 @@ from scos_actions.metadata.utils import construct_geojson_point
 logger = logging.getLogger(__name__)
 
 def location_action_completed_callback(sender, **kwargs):
-    """Update database and capabilities when GPS is synced or database is updated"""
+    """Update database when GPS is synced or database is updated"""
     latitude = kwargs["latitude"] if "latitude" in kwargs else None
     longitude = kwargs["longitude"] if "longitude" in kwargs else None
     gps = kwargs["gps"] if "gps" in kwargs else None
