@@ -8,6 +8,7 @@ from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
 from scos_actions.signals import register_component_with_status
 from scos_actions.signals import register_signal_analyzer
+from scos_actions.signals import register_sensor
 
 
 bind = ":8000"
@@ -72,6 +73,7 @@ def post_worker_init(worker):
 
     sensor = Sensor(signal_analyzer=sigan, preselector = preselector, switches = switches, capabilities = capabilities, location = location)
     scheduler.thread.sensor = sensor
+    register_sensor.send(sensor=sensor)
     scheduler.thread.start()
 
 
