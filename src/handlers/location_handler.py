@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 def location_action_completed_callback(sender, **kwargs):
     """Update database when GPS is synced or database is updated"""
+    logger.debug(f"Updating location from {sender}")
     latitude = kwargs["latitude"] if "latitude" in kwargs else None
     longitude = kwargs["longitude"] if "longitude" in kwargs else None
     gps = kwargs["gps"] if "gps" in kwargs else None
@@ -45,7 +46,7 @@ def db_location_updated(sender, **kwargs):
 def db_location_deleted(sender, **kwargs):
     instance = kwargs["instance"]
     if isinstance(instance, Location):
-        if "location" in settings.CAPABILITIES["sensor"] and instance.active:
+        if instance.active:
             if len(sensors) >0:
                 sensors[0].location = None
                 logger.debug(f"Set {sensors[0]} location to None.")

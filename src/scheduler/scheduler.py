@@ -55,7 +55,7 @@ class Scheduler(threading.Thread):
 
     @sensor.setter
     def sensor(self, sensor: Sensor):
-        logger.debug(f"Set scheduler sigan to {sensor}")
+        logger.debug(f"Set scheduler sensor to {sensor}")
         self._sensor = sensor
 
     @property
