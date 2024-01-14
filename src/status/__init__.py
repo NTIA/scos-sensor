@@ -14,8 +14,11 @@ status_monitor = StatusMonitor()
 
 def signal_analyzer_registration_handler(sender, **kwargs):
     try:
-        logger.debug(f"Registering {sender} as status provider")
-        signal_analyzers[0] = kwargs["signal_analyzer"]
+        logger.debug(f"Registering {sender} as signa analyzer")
+        if len(signal_analyzers) > 0:
+            signal_analyzers[0] =
+        else:
+            signal_analyzers.append( kwargs["signal_analyzer"])
     except:
         logger.exception("Error registering status component")
 
