@@ -52,6 +52,7 @@ def load_preselector(preselector_config, module, preselector_class_name, sensor_
     if module is not None and preselector_class_name is not None:
         preselector_module = importlib.import_module(module)
         preselector_constructor = getattr(preselector_module, preselector_class_name)
+        preselector_config = utils.load_from_json(preselector_config)
         ps = preselector_constructor(sensor_definition, preselector_config)
     else:
         ps = None
