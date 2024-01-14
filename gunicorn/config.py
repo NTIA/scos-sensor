@@ -59,7 +59,7 @@ def post_worker_init(worker):
     for key, switch in switches.items():
         register_component_with_status.send(switch, component=switch)
     capabilities = settings.CAPABILITIES
-    preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELEDTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
+    preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
     register_component_with_status(preselector, component=preselector)
     if "location" in capabilities["sensor"]:
         try:
