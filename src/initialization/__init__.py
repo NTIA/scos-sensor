@@ -48,6 +48,7 @@ def load_preselector_from_file(preselector_config_file: Path):
 
 
 def load_preselector(preselector_config, module, preselector_class_name, sensor_definition):
+    logger.debug(f"loading {preselector_class_name} from {module} with config: {preselector_config}")
     if module is not None and preselector_class_name is not None:
         preselector_module = importlib.import_module(module)
         preselector_constructor = getattr(preselector_module, preselector_class_name)
