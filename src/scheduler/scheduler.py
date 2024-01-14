@@ -8,6 +8,7 @@ from pathlib import Path
 
 import requests
 from django.utils import timezone
+from scos_actions.hardware.sensor import Sensor
 from scos_actions.signals import trigger_api_restart
 from authentication import oauth
 from schedule.models import ScheduleEntry
@@ -46,25 +47,16 @@ class Scheduler(threading.Thread):
         self.task = None  # Task object describing current task
         self.last_status = ""
         self.consecutive_failures = 0
-        self._signal_analyzer = None
-        self._gps = None
+        self._sensor = None
 
     @property
-    def signal_analyzer(self):
-        return self._signal_analyzer
+    def sensor(self):
+        return self._sensor
 
-    @signal_analyzer.setter
-    def signal_analyzer(self, sigan):
-        logger.debug(f"Set scheduler sigan to {sigan}")
-        self._signal_analyzer = sigan
-
-    @property
-    def gps(self):
-        return self._gps
-
-    @gps.setter
-    def gps(self, gps):
-        self._gps = gps
+    @sensor.setter
+    def sensor(self, sensor: Sensor):
+        logger.debug(f"Set scheduler sigan to {sensor}")
+        self._sensor = sensor
 
     @property
     def schedule(self):
@@ -181,8 +173,8 @@ class Scheduler(threading.Thread):
         schedule_entry_json["id"] = entry_name
 
         try:
-            logger.debug(f"running task {entry_name}/{task_id} with sigan: {self.signal_analyzer}")
-            detail = self.task.action_caller(self.signal_analyzer, self.gps, schedule_entry_json, task_id)
+            logger.debug(f"running task {entry_name}/{task_id} with sigan: {self.sensor}")
+            detail = self.task.action_caller(self.sensor, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):
