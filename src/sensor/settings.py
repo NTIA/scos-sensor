@@ -501,9 +501,8 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
             logger.debug("Looking for actions in " + name + ": " + str(module))
             discover = importlib.import_module(name + ".discover")
             if hasattr(discover, "actions"):
-                for name, action in discover.actions.items():
-                    logger.debug("action: " + name + "=" + str(action))
-                    actions[name] = action
+                logger.debug(f"loading {len(discover.actions)} actions.")
+                actions.update(discover.actions)
             if hasattr(discover, "action_types") and discover.action_types is not None:
                 action_types.update(discover.action_types)
 
@@ -516,8 +515,8 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
 
 def load_capabilities(sensor_definition_file):
     capabilities = {}
-    SENSOR_DEFINITION_HASH = None
-    SENSOR_LOCATION = None
+    sensor_definition_hash = None
+    sensor_location = None
 
     logger.debug(f"Loading {sensor_definition_file}")
     try:
@@ -534,11 +533,11 @@ def load_capabilities(sensor_definition_file):
     try:
         if "sensor_sha512" not in capabilities["sensor"]:
             sensor_def = json.dumps(capabilities["sensor"], sort_keys=True)
-            SENSOR_DEFINITION_HASH = hashlib.sha512(sensor_def.encode("UTF-8")).hexdigest()
-            capabilities["sensor"]["sensor_sha512"] = SENSOR_DEFINITION_HASH
+            sensor_definition_hash = hashlib.sha512(sensor_def.encode("UTF-8")).hexdigest()
+            capabilities["sensor"]["sensor_sha512"] = sensor_definition_hash
     except:
         capabilities["sensor"]["sensor_sha512"] = "ERROR GENERATING HASH"
-        # SENSOR_DEFINITION_HASH is None, do not raise Exception
+        # SENSOR_DEFINITION_HASH is None, do not raise Exception, but log it
         logger.exception(f"Unable to generate sensor definition hash")
 
     return capabilities
