@@ -81,7 +81,7 @@ def post_worker_init(worker):
                 db_location.latitude = sensor_loc["y"]
                 db_location.height = sensor_loc["z"]
                 db_location.gps = False
-                db_location.description = ""
+                db_location.description = "Sensor Definition Location"
                 db_location.save()
         except:
             logger.exception("Failed to get sensor location from sensor definition.")
