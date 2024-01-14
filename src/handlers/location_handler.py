@@ -1,5 +1,5 @@
 import logging
-from . import sensor
+from . import sensors
 from status.models import GPS_LOCATION_DESCRIPTION, Location
 from django.conf import settings
 from scos_actions.metadata.utils import construct_geojson_point
@@ -35,13 +35,19 @@ def db_location_updated(sender, **kwargs):
     instance = kwargs["instance"]
     if isinstance(instance, Location) and instance.active:
         geojson = construct_geojson_point(longitude = instance.longitude, latitude=instance.latitude, altitude= instance.height)
-        sensor.location = geojson
-        logger.debug(f"Updated {sensor} location to {geojson}")
-
+        if len(sensors) > 0:
+            sensors[0].location = geojson
+            logger.debug(f"Updated {sensors[0]} location to {geojson}")
+        else:
+            logger.warning("No sensor is registered. Unable to update sensor location.")
 
 
 def db_location_deleted(sender, **kwargs):
     instance = kwargs["instance"]
     if isinstance(instance, Location):
         if "location" in settings.CAPABILITIES["sensor"] and instance.active:
-            sensor.location = None
+            if len(sensors) >0:
+                sensors[0].location = None
+                logger.debug(f"Set {sensors[0]} location to None.")
+            else:
+                logger.warning("No sensor registered. Unable to remove sensor location.")
