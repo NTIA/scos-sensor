@@ -34,6 +34,7 @@ def location_action_completed_callback(sender, **kwargs):
 
 def db_location_updated(sender, **kwargs):
     instance = kwargs["instance"]
+    logger.debug(f"DB location updated by {sender}")
     if isinstance(instance, Location) and instance.active:
         geojson = construct_geojson_point(longitude = instance.longitude, latitude=instance.latitude, altitude= instance.height)
         if len(sensors) > 0:

@@ -44,5 +44,5 @@ if not settings.IN_DOCKER:
     register_component_with_status.send(sigan, component=sigan)
     scheduler.thread.signal_analyzer = sigan
     scheduler.thread.start()
-    scheduler.thread.start()
+
 
