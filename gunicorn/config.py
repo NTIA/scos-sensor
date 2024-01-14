@@ -60,6 +60,7 @@ def post_worker_init(worker):
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
     capabilities = settings.CAPABILITIES
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
+    location = None
     if "location" in capabilities["sensor"]:
         try:
             sensor_loc = capabilities["sensor"].pop("location")
