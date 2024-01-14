@@ -60,7 +60,7 @@ def post_worker_init(worker):
         register_component_with_status.send(switch, component=switch)
     capabilities = settings.CAPABILITIES
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
-    register_component_with_status(preselector, component=preselector)
+    register_component_with_status.send(preselector, component=preselector)
     if "location" in capabilities["sensor"]:
         try:
             sensor_loc = capabilities["sensor"].pop("location")
