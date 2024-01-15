@@ -445,7 +445,6 @@ MAX_FAILURES = env("MAX_FAILURES", default=2)
 
 ACTIONS = {}
 CAPABILITIES = {}
-SENSOR_DEFINITION_HASH = CAPABILITIES["sensor"]["sensor_sha512"]
 
 
 

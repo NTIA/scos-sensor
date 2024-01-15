@@ -53,7 +53,6 @@ def post_worker_init(worker):
 
     settings.ACTIONS = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTIONS_DIR)
     settings.CAPABILITIES = load_capabilities(settings.SENSOR_DEFINITION_FILE)
-    settings.SENSOR_DEFINITION_HASH = settings.CAPABILITIES["sensor"]["sensor_sha512"]
 
     sigan_module_setting = settings.SIGAN_MODULE
     sigan_module = importlib.import_module(sigan_module_setting)
