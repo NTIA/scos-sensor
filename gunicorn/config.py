@@ -69,7 +69,8 @@ def post_worker_init(worker):
                 db_location = Location.objects.get(active=True)
                 location = construct_geojson_point(db_location.longitude, db_location.latitude, db_location.height)
             except Location.DoesNotExist:
-                #No DB location. Use sensor def location and save to DB.
+                # This should never occur because status/migrations/0003_auto_20211217_2229.py
+                # will load the No DB location. Use sensor def location and save to DB.
                 location = construct_geojson_point(
                     sensor_loc["x"],
                     sensor_loc["y"],
@@ -81,7 +82,7 @@ def post_worker_init(worker):
                 db_location.latitude = sensor_loc["y"]
                 db_location.height = sensor_loc["z"]
                 db_location.gps = False
-                db_location.description = "Sensor Definition Location"
+                db_location.description = sensor_loc["description"]
                 db_location.save()
         except:
             logger.exception("Failed to get sensor location from sensor definition.")
