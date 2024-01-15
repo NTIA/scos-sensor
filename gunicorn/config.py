@@ -2,13 +2,8 @@ import importlib
 import logging
 import os
 import sys
-from environs import Env
 from multiprocessing import cpu_count
-from scos_actions.hardware.sensor import Sensor
-from scos_actions.metadata.utils import construct_geojson_point
-from scos_actions.signals import register_component_with_status
-from scos_actions.signals import register_signal_analyzer
-from scos_actions.signals import register_sensor
+
 
 
 bind = ":8000"
@@ -47,6 +42,12 @@ def post_worker_init(worker):
     )
     from django.conf import settings
     from status.models import Location
+    from scos_actions.hardware.sensor import Sensor
+    from scos_actions.metadata.utils import construct_geojson_point
+    from scos_actions.signals import register_component_with_status
+    from scos_actions.signals import register_signal_analyzer
+    from scos_actions.signals import register_sensor
+    
     sigan_module_setting = settings.SIGAN_MODULE
     sigan_module = importlib.import_module(sigan_module_setting)
     logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
