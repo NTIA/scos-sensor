@@ -57,8 +57,9 @@ IN_DOCKER = env.bool("IN_DOCKER", default=False)
 RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
 MOCK_SIGAN = env.bool("MOCK_SIGAN", default=False) or RUNNING_DEMO or RUNNING_TESTS
+os.environ["MOCK_SIGAN"] = str(MOCK_SIGAN)
 MOCK_SIGAN_RANDOM = env.bool("MOCK_SIGAN_RANDOM", default=False)
-
+os.environ["MOCK_SIGAN_RANDOM"] = str(MOCK_SIGAN_RANDOM)
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
@@ -545,7 +546,7 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
     return actions
-os.environ["RUNNING_TESTS"] = RUNNING_TESTS
+os.environ["RUNNING_TESTS"] = str(RUNNING_TESTS)
 ACTIONS = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
 CAPABILITIES = load_capabilities(SENSOR_DEFINITION_FILE)
 
