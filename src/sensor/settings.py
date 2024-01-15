@@ -78,6 +78,8 @@ if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
 else:
     SENSOR_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
+
+
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
     SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
 else:

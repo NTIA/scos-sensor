@@ -37,11 +37,8 @@ def post_worker_init(worker):
         load_switches,
     )
     from initialization import (
-        copy_driver_files,
         get_sensor_calibration,
-        get_sigan_calibration,
-        load_actions,
-        load_capabilities
+        get_sigan_calibration
     )
     from django.conf import settings
     from status.models import Location
