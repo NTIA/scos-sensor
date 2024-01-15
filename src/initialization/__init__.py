@@ -2,6 +2,7 @@ import hashlib
 import importlib
 import json
 import logging
+import os
 import pkgutil
 import shutil
 from os import path
