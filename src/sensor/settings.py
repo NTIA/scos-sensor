@@ -74,6 +74,7 @@ ACTIONS_DIR = path.join(CONFIG_DIR, "actions")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
 DEFAULT_CALIBRATION_FILE= path.join(CONFIG_DIR, "default_calibration.json")
+os.environ["DEFAULT_CALIBRATION_FILE"] = DEFAULT_CALIBRATION_FILE
 # JSON configs
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
@@ -445,6 +446,7 @@ PRESELECTOR_CLASS = env.str("PRESELECTOR_CLASS", default="WebRelayPreselector")
 SWITCH_CONFIGS_DIR = Path(env.str(
     "SWITCH_CONFIGS_DIR", default=path.join(CONFIG_DIR, "switches")
 ))
+os.environ["SWITCH_CONFIGS_DIR"] = SWITCH_CONFIGS_DIR
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
@@ -546,7 +548,7 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
     return actions
-
+os.environs["RUNNING_TESTS"] = RUNNING_TESTS
 ACTIONS = load_actions(MOCK_SIGAN, RUNNING_TESTS, DRIVERS_DIR, ACTIONS_DIR)
 CAPABILITIES = load_capabilities(SENSOR_DEFINITION_FILE)
 
