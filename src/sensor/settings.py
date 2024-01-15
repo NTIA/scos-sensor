@@ -69,6 +69,7 @@ LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
+
 ACTIONS_DIR = path.join(CONFIG_DIR, "actions")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
@@ -79,11 +80,14 @@ if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
 else:
     SENSOR_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
 
+os.environ["SENSOR_CALIBRATION_FILE"] = SENSOR_CALIBRATION_FILE
 
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
     SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
 else:
     SIGAN_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
+
+os.environ["SIGAN_CALIBRATION_FILE"] = SIGAN_CALIBRATION_FILE
 
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
