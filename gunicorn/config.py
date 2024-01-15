@@ -51,9 +51,6 @@ def post_worker_init(worker):
     from scos_actions.signals import register_signal_analyzer
     from scos_actions.signals import register_sensor
 
-    settings.ACTIONS = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTIONS_DIR)
-    settings.CAPABILITIES = load_capabilities(settings.SENSOR_DEFINITION_FILE)
-
     sigan_module_setting = settings.SIGAN_MODULE
     sigan_module = importlib.import_module(sigan_module_setting)
     logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
