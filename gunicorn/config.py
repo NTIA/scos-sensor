@@ -31,6 +31,7 @@ def post_worker_init(worker):
     import django
 
     django.setup()
+    from capabilities import sensor_capabilities
     from scheduler import scheduler
     from initialization import (
         load_preselector,
@@ -59,7 +60,7 @@ def post_worker_init(worker):
     register_signal_analyzer.send(sigan, signal_analyzer=sigan)
 
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-    capabilities = settings.CAPABILITIES
+    capabilities = sensor_capabilities
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
     location = None
     if "location" in capabilities["sensor"]:
