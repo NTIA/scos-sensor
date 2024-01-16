@@ -197,8 +197,9 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",  # OpenAPI generator
     # project-local apps
-    "authentication.apps.AuthenticationConfig",
+    "actions.apps.ActionsConfig",
     "capabilities.apps.CapabilitiesConfig",
+    "authentication.apps.AuthenticationConfig",
     "handlers.apps.HandlersConfig",
     "tasks.apps.TasksConfig",
     "schedule.apps.ScheduleConfig",
@@ -448,40 +449,8 @@ SWITCH_CONFIGS_DIR = Path(SWITCH_CONFIGS_DIR)
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
-
-def load_capabilities(sensor_definition_file):
-    from scos_actions.utils import load_from_json
-    capabilities = {}
-    sensor_definition_hash = None
-    sensor_location = None
-
-    logger.debug(f"Loading {sensor_definition_file}")
-    try:
-        capabilities["sensor"] = load_from_json(sensor_definition_file)
-    except Exception as e:
-        logger.warning(
-            f"Failed to load sensor definition file: {sensor_definition_file}"
-            + "\nAn empty sensor definition will be used"
-        )
-        capabilities["sensor"] = {"sensor_spec": {"id": "unknown"}}
-        capabilities["sensor"]["sensor_sha512"] = "UNKNOWN SENSOR DEFINITION"
-
-    # Generate sensor definition file hash (SHA 512)
-    try:
-        if "sensor_sha512" not in capabilities["sensor"]:
-            sensor_def = json.dumps(capabilities["sensor"], sort_keys=True)
-            sensor_definition_hash = hashlib.sha512(sensor_def.encode("UTF-8")).hexdigest()
-            capabilities["sensor"]["sensor_sha512"] = sensor_definition_hash
-    except:
-        capabilities["sensor"]["sensor_sha512"] = "ERROR GENERATING HASH"
-        # sensor_sha512 is None, do not raise Exception, but log it
-        logger.exception(f"Unable to generate sensor definition hash")
-
-    return capabilities
-
-
 os.environ["RUNNING_TESTS"] = str(RUNNING_TESTS)
-CAPABILITIES = load_capabilities(SENSOR_DEFINITION_FILE)
+
 
 
 

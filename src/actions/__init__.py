@@ -9,6 +9,8 @@ from scos_actions.actions import action_classes
 from scos_actions.discover import test_actions
 from scos_actions.discover import init
 
+from utils.signals import register_action
+
 logger = logging.getLogger(__name__)
 
 def copy_driver_files(driver_dir):
@@ -64,9 +66,11 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
             discover = importlib.import_module(name + ".discover")
             if hasattr(discover, "actions"):
                 logger.debug(f"loading {len(discover.actions)} actions.")
-                actions.update(discover.actions)
+                for name, action in discover.actions.items():
+                    register_action.send(name = name, action = action)
             if hasattr(discover, "action_classes") and discover.action_classes is not None:
-                action_classes.update(discover.action_classes)
+                for name, action in discover.action_classes.items():
+                    register_action_class(name= name, action=action)
 
     logger.debug(f"Loading actions in {action_dir}")
     yaml_actions, yaml_test_actions = init(action_classes = action_classes, yaml_dir=action_dir)

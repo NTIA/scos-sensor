@@ -19,6 +19,7 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()  # this is necessary because we need to handle our own thread
 
+from capabilities import sensor_capabilities
 from scheduler import scheduler  # noqa
 from sensor import settings  # noqa
 
@@ -61,12 +62,11 @@ if not settings.IN_DOCKER:
     register_signal_analyzer.send(sigan, signal_analyzer=sigan)
 
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-    capabilities = settings.CAPABILITIES
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE, settings.PRESELECTOR_CLASS, capabilities["sensor"])
     location = None
-    if "location" in capabilities["sensor"]:
+    if "location" in sensor_capabilities["sensor"]:
         try:
-            sensor_loc = capabilities["sensor"].pop("location")
+            sensor_loc = sensor_capabilities["sensor"].pop("location")
             try:
                 #if there is an active database location, use it over the value in the sensor def.
                 db_location = Location.objects.get(active=True)
