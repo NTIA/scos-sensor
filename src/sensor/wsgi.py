@@ -29,7 +29,7 @@ if settings.DEBUG:
     faulthandler.enable()
 
 application = get_wsgi_application()
-logger = logging.get(__name__)
+logger = logging.getLogger(__name__)
 
 if not settings.IN_DOCKER:
     # Normally scheduler is started by gunicorn worker process
