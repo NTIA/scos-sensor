@@ -15,8 +15,12 @@ class ActionLoader(object):
     _instance = None
 
     def __init__(self):
-        self._actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
+        if self._actions is None:
+            logger.debug("Actions have not been loaded. Loading actions...")
+            self._actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
                                              settings.ACTIONS_DIR)
+        else:
+            logger.debug("Already loaded actions. ")
 
     def __new__(cls):
         if cls._instance is None:
