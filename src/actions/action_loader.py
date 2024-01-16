@@ -12,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 class ActionLoader(object):
     _instance = None
-    _actions = {}
+
+    def __init__(self):
+        self._actions = {}
 
     def __new__(cls):
         if cls._instance is None:
