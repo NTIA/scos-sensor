@@ -4,7 +4,7 @@ import threading
 import time
 from itertools import chain, count, islice
 
-from actions import actions
+from actions import action_loader
 from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
@@ -12,7 +12,7 @@ from sensor import V1
 from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
 
 logger = logging.getLogger(__name__)
-
+actions = action_loader.actions
 if actions is not None:
     logger.debug(f"Have {len(actions)} actions")
 else:

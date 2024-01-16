@@ -6,7 +6,7 @@ import sys
 
 import django
 
-from actions import actions
+from actions import action_loader
 
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
 
@@ -16,7 +16,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
 django.setup()
 
 
-action_names = sorted(actions.keys())
+action_names = sorted(action_loader.actions.keys())
 
 
 if __name__ == "__main__":

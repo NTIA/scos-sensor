@@ -7,7 +7,7 @@ See https://hg.python.org/cpython/file/3.5/Lib/sched.py#l42.
 import logging
 from collections import namedtuple
 
-from actions import actions
+from actions import action_loader
 
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class Task(TaskTuple):
     @property
     def action_caller(self):
         """Action function with curried keyword arguments"""
-        action_caller = actions[self.action]
+        action_caller = action_loader.actions[self.action]
         return action_caller
 
     def __eq__(s, o):
