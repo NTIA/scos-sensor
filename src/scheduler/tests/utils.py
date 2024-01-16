@@ -11,10 +11,14 @@ from sensor import V1
 from django.conf import settings
 from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
 
+logger = logging.getLogger(__name__)
 actions = settings.ACTIONS
+if actions is not None:
+    logger.debug(f"Have {len(actions)} actions")
+else:
+    logger.warning("Actions is None")
 BAD_ACTION_STR = "testing expected failure"
 
-logger = logging.getLogger(__name__)
 logger.debug("*************** scos-sensor/scheduler/test/utils ***********")
 
 
@@ -62,7 +66,7 @@ def advance_testclock(iterator, n):
 
 def simulate_scheduler_run(n=1):
     s = Scheduler()
-    s.signal_analyzer = MockSignalAnalyzer()
+    s.sensor = Sensor(signal_analyzer=MockSignalAnalyzer())
     for _ in range(n):
         advance_testclock(s.timefn, 1)
         s.run(blocking=False)
@@ -107,7 +111,7 @@ def create_action():
     """
     flag = threading.Event()
 
-    def cb(schedule_entry_json, task_id):
+    def cb(sensor, schedule_entry_json, task_id):
         flag.set()
         return "set flag"
 
@@ -122,7 +126,7 @@ create_action.counter = 0
 
 
 def create_bad_action():
-    def bad_action(sigan, gps, schedule_entry_json, task_id):
+    def bad_action(sensor, schedule_entry_json, task_id):
         raise Exception(BAD_ACTION_STR)
 
     actions["bad_action"] = bad_action
