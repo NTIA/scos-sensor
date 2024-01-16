@@ -75,4 +75,4 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     logger.debug("Finished loading  and registering actions")
     return actions
 
-actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTION_DIR)
+actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTIONS_DIR)
