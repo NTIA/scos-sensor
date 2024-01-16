@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 
 class ActionLoader(object):
     _instance = None
-    _actions = None
+    _actions = {}
     def __new__(cls):
         if cls._instance is None:
             logger.debug('Creating the ActionLoader')
             cls._instance = super(ActionLoader, cls).__new__(cls)
             logger.debug(f"Calling load_actions with {settings.MOCK_SIGAN}, {settings.RUNNING_TESTS}, {settings.DRIVERS_DIR}, {settings.ACTIONS_DIR}")
-            _actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTIONS_DIR)
+            cls._instance._actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTIONS_DIR)
         return cls._instance
 
     @property
