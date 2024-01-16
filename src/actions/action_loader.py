@@ -4,8 +4,8 @@ import os
 import pkgutil
 import shutil
 from django.conf import settings
-from scos_actions import action_classes
-from scos_actions import test_actions
+from scos_actions.actions import action_classes
+from scos_actions.discover import test_actions
 
 logger = logging.getLogger(__name__)
 
