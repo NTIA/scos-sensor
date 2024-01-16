@@ -15,9 +15,9 @@ class ActionLoader(object):
     _instance = None
 
     def __init__(self):
-        if self._actions is None:
+        if not hasattr(self, "actions"):
             logger.debug("Actions have not been loaded. Loading actions...")
-            self._actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
+            self.actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
                                              settings.ACTIONS_DIR)
         else:
             logger.debug("Already loaded actions. ")
@@ -28,15 +28,6 @@ class ActionLoader(object):
             cls._instance = super(ActionLoader, cls).__new__(cls)
             logger.debug(f"Calling load_actions with {settings.MOCK_SIGAN}, {settings.RUNNING_TESTS}, {settings.DRIVERS_DIR}, {settings.ACTIONS_DIR}")
         return cls._instance
-
-    @property
-    def actions(self):
-        return self._actions
-
-    @actions.setter
-    def actions(self, value):
-        self._actions = value
-
 
 def copy_driver_files(driver_dir):
     """Copy driver files where they need to go"""
