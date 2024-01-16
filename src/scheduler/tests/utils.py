@@ -4,15 +4,15 @@ import threading
 import time
 from itertools import chain, count, islice
 
+from actions import actions
 from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
 from sensor import V1
-from django.conf import settings
 from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
 
 logger = logging.getLogger(__name__)
-actions = settings.ACTIONS
+
 if actions is not None:
     logger.debug(f"Have {len(actions)} actions")
 else:

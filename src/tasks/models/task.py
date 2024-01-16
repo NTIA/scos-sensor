@@ -6,9 +6,10 @@ See https://hg.python.org/cpython/file/3.5/Lib/sched.py#l42.
 
 import logging
 from collections import namedtuple
-from django.conf import settings
 
-actions = settings.ACTIONS
+from actions import actions
+
+
 logger = logging.getLogger(__name__)
 
 logger.debug("*********** scos-sensor/models/task.py ****************")

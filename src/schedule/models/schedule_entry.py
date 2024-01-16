@@ -6,10 +6,10 @@ from django.core.validators import MaxValueValidator, MinValueValidator, Validat
 from django.db import models
 
 from constants import MAX_ACTION_LENGTH
-from django.conf import settings
+from actions import actions
 from scheduler import utils
 
-actions = settings.ACTIONS
+
 logger = logging.getLogger(__name__)
 logger.debug(
     "************** scos-sensor/schedule/models/schedule_entry.py *****************"
