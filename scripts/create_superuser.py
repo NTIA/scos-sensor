@@ -22,6 +22,7 @@ def add_user(username, password, email=None):
         if email:
             admin_user.email = email
         admin_user.set_password(password)
+        admin_user.save()
         print("Reset admin account password and email from environment")
     except UserModel.DoesNotExist:
         UserModel._default_manager.create_superuser(username, email, password)
@@ -35,7 +36,7 @@ try:
     print("Retreived admin email from environment variable ADMIN_EMAIL")
     username = os.environ["ADMIN_NAME"]
     print("Retreived admin name from environment variable ADMIN_NAME")
-    add_user(username, password, email)
+    add_user(username.strip(), password.strip(), email.strip())
 except KeyError:
     print("Not on a managed sensor, so not auto-generating admin account.")
     print("You can add an admin later with `./manage.py createsuperuser`")
@@ -52,7 +53,7 @@ try:
         "ADDITIONAL_USER_PASSWORD" in os.environ
         and os.environ["ADDITIONAL_USER_PASSWORD"]
     ):
-        additional_user_password = os.environ["ADDITIONAL_USER_PASSWORD"]
+        additional_user_password = os.environ["ADDITIONAL_USER_PASSWORD"].strip()
     else:
         # user will have unusable password
         # https://docs.djangoproject.com/en/3.2/ref/contrib/auth/#django.contrib.auth.models.UserManager.create_user
@@ -69,4 +70,4 @@ if additional_user_names != "" and additional_user_password != "":
         for additional_user_name in additional_user_names.split(","):
             add_user(additional_user_name.strip(), additional_user_password)
     else:
-        add_user(additional_user_names, additional_user_password)
+        add_user(additional_user_names.strip(), additional_user_password)
