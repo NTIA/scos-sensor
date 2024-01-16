@@ -11,7 +11,7 @@ from scos_actions.utils import load_from_json
 logger = logging.getLogger(__name__)
 logger.debug("********** Initializing capabilities **********")
 actions_by_name = action_loader.actions
-
+logger.debug(f"ActionLoader has {len(action_loader.actions)} actions")
 def load_capabilities(sensor_definition_file):
 
     capabilities = {}

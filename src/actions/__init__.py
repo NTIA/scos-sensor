@@ -14,3 +14,4 @@ from .action_loader import ActionLoader
 logger = logging.getLogger(__name__)
 
 action_loader = ActionLoader()
+logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
