@@ -16,6 +16,7 @@ class ActionLoader(object):
         if cls._instance is None:
             logger.debug('Creating the ActionLoader')
             cls._instance = super(ActionLoader, cls).__new__(cls)
+            logger.debug(f"Calling load_actions with {settings.MOCK_SIGAN}, {settings.RUNNING_TESTS}, {settings.DRIVERS_DIR}, {settings.ACTIONS_DIR}")
             _actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR, settings.ACTIONS_DIR)
         return cls._instance
 
@@ -29,6 +30,7 @@ class ActionLoader(object):
 
 def copy_driver_files(driver_dir):
     """Copy driver files where they need to go"""
+    logger.debug(f"Copying driver files in {driver_dir}")
     for root, dirs, files in os.walk(driver_dir):
         for filename in files:
             name_without_ext, ext = os.path.splitext(filename)
