@@ -525,8 +525,6 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
         if name.startswith("scos_") and name != "scos_actions"
     }
     logger.debug(discovered_plugins)
-    action_types = {}
-    action_types.update(action_classes)
     actions = {}
     if mock_sigan or running_tests:
         for name, action in test_actions.items():
@@ -538,11 +536,11 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
             if hasattr(discover, "actions"):
                 logger.debug(f"loading {len(discover.actions)} actions.")
                 actions.update(discover.actions)
-            if hasattr(discover, "action_types") and discover.action_types is not None:
-                action_types.update(discover.action_types)
+            if hasattr(discover, "action_classes") and discover.action_classes is not None:
+                action_classes.update(discover.action_classes)
 
     logger.debug(f"Loading actions in {action_dir}")
-    yaml_actions, yaml_test_actions = init(action_classes = action_types, yaml_dir=action_dir)
+    yaml_actions, yaml_test_actions = init(action_classes = action_classes, yaml_dir=action_dir)
     actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
     return actions
