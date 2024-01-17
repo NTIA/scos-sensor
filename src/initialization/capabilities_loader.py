@@ -19,7 +19,7 @@ class CapabilitiesLoader(object):
     def __init__(self):
         if not hasattr(self, "actions"):
             logger.debug("Capabilities have not been loaded. Loading...")
-            self.capabilities = load_capabilities()
+            self.capabilities = load_capabilities(settings.SENSOR_DEFINITION_FILE)
         else:
             logger.debug("Already loaded capabilities. ")
 
