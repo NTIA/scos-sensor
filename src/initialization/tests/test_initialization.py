@@ -1,4 +1,4 @@
-from src.initialization import load_preselector
+from initialization.sensor_loader import load_preselector
 import logging
 import os
 
