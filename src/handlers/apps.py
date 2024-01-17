@@ -5,8 +5,7 @@ from django.db.models.signals import post_delete, post_save
 from scos_actions.signals import (
     location_action_completed,
     measurement_action_completed,
-    trigger_api_restart,
-    register_sensor
+    trigger_api_restart
 )
 
 logger = logging.getLogger(__name__)
@@ -24,7 +23,6 @@ class HandlersConfig(AppConfig):
 
         )
         from handlers.measurement_handler import measurement_action_completed_callback
-        from handlers.register_sensor_handler import sensor_registered
 
         measurement_action_completed.connect(measurement_action_completed_callback)
         logger.debug(
@@ -43,6 +41,4 @@ class HandlersConfig(AppConfig):
         trigger_api_restart.connect(trigger_api_restart_callback)
         logger.debug("trigger_api_restart_callback registered to trigger_api_restart")
 
-        register_sensor.connect(sensor_registered)
-        logger.debug("sensor_registered handler connected to register_sensor signal")
 

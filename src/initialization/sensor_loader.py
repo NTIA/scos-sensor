@@ -3,18 +3,13 @@ import logging
 from django.conf import settings
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
-from scos_actions.signals import register_component_with_status
-from scos_actions.signals import register_signal_analyzer
 from os import path
 from pathlib import Path
 from its_preselector.configuration_exception import ConfigurationException
 from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
-
 from scos_actions import utils
-from scos_actions.signals import register_component_with_status
-
 from scos_actions.calibration.calibration import Calibration, load_from_json
-
+from utils.signals import register_component_with_status
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +49,6 @@ def load_sensor(sensor_capabilities):
     sigan_cal = get_sigan_calibration(settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE)
     sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal)
     register_component_with_status.send(sigan, component=sigan)
-    register_signal_analyzer.send(sigan, signal_analyzer=sigan)
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE,
                                    settings.PRESELECTOR_CLASS, sensor_capabilities["sensor"])

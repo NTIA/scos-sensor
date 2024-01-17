@@ -1,22 +1,18 @@
 import logging
 import pytest
-from handlers import sensors
 from django.conf import settings
+from initialization import sensor_loader
 from status.models import Location
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
-from scos_actions.signals import register_sensor
 
 logger = logging.getLogger(__name__)
 
 @pytest.mark.django_db
 def test_db_location_update_handler():
     location = construct_geojson_point(-105.7, 40.5, 0)
-    sensor = Sensor(location = location)
-    register_sensor.send(sensor, sensor = sensor)
-    logger.debug(f"len(sensors) sensors registered")
-    logger.debug(f"sigan: {sensors[0].signal_analyzer}")
-    logger.debug(f"Registered sigan = {sensors}")
+    sensor = sensor_loader.sensor
+    logger.debug(f"Sensor: {sensor}")
     location = Location()
     location.gps = False
     location.height = 10
@@ -34,8 +30,7 @@ def test_db_location_update_handler():
 
 @pytest.mark.django_db
 def test_db_location_update_handler_current_location_none():
-    sensor = Sensor()
-    register_sensor.send(sensor, sensor = sensor)
+    sensor = sensor_loader.sensor
     logger.debug(f"len(sensors) sensors registered")
     logger.debug(f"sigan: {sensors[0].signal_analyzer}")
     logger.debug(f"Registered sigan = {sensors}")
@@ -55,9 +50,9 @@ def test_db_location_update_handler_current_location_none():
 
 @pytest.mark.django_db
 def test_db_location_update_handler_not_active():
+    sensor = sensor_loader.sensor
     location = construct_geojson_point(-105.7, 40.5, 0)
-    sensor = Sensor(location=location)
-    register_sensor.send(sensor, sensor=sensor)
+    sensor.location = location
     logger.debug(f"len(sensors) sensors registered")
     logger.debug(f"sigan: {sensors[0].signal_analyzer}")
     logger.debug(f"Registered sigan = {sensors}")
@@ -99,8 +94,8 @@ def test_db_location_deleted_handler():
 @pytest.mark.django_db
 def test_db_location_deleted_inactive_handler():
     location = construct_geojson_point(-105.7, 40.5, 0)
-    sensor = Sensor(location=location)
-    register_sensor.send(sensor, sensor=sensor)
+    sensor = sensor_loader.sensor
+    sensor.location = location
     location = Location()
     location.gps = False
     location.height = 10

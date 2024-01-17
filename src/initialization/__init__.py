@@ -5,7 +5,7 @@ from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
 from .status_monitor import StatusMonitor
 
-from scos_actions.signals import register_component_with_status
+from utils.signals import register_component_with_status
 
 logger = logging.getLogger(__name__)
 
