@@ -197,7 +197,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",  # OpenAPI generator
     # project-local apps
-    "actions.apps.InitializationConfig",
+    "initialization.apps.InitializationConfig",
     "capabilities.apps.CapabilitiesConfig",
     "authentication.apps.AuthenticationConfig",
     "handlers.apps.HandlersConfig",
