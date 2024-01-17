@@ -4,7 +4,7 @@ import threading
 import time
 from itertools import chain, count, islice
 
-from actions import action_loader
+from initialization import action_loader
 from authentication.models import User
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler

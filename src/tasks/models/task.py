@@ -7,7 +7,7 @@ See https://hg.python.org/cpython/file/3.5/Lib/sched.py#l42.
 import logging
 from collections import namedtuple
 
-from actions import action_loader
+from initialization import action_loader
 
 
 logger = logging.getLogger(__name__)

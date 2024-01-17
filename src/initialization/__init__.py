@@ -1,6 +1,8 @@
 
 import importlib
+import json
 import logging
+import os
 from os import path
 from pathlib import Path
 from its_preselector.configuration_exception import ConfigurationException
@@ -11,7 +13,24 @@ from scos_actions.signals import register_component_with_status
 
 from scos_actions.calibration.calibration import Calibration, load_from_json
 
+from .action_loader import ActionLoader
+from .capabilities_loader import CapabilitiesLoader
+
 logger = logging.getLogger(__name__)
+
+from django.conf import settings
+
+from scos_actions.actions import action_classes
+from scos_actions.discover import test_actions
+from scos_actions.discover import init
+
+
+
+logger = logging.getLogger(__name__)
+
+action_loader = ActionLoader()
+logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
+capabilities_loader = CapabilitiesLoader()
 
 
 def load_switches(switch_dir: Path) -> dict:

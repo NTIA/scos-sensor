@@ -6,7 +6,7 @@ import sys
 
 import django
 
-from actions import action_loader
+from initialization import action_loader
 
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
 
