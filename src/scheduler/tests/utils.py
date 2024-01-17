@@ -66,7 +66,6 @@ def advance_testclock(iterator, n):
 
 def simulate_scheduler_run(n=1):
     s = Scheduler()
-    s.sensor = Sensor(signal_analyzer=MockSignalAnalyzer())
     for _ in range(n):
         advance_testclock(s.timefn, 1)
         s.run(blocking=False)

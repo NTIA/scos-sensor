@@ -14,8 +14,4 @@ logger = logging.getLogger(__name__)
 logger.debug("********** Initializing capabilities **********")
 actions_by_name = action_loader.actions
 logger.debug(f"ActionLoader has {len(action_loader.actions)} actions")
-
-
-logger.debug("Capabilites connected to register_action")
-
 sensor_capabilities = capabilities_loader.capabilities

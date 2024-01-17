@@ -73,8 +73,8 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     actions = {}
 
     if mock_sigan or running_tests:
-        for name, action in test_actions.items():
-            logger.debug("test_action: " + name + "=" + str(action))
+        logger.debug(f"Loading {len(test_actions)} test actions.")
+        actions.update(test_actions)
     else:
         for name, module in discovered_plugins.items():
             logger.debug("Looking for actions in " + name + ": " + str(module))

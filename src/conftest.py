@@ -44,9 +44,9 @@ def testclock():
 def test_scheduler(rf, testclock):
     """Instantiate test scheduler with fake request context and testclock."""
     s = scheduler.scheduler.Scheduler()
-    mock_sigan = MockSignalAnalyzer()
-    sensor = Sensor(signal_analyzer=mock_sigan)
-    s.sensor = sensor
+   # mock_sigan = MockSignalAnalyzer()
+   # sensor = Sensor(signal_analyzer=mock_sigan)
+   # s.sensor = sensor
     s.request = rf.post("mock://cburl/schedule")
     return s
 
