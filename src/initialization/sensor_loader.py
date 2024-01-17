@@ -17,7 +17,7 @@ class SensorLoader(object):
     _instance = None
 
     def __init__(self, sensor_capabilities):
-        if not hasattr(self, "actions"):
+        if not hasattr(self, "sensor"):
             logger.debug("Sensor has not been loaded. Loading...")
             self.sensor = load_sensor(sensor_capabilities)
         else:

@@ -1,14 +1,7 @@
 import hashlib
 import json
 import logging
-import os
-import pkgutil
-import shutil
 from django.conf import settings
-from scos_actions.actions import action_classes
-from scos_actions.discover import test_actions
-from scos_actions.discover import init
-
 from scos_actions.utils import load_from_json
 
 logger = logging.getLogger(__name__)
@@ -17,7 +10,7 @@ class CapabilitiesLoader(object):
     _instance = None
 
     def __init__(self):
-        if not hasattr(self, "actions"):
+        if not hasattr(self, "capabilities"):
             logger.debug("Capabilities have not been loaded. Loading...")
             self.capabilities = load_capabilities(settings.SENSOR_DEFINITION_FILE)
         else:
