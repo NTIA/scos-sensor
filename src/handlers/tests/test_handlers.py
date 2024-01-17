@@ -1,6 +1,5 @@
 import logging
 import pytest
-from django.conf import settings
 from initialization import sensor_loader
 from status.models import Location
 from scos_actions.hardware.sensor import Sensor
@@ -70,7 +69,6 @@ def test_db_location_update_handler_not_active():
 def test_db_location_deleted_handler():
     location = construct_geojson_point(-105.7, 40.5, 0)
     sensor = Sensor(location=location)
-    register_sensor.send(sensor, sensor=sensor)
     location = Location()
     location.gps = False
     location.height = 10
