@@ -31,9 +31,7 @@ def test_db_location_update_handler():
 @pytest.mark.django_db
 def test_db_location_update_handler_current_location_none():
     sensor = sensor_loader.sensor
-    logger.debug(f"len(sensors) sensors registered")
-    logger.debug(f"sigan: {sensors[0].signal_analyzer}")
-    logger.debug(f"Registered sigan = {sensors}")
+    logger.debug(f"Sensor: {sensor}")
     location = Location()
     location.gps = False
     location.height = 10
@@ -53,9 +51,7 @@ def test_db_location_update_handler_not_active():
     sensor = sensor_loader.sensor
     location = construct_geojson_point(-105.7, 40.5, 0)
     sensor.location = location
-    logger.debug(f"len(sensors) sensors registered")
-    logger.debug(f"sigan: {sensors[0].signal_analyzer}")
-    logger.debug(f"Registered sigan = {sensors}")
+    logger.debug(f"Sensor = {sensor}")
     location = Location()
     location.gps = False
     location.height = 10
