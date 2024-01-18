@@ -63,6 +63,7 @@ def load_sensor(sensor_capabilities):
 
 def load_switches(switch_dir: Path) -> dict:
     switch_dict = {}
+
     if switch_dir is not None and switch_dir.is_dir():
         for f in switch_dir.iterdir():
             file_path = f.resolve()
