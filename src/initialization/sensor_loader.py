@@ -60,11 +60,13 @@ def load_sensor(signal_analyzer, sensor_capabilities):
 
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE,
                                    settings.PRESELECTOR_CLASS, sensor_capabilities["sensor"])
+    logger.debug("Creating sensor")
     sensor = Sensor(signal_analyzer=signal_analyzer, preselector=preselector, switches=switches, capabilities=sensor_capabilities,
                    location=location)
     return sensor
 
 def load_switches(switch_dir: Path) -> dict:
+    logger.debug(f"Loading switches in {switch_dir}")
     switch_dict = {}
     try:
         if switch_dir is not None and switch_dir.is_dir():
