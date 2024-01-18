@@ -23,7 +23,7 @@ class SensorLoader(object):
         else:
             logger.debug("Already loaded sensor. ")
 
-    def __new__(cls, sensor_capabilities):
+    def __new__(cls, signal_analyzer, sensor_capabilities):
         if cls._instance is None:
             logger.debug('Creating the SensorLoader')
             cls._instance = super(SensorLoader, cls).__new__(cls)
