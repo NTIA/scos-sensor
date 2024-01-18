@@ -1,4 +1,3 @@
-import datetime
 import logging
 from .models import Location
 from initialization import sensor_loader
@@ -12,15 +11,10 @@ try:
     db_location_geojson = construct_geojson_point(
             location.longitude,
             location.latitude,
-            location.height,
+            location.height
     )
     logger.debug(f"Location found in DB. Updating sensor location to {location}.")
-    sensor_loader.sensor.location = db_location_geojson
+    if sensor_loader.sensor is not None:
+        sensor_loader.sensor.location = db_location_geojson
 except Location.DoesNotExist:
-    #No location, no problem
-
-
-
-
-
-
+    pass
