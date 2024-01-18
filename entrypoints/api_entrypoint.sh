@@ -10,13 +10,13 @@ function cleanup_demodb {
 
 trap cleanup_demodb SIGTERM
 trap cleanup_demodb SIGINT
-export RUNNING_MIGRATIONS = True
+RUNNING_MIGRATIONS="True"
+export RUNNING_MIGRATIONS
 echo "Starting Migrations"
 python3.8 manage.py migrate
-RUNNING_MIGRATIONS = False
+RUNNING_MIGRATIONS="False"
 echo "Creating superuser (if managed)"
 python3.8 /scripts/create_superuser.py
-
 echo "Starting Gunicorn"
 exec gunicorn sensor.wsgi -c ../gunicorn/config.py &
 wait
