@@ -59,10 +59,11 @@ def status(request, version, format=None):
         "location": serialize_location(),
         "system_time": get_datetime_str_now(),
         "start_time": convert_datetime_to_millisecond_iso_format(start_time),
-        "last_calibration_datetime": sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime,
         "disk_usage": disk_usage(),
         "days_up": get_days_up(),
     }
+    if sensor_loader.sensor is not None and sensor_loader.sensor.signal_analyzer is not None and sensor_loader.sensor.signal_analyzer.sensor_calibration is not None :
+        status_json["last_calibration_datetime"] = sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime,
     for component in status_monitor.status_components:
         component_status = component.get_status()
         if isinstance(component, WebRelay):
