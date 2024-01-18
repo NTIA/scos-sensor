@@ -21,5 +21,5 @@ class StatusConfig(AppConfig):
             logger.debug(f"Location found in DB. Updating sensor location to {location}.")
             if sensor_loader.sensor is not None:
                 sensor_loader.sensor.location = db_location_geojson
-        except Location.DoesNotExist:
+        except:
             pass
