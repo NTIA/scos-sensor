@@ -1,7 +1,6 @@
 import logging
 from django.apps import AppConfig
 from initialization import sensor_loader
-from .models import Location
 from scos_actions.metadata.utils import construct_geojson_point
 
 
@@ -11,6 +10,7 @@ class StatusConfig(AppConfig):
     name = "status"
 
     def ready(self):
+        from .models import Location
         try:
             location = Location.objects.get(active=True)
             db_location_geojson = construct_geojson_point(
