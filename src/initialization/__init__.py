@@ -22,6 +22,7 @@ register_component_with_status.connect(status_registration_handler)
 
 action_loader = ActionLoader()
 logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
+logger.debug(f"Action loader sigan: {action_loader.signal_analyzer}")
 capabilities_loader = CapabilitiesLoader()
 sensor_loader = SensorLoader(action_loader.signal_analyzer, capabilities_loader.capabilities)
 
