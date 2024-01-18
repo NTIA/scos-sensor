@@ -85,6 +85,7 @@ def load_actions_and_sigan(mock_sigan, running_tests, driver_dir, action_dir):
             if hasattr(discover, "action_classes") and discover.action_classes is not None:
                 action_classes.update(discover.action_classes)
             if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
+                logger.debug(f"Found signal_analyzer: {discover.signal_analyzer}")
                 signal_analyzer = discover.signal_analyzer
 
     logger.debug(f"Loading actions in {action_dir}")
