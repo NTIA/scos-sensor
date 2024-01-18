@@ -29,7 +29,7 @@ class SensorLoader(object):
             cls._instance = super(SensorLoader, cls).__new__(cls)
         return cls._instance
 
-def load_sensor(sensor_capabilities):
+def load_sensor(signal_analyzer, sensor_capabilities):
     location = None
     #Remove location from sensor definition and convert to geojson.
     #Db may have an updated location, but status module will update it
@@ -44,23 +44,23 @@ def load_sensor(sensor_capabilities):
     switches = load_switches(settings.SWITCH_CONFIGS_DIR)
     sensor_cal = get_sensor_calibration(settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE)
     sigan_cal = get_sigan_calibration(settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE)
-    sigan = None
-    try:
-        if not settings.RUNNING_MIGRATIONS:
-            sigan_module_setting = settings.SIGAN_MODULE
-            sigan_module = importlib.import_module(sigan_module_setting)
-            logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
-            sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
-            sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
-            register_component_with_status.send(sigan, component=sigan)
-        else:
-            logger.info("Running migrations. Not loading signal analyzer.")
-    except Exception as ex:
-        logger.warning(f"unable to create signal analyzer: {ex}")
+#    sigan = None
+#    try:
+#        if not settings.RUNNING_MIGRATIONS:
+#            sigan_module_setting = settings.SIGAN_MODULE
+#            sigan_module = importlib.import_module(sigan_module_setting)
+#            logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
+#            sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
+#            sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
+#            register_component_with_status.send(sigan, component=sigan)
+#        else:
+#            logger.info("Running migrations. Not loading signal analyzer.")
+#    except Exception as ex:
+#        logger.warning(f"unable to create signal analyzer: {ex}")
 
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE,
                                    settings.PRESELECTOR_CLASS, sensor_capabilities["sensor"])
-    sensor = Sensor(signal_analyzer=sigan, preselector=preselector, switches=switches, capabilities=sensor_capabilities,
+    sensor = Sensor(signal_analyzer=signal_analyzer, preselector=preselector, switches=switches, capabilities=sensor_capabilities,
                    location=location)
     return sensor
 

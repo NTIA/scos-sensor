@@ -17,7 +17,7 @@ class ActionLoader(object):
     def __init__(self):
         if not hasattr(self, "actions"):
             logger.debug("Actions have not been loaded. Loading actions...")
-            self.actions = load_actions(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
+            self.actions, self.signal_analyzer = load_actions_and_sigan(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
                                              settings.ACTIONS_DIR)
         else:
             logger.debug("Already loaded actions. ")
@@ -60,7 +60,7 @@ def copy_driver_files(driver_dir):
                             logger.error(f"Failed to copy {source_path} to {dest_path}")
                             logger.error(e)
 
-def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
+def load_actions_and_sigan(mock_sigan, running_tests, driver_dir, action_dir):
 
     logger.debug("********** Initializing actions **********")
     copy_driver_files(driver_dir)  # copy driver files before loading plugins
@@ -71,7 +71,7 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
     }
     logger.debug(discovered_plugins)
     actions = {}
-
+    signal_analyzer = None
     if mock_sigan or running_tests:
         logger.debug(f"Loading {len(test_actions)} test actions.")
         actions.update(test_actions)
@@ -84,9 +84,11 @@ def load_actions(mock_sigan, running_tests, driver_dir, action_dir):
                 actions.update(discover.actions)
             if hasattr(discover, "action_classes") and discover.action_classes is not None:
                 action_classes.update(discover.action_classes)
+            if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
+                signal_analyzer = discover.signal_analyzer
 
     logger.debug(f"Loading actions in {action_dir}")
     yaml_actions, yaml_test_actions = init(action_classes=action_classes, yaml_dir=action_dir)
     actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
-    return actions
+    return actions, signal_analyzer
