@@ -48,7 +48,7 @@ def load_sensor(sensor_capabilities):
     sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
     sensor_cal = get_sensor_calibration(settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE)
     sigan_cal = get_sigan_calibration(settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE)
-    sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches)
+    sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
     register_component_with_status.send(sigan, component=sigan)
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE,
                                    settings.PRESELECTOR_CLASS, sensor_capabilities["sensor"])
