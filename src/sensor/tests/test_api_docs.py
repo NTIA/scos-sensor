@@ -4,6 +4,7 @@ from os import path
 from rest_framework.reverse import reverse
 
 from sensor import V1, settings
+from sensor.tests.utils import HTTPS_KWARG
 
 
 def test_api_docs_up_to_date(admin_client):
@@ -16,7 +17,7 @@ def test_api_docs_up_to_date(admin_client):
         return True
 
     schema_url = reverse("api_schema", kwargs=V1) + "?format=openapi"
-    response = admin_client.get(schema_url)
+    response = admin_client.get(schema_url, **HTTPS_KWARG)
 
     with open(settings.OPENAPI_FILE, "w+") as openapi_file:
         openapi_json = json.loads(response.content)

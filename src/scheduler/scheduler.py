@@ -10,7 +10,6 @@ import requests
 from django.utils import timezone
 from scos_actions.signals import trigger_api_restart
 
-from authentication import oauth
 from schedule.models import ScheduleEntry
 from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
@@ -193,14 +192,15 @@ class Scheduler(threading.Thread):
                     if settings.PATH_TO_VERIFY_CERT != "":
                         verify_ssl = settings.PATH_TO_VERIFY_CERT
                 logger.debug(settings.CALLBACK_AUTHENTICATION)
-                if settings.CALLBACK_AUTHENTICATION == "OAUTH":
-                    client = oauth.get_oauth_client()
+                if settings.CALLBACK_AUTHENTICATION == "CERT":
                     headers = {"Content-Type": "application/json"}
-                    response = client.post(
+
+                    response = requests.post(
                         self.entry.callback_url,
                         data=json.dumps(result_json),
                         headers=headers,
                         verify=verify_ssl,
+                        cert=settings.PATH_TO_CLIENT_CERT,
                         timeout=settings.CALLBACK_TIMEOUT,
                     )
                     self._callback_response_handler(response, task_result)
