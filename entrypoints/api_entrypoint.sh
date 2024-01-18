@@ -10,9 +10,10 @@ function cleanup_demodb {
 
 trap cleanup_demodb SIGTERM
 trap cleanup_demodb SIGINT
+export RUNNING_MIGRATIONS = True
 echo "Starting Migrations"
 python3.8 manage.py migrate
-
+RUNNING_MIGRATIONS = False
 echo "Creating superuser (if managed)"
 python3.8 /scripts/create_superuser.py
 

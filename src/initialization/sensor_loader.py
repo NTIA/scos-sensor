@@ -46,12 +46,15 @@ def load_sensor(sensor_capabilities):
     sigan_cal = get_sigan_calibration(settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE)
     sigan = None
     try:
-        sigan_module_setting = settings.SIGAN_MODULE
-        sigan_module = importlib.import_module(sigan_module_setting)
-        logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
-        sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
-        sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
-        register_component_with_status.send(sigan, component=sigan)
+        if not settings.RUNNING_MIGRATIONS:
+            sigan_module_setting = settings.SIGAN_MODULE
+            sigan_module = importlib.import_module(sigan_module_setting)
+            logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
+            sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
+            sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
+            register_component_with_status.send(sigan, component=sigan)
+        else:
+            logger.info("Running migrations. Not loading signal analyzer.")
     except Exception as ex:
         logger.warning(f"unable to create signal analyzer: {ex}")
 
@@ -63,22 +66,22 @@ def load_sensor(sensor_capabilities):
 
 def load_switches(switch_dir: Path) -> dict:
     switch_dict = {}
-
-    if switch_dir is not None and switch_dir.is_dir():
-        for f in switch_dir.iterdir():
-            file_path = f.resolve()
-            logger.debug(f"loading switch config {file_path}")
-            conf = utils.load_from_json(file_path)
-            try:
-                switch = ControlByWebWebRelay(conf)
-                logger.debug(f"Adding {switch.id}")
-
-                switch_dict[switch.id] = switch
-                logger.debug(f"Registering switch status for {switch.name}")
-                register_component_with_status.send(__name__, component=switch)
-            except ConfigurationException:
-                logger.error(f"Unable to configure switch defined in: {file_path}")
-
+    try:
+        if switch_dir is not None and switch_dir.is_dir():
+            for f in switch_dir.iterdir():
+                file_path = f.resolve()
+                logger.debug(f"loading switch config {file_path}")
+                conf = utils.load_from_json(file_path)
+                try:
+                    switch = ControlByWebWebRelay(conf)
+                    logger.debug(f"Adding {switch.id}")
+                    switch_dict[switch.id] = switch
+                    logger.debug(f"Registering switch status for {switch.name}")
+                    register_component_with_status.send(__name__, component=switch)
+                except ConfigurationException:
+                    logger.error(f"Unable to configure switch defined in: {file_path}")
+    except Exception as ex:
+        logger.error(f"Unable to load switches {ex}")
     return switch_dict
 
 
