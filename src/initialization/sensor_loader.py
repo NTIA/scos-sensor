@@ -20,7 +20,7 @@ class SensorLoader(object):
     def __init__(self, sensor_capabilities):
         if not hasattr(self, "sensor"):
             logger.debug("Sensor has not been loaded. Loading...")
-            self.sensor = load_sensor(signal_analyzer, sensor_capabilities)
+            self.sensor = load_sensor(sensor_capabilities)
         else:
             logger.debug("Already loaded sensor. ")
 
