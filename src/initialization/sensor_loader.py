@@ -52,8 +52,9 @@ def load_sensor(sensor_capabilities):
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
-            sigan_loader = importlib.import_module("utils.sigan_loader")
+            sigan_loader = importlib.import_module("sigan_loader")
             sigan = sigan_loader.signal_analyzer
+            logger.debug(f"{sigan_loader.sensor_cal}")
             if sigan:
                 logger.debug(f"loaded {sigan}")
                 register_component_with_status.send(sigan, component=sigan)
