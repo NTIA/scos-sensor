@@ -26,7 +26,6 @@ from environs import Env
 logger = logging.getLogger(__name__)
 logger.debug("Initializing scos-sensor settings.")
 env = Env()
-
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
@@ -89,6 +88,8 @@ else:
 
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
+os.environ["SENSOR_CALIBRATION_FILE"] = SENSOR_CALIBRATION_FILE
+os.environ["SIGAN_CALIBRATION_FILE"] = SIGAN_CALIBRATION_FILE
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 PRESELECTOR_CONFIG = path.join(CONFIG_DIR, "preselector_config.json")
 

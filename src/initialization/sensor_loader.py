@@ -1,5 +1,6 @@
 import importlib
 import logging
+import signal
 from django.conf import settings
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
@@ -30,6 +31,9 @@ class SensorLoader(object):
             cls._instance = super(SensorLoader, cls).__new__(cls)
         return cls._instance
 
+def sigabrt_handler(signum, frame):
+    logger.error("Recieved SIGABRT")
+
 def load_sensor(sensor_capabilities):
     location = None
     #Remove location from sensor definition and convert to geojson.
@@ -48,6 +52,7 @@ def load_sensor(sensor_capabilities):
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
+            signal.signal(signal.SIGABRT, sigabrt_handler)
             sigan_module_setting = settings.SIGAN_MODULE
             sigan_module = importlib.import_module(sigan_module_setting)
             logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
@@ -65,6 +70,8 @@ def load_sensor(sensor_capabilities):
     sensor = Sensor(signal_analyzer=sigan, preselector=preselector, switches=switches, capabilities=sensor_capabilities,
                    location=location)
     return sensor
+
+
 
 def load_switches(switch_dir: Path) -> dict:
      logger.debug(f"Loading switches in {switch_dir}")
