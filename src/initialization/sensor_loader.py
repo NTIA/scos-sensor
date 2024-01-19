@@ -61,13 +61,8 @@ def load_sensor(sensor_capabilities):
 
     preselector = load_preselector(settings.PRESELECTOR_CONFIG, settings.PRESELECTOR_MODULE,
                                    settings.PRESELECTOR_CLASS, sensor_capabilities["sensor"])
-    logger.debug("Creating sensor")
-    signal_analyzer.sensor_calibration = sensor_cal
-    signal_analyzer.sigan_calibration = sigan_cal
-    for name, switch in signal_analyzer.switches.items():
-        register_component_with_status(name, switch)
 
-    sensor = Sensor(signal_analyzer=signal_analyzer, preselector=preselector, switches=signal_analyzer.switches, capabilities=sensor_capabilities,
+    sensor = Sensor(signal_analyzer=sigan, preselector=preselector, switches=switches, capabilities=sensor_capabilities,
                    location=location)
     return sensor
 
