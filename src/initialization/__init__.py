@@ -26,6 +26,6 @@ try:
     logger.debug(f"Action loader sigan: {action_loader.signal_analyzer}")
     capabilities_loader = CapabilitiesLoader()
     logger.debug("Calling sensor loader.")
-    sensor_loader = SensorLoader(action_loader.signal_analyzer, capabilities_loader.capabilities)
+    sensor_loader = SensorLoader(capabilities_loader.capabilities)
 except Exception as ex:
     logger.error(f"Error during initialization: {ex}")

@@ -17,7 +17,7 @@ class ActionLoader(object):
     def __init__(self):
         if not hasattr(self, "actions"):
             logger.debug("Actions have not been loaded. Loading actions...")
-            self.actions, self.signal_analyzer = load_actions_and_sigan(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
+            self.actions = load_actions_and_sigan(settings.MOCK_SIGAN, settings.RUNNING_TESTS, settings.DRIVERS_DIR,
                                              settings.ACTIONS_DIR)
         else:
             logger.debug("Already loaded actions. ")
@@ -84,14 +84,14 @@ def load_actions_and_sigan(mock_sigan, running_tests, driver_dir, action_dir):
                 actions.update(discover.actions)
             if hasattr(discover, "action_classes") and discover.action_classes is not None:
                 action_classes.update(discover.action_classes)
-            if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
-                logger.debug(f"Found signal_analyzer: {discover.signal_analyzer}")
-                signal_analyzer = discover.signal_analyzer
-            else:
-                logger.debug(f"{discover} has no signal_analyzer attribute")
+            # if hasattr(discover, "signal_analyzer") and discover.signal_analyzer is not None:
+            #     logger.debug(f"Found signal_analyzer: {discover.signal_analyzer}")
+            #     signal_analyzer = discover.signal_analyzer
+            # else:
+            #     logger.debug(f"{discover} has no signal_analyzer attribute")
 
     logger.debug(f"Loading actions in {action_dir}")
     yaml_actions, yaml_test_actions = init(action_classes=action_classes, yaml_dir=action_dir)
     actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
-    return actions, signal_analyzer
+    return actions
