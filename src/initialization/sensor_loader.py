@@ -30,7 +30,7 @@ class SensorLoader(object):
             cls._instance = super(SensorLoader, cls).__new__(cls)
         return cls._instance
 
-def load_sensor(signal_analyzer: SignalAnalyzerInterface, sensor_capabilities):
+def load_sensor(sensor_capabilities):
     location = None
     #Remove location from sensor definition and convert to geojson.
     #Db may have an updated location, but status module will update it
