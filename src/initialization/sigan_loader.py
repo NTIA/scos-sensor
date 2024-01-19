@@ -8,6 +8,7 @@ from scos_actions import utils
 from scos_actions.calibration.calibration import Calibration, load_from_json
 from environs import Env
 
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def load_switches(switch_dir: Path) -> dict:
