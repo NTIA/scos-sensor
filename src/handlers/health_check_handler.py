@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from sensor import settings
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
