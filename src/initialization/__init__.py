@@ -23,7 +23,6 @@ try:
     action_loader = ActionLoader()
     logger.debug("test")
     logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
-    logger.debug(f"Action loader sigan: {action_loader.signal_analyzer}")
     capabilities_loader = CapabilitiesLoader()
     logger.debug("Calling sensor loader.")
     sensor_loader = SensorLoader(capabilities_loader.capabilities)
