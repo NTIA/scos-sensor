@@ -187,7 +187,7 @@ the API call. The body of the response will be JSON in the following format:
 
 """
 RUNNING_MIGRATIONS=env.bool("RUNNING_MIGRATIONS", False)
-os.environ["RUNNING_MIGRATIONS"] = RUNNING_MIGRATIONS
+os.environ["RUNNING_MIGRATIONS"] = str(RUNNING_MIGRATIONS)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
