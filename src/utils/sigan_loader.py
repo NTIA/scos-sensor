@@ -31,35 +31,6 @@ def load_switches(switch_dir: Path) -> dict:
     return switch_dict
 
 
-def load_preselector_from_file(preselector_module, preselector_class, preselector_config_file: Path):
-    if preselector_config_file is None:
-        return None
-    else:
-        try:
-            preselector_config = utils.load_from_json(preselector_config_file)
-            return load_preselector(
-                preselector_config, preselector_module, preselector_class
-            )
-        except ConfigurationException:
-            logger.exception(
-                f"Unable to create preselector defined in: {preselector_config_file}"
-            )
-    return None
-
-
-def load_preselector(preselector_config: str, module: str, preselector_class_name: str, sensor_definition: dict):
-    logger.debug(f"loading {preselector_class_name} from {module} with config: {preselector_config}")
-    if module is not None and preselector_class_name is not None:
-        preselector_module = importlib.import_module(module)
-        preselector_constructor = getattr(preselector_module, preselector_class_name)
-        preselector_config = utils.load_from_json(preselector_config)
-        ps = preselector_constructor(sensor_definition, preselector_config)
-        register_component_with_status.send(ps, component=ps)
-    else:
-        ps = None
-    return ps
-
-
 def get_sigan_calibration(sigan_cal_file_path: str, default_cal_file_path: str) -> Calibration:
     """
     Load signal analyzer calibration data from file.
