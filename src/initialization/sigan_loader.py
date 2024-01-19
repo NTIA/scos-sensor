@@ -108,14 +108,11 @@ sensor_cal = get_sensor_calibration(env("SENSOR_CALIBRATION_FILE"), env("DEFAULT
 sigan_cal = get_sigan_calibration(env("SIGAN_CALIBRATION_FILE"), env("DEFAULT_CALIBRATION_FILE"))
 signal_analyzer = None
 try:
-    if not env("RUNNING_MIGRATIONS"):
-        sigan_module_setting = env("SIGAN_MODULE")
-        sigan_module = importlib.import_module(sigan_module_setting)
-        logger.info("Creating " + env("SIGAN_CLASS") + " from " + env("SIGAN_MODULE"))
-        sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
-        signal_analyzer = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
-    else:
-        logger.info("Running migrations. Not loading signal analyzer.")
+    sigan_module_setting = env("SIGAN_MODULE")
+    sigan_module = importlib.import_module(sigan_module_setting)
+    logger.info("Creating " + env("SIGAN_CLASS") + " from " + env("SIGAN_MODULE"))
+    sigan_constructor = getattr(sigan_module, env("SIGAN_CLASS"))
+    signal_analyzer = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
 except Exception as ex:
     logger.warning(f"unable to create signal analyzer: {ex}")
 

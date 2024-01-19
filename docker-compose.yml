@@ -64,6 +64,7 @@ services:
       - SIGAN_CLASS
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
+      - RUNNING_MIGRATIONS
     expose:
       - '8000'
     volumes:
