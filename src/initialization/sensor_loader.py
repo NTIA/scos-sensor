@@ -31,9 +31,6 @@ class SensorLoader(object):
             cls._instance = super(SensorLoader, cls).__new__(cls)
         return cls._instance
 
-def sigabrt_handler(signum, frame):
-    logger.error("Recieved SIGABRT")
-
 def load_sensor(sensor_capabilities):
     location = None
     #Remove location from sensor definition and convert to geojson.
@@ -52,7 +49,6 @@ def load_sensor(sensor_capabilities):
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
-            signal.signal(signal.SIGABRT, sigabrt_handler)
             sigan_module_setting = settings.SIGAN_MODULE
             sigan_module = importlib.import_module(sigan_module_setting)
             logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
