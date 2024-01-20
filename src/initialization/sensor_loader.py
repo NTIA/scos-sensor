@@ -52,21 +52,13 @@ def load_sensor(sensor_capabilities):
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
-            sigan_loader = importlib.import_module("initialization.sigan_loader")
-            sigan = sigan_loader.signal_analyzer
-            logger.debug(f"{sigan_loader.sensor_cal}")
-            if sigan:
-                logger.debug(f"loaded {sigan}")
-                register_component_with_status.send(sigan, component=sigan)
-            else:
-                logger.warning("Sigan loader did not create signal analyzer.")
-            # signal.signal(signal.SIGABRT, sigabrt_handler)
-            # sigan_module_setting = settings.SIGAN_MODULE
-            # sigan_module = importlib.import_module(sigan_module_setting)
-            # logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
-            # sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
-            # sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
-            # register_component_with_status.send(sigan, component=sigan)
+            signal.signal(signal.SIGABRT, sigabrt_handler)
+            sigan_module_setting = settings.SIGAN_MODULE
+            sigan_module = importlib.import_module(sigan_module_setting)
+            logger.info("Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE)
+            sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
+            sigan = sigan_constructor(sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches = switches)
+            register_component_with_status.send(sigan, component=sigan)
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
     except Exception as ex:
