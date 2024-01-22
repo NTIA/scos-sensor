@@ -3,15 +3,12 @@
 import os
 import sys
 
-import django
 from django.contrib.auth import get_user_model  # noqa
 
-PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
+PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../..", "src")
 
 sys.path.append(PATH)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
-django.setup()
 
 UserModel = get_user_model()
 

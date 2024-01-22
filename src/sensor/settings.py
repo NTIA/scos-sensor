@@ -208,6 +208,7 @@ INSTALLED_APPS = [
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
     "sensor.apps.SensorConfig",  # global settings/utils, etc
+    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
