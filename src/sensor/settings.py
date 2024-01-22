@@ -405,6 +405,7 @@ LOGGING = {
         "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_sensor_keysight": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_tekrsa": {"handlers": ["console"], "level": LOGLEVEL},
+        "users": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 
