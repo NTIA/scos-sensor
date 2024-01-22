@@ -13,16 +13,12 @@ logger = logging.getLogger(__name__)
 status_monitor = StatusMonitor()
 
 
-def check_for_usb():
+def usb_exists() -> bool:
     logger.debug("Checking for USB...")
     if settings.USB_PATH is not None:
         usb = Path(settings.USB_PATH)
-        if not usb.exists():
-            logger.debug("Usb is not ready. Marking container as unhealthy")
-            if settings.IN_DOCKER:
-                Path(settings.SDR_HEALTHCHECK_FILE).touch()
-        else:
-            logger.debug("Found USB")
+        return usb.exists()
+    return True
 
 
 def status_registration_handler(sender, **kwargs):
@@ -36,12 +32,17 @@ def status_registration_handler(sender, **kwargs):
 try:
     register_component_with_status.connect(status_registration_handler)
     logger.debug("Checking for /dev/bus/usb/002/003")
-    check_for_usb()
-    action_loader = ActionLoader()
-    logger.debug("test")
-    logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
-    capabilities_loader = CapabilitiesLoader()
-    logger.debug("Calling sensor loader.")
-    sensor_loader = SensorLoader(capabilities_loader.capabilities)
+    usb_exists = usb_exists()
+    if usb_exists:
+        action_loader = ActionLoader()
+        logger.debug("test")
+        logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
+        capabilities_loader = CapabilitiesLoader()
+        logger.debug("Calling sensor loader.")
+        sensor_loader = SensorLoader(capabilities_loader.capabilities)
+    else:
+        logger.warning("Usb is not ready. Marking container as unhealthy")
+        if settings.IN_DOCKER:
+            Path(settings.SDR_HEALTHCHECK_FILE).touch()
 except Exception as ex:
     logger.error(f"Error during initialization: {ex}")
