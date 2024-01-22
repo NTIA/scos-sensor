@@ -71,7 +71,6 @@ services:
       - ${REPO_ROOT}/configs:/configs:rw
       - ${REPO_ROOT}/drivers:/drivers:ro
       - ${REPO_ROOT}/files:/files:rw
-      - /dev/bus/usb
     tmpfs:
       - /scos_tmp
     cap_add:
