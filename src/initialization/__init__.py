@@ -18,6 +18,7 @@ status_monitor = StatusMonitor()
 def usb_exists() -> bool:
     logger.debug("Checking for USB...")
     if settings.USB_PATH is not None:
+        logger.debug("Checking for " + settings.USB_PATH)
         usb = Path(settings.USB_PATH)
         return usb.exists()
     return True
@@ -33,7 +34,6 @@ def status_registration_handler(sender, **kwargs):
 
 try:
     register_component_with_status.connect(status_registration_handler)
-    logger.debug("Checking for /dev/bus/usb/002/003")
     usb_exists = usb_exists()
     if usb_exists:
         action_loader = ActionLoader()
