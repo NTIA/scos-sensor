@@ -1,14 +1,17 @@
 import logging
+import sys
 import types
 from pathlib import Path
+from subprocess import check_output
+
 from django.conf import settings
+
+from utils.signals import register_component_with_status
+
 from .action_loader import ActionLoader
 from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
 from .status_monitor import StatusMonitor
-from subprocess import check_output
-
-from utils.signals import register_component_with_status
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +21,9 @@ status_monitor = StatusMonitor()
 def usb_exists() -> bool:
     logger.debug("Checking for USB...")
     if settings.USB_DEVICE is not None:
-        usb_devices = check_output("lsusb")
+        usb_devices = check_output("lsusb").decode(sys.stdout.encoding)
         logger.debug("Checking for " + settings.USB_DEVICE)
+        logger.debug("Found " + usb_devices)
         return settings.USB_DEVICE in usb_devices
     return True
 
