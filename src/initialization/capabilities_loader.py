@@ -6,7 +6,8 @@ from scos_actions.utils import load_from_json
 
 logger = logging.getLogger(__name__)
 
-class CapabilitiesLoader(object):
+
+class CapabilitiesLoader:
     _instance = None
 
     def __init__(self):
@@ -18,12 +19,12 @@ class CapabilitiesLoader(object):
 
     def __new__(cls):
         if cls._instance is None:
-            logger.debug('Creating the ActionLoader')
-            cls._instance = super(CapabilitiesLoader, cls).__new__(cls)
+            logger.debug("Creating the ActionLoader")
+            cls._instance = super().__new__(cls)
         return cls._instance
 
-def load_capabilities(sensor_definition_file):
 
+def load_capabilities(sensor_definition_file) -> dict:
     capabilities = {}
     sensor_definition_hash = None
     sensor_location = None
@@ -43,12 +44,13 @@ def load_capabilities(sensor_definition_file):
     try:
         if "sensor_sha512" not in capabilities["sensor"]:
             sensor_def = json.dumps(capabilities["sensor"], sort_keys=True)
-            sensor_definition_hash = hashlib.sha512(sensor_def.encode("UTF-8")).hexdigest()
+            sensor_definition_hash = hashlib.sha512(
+                sensor_def.encode("UTF-8")
+            ).hexdigest()
             capabilities["sensor"]["sensor_sha512"] = sensor_definition_hash
     except:
         capabilities["sensor"]["sensor_sha512"] = "ERROR GENERATING HASH"
         # sensor_sha512 is None, do not raise Exception, but log it
         logger.exception(f"Unable to generate sensor definition hash")
-
 
     return capabilities

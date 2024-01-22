@@ -1,10 +1,12 @@
 import logging
+import types
 from pathlib import Path
 from django.conf import settings
 from .action_loader import ActionLoader
 from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
 from .status_monitor import StatusMonitor
+
 
 from utils.signals import register_component_with_status
 
@@ -41,6 +43,16 @@ try:
         logger.debug("Calling sensor loader.")
         sensor_loader = SensorLoader(capabilities_loader.capabilities)
     else:
+        action_loader = types.SimpleNamespace()
+        action_loader.actions = {}
+        capabilities_loader = types.SimpleNamespace()
+        capabilities_loader.capabilities = {}
+        sensor_loader = types.SimpleNamespace()
+        sensor_loader.sensor = types.SimpleNamespace()
+        sensor_loader.sensor.signal_analyzer = None
+        sensor_loader.preselector = None
+        sensor_loader.switches = {}
+        sensor_loader.capabilities = {}
         logger.warning("Usb is not ready. Marking container as unhealthy")
         if settings.IN_DOCKER:
             Path(settings.SDR_HEALTHCHECK_FILE).touch()
