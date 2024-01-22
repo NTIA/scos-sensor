@@ -46,6 +46,12 @@ try:
         capabilities_loader = CapabilitiesLoader()
         logger.debug("Calling sensor loader.")
         sensor_loader = SensorLoader(capabilities_loader.capabilities)
+        if not sensor_loader.sensor.signal_analyzer.healthy():
+            if settings.IN_DOCKER:
+                logger.warning(
+                    "Signal analyzer is not healthy. Marking container for restart."
+                )
+                Path(settings.SDR_HEALTHCHECK_FILE).touch()
     else:
         action_loader = types.SimpleNamespace()
         action_loader.actions = {}
