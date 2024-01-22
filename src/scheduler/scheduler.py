@@ -1,27 +1,22 @@
 """Queue and run tasks."""
-import importlib
 import json
 import logging
 import threading
-import requests
-
 from contextlib import contextmanager
 from pathlib import Path
 
-
+import requests
+from django.conf import settings
 from django.utils import timezone
+from scos_actions.hardware.sensor import Sensor
 from scos_actions.signals import trigger_api_restart
-from authentication import oauth
+
 from initialization import sensor_loader
 from schedule.models import ScheduleEntry
 from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
-from django.conf import settings
-from scos_actions.hardware.sensor import Sensor
-
-
 
 from . import utils
 
@@ -174,7 +169,9 @@ class Scheduler(threading.Thread):
         schedule_entry_json["id"] = entry_name
 
         try:
-            logger.debug(f"running task {entry_name}/{task_id} with sigan: {self.sensor}")
+            logger.debug(
+                f"running task {entry_name}/{task_id} with sigan: {self.sensor}"
+            )
             detail = self.task.action_caller(self.sensor, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
@@ -205,14 +202,15 @@ class Scheduler(threading.Thread):
                     if settings.PATH_TO_VERIFY_CERT != "":
                         verify_ssl = settings.PATH_TO_VERIFY_CERT
                 logger.debug(settings.CALLBACK_AUTHENTICATION)
-                if settings.CALLBACK_AUTHENTICATION == "OAUTH":
-                    client = oauth.get_oauth_client()
+                if settings.CALLBACK_AUTHENTICATION == "CERT":
                     headers = {"Content-Type": "application/json"}
-                    response = client.post(
+
+                    response = requests.post(
                         self.entry.callback_url,
                         data=json.dumps(result_json),
                         headers=headers,
                         verify=verify_ssl,
+                        cert=settings.PATH_TO_CLIENT_CERT,
                         timeout=settings.CALLBACK_TIMEOUT,
                     )
                     self._callback_response_handler(response, task_result)
@@ -355,4 +353,3 @@ def minimum_duration(blocking):
 # of running it in its own microservice is that we _must not_ run the
 # application server in multiple processes (multiple threads are fine).
 thread = Scheduler()
-

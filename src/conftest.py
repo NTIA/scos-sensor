@@ -5,17 +5,13 @@ from collections import namedtuple
 import pytest
 from django.conf import settings
 from django.test.client import Client
+from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
+from scos_actions.hardware.sensor import Sensor
 
 import scheduler
 from authentication.models import User
-from authentication.tests.utils import get_test_public_private_key
+from sensor.tests.certificate_auth_client import CertificateAuthClient
 from tasks.models import TaskResult
-from scos_actions.hardware.sensor import Sensor
-from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
-
-PRIVATE_KEY, PUBLIC_KEY = get_test_public_private_key()
-Keys = namedtuple("KEYS", ["private_key", "public_key"])
-keys = Keys(PRIVATE_KEY.decode("utf-8"), PUBLIC_KEY.decode("utf-8"))
 
 
 @pytest.fixture(autouse=True)
@@ -44,9 +40,9 @@ def testclock():
 def test_scheduler(rf, testclock):
     """Instantiate test scheduler with fake request context and testclock."""
     s = scheduler.scheduler.Scheduler()
-   # mock_sigan = MockSignalAnalyzer()
-   # sensor = Sensor(signal_analyzer=mock_sigan)
-   # s.sensor = sensor
+    # mock_sigan = MockSignalAnalyzer()
+    # sensor = Sensor(signal_analyzer=mock_sigan)
+    # s.sensor = sensor
     s.request = rf.post("mock://cburl/schedule")
     return s
 
@@ -71,8 +67,17 @@ def user(db):
 @pytest.fixture
 def user_client(db, user):
     """A Django test client logged in as a normal user"""
-    client = Client()
-    client.login(username=user.username, password=user.password)
+    client = CertificateAuthClient()
+    assert client.login(username=user.username, password=user.password)
+
+    return client
+
+
+@pytest.fixture
+def admin_client(db, admin_user):
+    """A Django test client logged in as an admin user"""
+    client = CertificateAuthClient()
+    assert client.login(username=admin_user.username, password="password")
 
     return client
 
@@ -97,8 +102,8 @@ def alt_user(db):
 @pytest.fixture
 def alt_user_client(db, alt_user):
     """A Django test client logged in as a normal user"""
-    client = Client()
-    client.login(username=alt_user.username, password=alt_user.password)
+    client = CertificateAuthClient()
+    assert client.login(username=alt_user.username, password=alt_user.password)
 
     return client
 
@@ -115,15 +120,15 @@ def alt_admin_user(db, django_user_model, django_username_field):
     username_field = django_username_field
 
     try:
-        user = UserModel._default_manager.get(**{username_field: "alt_admin"})
+        user = UserModel._default_manager.get(**{username_field: "ALT ADMIN"})
     except UserModel.DoesNotExist:
         extra_fields = {}
 
         if username_field != "username":
-            extra_fields[username_field] = "alt_admin"
+            extra_fields[username_field] = "ALT ADMIN"
 
         user = UserModel._default_manager.create_superuser(
-            "alt_admin", "alt_admin@example.com", "password", **extra_fields
+            "ALT ADMIN", "alt_admin@example.com", "password", **extra_fields
         )
 
     return user
@@ -134,16 +139,7 @@ def alt_admin_client(db, alt_admin_user):
     """A Django test client logged in as an admin user."""
     from django.test.client import Client
 
-    client = Client()
-    client.login(username=alt_admin_user.username, password="password")
+    client = CertificateAuthClient()
+    assert client.login(username=alt_admin_user.username, password="password")
 
     return client
-
-
-@pytest.fixture(autouse=True)
-def jwt_keys(settings):
-    with tempfile.NamedTemporaryFile() as jwt_public_key_file:
-        jwt_public_key_file.write(PUBLIC_KEY)
-        jwt_public_key_file.flush()
-        settings.PATH_TO_JWT_PUBLIC_KEY = jwt_public_key_file.name
-        yield keys

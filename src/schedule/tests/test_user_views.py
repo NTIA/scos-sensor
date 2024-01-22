@@ -32,6 +32,6 @@ def test_user_cannot_view_schedule_entry_detail(user_client, admin_client):
     kws = {"pk": admin_entry_name}
     kws.update(V1)
     admin_url = reverse("schedule-detail", kwargs=kws)
-    response = user_client.get(admin_url)
+    response = user_client.get(admin_url, **HTTPS_KWARG)
     rjson = validate_response(response, status.HTTP_403_FORBIDDEN)
     assert rjson != EMPTY_SCHEDULE_RESPONSE
