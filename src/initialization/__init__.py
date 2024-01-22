@@ -12,6 +12,17 @@ logger = logging.getLogger(__name__)
 
 status_monitor = StatusMonitor()
 
+def check_for_usb():
+    logger.debug("Checking for USB...")
+    if settings.USB_PATH is not None:
+        usb = settings.USB_PATH
+        if not usb.exists():
+            logger.debug("Usb is not ready. Marking container as unhealthy")
+            if settings.IN_DOCKER:
+                Path(settings.SDR_HEALTHCHECK_FILE).touch()
+        else:
+            logger.debug("Found USB")
+
 def status_registration_handler(sender, **kwargs):
     try:
         logger.debug(f"Registering {sender} as status provider")
@@ -21,11 +32,7 @@ def status_registration_handler(sender, **kwargs):
 try:
     register_component_with_status.connect(status_registration_handler)
     logger.debug("Checking for /dev/bus/usb/002/003")
-    usb = Path("/dev/bus/usb/002/003")
-    if not usb.exists():
-        logger.debug("Usb is not ready. Marking container as unhealthy")
-        if settings.IN_DOCKER:
-            Path(settings.SDR_HEALTHCHECK_FILE).touch()
+    check_for_usb()
     action_loader = ActionLoader()
     logger.debug("test")
     logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
