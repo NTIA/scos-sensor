@@ -6,7 +6,7 @@ from .action_loader import ActionLoader
 from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
 from .status_monitor import StatusMonitor
-
+from subprocess import check_output
 
 from utils.signals import register_component_with_status
 
@@ -17,10 +17,10 @@ status_monitor = StatusMonitor()
 
 def usb_exists() -> bool:
     logger.debug("Checking for USB...")
-    if settings.USB_PATH is not None:
-        logger.debug("Checking for " + settings.USB_PATH)
-        usb = Path(settings.USB_PATH)
-        return usb.exists()
+    if settings.USB_DEVICE is not None:
+        usb_devices = check_output("lsusb")
+        logger.debug("Checking for " + settings.USB_DEVICE)
+        return settings.USB_DEVICE in usb_devices
     return True
 
 

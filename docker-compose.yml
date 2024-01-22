@@ -64,7 +64,7 @@ services:
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
       - RUNNING_MIGRATIONS
-      - USB_PATH
+      - USB_DEVICE
     expose:
       - '8000'
     volumes:
