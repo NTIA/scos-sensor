@@ -1,5 +1,6 @@
 import logging
-
+from pathlib import Path
+from django.conf import settings
 from .action_loader import ActionLoader
 from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
@@ -19,7 +20,12 @@ def status_registration_handler(sender, **kwargs):
         logger.exception("Error registering status component")
 try:
     register_component_with_status.connect(status_registration_handler)
-
+    logger.debug("Checking for /dev/bus/usb/002/003")
+    usb = Path("/dev/bus/usb/002/003")
+    if not usb.exists():
+        logger.debug("Usb is not ready. Marking container as unhealthy")
+        if settings.IN_DOCKER:
+            Path(settings.SDR_HEALTHCHECK_FILE).touch()
     action_loader = ActionLoader()
     logger.debug("test")
     logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
