@@ -398,6 +398,7 @@ LOGGING = {
         "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "handlers": {"handlers": ["console"], "level": LOGLEVEL},
+        "initialization": {"handlers": ["console"], "level": LOGLEVEL} ,
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},
