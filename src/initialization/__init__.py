@@ -12,10 +12,11 @@ logger = logging.getLogger(__name__)
 
 status_monitor = StatusMonitor()
 
+
 def check_for_usb():
     logger.debug("Checking for USB...")
     if settings.USB_PATH is not None:
-        usb = settings.USB_PATH
+        usb = Path(settings.USB_PATH)
         if not usb.exists():
             logger.debug("Usb is not ready. Marking container as unhealthy")
             if settings.IN_DOCKER:
@@ -23,12 +24,15 @@ def check_for_usb():
         else:
             logger.debug("Found USB")
 
+
 def status_registration_handler(sender, **kwargs):
     try:
         logger.debug(f"Registering {sender} as status provider")
         status_monitor.add_component(kwargs["component"])
     except:
         logger.exception("Error registering status component")
+
+
 try:
     register_component_with_status.connect(status_registration_handler)
     logger.debug("Checking for /dev/bus/usb/002/003")
