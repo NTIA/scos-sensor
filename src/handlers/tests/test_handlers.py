@@ -7,6 +7,7 @@ from scos_actions.metadata.utils import construct_geojson_point
 
 logger = logging.getLogger(__name__)
 
+
 @pytest.mark.django_db
 def test_db_location_update_handler():
     location = construct_geojson_point(-105.7, 40.5, 0)
@@ -24,7 +25,6 @@ def test_db_location_update_handler():
     assert sensor.location["coordinates"][0] == 100
     assert sensor.location["coordinates"][1] == -1
     assert sensor.location["coordinates"][2] == 10
-
 
 
 @pytest.mark.django_db
@@ -68,7 +68,7 @@ def test_db_location_update_handler_not_active():
 @pytest.mark.django_db
 def test_db_location_deleted_handler():
     location = construct_geojson_point(-105.7, 40.5, 0)
-    sensor = Sensor(location=location)
+    sensor = sensor_loader.sensor
     location = Location()
     location.gps = False
     location.height = 10
