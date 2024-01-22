@@ -27,9 +27,6 @@ COPY ./gunicorn /gunicorn
 RUN mkdir -p /entrypoints
 COPY ./entrypoints/api_entrypoint.sh /entrypoints
 
-RUN mkdir -p /scripts
-COPY ./scripts/create_superuser.py /scripts
-
 RUN chmod +x /entrypoints/api_entrypoint.sh
 
 COPY ./configs /configs
