@@ -1,6 +1,7 @@
 import hashlib
 import json
 import logging
+
 from django.conf import settings
 from scos_actions.utils import load_from_json
 
@@ -13,7 +14,7 @@ class CapabilitiesLoader:
     def __init__(self):
         if not hasattr(self, "capabilities"):
             logger.debug("Capabilities have not been loaded. Loading...")
-            self.capabilities = load_capabilities(settings.SENSOR_DEFINITION_FILE)
+            self._capabilities = load_capabilities(settings.SENSOR_DEFINITION_FILE)
         else:
             logger.debug("Already loaded capabilities. ")
 
@@ -23,8 +24,12 @@ class CapabilitiesLoader:
             cls._instance = super().__new__(cls)
         return cls._instance
 
+    @property
+    def capabilities(self) -> dict:
+        return self._capabilities
 
-def load_capabilities(sensor_definition_file) -> dict:
+
+def load_capabilities(sensor_definition_file: str) -> dict:
     capabilities = {}
     sensor_definition_hash = None
     sensor_location = None
