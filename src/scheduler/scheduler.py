@@ -170,7 +170,7 @@ class Scheduler(threading.Thread):
 
         try:
             logger.debug(
-                f"running task {entry_name}/{task_id} with sigan: {self.sensor}"
+                f"running task {entry_name}/{task_id} with sigan: {self.sensor.signal_analyzer}"
             )
             detail = self.task.action_caller(self.sensor, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run

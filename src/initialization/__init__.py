@@ -20,7 +20,7 @@ status_monitor = StatusMonitor()
 
 def usb_device_exists() -> bool:
     logger.debug("Checking for USB...")
-    if settings.USB_DEVICE is not None:
+    if not settings.RUNNING_TESTS and settings.USB_DEVICE is not None:
         usb_devices = check_output("lsusb").decode(sys.stdout.encoding)
         logger.debug("Checking for " + settings.USB_DEVICE)
         logger.debug("Found " + usb_devices)

@@ -1,9 +1,10 @@
 import logging
+
 import pytest
+from scos_actions.metadata.utils import construct_geojson_point
+
 from initialization import sensor_loader
 from status.models import Location
-from scos_actions.hardware.sensor import Sensor
-from scos_actions.metadata.utils import construct_geojson_point
 
 logger = logging.getLogger(__name__)
 

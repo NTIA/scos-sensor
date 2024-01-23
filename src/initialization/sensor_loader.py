@@ -40,24 +40,36 @@ class SensorLoader:
 
 
 def load_sensor(sensor_capabilities: dict) -> Sensor:
+    switches = {}
+    sigan_cal = None
+    sensor_cal = None
+    preselector = None
     location = None
-    # Remove location from sensor definition and convert to geojson.
-    # Db may have an updated location, but status module will update it
-    # if needed.
-    if "location" in sensor_capabilities["sensor"]:
-        sensor_loc = sensor_capabilities["sensor"].pop("location")
-        location = construct_geojson_point(
-            sensor_loc["x"],
-            sensor_loc["y"],
-            sensor_loc["z"] if "z" in sensor_loc else None,
+    if not settings.RUNNING_TESTS:
+        # Remove location from sensor definition and convert to geojson.
+        # Db may have an updated location, but status module will update it
+        # if needed.
+        if "location" in sensor_capabilities["sensor"]:
+            sensor_loc = sensor_capabilities["sensor"].pop("location")
+            location = construct_geojson_point(
+                sensor_loc["x"],
+                sensor_loc["y"],
+                sensor_loc["z"] if "z" in sensor_loc else None,
+            )
+        switches = load_switches(settings.SWITCH_CONFIGS_DIR)
+        sensor_cal = get_sensor_calibration(
+            settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
         )
-    switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-    sensor_cal = get_sensor_calibration(
-        settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
-    )
-    sigan_cal = get_sigan_calibration(
-        settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
-    )
+        sigan_cal = get_sigan_calibration(
+            settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
+        )
+        preselector = load_preselector(
+            settings.PRESELECTOR_CONFIG,
+            settings.PRESELECTOR_MODULE,
+            settings.PRESELECTOR_CLASS,
+            sensor_capabilities["sensor"],
+        )
+
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
@@ -75,13 +87,6 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
             logger.info("Running migrations. Not loading signal analyzer.")
     except Exception as ex:
         logger.warning(f"unable to create signal analyzer: {ex}")
-
-    preselector = load_preselector(
-        settings.PRESELECTOR_CONFIG,
-        settings.PRESELECTOR_MODULE,
-        settings.PRESELECTOR_CLASS,
-        sensor_capabilities["sensor"],
-    )
 
     sensor = Sensor(
         signal_analyzer=sigan,
