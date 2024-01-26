@@ -90,9 +90,9 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
 
     sensor = Sensor(
         signal_analyzer=sigan,
+        capabilities=sensor_capabilities,
         preselector=preselector,
         switches=switches,
-        capabilities=sensor_capabilities,
         location=location,
     )
     return sensor
