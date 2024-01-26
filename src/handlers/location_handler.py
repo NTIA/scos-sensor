@@ -1,9 +1,12 @@
 import logging
-from initialization import sensor_loader
-from status.models import GPS_LOCATION_DESCRIPTION, Location
+
 from scos_actions.metadata.utils import construct_geojson_point
 
+from initialization import sensor_loader
+from status.models import GPS_LOCATION_DESCRIPTION, Location
+
 logger = logging.getLogger(__name__)
+
 
 def location_action_completed_callback(sender, **kwargs):
     """Update database when GPS is synced or database is updated"""
@@ -33,9 +36,15 @@ def location_action_completed_callback(sender, **kwargs):
 
 def db_location_updated(sender, **kwargs):
     instance = kwargs["instance"]
-    logger.debug(f"DB location updated by {sender}")
     if isinstance(instance, Location) and instance.active:
-        geojson = construct_geojson_point(longitude = instance.longitude, latitude=instance.latitude, altitude= instance.height)
+        geojson = construct_geojson_point(
+            longitude=instance.longitude,
+            latitude=instance.latitude,
+            altitude=instance.height,
+        )
+        logger.debug(
+            f"DB location updated to latitude:{instance.latitude}, longitude:{instance.longitude}, height:{instance.height}"
+        )
         if sensor_loader.sensor:
             sensor_loader.sensor.location = geojson
             logger.debug(f"Updated {sensor_loader.sensor} location to {geojson}")
@@ -51,4 +60,6 @@ def db_location_deleted(sender, **kwargs):
                 sensor_loader.sensor.location = None
                 logger.debug(f"Set {sensor_loader.sensor} location to None.")
             else:
-                logger.warning("No sensor registered. Unable to remove sensor location.")
+                logger.warning(
+                    "No sensor registered. Unable to remove sensor location."
+                )
