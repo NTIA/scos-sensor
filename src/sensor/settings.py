@@ -72,16 +72,28 @@ CONFIG_DIR = path.join(REPO_ROOT, "configs")
 ACTIONS_DIR = path.join(CONFIG_DIR, "actions")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
-DEFAULT_CALIBRATION_FILE = path.join(CONFIG_DIR, "default_calibration.json")
-os.environ["DEFAULT_CALIBRATION_FILE"] = str(DEFAULT_CALIBRATION_FILE)
+DEFAULT_SENSOR_CALIBRATION_FILE = path.join(
+    CONFIG_DIR, "default_sensor_calibration.json"
+)
+DEFAULT_DIFFERENTIAL_CALIBRATION_FILE = path.join(
+    CONFIG_DIR, "default_differential_calibration.json"
+)
+os.environ["DEFAULT_SENSOR_CALIBRATION_FILE"] = str(DEFAULT_SENSOR_CALIBRATION_FILE)
+os.environ["DEFAULT_DIFFERENTIAL_CALIBRATION_FILE"] = str(
+    DEFAULT_DIFFERENTIAL_CALIBRATION_FILE
+)
 # JSON configs
-if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
-    SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
+if path.exists(sensor_cal_path := path.join(CONFIG_DIR, "sensor_calibration.json")):
+    SENSOR_CALIBRATION_FILE = sensor_cal_path
 else:
-    SENSOR_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
+    SENSOR_CALIBRATION_FILE = DEFAULT_SENSOR_CALIBRATION_FILE
+if path.exists(diff_cal_path := path.join(CONFIG_DIR, "differential_calibration.json")):
+    DIFFERENTIAL_CALIBRATION_FILE = diff_cal_path
+else:
+    DIFFERENTIAL_CALIBRATION_FILE = DEFAULT_DIFFERENTIAL_CALIBRATION_FILE
 
-if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
-    SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
+if path.exists(sensor_def_path := path.join(CONFIG_DIR, "sensor_definition.json")):
+    SENSOR_DEFINITION_FILE = sensor_def_path
 os.environ["SENSOR_CALIBRATION_FILE"] = SENSOR_CALIBRATION_FILE
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 PRESELECTOR_CONFIG = path.join(CONFIG_DIR, "preselector_config.json")

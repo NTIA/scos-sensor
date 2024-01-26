@@ -393,7 +393,7 @@ specific to the sensor you are using.
 
 ### Sensor Calibration File
 
-By default, scos-sensor will use `configs/default_calibration.json` as the sensor
+By default, scos-sensor will use `configs/default_sensor_calibration.json` as the sensor
 calibration file. However, if `configs/sensor_calibration.json` exists it will be used
 instead of the default calibration file. Sensor calibration files allow SCOS Sensor to
 scale data based on a laboratory or in-field calibration of the sensor and may also

@@ -3,13 +3,15 @@ import logging
 import signal
 from os import path
 from pathlib import Path
+from typing import Union
 
 from django.conf import settings
 from its_preselector.configuration_exception import ConfigurationException
 from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
 from its_preselector.preselector import Preselector
 from scos_actions import utils
-from scos_actions.calibration.calibration import Calibration, load_from_json
+from scos_actions.calibration.differential_calibration import DifferentialCalibration
+from scos_actions.calibration.sensor_calibration import SensorCalibration
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
 
@@ -40,8 +42,10 @@ class SensorLoader:
 
 
 def load_sensor(sensor_capabilities: dict) -> Sensor:
+    gps = None  # TODO Not Implemented
     switches = {}
     sensor_cal = None
+    differential_cal = None
     preselector = None
     location = None
     if not settings.RUNNING_TESTS:
@@ -56,8 +60,15 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 sensor_loc["z"] if "z" in sensor_loc else None,
             )
         switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-        sensor_cal = get_sensor_calibration(
-            settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
+        sensor_cal = get_calibration(
+            settings.SENSOR_CALIBRATION_FILE,
+            settings.DEFAULT_SENSOR_CALIBRATION_FILE,
+            "sensor",
+        )
+        differential_cal = get_calibration(
+            settings.DIFFERENTIAL_CALIBRATION_FILE,
+            settings.DEFAULT_DIFFERENTIAL_CALIBRATION_FILE,
+            "differential",
         )
         preselector = load_preselector(
             settings.PRESELECTOR_CONFIG,
@@ -84,10 +95,13 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
 
     sensor = Sensor(
         signal_analyzer=sigan,
+        gps=gps,
         preselector=preselector,
         switches=switches,
         capabilities=sensor_capabilities,
         location=location,
+        sensor_cal=sensor_cal,
+        differential_cal=differential_cal,
     )
     return sensor
 
@@ -152,39 +166,43 @@ def load_preselector(
     return ps
 
 
-def get_sensor_calibration(
-    sensor_cal_file_path: str, default_cal_file_path: str
-) -> Calibration:
+def get_calibration(
+    cal_file_path: str, default_cal_file_path: str, cal_type: str
+) -> Union[DifferentialCalibration, SensorCalibration]:
     """
-    Load sensor calibration data from file.
+    Load calibration data from file.
 
-    :param sensor_cal_file_path: Path to JSON file containing sensor
-        calibration data.
-    :param default_cal_file_path: Name of the default calibration file.
-    :return: The sensor ``Calibration`` object.
+    :param cal_file_path: Path to the JSON calibration file.
+    :param default_cal_file_path: Path to the default calibration file.
+    :param cal_type: Calibration type to load, either "sensor" or "differential"
+    :return: The ``Calibration`` object.
     """
     try:
-        sensor_cal = None
-        if sensor_cal_file_path is None or sensor_cal_file_path == "":
-            logger.warning(
-                "No sensor calibration file specified. Not loading calibration file."
-            )
-        elif not path.exists(sensor_cal_file_path):
-            logger.warning(
-                sensor_cal_file_path
-                + " does not exist. Not loading sensor calibration file."
-            )
+        cal = None
+        if cal_file_path is None or cal_file_path == "":
+            logger.error("No calibration file specified.")
+            raise ValueError
+        elif not path.exists(cal_file_path):
+            logger.error(f"{cal_file_path} does not exist.")
+            raise FileNotFoundError
         else:
-            logger.debug(f"Loading sensor cal file: {sensor_cal_file_path}")
+            logger.debug(f"Loading calibration file: {cal_file_path}")
             default = check_for_default_calibration(
-                sensor_cal_file_path, default_cal_file_path, "Sensor"
+                cal_file_path, default_cal_file_path, cal_type
             )
-        sensor_cal = load_from_json(sensor_cal_file_path, default)
-        sensor_cal.is_default = default
+            # Create calibration object
+            if cal_type.lower() == "sensor":
+                cal = SensorCalibration.from_json(cal_file_path, default)
+            elif cal_type.lower() == "differential":
+                cal = DifferentialCalibration.from_json(cal_file_path, default)
+            else:
+                logger.error(f"Unknown calibration type: {cal_type}")
+                raise ValueError
     except Exception:
-        sensor_cal = None
-        logger.exception("Unable to load sensor calibration data, reverting to none")
-    return sensor_cal
+        cal = None
+        logger.exception("Unable to load calibration file, reverting to none")
+    finally:
+        return cal
 
 
 def check_for_default_calibration(
