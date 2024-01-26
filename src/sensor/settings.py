@@ -80,15 +80,9 @@ if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
 else:
     SENSOR_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
 
-if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
-    SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
-else:
-    SIGAN_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
-
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
 os.environ["SENSOR_CALIBRATION_FILE"] = SENSOR_CALIBRATION_FILE
-os.environ["SIGAN_CALIBRATION_FILE"] = SIGAN_CALIBRATION_FILE
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 PRESELECTOR_CONFIG = path.join(CONFIG_DIR, "preselector_config.json")
 

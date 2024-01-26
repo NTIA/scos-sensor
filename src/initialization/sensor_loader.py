@@ -41,7 +41,6 @@ class SensorLoader:
 
 def load_sensor(sensor_capabilities: dict) -> Sensor:
     switches = {}
-    sigan_cal = None
     sensor_cal = None
     preselector = None
     location = None
@@ -60,9 +59,6 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         sensor_cal = get_sensor_calibration(
             settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
         )
-        sigan_cal = get_sigan_calibration(
-            settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
-        )
         preselector = load_preselector(
             settings.PRESELECTOR_CONFIG,
             settings.PRESELECTOR_MODULE,
@@ -79,9 +75,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 "Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE
             )
             sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
-            sigan = sigan_constructor(
-                sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches=switches
-            )
+            sigan = sigan_constructor(switches=switches)
             register_component_with_status.send(sigan, component=sigan)
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
@@ -156,41 +150,6 @@ def load_preselector(
     else:
         ps = None
     return ps
-
-
-def get_sigan_calibration(
-    sigan_cal_file_path: str, default_cal_file_path: str
-) -> Calibration:
-    """
-    Load signal analyzer calibration data from file.
-
-    :param sigan_cal_file_path: Path to JSON file containing signal
-        analyzer calibration data.
-    :param default_cal_file_path: Path to the default cal file.
-    :return: The signal analyzer ``Calibration`` object.
-    """
-    try:
-        sigan_cal = None
-        if sigan_cal_file_path is None or sigan_cal_file_path == "":
-            logger.warning(
-                "No sigan calibration file specified. Not loading calibration file."
-            )
-        elif not path.exists(sigan_cal_file_path):
-            logger.warning(
-                sigan_cal_file_path
-                + " does not exist. Not loading sigan calibration file."
-            )
-        else:
-            logger.debug(f"Loading sigan cal file: {sigan_cal_file_path}")
-            default = check_for_default_calibration(
-                sigan_cal_file_path, default_cal_file_path, "Sigan"
-            )
-            sigan_cal = load_from_json(sigan_cal_file_path, default)
-            sigan_cal.is_default = default
-    except Exception:
-        sigan_cal = None
-        logger.exception("Unable to load sigan calibration data, reverting to none")
-    return sigan_cal
 
 
 def get_sensor_calibration(

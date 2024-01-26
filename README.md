@@ -394,11 +394,10 @@ specific to the sensor you are using.
 ### Sensor Calibration File
 
 By default, scos-sensor will use `configs/default_calibration.json` as the sensor
-calibration file. However, if`configs/sensor_calibration.json` or
-`configs/sigan_calibration.json` exist they will be used instead of the default
-calibration file. Sensor calibration files allow scos-sensor to pply a gain based
-on a laboratory calibration of the sensor and may also contain other useful
-metadata that characterizes the sensor performance. For additional
+calibration file. However, if `configs/sensor_calibration.json` exists it will be used
+instead of the default calibration file. Sensor calibration files allow SCOS Sensor to
+scale data based on a laboratory or in-field calibration of the sensor and may also
+contain other useful metadata that characterizes the sensor performance. For additional
 information on the calibration data, see the
 [NTIA-Sensor SigMF Calibration Object](https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#08-the-calibration-object).
 The default calibration file is shown below:
