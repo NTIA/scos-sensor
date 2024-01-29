@@ -1,9 +1,8 @@
 import logging
 
-from utils import get_summary
-from django.conf import settings
-
 from initialization import action_loader
+from utils import get_summary
+
 
 def get_action_with_summary(action):
     """Given an action, return the string 'action_name - summary'."""
@@ -18,4 +17,3 @@ def get_action_with_summary(action):
 
 logger = logging.getLogger(__name__)
 logger.debug("********** Initializing schedule **********")
-

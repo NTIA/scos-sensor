@@ -3,11 +3,11 @@ import logging
 import os
 import shutil
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 from schedule.models import ScheduleEntry
-from django.conf import settings
 from tasks.consts import MAX_DETAIL_LEN
 
 UTC = timezone.timezone.utc

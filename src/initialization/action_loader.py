@@ -8,8 +8,8 @@ from typing import Dict
 
 from django.conf import settings
 from scos_actions.actions import action_classes
-from scos_actions.discover import init, test_actions
 from scos_actions.actions.interfaces.action import Action
+from scos_actions.discover import init, test_actions
 
 logger = logging.getLogger(__name__)
 

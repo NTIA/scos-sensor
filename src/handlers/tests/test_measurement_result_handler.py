@@ -6,7 +6,6 @@ import sigmf
 from rest_framework import status
 from scos_actions.signals import measurement_action_completed
 
-from initialization import sensor_loader
 from tasks.models import Acquisition
 from test_utils.task_test_utils import (
     HTTPS_KWARG,

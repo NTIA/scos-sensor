@@ -9,7 +9,6 @@ from collections import namedtuple
 
 from initialization import action_loader
 
-
 logger = logging.getLogger(__name__)
 
 logger.debug("*********** scos-sensor/models/task.py ****************")

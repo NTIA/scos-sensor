@@ -3,7 +3,7 @@ import logging
 from scos_actions.metadata.utils import construct_geojson_point
 
 from initialization import sensor_loader
-from status.models import GPS_LOCATION_DESCRIPTION, Location
+from status.models import Location
 
 logger = logging.getLogger(__name__)
 

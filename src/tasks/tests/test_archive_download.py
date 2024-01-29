@@ -1,7 +1,5 @@
-import os
 import tempfile
 
-import numpy as np
 import sigmf.sigmffile
 from rest_framework import status
 

@@ -4,12 +4,11 @@ import threading
 import time
 from itertools import chain, count, islice
 
-from initialization import action_loader
 from authentication.models import User
+from initialization import action_loader
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
 from sensor import V1
-from scos_actions.hardware.mocks.mock_sigan import MockSignalAnalyzer
 
 logger = logging.getLogger(__name__)
 actions = action_loader.actions

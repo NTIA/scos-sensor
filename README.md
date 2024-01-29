@@ -309,17 +309,19 @@ settings in the environment file:
 
 - ADDITIONAL_USER_NAMES: Comma separated list of additional admin usernames.
 - ADDITIONAL_USER_PASSWORD: Password for additional admin users.
-- ADMIN_NAME: Username for the admin user.
 - ADMIN_EMAIL: Email used to generate admin user. Change in production.
+- ADMIN_NAME: Username for the admin user.
 - ADMIN_PASSWORD: Password used to generate admin user. Change in production.
 - AUTHENTICATION: Authentication method used for scos-sensor. Supports `TOKEN` or
   `CERT`.
-- BASE_IMAGE: Base docker image used to build the API container.
+- BASE_IMAGE: Base docker image used to build the API container. Note, this should
+  updated when switching signal analyzers.
 - CALLBACK_AUTHENTICATION: Sets how to authenticate to the callback URL. Supports
   `TOKEN` or `CERT`.
 - CALLBACK_SSL_VERIFICATION: Set to “true” in production environment. If false, the SSL
   certificate validation will be ignored when posting results to the callback URL.
-- CALLBACK_TIMEOUT: The timeout for the requests sent to the callback URL.
+- CALLBACK_TIMEOUT: The timeout for the posts sent to the callback URL when a scheduled
+  action is completed.
 - DEBUG: Django debug mode. Set to False in production.
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
@@ -349,12 +351,30 @@ settings in the environment file:
   unpredictable value. See
   <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
   file sets to a randomly generated value.
+- SIGAN_CLASS: The name of the signal analyzer class to use. By default, this is
+  TekRSASigan to use a Tektronix signal analyzer. This must be changed to switch to
+  a different signal analyzer.
+- SIGAN_MODULE: The name of the python module that provides the signal analyzer
+  implementation. This defaults to scos_tekrsa.hardware.tekrsa_sigan for the
+  Tektronix signal analyzers. This must be changed to switch to a different
+  signal analyzer.
+- SIGAN_POWER_CYCLE_STATES: Optional setting to provide the name of the control_state
+  in the SIGAN_POWER_SWITCH that will power cycle the signal analyzer.
+- SIGAN_POWER_SWITCH: Optional setting used to indicate the name of a
+  [WebRelay](https://github.com/NTIA/Preselector) that may be used to power cycle
+  the signal analyzer if necessary.Note: determinations of power cycling behavior
+  are implemented within the signal analyzer implementations or actions.
+- SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
+  certificate(s) when authentication is set to CERT.
 - SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
   scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
   certificate in production.
-- SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
-  certificate(s) when authentication is set to CERT.
+- USB_DEVICE: Optional string used to search for available USB devices. By default,
+  this is set to Tektronix to see if the Tektronix signal analyzer is available. If
+  the specified value is not found in the output of lsusb, scos-sensor will attempt
+  to restart the api container. If switching to a different signal analyzer, this
+  setting should be updated or removed.
 
 ### Sensor Definition File
 
@@ -435,132 +455,223 @@ per second at several frequencies with a signal analyzer reference level setting
 
 ```json
 {
+  "last_calibration_datetime": "2023-10-23T14:39:13.682Z",
   "calibration_parameters": [
     "sample_rate",
     "frequency",
-    "reference_level"
+    "reference_level",
+    "preamp_enable",
+    "attenuation"
   ],
-  "calibration_datetime": "2020-11-18T23:13:09.156274Z",
+  "clock_rate_lookup_by_sample_rate": [],
   "calibration_data": {
-    "14000000.0":{
-      "3555000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+    "14000000.0": {
+      "3545000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:02.882Z",
+              "gain": 30.09194805857024,
+              "noise_figure": 4.741521295220736,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3565000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3555000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:08.022Z",
+              "gain": 30.401008416406599,
+              "noise_figure": 4.394893979804061,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3575000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3565000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:11.922Z",
+              "gain": 30.848049817892105,
+              "noise_figure": 4.0751785215495819,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3585000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3575000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:16.211Z",
+              "gain": 30.73297444891243,
+              "noise_figure": 4.090843866619065,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3595000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3585000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:20.725Z",
+              "gain": 30.884253019974623,
+              "noise_figure": 3.934553150614483,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3605000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3595000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:24.606Z",
+              "gain": 31.002780356672476,
+              "noise_figure": 3.940238988552726,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3615000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3605000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:29.724Z",
+              "gain": 31.035560147646778,
+              "noise_figure": 3.9290832485193989,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3625000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3615000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:33.614Z",
+              "gain": 30.935970273145274,
+              "noise_figure": 4.006672278350428,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3635000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3625000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:37.592Z",
+              "gain": 30.682403307202095,
+              "noise_figure": 4.064067195729546,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3645000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3635000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:41.889Z",
+              "gain": 30.980340383458626,
+              "noise_figure": 3.8826926914916726,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3655000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3645000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:46.450Z",
+              "gain": 30.948486357958318,
+              "noise_figure": 3.917520438472101,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3665000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3655000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:51.575Z",
+              "gain": 30.96859101287636,
+              "noise_figure": 3.926017393059535,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3675000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3665000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:55.571Z",
+              "gain": 30.618851884796429,
+              "noise_figure": 4.225928655860898,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3685000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3675000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:59.585Z",
+              "gain": 30.552247661443276,
+              "noise_figure": 4.171389553033189,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3695000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3685000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:39:03.921Z",
+              "gain": 30.413415948237785,
+              "noise_figure": 4.42128294424517,
+              "temperature": 15.6
+            }
+          }
+        }
+      },
+      "3695000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:39:09.115Z",
+              "gain": 30.112285957420995,
+              "noise_figure": 4.576464590847393,
+              "temperature": 15.6
+            }
+          }
+        }
+      },
+      "3705000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:39:13.682Z",
+              "gain": 29.120051306906164,
+              "noise_figure": 5.2261432005125709,
+              "temperature": 15.7
+            }
+          }
         }
       }
     }
-  },
-  "clock_rate_lookup_by_sample_rate": [
-    {
-      "sample_rate": 3500000.0,
-      "clock_frequency": 3500000.0
-    },
-    {
-      "sample_rate": 28000000.0,
-      "clock_frequency": 28000000.0
-    }
-  ],
-  "sensor_uid": "US55120115"
+  }
 }
 ```
 
@@ -838,17 +949,19 @@ repository. The scos-actions repository is intended to be a dependency for every
 as it contains the actions base class and signals needed to interface with scos-sensor.
 These actions use a common but flexible signal analyzer interface that can be
 implemented for new types of hardware. This allows for action re-use by passing the
-signal analyzer interface implementation and the required hardware and measurement
-parameters to the constructor of these actions. Alternatively, custom actions that
-support unique hardware functionality can be added to the plugin.
+measurement parameters to the constructor of these actions and supplying the
+Sensor instance (including the signal analyzer) to the `__call__` method.
+Alternatively, custom actions that support unique hardware functionality can be
+added to the plugin.
 
-The scos-actions repository can also be installed as a plugin which uses a mock signal
-analyzer.
-
-scos-sensor uses the following convention to discover actions offered by plugins: if
+Scos-sensor uses the following convention to discover actions offered by plugins: if
 any Python package begins with "scos_", and contains a dictionary of actions at the
 Python path `package_name.discover.actions`, these actions will automatically be
-available for scheduling.
+available for scheduling. Similarly, plugins may offer new action types be including
+a dictionary of action classes at the Python path `package_name.discover.action_classes`.
+Scos-sensor will load all plugin actions and action classes prior to creating the actions
+defined in yaml file in `configs/actions` directory. In this manner, a plugin may add new
+action types to scos-sensor and those new types my instantiated/parameterized with yaml
 
 The scos-usrp plugin adds support for the Ettus B2xx line of signal analyzers.
 It can also be used as an example of a plugin which adds new hardware support and

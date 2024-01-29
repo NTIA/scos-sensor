@@ -9,7 +9,6 @@ from constants import MAX_ACTION_LENGTH
 from initialization import action_loader
 from scheduler import utils
 
-
 logger = logging.getLogger(__name__)
 logger.debug(
     "************** scos-sensor/schedule/models/schedule_entry.py *****************"
