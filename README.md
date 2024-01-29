@@ -957,15 +957,19 @@ added to the plugin.
 Scos-sensor uses the following convention to discover actions offered by plugins: if
 any Python package begins with "scos_", and contains a dictionary of actions at the
 Python path `package_name.discover.actions`, these actions will automatically be
-available for scheduling. Similarly, plugins may offer new action types be including
+available for scheduling. Similarly, plugins may offer new action types by including
 a dictionary of action classes at the Python path `package_name.discover.action_classes`.
-Scos-sensor will load all plugin actions and action classes prior to creating the actions
-defined in yaml file in `configs/actions` directory. In this manner, a plugin may add new
-action types to scos-sensor and those new types my instantiated/parameterized with yaml
+Scos-sensor will load all plugin actions and action classes prior to creating actions
+defined in yaml files in `configs/actions` directory. In this manner, a plugin may add new
+action types to scos-sensor and those new types may be instantiated/parameterized with yaml
+config files.
 
-The scos-usrp plugin adds support for the Ettus B2xx line of signal analyzers.
-It can also be used as an example of a plugin which adds new hardware support and
-re-uses the common actions in scos-actions.
+The [scos-usrp](https://github.com/ntia/scos-usrp) plugin adds support for the Ettus B2xx
+line of signal analyzers and [scos-tekrsa](https://github.com/ntia/scos-tekrsa) adss
+support for Tektronix RSA306, RSA306B, RSA503A,
+RSA507A, RSA513A, RSA518A, RSA603A, and RSA607A real-time spectrum analyzers.
+These repositories may also be used as examples of plugins which provide new hardware
+support and re-use the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
 <https://github.com/ntia/scos-actions#development>).
