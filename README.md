@@ -314,8 +314,13 @@ settings in the environment file:
 - ADMIN_PASSWORD: Password used to generate admin user. Change in production.
 - AUTHENTICATION: Authentication method used for scos-sensor. Supports `TOKEN` or
   `CERT`.
-- BASE_IMAGE: Base docker image used to build the API container. Note, this should
-  updated when switching signal analyzers.
+- BASE_IMAGE: Base docker image used to build the API container. These docker
+  images, combined with any drivers found in the signal analyzer repos,  are
+  responsible for providing the operating system suitable for the chosen signal
+  analyzer. Note, this should be updated when switching signal analyzers.
+  By default, this is configured to
+  use a version of `ghcr.io/ntia/scos-tekrsa/tekrsa_usb` to use a Tektronix
+  signal analyzer.
 - CALLBACK_AUTHENTICATION: Sets how to authenticate to the callback URL. Supports
   `TOKEN` or `CERT`.
 - CALLBACK_SSL_VERIFICATION: Set to “true” in production environment. If false, the SSL
@@ -352,17 +357,17 @@ settings in the environment file:
   <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
   file sets to a randomly generated value.
 - SIGAN_CLASS: The name of the signal analyzer class to use. By default, this is
-  TekRSASigan to use a Tektronix signal analyzer. This must be changed to switch to
+`TekRSASigan` to use a Tektronix signal analyzer. This must be changed to switch to
   a different signal analyzer.
 - SIGAN_MODULE: The name of the python module that provides the signal analyzer
-  implementation. This defaults to scos_tekrsa.hardware.tekrsa_sigan for the
+  implementation. This defaults to  `scos_tekrsa.hardware.tekrsa_sigan` for the
   Tektronix signal analyzers. This must be changed to switch to a different
   signal analyzer.
 - SIGAN_POWER_CYCLE_STATES: Optional setting to provide the name of the control_state
   in the SIGAN_POWER_SWITCH that will power cycle the signal analyzer.
 - SIGAN_POWER_SWITCH: Optional setting used to indicate the name of a
   [WebRelay](https://github.com/NTIA/Preselector) that may be used to power cycle
-  the signal analyzer if necessary.Note: determinations of power cycling behavior
+  the signal analyzer if necessary. Note: specifics of power cycling behavior
   are implemented within the signal analyzer implementations or actions.
 - SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
   certificate(s) when authentication is set to CERT.
