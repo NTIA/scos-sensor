@@ -9,7 +9,7 @@ from typing import Dict
 from django.conf import settings
 from scos_actions.actions import action_classes
 from scos_actions.actions.interfaces.action import Action
-from scos_actions.discover import init
+from scos_actions.discover import init, test_actions
 
 logger = logging.getLogger(__name__)
 
@@ -93,35 +93,28 @@ def load_actions(
         for finder, name, ispkg in pkgutil.iter_modules()
         if name.startswith("scos_") and name != "scos_actions"
     }
-    logger.debug(f"Discovered SCOS plugins: {discovered_plugins}")
+    logger.debug(discovered_plugins)
     actions = {}
-
-    for name, module in discovered_plugins.items():
-        # Load action classes from discovered plugins
-        logger.debug(f"Looking for action classes in {name}: {module}")
-        discover = importlib.import_module(name + ".discover")
-        if hasattr(discover, "action_classes") and discover.action_classes is not None:
-            action_classes.update(discover.action_classes)
-        if mock_sigan or running_tests:
-            # Load test action YAMLs from discovered plugins
-            logger.debug(f"Looking for test actions in {name}: {module}")
-            if hasattr(discover, "test_actions") and discover.test_actions is not None:
-                actions.update(discover.test_actions)
-        else:
-            # Load non-testing action YAMLS from discovered plugins
-            logger.debug(f"Looking for actions in {name}: {module}")
-            if hasattr(discover, "actions") and discover.actions is not None:
+    if mock_sigan or running_tests:
+        logger.debug(f"Loading {len(test_actions)} test actions.")
+        actions.update(test_actions)
+    else:
+        for name, module in discovered_plugins.items():
+            logger.debug("Looking for actions in " + name + ": " + str(module))
+            discover = importlib.import_module(name + ".discover")
+            if hasattr(discover, "actions"):
+                logger.debug(f"loading {len(discover.actions)} actions.")
                 actions.update(discover.actions)
-    # Load actions or test actions from local action_dir
-    local_actions, local_test_actions = init(
+            if (
+                hasattr(discover, "action_classes")
+                and discover.action_classes is not None
+            ):
+                action_classes.update(discover.action_classes)
+
+    logger.debug(f"Loading actions in {action_dir}")
+    yaml_actions, yaml_test_actions = init(
         action_classes=action_classes, yaml_dir=action_dir
     )
-    if mock_sigan or running_tests:
-        logger.debug(f"Loading test actions in {action_dir}")
-        actions.update(local_test_actions)
-    else:
-        logger.debug(f"Loading actions in {action_dir}")
-        actions.update(local_actions)
-
-    logger.debug("Finished loading and registering actions")
+    actions.update(yaml_actions)
+    logger.debug("Finished loading  and registering actions")
     return actions
