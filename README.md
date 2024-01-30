@@ -990,10 +990,10 @@ the [scos-tekrsa](https://github.com/ntia/scos-tekrsa) plugin. To
 configure scos-sensor for the desired signal analyzer review the
 instructions in the plugin repository. Generally,
 switching signal analyzers involves updating the `BASE_IMAGE`
-setting, updating the requirements, and updating the `SIGAN_MODULE`
-and `SIGAN_CLASS` settings. To identify the `BASE_IMAGE`,
-go to the preferred plugin repository and find the latest docker image.
-For example, see
+setting, updating the requirements, and updating the `SIGAN_MODULE`,
+`SIGAN_CLASS`, and `USB_DEVICE` settings. To identify the
+`BASE_IMAGE`, go to the preferred plugin repository and find
+the latest docker image. For example, see
 [scos-tekrsa base images](https://github.com/NTIA/scos-tekrsa/pkgs/container/scos-tekrsa%2Ftekrsa_usb)
 or
 [scos-usrp base images](https://github.com/NTIA/scos-usrp/pkgs/container/scos-usrp%2Fscos_usrp_uhd).
