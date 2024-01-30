@@ -47,7 +47,6 @@ try:
     usb_device_exists = usb_device_exists()
     if usb_device_exists:
         action_loader = ActionLoader()
-        logger.debug("test")
         logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
         capabilities_loader = CapabilitiesLoader()
         logger.debug("Calling sensor loader.")
