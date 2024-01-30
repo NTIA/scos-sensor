@@ -69,5 +69,5 @@ try:
         sensor_loader.capabilities = {}
         logger.warning("Usb is not ready. Marking container as unhealthy")
         set_container_unhealthy()
-except Exception as ex:
-    logger.error(f"Error during initialization: {ex}")
+except:
+    logger.exception("Error during initialization")
