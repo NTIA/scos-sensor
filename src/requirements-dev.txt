@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.9.1
+aiohttp==3.9.2
     # via
     #   -r requirements-dev.in
     #   aiohttp-cors
@@ -59,7 +59,9 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 cryptography==41.0.7
     # via -r requirements.txt
 defusedxml==0.7.1
