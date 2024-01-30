@@ -422,7 +422,7 @@ specific to the sensor you are using.
 By default, scos-sensor will use `configs/default_calibration.json` as the sensor
 calibration file. However, if`configs/sensor_calibration.json` or
 `configs/sigan_calibration.json` exist they will be used instead of the default
-calibration file. Sensor calibration files allow scos-sensor to pply a gain based
+calibration file. Sensor calibration files allow scos-sensor to apply a gain based
 on a laboratory calibration of the sensor and may also contain other useful
 metadata that characterizes the sensor performance. For additional
 information on the calibration data, see the
@@ -507,181 +507,13 @@ per second at several frequencies with a signal analyzer reference level setting
             }
           }
         }
-      },
-      "3575000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:16.211Z",
-              "gain": 30.73297444891243,
-              "noise_figure": 4.090843866619065,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3585000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:20.725Z",
-              "gain": 30.884253019974623,
-              "noise_figure": 3.934553150614483,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3595000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:24.606Z",
-              "gain": 31.002780356672476,
-              "noise_figure": 3.940238988552726,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3605000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:29.724Z",
-              "gain": 31.035560147646778,
-              "noise_figure": 3.9290832485193989,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3615000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:33.614Z",
-              "gain": 30.935970273145274,
-              "noise_figure": 4.006672278350428,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3625000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:37.592Z",
-              "gain": 30.682403307202095,
-              "noise_figure": 4.064067195729546,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3635000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:41.889Z",
-              "gain": 30.980340383458626,
-              "noise_figure": 3.8826926914916726,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3645000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:46.450Z",
-              "gain": 30.948486357958318,
-              "noise_figure": 3.917520438472101,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3655000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:51.575Z",
-              "gain": 30.96859101287636,
-              "noise_figure": 3.926017393059535,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3665000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:55.571Z",
-              "gain": 30.618851884796429,
-              "noise_figure": 4.225928655860898,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3675000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:59.585Z",
-              "gain": 30.552247661443276,
-              "noise_figure": 4.171389553033189,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3685000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:39:03.921Z",
-              "gain": 30.413415948237785,
-              "noise_figure": 4.42128294424517,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3695000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:39:09.115Z",
-              "gain": 30.112285957420995,
-              "noise_figure": 4.576464590847393,
-              "temperature": 15.6
-            }
-          }
-        }
-      },
-      "3705000000.0": {
-        "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:39:13.682Z",
-              "gain": 29.120051306906164,
-              "noise_figure": 5.2261432005125709,
-              "temperature": 15.7
-            }
-          }
-        }
       }
     }
   }
 }
 ```
 
-When an action is run with the above calibration, scos will expect the action to have
+When an action is run with the above calibration, SCOS will expect the action to have
 a sample_rate, frequency, and reference_level specified in the action config. The values
 specified for these parameters will then be used to retrieve the calibration data.
 
