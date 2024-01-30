@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 status_monitor = StatusMonitor()
 
 
-def usb_device_exists() -> bool:
+def get_usb_device_exists() -> bool:
     logger.debug("Checking for USB...")
     if not settings.RUNNING_TESTS and settings.USB_DEVICE is not None:
         usb_devices = check_output("lsusb").decode(sys.stdout.encoding)
@@ -44,7 +44,7 @@ def set_container_unhealthy():
 
 try:
     register_component_with_status.connect(status_registration_handler)
-    usb_device_exists = usb_device_exists()
+    usb_device_exists = get_usb_device_exists()
     if usb_device_exists:
         action_loader = ActionLoader()
         logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
