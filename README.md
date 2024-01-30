@@ -351,16 +351,17 @@ settings in the environment file:
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
-- SCOS_SENSOR_GIT_TAG: The scos-sensor branch name.
+- SCOS_SENSOR_GIT_TAG: The scos-sensor branch name. This value may be used in action
+  metadata to capture the version of the software that produced the sigmf archive.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
   unpredictable value. See
   <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
   file sets to a randomly generated value.
 - SIGAN_CLASS: The name of the signal analyzer class to use. By default, this is
-`TekRSASigan` to use a Tektronix signal analyzer. This must be changed to switch to
-  a different signal analyzer.
+  set to `TekRSASigan` to use a Tektronix signal analyzer. This must be changed
+  to switch to a different signal analyzer.
 - SIGAN_MODULE: The name of the python module that provides the signal analyzer
-  implementation. This defaults to  `scos_tekrsa.hardware.tekrsa_sigan` for the
+  implementation. This defaults to `scos_tekrsa.hardware.tekrsa_sigan` for the
   Tektronix signal analyzers. This must be changed to switch to a different
   signal analyzer.
 - SIGAN_POWER_CYCLE_STATES: Optional setting to provide the name of the control_state
@@ -978,6 +979,35 @@ support and re-use the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
 <https://github.com/ntia/scos-actions#development>).
+
+### Switching Signal Analyzers
+
+Scos-sensor currently supports Ettus B2xx signal analyzers through
+the [scos-usrp](https://github.com/ntia/scos-usrp) plugin and
+Tektronix RSA306, RSA306B, RSA503A, RSA507A, RSA513A,
+RSA518A, RSA603A, and RSA607A real-time spectrum analyzers through
+the [scos-tekrsa](https://github.com/ntia/scos-tekrsa) plugin. To
+configure scos-sensor for the desired signal analyzer review the
+instructions in the plugin repository. Generally,
+switching signal analyzers involves updating the `BASE_IMAGE`
+setting, updating the requirements, and updating the `SIGAN_MODULE`
+and `SIGAN_CLASS` settings. To identify the `BASE_IMAGE`,
+go to the preferred plugin repository and find the latest docker image.
+For example, see
+[scos-tekrsa base images](https://github.com/NTIA/scos-tekrsa/pkgs/container/scos-tekrsa%2Ftekrsa_usb)
+or
+[scos-usrp base images](https://github.com/NTIA/scos-usrp/pkgs/container/scos-usrp%2Fscos_usrp_uhd).
+Update the `BASE_IMAGE` setting in env file to the desired base image.
+Then update the `SIGAN_MODULE` and `SIGAN_CLASS` settings with
+the appropriate Python module and class that provide
+an implementation of the `SignalAnalyzerInterface`
+(you will have to look in the plugin repo to identify the correct module and class). Finally,
+update the requirements with the selected plugin repo.
+See [Requirements and Configuration](https://github.com/NTIA/scos-sensor?tab=readme-ov-file#requirements-and-configuration)
+and [Using pip-tools](https://github.com/NTIA/scos-sensor?tab=readme-ov-file#using-pip-tools)
+for additional information. Be sure to re-source the environment file, update the
+requirements files, and prune any existing containers
+before rebuilding scos-sensor.
 
 ## Preselector Support
 
