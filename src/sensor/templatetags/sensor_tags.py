@@ -1,10 +1,9 @@
 from django import template
-
-from sensor.settings import VERSION_STRING
+from django.conf import settings
 
 register = template.Library()
 
 
 @register.simple_tag
 def sensor_version_string():
-    return VERSION_STRING
+    return settings.VERSION_STRING
