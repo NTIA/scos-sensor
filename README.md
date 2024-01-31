@@ -328,6 +328,9 @@ settings in the environment file:
 - CALLBACK_TIMEOUT: The timeout for the posts sent to the callback URL when a scheduled
   action is completed.
 - DEBUG: Django debug mode. Set to False in production.
+- DEVICE_MODEL: Optional setting indicating the model of the signal analyzer. The
+  TekRSASigan class will use this value to determine which action configs to load.
+  See [scos-tekrsa](https://github.com/ntia/scos-tekrsa) for additional details.
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
   <https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts>).

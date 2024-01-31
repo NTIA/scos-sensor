@@ -345,9 +345,9 @@ else:
             "PORT": "5432",
         }
     }
-    DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
-    SIGAN_MODULE = env.str("SIGAN_MDOULE", default="scos_tekrsa.hardware.tekrsa_sigan")
-    SIGAN_CLASS = env.str("SIGAN_CLASS", default="TekRSASigan")
+    DEVICE_MODEL = env("DEVICE_MODEL", default=None)
+    SIGAN_MODULE = env.str("SIGAN_MDOULE", default=None)
+    SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
 
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"

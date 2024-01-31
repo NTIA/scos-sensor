@@ -72,6 +72,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
+            check_for_required_sigan_settings()
             sigan_module_setting = settings.SIGAN_MODULE
             sigan_module = importlib.import_module(sigan_module_setting)
             logger.info(
@@ -95,6 +96,19 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         location=location,
     )
     return sensor
+
+
+def check_for_required_sigan_settings():
+    error = ""
+    raise_exception = False
+    if settings.SIGAN_MODULE is None:
+        raise_exception = True
+        error = "SIGAN_MODULE environment variable must be set. "
+    if settings.SIGAN_CLASS is None:
+        raise_exception = True
+        error += "SIGAN_CLASS environment variable. "
+    if raise_exception:
+        raise Exception(error)
 
 
 def load_switches(switch_dir: Path) -> dict:
