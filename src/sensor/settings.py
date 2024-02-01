@@ -346,7 +346,7 @@ else:
         }
     }
     DEVICE_MODEL = env("DEVICE_MODEL", default=None)
-    SIGAN_MODULE = env.str("SIGAN_MDOULE", default=None)
+    SIGAN_MODULE = env.str("SIGAN_MODULE", default=None)
     SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
 
 if not IN_DOCKER:
