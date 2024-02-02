@@ -1,10 +1,7 @@
 import shutil
-import tempfile
-from collections import namedtuple
 
 import pytest
 from django.conf import settings
-from django.test.client import Client
 
 import scheduler
 from authentication.models import User
@@ -132,7 +129,6 @@ def alt_admin_user(db, django_user_model, django_username_field):
 @pytest.fixture
 def alt_admin_client(db, alt_admin_user):
     """A Django test client logged in as an admin user."""
-    from django.test.client import Client
 
     client = CertificateAuthClient()
     assert client.login(username=alt_admin_user.username, password="password")

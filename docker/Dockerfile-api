@@ -6,7 +6,7 @@ RUN apt-get update -q && \
                    apt-get install -qy --no-install-recommends \
                    libusb-1.0-0 libpython3.8 \
                    git smartmontools \
-                   python3-pip python3.8 python3.8-dev && \
+                   python3-pip python3.8 python3.8-dev usbutils && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONUNBUFFERED 1
@@ -26,9 +26,6 @@ COPY ./gunicorn /gunicorn
 
 RUN mkdir -p /entrypoints
 COPY ./entrypoints/api_entrypoint.sh /entrypoints
-
-RUN mkdir -p /scripts
-COPY ./scripts/create_superuser.py /scripts
 
 RUN chmod +x /entrypoints/api_entrypoint.sh
 

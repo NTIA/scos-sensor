@@ -2,6 +2,7 @@ import os
 import sys
 from multiprocessing import cpu_count
 
+
 bind = ":8000"
 workers = 1
 worker_class = "gthread"
@@ -23,11 +24,9 @@ def post_worker_init(worker):
     """Start scheduler in worker."""
     _modify_path()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
-
     import django
 
     django.setup()
-
     from scheduler import scheduler
 
     scheduler.thread.start()

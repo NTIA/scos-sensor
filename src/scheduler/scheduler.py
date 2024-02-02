@@ -1,5 +1,4 @@
 """Queue and run tasks."""
-
 import json
 import logging
 import threading
@@ -7,11 +6,13 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import requests
+from django.conf import settings
 from django.utils import timezone
+from scos_actions.hardware.sensor import Sensor
 from scos_actions.signals import trigger_api_restart
 
+from initialization import sensor_loader
 from schedule.models import ScheduleEntry
-from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
@@ -30,21 +31,28 @@ class Scheduler(threading.Thread):
         self.task_status_lock = threading.Lock()
         self.timefn = utils.timefn
         self.delayfn = utils.delayfn
-
         self.task_queue = TaskQueue()
-
         # scheduler looks ahead `interval_multiplier` times the shortest
         # interval in the schedule in order to keep memory-usage low
         self.interval_multiplier = 10
         self.name = "Scheduler"
         self.running = False
         self.interrupt_flag = threading.Event()
-
         # Cache the currently running task state
         self.entry = None  # ScheduleEntry that created the current task
         self.task = None  # Task object describing current task
         self.last_status = ""
         self.consecutive_failures = 0
+        self._sensor = sensor_loader.sensor
+
+    @property
+    def sensor(self):
+        return self._sensor
+
+    @sensor.setter
+    def sensor(self, sensor: Sensor):
+        logger.debug(f"Set scheduler sensor to {sensor}")
+        self._sensor = sensor
 
     @property
     def schedule(self):
@@ -161,8 +169,10 @@ class Scheduler(threading.Thread):
         schedule_entry_json["id"] = entry_name
 
         try:
-            logger.debug(f"running task {entry_name}/{task_id}")
-            detail = self.task.action_caller(schedule_entry_json, task_id)
+            logger.debug(
+                f"running task {entry_name}/{task_id} with sigan: {self.sensor.signal_analyzer}"
+            )
+            detail = self.task.action_caller(self.sensor, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):

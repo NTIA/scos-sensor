@@ -59,8 +59,12 @@ services:
       - POSTGRES_PASSWORD
       - SCOS_SENSOR_GIT_TAG
       - SECRET_KEY
+      - SIGAN_MODULE
+      - SIGAN_CLASS
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
+      - RUNNING_MIGRATIONS
+      - USB_DEVICE
     expose:
       - '8000'
     volumes:
