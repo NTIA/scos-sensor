@@ -59,9 +59,7 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 cryptography==41.0.7
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -147,6 +145,7 @@ jsonschema==4.20.0
     # via
     #   -r requirements.txt
     #   ray
+    #   sigmf
 jsonschema-specifications==2023.11.2
     # via
     #   -r requirements.txt
@@ -315,13 +314,13 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@8.0.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@test_sigmf
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@5.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@test_sigmf
     # via -r requirements.txt
-sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
+sigmf @ git+https://github.com/NTIA/sigmf-python@multirecording2_its_review
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -332,7 +331,6 @@ six==1.16.0
     #   django-session-timeout
     #   python-dateutil
     #   requests-mock
-    #   sigmf
 smart-open==6.4.0
     # via ray
 sqlparse==0.4.4
