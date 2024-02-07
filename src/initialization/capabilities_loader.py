@@ -54,8 +54,6 @@ def load_capabilities(sensor_definition_file: str) -> dict:
             ).hexdigest()
             capabilities["sensor"]["sensor_sha512"] = sensor_definition_hash
     except:
-        capabilities["sensor"]["sensor_sha512"] = "ERROR GENERATING HASH"
-        # sensor_sha512 is None, do not raise Exception, but log it
         logger.exception(f"Unable to generate sensor definition hash")
 
     return capabilities

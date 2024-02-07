@@ -1,6 +1,5 @@
 import importlib
 import logging
-import signal
 from os import path
 from pathlib import Path
 from typing import Union
@@ -42,7 +41,6 @@ class SensorLoader:
 
 
 def load_sensor(sensor_capabilities: dict) -> Sensor:
-    gps = None  # TODO Not Implemented
     switches = {}
     sensor_cal = None
     differential_cal = None
@@ -80,6 +78,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
+            check_for_required_sigan_settings()
             sigan_module_setting = settings.SIGAN_MODULE
             sigan_module = importlib.import_module(sigan_module_setting)
             logger.info(
@@ -95,15 +94,28 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
 
     sensor = Sensor(
         signal_analyzer=sigan,
-        gps=gps,
+        # TODO GPS Not Implemented
+        capabilities=sensor_capabilities,
         preselector=preselector,
         switches=switches,
-        capabilities=sensor_capabilities,
         location=location,
         sensor_cal=sensor_cal,
         differential_cal=differential_cal,
     )
     return sensor
+
+
+def check_for_required_sigan_settings():
+    error = ""
+    raise_exception = False
+    if settings.SIGAN_MODULE is None:
+        raise_exception = True
+        error = "SIGAN_MODULE environment variable must be set. "
+    if settings.SIGAN_CLASS is None:
+        raise_exception = True
+        error += "SIGAN_CLASS environment variable. "
+    if raise_exception:
+        raise Exception(error)
 
 
 def load_switches(switch_dir: Path) -> dict:

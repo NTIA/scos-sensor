@@ -1,6 +1,7 @@
 import datetime
 import logging
 import shutil
+
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
@@ -11,7 +12,7 @@ from scos_actions.utils import (
     get_datetime_str_now,
 )
 
-from initialization import status_monitor, sensor_loader
+from initialization import sensor_loader, status_monitor
 from scheduler import scheduler
 
 from . import start_time

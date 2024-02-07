@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 @pytest.mark.django_db
 def test_db_location_update_handler():
-    location = construct_geojson_point(-105.7, 40.5, 0)
     sensor = sensor_loader.sensor
     logger.debug(f"Sensor: {sensor}")
     location = Location()
@@ -68,7 +67,6 @@ def test_db_location_update_handler_not_active():
 
 @pytest.mark.django_db
 def test_db_location_deleted_handler():
-    location = construct_geojson_point(-105.7, 40.5, 0)
     sensor = sensor_loader.sensor
     location = Location()
     location.gps = False

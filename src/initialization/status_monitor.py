@@ -35,3 +35,8 @@ class StatusMonitor:
         """
         if hasattr(component, "get_status"):
             self._status_components.append(component)
+        else:
+            logger.debug(
+                "Provided component has no `get_status` method and was not registered"
+                + f" with the status monitor: {component}"
+            )

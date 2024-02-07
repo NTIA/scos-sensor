@@ -1,11 +1,9 @@
-import os
 import tempfile
 
-import numpy as np
 import sigmf.sigmffile
+from django.conf import settings
 from rest_framework import status
 
-import sensor.settings
 from test_utils.task_test_utils import (
     HTTPS_KWARG,
     reverse_archive,
@@ -20,7 +18,7 @@ def test_single_acquisition_archive_download(admin_client, test_scheduler):
     task_id = 1
     url = reverse_archive(entry_name, task_id)
     disposition = 'attachment; filename="{}_test_acq_1.sigmf"'
-    disposition = disposition.format(sensor.settings.FQDN)
+    disposition = disposition.format(settings.FQDN)
     response = admin_client.get(url, **HTTPS_KWARG)
 
     assert response.status_code == status.HTTP_200_OK
@@ -46,7 +44,7 @@ def test_multirec_acquisition_archive_download(admin_client, test_scheduler):
     task_id = 1
     url = reverse_archive(entry_name, task_id)
     disposition = 'attachment; filename="{}_test_multirec_acq_1.sigmf"'
-    disposition = disposition.format(sensor.settings.FQDN)
+    disposition = disposition.format(settings.FQDN)
     response = admin_client.get(url, **HTTPS_KWARG)
 
     assert response.status_code == status.HTTP_200_OK
@@ -66,7 +64,7 @@ def test_all_acquisitions_archive_download(admin_client, test_scheduler, tmpdir)
     entry_name = simulate_frequency_fft_acquisitions(admin_client, n=3)
     url = reverse_archive_all(entry_name)
     disposition = 'attachment; filename="{}_test_multiple_acq.sigmf"'
-    disposition = disposition.format(sensor.settings.FQDN)
+    disposition = disposition.format(settings.FQDN)
     response = admin_client.get(url, **HTTPS_KWARG)
 
     assert response.status_code == status.HTTP_200_OK

@@ -1,14 +1,6 @@
-import hashlib
-import json
 import logging
 
-from initialization import action_loader
-
-from django.conf import settings
-from initialization import action_loader
-from initialization import capabilities_loader
-
-
+from initialization import action_loader, capabilities_loader
 
 logger = logging.getLogger(__name__)
 logger.debug("********** Initializing capabilities **********")

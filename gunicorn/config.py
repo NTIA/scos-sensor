@@ -1,9 +1,6 @@
-import importlib
-import logging
 import os
 import sys
 from multiprocessing import cpu_count
-
 
 
 bind = ":8000"
@@ -12,7 +9,7 @@ worker_class = "gthread"
 threads = cpu_count()
 
 loglevel = os.environ.get("GUNICORN_LOG_LEVEL", "info")
-logger = logging.getLogger(__name__)
+
 
 def _modify_path():
     """Ensure Django project is on sys.path."""
@@ -28,8 +25,10 @@ def post_worker_init(worker):
     _modify_path()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sensor.settings")
     import django
+
     django.setup()
     from scheduler import scheduler
+
     scheduler.thread.start()
 
 

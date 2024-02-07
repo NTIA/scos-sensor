@@ -309,18 +309,28 @@ settings in the environment file:
 
 - ADDITIONAL_USER_NAMES: Comma separated list of additional admin usernames.
 - ADDITIONAL_USER_PASSWORD: Password for additional admin users.
-- ADMIN_NAME: Username for the admin user.
 - ADMIN_EMAIL: Email used to generate admin user. Change in production.
+- ADMIN_NAME: Username for the admin user.
 - ADMIN_PASSWORD: Password used to generate admin user. Change in production.
 - AUTHENTICATION: Authentication method used for scos-sensor. Supports `TOKEN` or
   `CERT`.
-- BASE_IMAGE: Base docker image used to build the API container.
+- BASE_IMAGE: Base docker image used to build the API container. These docker
+  images, combined with any drivers found in the signal analyzer repos,  are
+  responsible for providing the operating system suitable for the chosen signal
+  analyzer. Note, this should be updated when switching signal analyzers.
+  By default, this is configured to
+  use a version of `ghcr.io/ntia/scos-tekrsa/tekrsa_usb` to use a Tektronix
+  signal analyzer.
 - CALLBACK_AUTHENTICATION: Sets how to authenticate to the callback URL. Supports
   `TOKEN` or `CERT`.
 - CALLBACK_SSL_VERIFICATION: Set to “true” in production environment. If false, the SSL
   certificate validation will be ignored when posting results to the callback URL.
-- CALLBACK_TIMEOUT: The timeout for the requests sent to the callback URL.
+- CALLBACK_TIMEOUT: The timeout for the posts sent to the callback URL when a scheduled
+  action is completed.
 - DEBUG: Django debug mode. Set to False in production.
+- DEVICE_MODEL: Optional setting indicating the model of the signal analyzer. The
+  TekRSASigan class will use this value to determine which action configs to load.
+  See [scos-tekrsa](https://github.com/ntia/scos-tekrsa) for additional details.
 - DOCKER_TAG: Always set to “latest” to install newest version of docker containers.
 - DOMAINS: A space separated list of domain names. Used to generate [ALLOWED_HOSTS](
   <https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts>).
@@ -344,17 +354,36 @@ settings in the environment file:
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
-- SCOS_SENSOR_GIT_TAG: The scos-sensor branch name.
+- SCOS_SENSOR_GIT_TAG: The scos-sensor branch name. This value may be used in action
+  metadata to capture the version of the software that produced the sigmf archive.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
   unpredictable value. See
   <https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key>. The env.template
   file sets to a randomly generated value.
+- SIGAN_CLASS: The name of the signal analyzer class to use. By default, this is
+  set to `TekRSASigan` to use a Tektronix signal analyzer. This must be changed
+  to switch to a different signal analyzer.
+- SIGAN_MODULE: The name of the python module that provides the signal analyzer
+  implementation. This defaults to `scos_tekrsa.hardware.tekrsa_sigan` for the
+  Tektronix signal analyzers. This must be changed to switch to a different
+  signal analyzer.
+- SIGAN_POWER_CYCLE_STATES: Optional setting to provide the name of the control_state
+  in the SIGAN_POWER_SWITCH that will power cycle the signal analyzer.
+- SIGAN_POWER_SWITCH: Optional setting used to indicate the name of a
+  [WebRelay](https://github.com/NTIA/Preselector) that may be used to power cycle
+  the signal analyzer if necessary. Note: specifics of power cycling behavior
+  are implemented within the signal analyzer implementations or actions.
+- SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
+  certificate(s) when authentication is set to CERT.
 - SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
   scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
   certificate in production.
-- SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
-  certificate(s) when authentication is set to CERT.
+- USB_DEVICE: Optional string used to search for available USB devices. By default,
+  this is set to Tektronix to see if the Tektronix signal analyzer is available. If
+  the specified value is not found in the output of lsusb, scos-sensor will attempt
+  to restart the api container. If switching to a different signal analyzer, this
+  setting should be updated or removed.
 
 ### Sensor Definition File
 
@@ -434,136 +463,59 @@ per second at several frequencies with a signal analyzer reference level setting
 
 ```json
 {
+  "last_calibration_datetime": "2023-10-23T14:39:13.682Z",
   "calibration_parameters": [
     "sample_rate",
     "frequency",
-    "reference_level"
+    "reference_level",
+    "preamp_enable",
+    "attenuation"
   ],
-  "calibration_datetime": "2020-11-18T23:13:09.156274Z",
+  "clock_rate_lookup_by_sample_rate": [],
   "calibration_data": {
-    "14000000.0":{
-      "3555000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+    "14000000.0": {
+      "3545000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:02.882Z",
+              "gain": 30.09194805857024,
+              "noise_figure": 4.741521295220736,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3565000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3555000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:08.022Z",
+              "gain": 30.401008416406599,
+              "noise_figure": 4.394893979804061,
+              "temperature": 15.6
+            }
+          }
         }
       },
-      "3575000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3585000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3595000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3605000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3615000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3625000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3635000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3645000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3655000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3665000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3675000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3685000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
-        }
-      },
-      "3695000000":{
-        "-25":{
-          "noise_figure": 46.03993010994134,
-          "enbw": 15723428.858731967,
-          "gain": 0.40803345928877379
+      "3565000000.0": {
+        "-25": {
+          "true": {
+            "0": {
+              "datetime": "2023-10-23T14:38:11.922Z",
+              "gain": 30.848049817892105,
+              "noise_figure": 4.0751785215495819,
+              "temperature": 15.6
+            }
+          }
         }
       }
     }
-  },
-  "clock_rate_lookup_by_sample_rate": [
-    {
-      "sample_rate": 3500000.0,
-      "clock_frequency": 3500000.0
-    },
-    {
-      "sample_rate": 28000000.0,
-      "clock_frequency": 28000000.0
-    }
-  ],
-  "sensor_uid": "US55120115"
+  }
 }
 ```
 
-When an action is run with the above calibration, scos will expect the action to have
+When an action is run with the above calibration, SCOS will expect the action to have
 a sample_rate, frequency, and reference_level specified in the action config. The values
 specified for these parameters will then be used to retrieve the calibration data.
 
@@ -837,24 +789,59 @@ repository. The scos-actions repository is intended to be a dependency for every
 as it contains the actions base class and signals needed to interface with scos-sensor.
 These actions use a common but flexible signal analyzer interface that can be
 implemented for new types of hardware. This allows for action re-use by passing the
-signal analyzer interface implementation and the required hardware and measurement
-parameters to the constructor of these actions. Alternatively, custom actions that
-support unique hardware functionality can be added to the plugin.
+measurement parameters to the constructor of these actions and supplying the
+Sensor instance (including the signal analyzer) to the `__call__` method.
+Alternatively, custom actions that support unique hardware functionality can be
+added to the plugin.
 
-The scos-actions repository can also be installed as a plugin which uses a mock signal
-analyzer.
-
-scos-sensor uses the following convention to discover actions offered by plugins: if
+Scos-sensor uses the following convention to discover actions offered by plugins: if
 any Python package begins with "scos_", and contains a dictionary of actions at the
 Python path `package_name.discover.actions`, these actions will automatically be
-available for scheduling.
+available for scheduling. Similarly, plugins may offer new action types by including
+a dictionary of action classes at the Python path `package_name.discover.action_classes`.
+Scos-sensor will load all plugin actions and action classes prior to creating actions
+defined in yaml files in `configs/actions` directory. In this manner, a plugin may add new
+action types to scos-sensor and those new types may be instantiated/parameterized with yaml
+config files.
 
-The scos-usrp plugin adds support for the Ettus B2xx line of signal analyzers.
-It can also be used as an example of a plugin which adds new hardware support and
-re-uses the common actions in scos-actions.
+The [scos-usrp](https://github.com/ntia/scos-usrp) plugin adds support for the Ettus B2xx
+line of signal analyzers and [scos-tekrsa](https://github.com/ntia/scos-tekrsa) adss
+support for Tektronix RSA306, RSA306B, RSA503A,
+RSA507A, RSA513A, RSA518A, RSA603A, and RSA607A real-time spectrum analyzers.
+These repositories may also be used as examples of plugins which provide new hardware
+support and re-use the common actions in scos-actions.
 
 For more information on adding actions and hardware support, see [scos-actions](
 <https://github.com/ntia/scos-actions#development>).
+
+### Switching Signal Analyzers
+
+Scos-sensor currently supports Ettus B2xx signal analyzers through
+the [scos-usrp](https://github.com/ntia/scos-usrp) plugin and
+Tektronix RSA306, RSA306B, RSA503A, RSA507A, RSA513A,
+RSA518A, RSA603A, and RSA607A real-time spectrum analyzers through
+the [scos-tekrsa](https://github.com/ntia/scos-tekrsa) plugin. To
+configure scos-sensor for the desired signal analyzer review the
+instructions in the plugin repository. Generally,
+switching signal analyzers involves updating the `BASE_IMAGE`
+setting, updating the requirements, and updating the `SIGAN_MODULE`,
+`SIGAN_CLASS`, and `USB_DEVICE` settings. To identify the
+`BASE_IMAGE`, go to the preferred plugin repository and find
+the latest docker image. For example, see
+[scos-tekrsa base images](https://github.com/NTIA/scos-tekrsa/pkgs/container/scos-tekrsa%2Ftekrsa_usb)
+or
+[scos-usrp base images](https://github.com/NTIA/scos-usrp/pkgs/container/scos-usrp%2Fscos_usrp_uhd).
+Update the `BASE_IMAGE` setting in env file to the desired base image.
+Then update the `SIGAN_MODULE` and `SIGAN_CLASS` settings with
+the appropriate Python module and class that provide
+an implementation of the `SignalAnalyzerInterface`
+(you will have to look in the plugin repo to identify the correct module and class). Finally,
+update the requirements with the selected plugin repo.
+See [Requirements and Configuration](https://github.com/NTIA/scos-sensor?tab=readme-ov-file#requirements-and-configuration)
+and [Using pip-tools](https://github.com/NTIA/scos-sensor?tab=readme-ov-file#using-pip-tools)
+for additional information. Be sure to re-source the environment file, update the
+requirements files, and prune any existing containers
+before rebuilding scos-sensor.
 
 ## Preselector Support
 
