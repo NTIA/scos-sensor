@@ -199,14 +199,15 @@ def get_calibration(
             raise FileNotFoundError
         else:
             logger.debug(f"Loading calibration file: {cal_file_path}")
-            default = check_for_default_calibration(
+            is_default = check_for_default_calibration(
                 cal_file_path, default_cal_file_path, cal_type
             )
             # Create calibration object
+            cal_file_path = Path(cal_file_path)
             if cal_type.lower() == "sensor":
-                cal = SensorCalibration.from_json(cal_file_path, default)
+                cal = SensorCalibration.from_json(cal_file_path, is_default)
             elif cal_type.lower() == "differential":
-                cal = DifferentialCalibration.from_json(cal_file_path, default)
+                cal = DifferentialCalibration.from_json(cal_file_path, is_default)
             else:
                 logger.error(f"Unknown calibration type: {cal_type}")
                 raise ValueError
