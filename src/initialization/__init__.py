@@ -1,4 +1,5 @@
 import logging
+import ray
 import sys
 import types
 from pathlib import Path
@@ -56,6 +57,10 @@ try:
             and not sensor_loader.sensor.signal_analyzer.healthy()
         ):
             set_container_unhealthy()
+        if settings.RAY_INIT:
+            if not ray.is_initialized():
+                # Dashboard is only enabled if ray[default] is installed
+                ray.init()
     else:
         action_loader = types.SimpleNamespace()
         action_loader.actions = {}

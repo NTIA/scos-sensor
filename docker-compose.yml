@@ -57,6 +57,7 @@ services:
       - PATH_TO_CLIENT_CERT
       - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
+      - RAY_INIT
       - SCOS_SENSOR_GIT_TAG
       - SECRET_KEY
       - SIGAN_MODULE
