@@ -76,3 +76,4 @@ try:
         set_container_unhealthy()
 except:
     logger.exception("Error during initialization")
+    set_container_unhealthy()

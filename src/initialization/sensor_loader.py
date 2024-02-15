@@ -13,6 +13,7 @@ from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
+from . import set_container_unhealthy
 
 logger = logging.getLogger(__name__)
 
@@ -85,8 +86,9 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
             register_component_with_status.send(sigan, component=sigan)
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
-    except Exception as ex:
+    except BaseException as ex:
         logger.warning(f"unable to create signal analyzer: {ex}")
+        set_container_unhealthy()
 
     sensor = Sensor(
         signal_analyzer=sigan,
