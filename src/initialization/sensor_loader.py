@@ -13,7 +13,8 @@ from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
-from . import set_container_unhealthy
+from .utils import set_container_unhealthy
+
 
 logger = logging.getLogger(__name__)
 
