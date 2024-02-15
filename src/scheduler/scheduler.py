@@ -93,7 +93,12 @@ class Scheduler(threading.Thread):
         try:
             while True:
                 with minimum_duration(blocking):
-                    self._consume_schedule(blocking)
+                    if self.sensor is None or self.sensor.signal_analyzer is None:
+                        if settings.IN_DOCKER:
+                            Path(settings.SCHEDULER_HEALTHCHECK_FILE).touch()
+                            logger.error("Scheduler sensor is not healthy. Awaiting container restart.")
+                    else:
+                        self._consume_schedule(blocking)
 
                 if not blocking or self.interrupt_flag.is_set():
                     logger.info("scheduler interrupted")
