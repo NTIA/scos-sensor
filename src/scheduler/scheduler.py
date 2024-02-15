@@ -98,7 +98,7 @@ class Scheduler(threading.Thread):
                 if not blocking or self.interrupt_flag.is_set():
                     logger.info("scheduler interrupted")
                     break
-        except Exception as err:
+        except BaseException as err:
             logger.warning("scheduler dead")
             logger.exception(err)
             if settings.IN_DOCKER:
