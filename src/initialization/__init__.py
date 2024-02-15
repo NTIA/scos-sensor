@@ -1,9 +1,6 @@
 import logging
 import ray
-import sys
 import types
-from pathlib import Path
-from subprocess import check_output
 
 from django.conf import settings
 
