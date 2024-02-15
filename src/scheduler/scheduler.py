@@ -134,19 +134,23 @@ class Scheduler(threading.Thread):
             self.entry = ScheduleEntry.objects.get(name=entry_name)
             task_result = self._initialize_task_result()
             started = timezone.now()
-            status, detail = self._call_task_action()
-            finished = timezone.now()
-            if settings.ASYNC_CALLBACK:
-                finalize_task_thread = threading.Thread(
-                    target=self._finalize_task_result,
-                    args=(task_result, started, finished, status, detail),
-                    daemon=True,
-                )
-                finalize_task_thread.start()
-            else:
-                self._finalize_task_result(
-                    task_result, started, finished, status, detail
-                )
+            try:
+                status, detail = self._call_task_action()
+                finished = timezone.now()
+                if settings.ASYNC_CALLBACK:
+                    finalize_task_thread = threading.Thread(
+                        target=self._finalize_task_result,
+                        args=(task_result, started, finished, status, detail),
+                        daemon=True,
+                    )
+                    finalize_task_thread.start()
+                else:
+                    self._finalize_task_result(
+                        task_result, started, finished, status, detail
+                    )
+            except BaseException as ex:
+                logger.exception(f"Actions failed:{ex}. Restarting container.")
+                trigger_api_restart.send(sender=self.__class__)
 
     def _initialize_task_result(self) -> TaskResult:
         """Initalize an 'in-progress' result so it exists when action runs."""
