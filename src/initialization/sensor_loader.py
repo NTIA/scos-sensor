@@ -39,6 +39,15 @@ class SensorLoader:
     def sensor(self) -> Sensor:
         return self._sensor
 
+def power_signal_analyzer():
+    preselector = load_preselector(
+        settings.PRESELECTOR_CONFIG,
+        settings.PRESELECTOR_MODULE,
+        settings.PRESELECTOR_CLASS,
+        {},
+    )
+    preselector.set_state("power_sigan")
+
 
 def load_sensor(sensor_capabilities: dict) -> Sensor:
     switches = {}

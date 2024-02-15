@@ -9,6 +9,7 @@ from utils.signals import register_component_with_status
 from .action_loader import ActionLoader
 from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
+from .sensor_loader import power_signal_analyzer
 from .status_monitor import StatusMonitor
 from .utils import set_container_unhealthy
 from .utils import get_usb_device_exists
@@ -60,6 +61,8 @@ try:
         sensor_loader.switches = {}
         sensor_loader.capabilities = {}
         logger.warning("Usb is not ready. Marking container as unhealthy")
+        logger.info("Ensuring signal analyzer is powered.")
+        power_signal_analyzer()
         set_container_unhealthy()
 except:
     logger.exception("Error during initialization")
