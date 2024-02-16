@@ -111,11 +111,9 @@ try:
             not settings.RUNNING_MIGRATIONS
             and not sensor_loader.sensor.signal_analyzer.healthy()
         ):
-            set_container_unhealthy()
-        if settings.RAY_INIT:
-            if not ray.is_initialized():
-                # Dashboard is only enabled if ray[default] is installed
-                ray.init()
+            power_cycle_sigan(switches)
+            time.sleep(1)
+            sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
     else:
         if (
                 not settings.RUNNING_MIGRATIONS
@@ -130,6 +128,15 @@ try:
             else:
                 logger.debug("Cnable to find USB device after power cycling sigan.")
                 set_container_unhealthy()
+
+    if  sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
+        set_container_unhealthy()
+        time.sleep(60)
+
+    if not settings.RUNNING_MIGRATIONS and settings.RAY_INIT:
+        if not ray.is_initialized():
+            # Dashboard is only enabled if ray[default] is installed
+            ray.init()
 except:
     logger.exception("Error during initialization")
     set_container_unhealthy()
