@@ -117,16 +117,19 @@ try:
                 # Dashboard is only enabled if ray[default] is installed
                 ray.init()
     else:
-        logger.debug("Power cycling sigan")
-        power_cycle_sigan(switches)
-        time.sleep(1)
-        usb_device_exists = get_usb_device_exists()
-        if usb_device_exists:
-            logger.debug("Found USB device. Initializing sensor.")
-            sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
-        else:
-            logger.debug("Cnable to find USB device after power cycling sigan.")
-            set_container_unhealthy()
+        if (
+                not settings.RUNNING_MIGRATIONS
+        ):
+            logger.debug("Power cycling sigan")
+            power_cycle_sigan(switches)
+            time.sleep(1)
+            usb_device_exists = get_usb_device_exists()
+            if usb_device_exists:
+                logger.debug("Found USB device. Initializing sensor.")
+                sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
+            else:
+                logger.debug("Cnable to find USB device after power cycling sigan.")
+                set_container_unhealthy()
 except:
     logger.exception("Error during initialization")
     set_container_unhealthy()

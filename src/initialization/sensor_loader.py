@@ -22,11 +22,11 @@ class SensorLoader:
     def __init__(self, sensor_capabilities: dict, switches: dict, preselector: Preselector):
         if not hasattr(self, "sensor"):
             logger.debug("Sensor has not been loaded. Loading...")
-            self._sensor = load_sensor(sensor_capabilities, switches)
+            self._sensor = load_sensor(sensor_capabilities, switches, preselector)
         else:
             logger.debug("Already loaded sensor. ")
 
-    def __new__(cls, sensor_capabilities):
+    def __new__(cls, sensor_capabilities:dict, switches:dict,preslector:Preselector ):
         if cls._instance is None:
             logger.debug("Creating the SensorLoader")
             cls._instance = super().__new__(cls)
