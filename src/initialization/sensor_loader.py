@@ -26,7 +26,7 @@ class SensorLoader:
         else:
             logger.debug("Already loaded sensor. ")
 
-    def __new__(cls, sensor_capabilities:dict, switches:dict,preslector:Preselector ):
+    def __new__(cls, sensor_capabilities:dict, switches:dict, preselector:Preselector ):
         if cls._instance is None:
             logger.debug("Creating the SensorLoader")
             cls._instance = super().__new__(cls)
@@ -37,7 +37,7 @@ class SensorLoader:
         return self._sensor
 
 
-def load_sensor(sensor_capabilities: dict, switches: dict) -> Sensor:
+def load_sensor(sensor_capabilities: dict, switches: dict, preselector: Preselector) -> Sensor:
     switches = {}
     sigan_cal = None
     sensor_cal = None
