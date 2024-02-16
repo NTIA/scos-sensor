@@ -1,13 +1,10 @@
 import importlib
 import logging
 from os import path
-from pathlib import Path
+
 
 from django.conf import settings
-from its_preselector.configuration_exception import ConfigurationException
-from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
 from its_preselector.preselector import Preselector
-from scos_actions import utils
 from scos_actions.calibration.calibration import Calibration, load_from_json
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
@@ -22,10 +19,10 @@ logger = logging.getLogger(__name__)
 class SensorLoader:
     _instance = None
 
-    def __init__(self, sensor_capabilities: dict):
+    def __init__(self, sensor_capabilities: dict, switches: dict, preselector: Preselector):
         if not hasattr(self, "sensor"):
             logger.debug("Sensor has not been loaded. Loading...")
-            self._sensor = load_sensor(sensor_capabilities)
+            self._sensor = load_sensor(sensor_capabilities, switches)
         else:
             logger.debug("Already loaded sensor. ")
 
@@ -39,15 +36,8 @@ class SensorLoader:
     def sensor(self) -> Sensor:
         return self._sensor
 
-def power_signal_analyzer():
 
-    if settings.SIGAN_POWER_SWITCH:
-        switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-        power_switch = switches[settings.SIGAN_POWER_SWITCH]
-        power_switch.set_state("power_sigan")
-
-
-def load_sensor(sensor_capabilities: dict) -> Sensor:
+def load_sensor(sensor_capabilities: dict, switches: dict) -> Sensor:
     switches = {}
     sigan_cal = None
     sensor_cal = None
@@ -64,19 +54,14 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 sensor_loc["y"],
                 sensor_loc["z"] if "z" in sensor_loc else None,
             )
-        switches = load_switches(settings.SWITCH_CONFIGS_DIR)
+
         sensor_cal = get_sensor_calibration(
             settings.SENSOR_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
         )
         sigan_cal = get_sigan_calibration(
             settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
         )
-        preselector = load_preselector(
-            settings.PRESELECTOR_CONFIG,
-            settings.PRESELECTOR_MODULE,
-            settings.PRESELECTOR_CLASS,
-            sensor_capabilities["sensor"],
-        )
+
 
     sigan = None
     try:
@@ -121,64 +106,7 @@ def check_for_required_sigan_settings():
         raise Exception(error)
 
 
-def load_switches(switch_dir: Path) -> dict:
-    logger.debug(f"Loading switches in {switch_dir}")
-    switch_dict = {}
-    try:
-        if switch_dir is not None and switch_dir.is_dir():
-            for f in switch_dir.iterdir():
-                file_path = f.resolve()
-                logger.debug(f"loading switch config {file_path}")
-                conf = utils.load_from_json(file_path)
-                try:
-                    switch = ControlByWebWebRelay(conf)
-                    logger.debug(f"Adding {switch.id}")
-                    switch_dict[switch.id] = switch
-                    logger.debug(f"Registering switch status for {switch.name}")
-                    register_component_with_status.send(__name__, component=switch)
-                except ConfigurationException:
-                    logger.error(f"Unable to configure switch defined in: {file_path}")
-    except Exception as ex:
-        logger.error(f"Unable to load switches {ex}")
-    return switch_dict
 
-
-def load_preselector_from_file(
-    preselector_module, preselector_class, preselector_config_file: Path
-):
-    if preselector_config_file is None:
-        return None
-    else:
-        try:
-            preselector_config = utils.load_from_json(preselector_config_file)
-            return load_preselector(
-                preselector_config, preselector_module, preselector_class
-            )
-        except ConfigurationException:
-            logger.exception(
-                f"Unable to create preselector defined in: {preselector_config_file}"
-            )
-    return None
-
-
-def load_preselector(
-    preselector_config: str,
-    module: str,
-    preselector_class_name: str,
-    sensor_definition: dict,
-) -> Preselector:
-    logger.debug(
-        f"loading {preselector_class_name} from {module} with config: {preselector_config}"
-    )
-    if module is not None and preselector_class_name is not None:
-        preselector_module = importlib.import_module(module)
-        preselector_constructor = getattr(preselector_module, preselector_class_name)
-        preselector_config = utils.load_from_json(preselector_config)
-        ps = preselector_constructor(sensor_definition, preselector_config)
-        register_component_with_status.send(ps, component=ps)
-    else:
-        ps = None
-    return ps
 
 
 def get_sigan_calibration(
