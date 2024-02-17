@@ -20,7 +20,7 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via ray
-cryptography==42.0.0
+cryptography==42.0.2
     # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
