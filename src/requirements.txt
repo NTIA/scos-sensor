@@ -20,11 +20,11 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via ray
-cryptography==42.0.0
+cryptography==42.0.4
     # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
-django==3.2.23
+django==3.2.24
     # via
     #   -r requirements.in
     #   django-session-timeout
