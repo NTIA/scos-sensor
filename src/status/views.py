@@ -1,17 +1,22 @@
 import datetime
 import logging
 import shutil
+import platform
+import sys
 
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from scos_actions.settings import SCOS_SENSOR_GIT_TAG
+from scos_actions import __version__ as SCOS_ACTIONS_VERSION
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
+from scos_actions.metadata.structs import ntia_diagnostics
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,
 )
-
+from its_preselector import __version__ as PRESELECTOR_API_VERSION
 from initialization import sensor_loader, status_monitor
 from scheduler import scheduler
 
@@ -47,6 +52,26 @@ def get_days_up():
     fractional_day = elapsed.seconds / (60 * 60 * 24)
     return round(days + fractional_day, 4)
 
+def get_software_version():
+    # Get software versions
+    software_version = {
+        "system_platform": platform.platform(),
+        "python_version": sys.version.split()[0],
+        "scos_sensor_version": SCOS_SENSOR_GIT_TAG,
+        "scos_actions_version": SCOS_ACTIONS_VERSION,
+        "preselector_api_version": PRESELECTOR_API_VERSION,
+    }
+
+    if sensor_loader.sensor is not None and sensor_loader.sensor.signal_analyzer is not None:
+        if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
+            software_version["sigan_firmware_version"] = sensor_loader.sensor.signal_analyzer.firmware_version
+        if sensor_loader.sensor.signal_analyzer.api_version is not None:
+            software_version["sigan_api_version"] = sensor_loader.sensor.signal_analyzer.api_version
+        if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
+            software_version["scos_sigan_plugin"] = ntia_diagnostics.ScosPlugin(
+                name="scos_tekrsa", version=sensor_loader.sensor.signal_analyzer.plugin_version
+            )
+    return software_version
 
 @api_view()
 def status(request, version, format=None):
@@ -59,6 +84,7 @@ def status(request, version, format=None):
         "start_time": convert_datetime_to_millisecond_iso_format(start_time),
         "disk_usage": disk_usage(),
         "days_up": get_days_up(),
+        "software": get_software_version(),
     }
     if (
         sensor_loader.sensor is not None
@@ -67,6 +93,16 @@ def status(request, version, format=None):
     ):
         status_json[
             "last_calibration_datetime"
+        ] = (
+            sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime
+        )
+    if (
+        sensor_loader.sensor is not None
+        and sensor_loader.sensor.signal_analyzer is not None
+        and sensor_loader.sensor.signal_analyzer.sensor_calibration is not None
+    ):
+        status_json[
+            "software"
         ] = (
             sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime
         )
