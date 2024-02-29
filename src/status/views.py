@@ -1,24 +1,24 @@
 import datetime
 import logging
-import shutil
 import platform
+import shutil
 import sys
 
+from initialization import sensor_loader, status_monitor
+from its_preselector import __version__ as PRESELECTOR_API_VERSION
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from scos_actions.settings import SCOS_SENSOR_GIT_TAG
+from scheduler import scheduler
 from scos_actions import __version__ as SCOS_ACTIONS_VERSION
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
 from scos_actions.metadata.structs import ntia_diagnostics
+from scos_actions.settings import SCOS_SENSOR_GIT_TAG
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,
 )
-from its_preselector import __version__ as PRESELECTOR_API_VERSION
-from initialization import sensor_loader, status_monitor
-from scheduler import scheduler
 
 from . import start_time
 from .serializers import LocationSerializer
