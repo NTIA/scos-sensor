@@ -334,6 +334,8 @@ if RUNNING_TESTS or RUNNING_DEMO:
     DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
     SIGAN_MODULE = "scos_actions.hardware.mocks.mock_sigan"
     SIGAN_CLASS = "MockSignalAnalyzer"
+    GPS_MODULE = "scos_actions.hardware.mocks.mock_gps"
+    GPS_CLASS = "MockGPS"
 else:
     DATABASES = {
         "default": {
@@ -348,6 +350,8 @@ else:
     DEVICE_MODEL = env("DEVICE_MODEL", default=None)
     SIGAN_MODULE = env.str("SIGAN_MODULE", default=None)
     SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
+    GPS_MODULE = env.str("GPS_MODULE", default=None)
+    GPS_CLASS = env.str("GPS_CLASS", default=None)
 
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"

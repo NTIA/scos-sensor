@@ -91,24 +91,28 @@ def load_actions(
     discovered_plugins = {
         name: importlib.import_module(name)
         for finder, name, ispkg in pkgutil.iter_modules()
-        if name.startswith("scos_") and name != "scos_actions"
+        if name.startswith("scos_")
     }
     logger.debug(discovered_plugins)
     actions = {}
-    for name, module in discovered_plugins.items():
-        logger.debug("Looking for actions in " + name + ": " + str(module))
-        discover = importlib.import_module(name + ".discover")
-        if (mock_sigan or running_tests) and hasattr(discover, "test_actions"):
-            logger.debug(f"loading {len(discover.test_actions)} test actions.")
-            actions.update(discover.test_actions)
-        elif hasattr(discover, "actions"):
-            logger.debug(f"loading {len(discover.actions)} actions.")
-            actions.update(discover.actions)
-        if (
-            hasattr(discover, "action_classes")
-            and discover.action_classes is not None
-        ):
-            action_classes.update(discover.action_classes)
+    if running_tests:
+        logger.debug(f"Loading {len(test_actions)} test actions.")
+        actions.update(test_actions)
+    else:
+        for name, module in discovered_plugins.items():
+            logger.debug("Looking for actions in " + name + ": " + str(module))
+            discover = importlib.import_module(name + ".discover")
+            if mock_sigan and hasattr(discover, "test_actions"):
+                logger.debug(f"loading {len(discover.test_actions)} test actions.")
+                actions.update(discover.test_actions)
+            elif hasattr(discover, "actions"):
+                logger.debug(f"loading {len(discover.actions)} actions.")
+                actions.update(discover.actions)
+            if (
+                hasattr(discover, "action_classes")
+                and discover.action_classes is not None
+            ):
+                action_classes.update(discover.action_classes)
 
     logger.debug(f"Loading actions in {action_dir}")
     yaml_actions, yaml_test_actions = init(

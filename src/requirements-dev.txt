@@ -76,6 +76,7 @@ django==3.2.23
     #   drf-yasg
     #   jsonfield
     #   scos-actions
+    #   scos-usrp
 django-session-timeout==0.1.0
     # via -r requirements.txt
 djangorestframework==3.14.0
@@ -88,7 +89,7 @@ environs==9.5.0
     # via
     #   -r requirements.txt
     #   scos-actions
-    #   scos-tekrsa
+    #   scos-usrp
 exceptiongroup==1.2.0
     # via pytest
 filelock==3.13.1
@@ -178,8 +179,8 @@ numpy==1.24.4
     #   ray
     #   scipy
     #   scos-actions
+    #   scos-usrp
     #   sigmf
-    #   tekrsa-api-wrap
 nvidia-ml-py==12.535.133
     # via gpustat
 oauthlib==3.2.2
@@ -316,8 +317,8 @@ scipy==1.10.1
 scos-actions @ git+https://github.com/NTIA/scos-actions@SEA-178_test_actions_loading
     # via
     #   -r requirements.txt
-    #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@SEA-178_test_actions_loading
+    #   scos-usrp
+scos-usrp @ git+https://github.com/NTIA/scos-usrp@SEA-178_test_actions_loading
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -337,10 +338,6 @@ sqlparse==0.4.4
     # via
     #   -r requirements.txt
     #   django
-tekrsa-api-wrap==1.3.2
-    # via
-    #   -r requirements.txt
-    #   scos-tekrsa
 tomli==2.0.1
     # via
     #   coverage

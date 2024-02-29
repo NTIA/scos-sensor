@@ -70,6 +70,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         )
 
     sigan = None
+    gps = None
     try:
         if not settings.RUNNING_MIGRATIONS:
             check_for_required_sigan_settings()
@@ -83,6 +84,17 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches=switches
             )
             register_component_with_status.send(sigan, component=sigan)
+
+            if settings.GPS_MODULE and settings.GPS_CLASS:
+                gps_module_setting = settings.GPS_MODULE
+                gps_module = importlib.import_module(gps_module_setting)
+                logger.info(
+                    "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
+                )
+                gps_constructor = getattr(gps_module, settings.GPS_CLASS)
+                gps = gps_constructor(
+                    sigan=sigan
+                )
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
     except Exception as ex:
@@ -94,6 +106,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         preselector=preselector,
         switches=switches,
         location=location,
+        gps=gps
     )
     return sensor
 
