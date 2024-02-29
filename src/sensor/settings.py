@@ -8,22 +8,20 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 
-!!!!!!NOTE!!!!!: This file is replaced when scos-sensor runs in docker. migration_settings.py is used when migrations are
-run and runtime_settings is used when scos sensor is run in docker.
-Make sure runtime_settings.py and this stay in sync as needed. See entrypoints/api_entrypoints.sh
-
 """
-
+import logging
 import os
 import sys
 from os import path
+from pathlib import Path
 
 from cryptography.fernet import Fernet
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 
+logger = logging.getLogger(__name__)
+logger.debug("Initializing scos-sensor settings.")
 env = Env()
-
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
@@ -54,8 +52,9 @@ IN_DOCKER = env.bool("IN_DOCKER", default=False)
 RUNNING_TESTS = "test" in __cmd
 RUNNING_DEMO = env.bool("DEMO", default=False)
 MOCK_SIGAN = env.bool("MOCK_SIGAN", default=False) or RUNNING_DEMO or RUNNING_TESTS
+os.environ["MOCK_SIGAN"] = str(MOCK_SIGAN)
 MOCK_SIGAN_RANDOM = env.bool("MOCK_SIGAN_RANDOM", default=False)
-
+os.environ["MOCK_SIGAN_RANDOM"] = str(MOCK_SIGAN_RANDOM)
 
 # Healthchecks - the existance of any of these indicates an unhealthy state
 SDR_HEALTHCHECK_FILE = path.join(REPO_ROOT, "sdr_unhealthy")
@@ -66,15 +65,27 @@ LICENSE_URL = "https://github.com/NTIA/scos-sensor/blob/master/LICENSE.md"
 OPENAPI_FILE = path.join(REPO_ROOT, "docs", "openapi.json")
 
 CONFIG_DIR = path.join(REPO_ROOT, "configs")
+
+ACTIONS_DIR = path.join(CONFIG_DIR, "actions")
 DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 
+DEFAULT_CALIBRATION_FILE = path.join(CONFIG_DIR, "default_calibration.json")
+os.environ["DEFAULT_CALIBRATION_FILE"] = str(DEFAULT_CALIBRATION_FILE)
 # JSON configs
 if path.exists(path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = path.join(CONFIG_DIR, "sensor_calibration.json")
+else:
+    SENSOR_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
+
 if path.exists(path.join(CONFIG_DIR, "sigan_calibration.json")):
     SIGAN_CALIBRATION_FILE = path.join(CONFIG_DIR, "sigan_calibration.json")
+else:
+    SIGAN_CALIBRATION_FILE = DEFAULT_CALIBRATION_FILE
+
 if path.exists(path.join(CONFIG_DIR, "sensor_definition.json")):
     SENSOR_DEFINITION_FILE = path.join(CONFIG_DIR, "sensor_definition.json")
+os.environ["SENSOR_CALIBRATION_FILE"] = SENSOR_CALIBRATION_FILE
+os.environ["SIGAN_CALIBRATION_FILE"] = SIGAN_CALIBRATION_FILE
 MEDIA_ROOT = path.join(REPO_ROOT, "files")
 PRESELECTOR_CONFIG = path.join(CONFIG_DIR, "preselector_config.json")
 
@@ -171,6 +182,8 @@ the API call. The body of the response will be JSON in the following format:
 ```
 
 """
+RUNNING_MIGRATIONS = env.bool("RUNNING_MIGRATIONS", False)
+os.environ["RUNNING_MIGRATIONS"] = str(RUNNING_MIGRATIONS)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -183,15 +196,16 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",  # OpenAPI generator
     # project-local apps
-    "authentication.apps.AuthenticationConfig",
+    "initialization.apps.InitializationConfig",
     "capabilities.apps.CapabilitiesConfig",
+    "authentication.apps.AuthenticationConfig",
     "handlers.apps.HandlersConfig",
     "tasks.apps.TasksConfig",
     "schedule.apps.ScheduleConfig",
     "scheduler.apps.SchedulerConfig",
     "status.apps.StatusConfig",
     "sensor.apps.SensorConfig",  # global settings/utils, etc
-    "actions.apps.ActionsConfig",
+    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -237,7 +251,7 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-        "authentication.permissions.RequiredJWTRolePermissionOrIsSuperuser",
+        "authentication.permissions.IsSuperuser",
     ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
@@ -255,10 +269,9 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION = env("AUTHENTICATION", default="")
-if AUTHENTICATION == "JWT":
+if AUTHENTICATION == "CERT":
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
-        "authentication.auth.OAuthJWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        "authentication.auth.CertificateAuthentication",
     )
 else:
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
@@ -269,44 +282,43 @@ else:
 
 # https://drf-yasg.readthedocs.io/en/stable/settings.html
 SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {},
+    "SECURITY_DEFINITIONS": {
+        "cert": {
+            "type": "cert",
+            "description": (
+                "Certificate based mutual TLS authentication. "
+                "AUTHENTICATION must be set to 'CERT'. "
+                "This is done by the client verifying the server certificate and the server verifying the client certificate. "
+                "The client certificate Common Name (CN) should contain the username of a user that exists in the database. "
+                "Client certificate verification is handled by NGINX. "
+                "For more information, see https://www.rfc-editor.org/rfc/rfc5246."
+            ),
+        },
+        "token": {
+            "type": "apiKey",
+            "description": (
+                "Tokens are automatically generated for all users. You can "
+                "view yours by going to your User Details view in the "
+                "browsable API at `/api/v1/users/me` and looking for the "
+                "`auth_token` key. New user accounts do not initially "
+                "have a password and so can not log in to the browsable API. "
+                "To set a password for a user (for testing purposes), an "
+                "admin can do that in the Sensor Configuration Portal, but "
+                "only the account's token should be stored and used for "
+                "general purpose API access. "
+                'Example cURL call: `curl -kLsS -H "Authorization: Token'
+                ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
+                "https://localhost/api/v1`. "
+                "AUTHENTICATION should be set to 'TOKEN'"
+            ),
+            "name": "Token",
+            "in": "header",
+        },
+    },
     "APIS_SORTER": "alpha",
     "OPERATIONS_SORTER": "method",
     "VALIDATOR_URL": None,
 }
-
-if AUTHENTICATION == "JWT":
-    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["oAuth2JWT"] = {
-        "type": "oauth2",
-        "description": (
-            "OAuth2 authentication using resource owner password flow."
-            "This is done by verifing JWT bearer tokens signed with RS256 algorithm."
-            "The JWT_PUBLIC_KEY_FILE setting controls the public key used for signature verification."
-            "Only authorizes users who have an authority matching the REQUIRED_ROLE setting."
-            "For more information, see https://tools.ietf.org/html/rfc6749#section-4.3."
-        ),
-        "flows": {"password": {"scopes": {}}},  # scopes are not used
-    }
-else:
-    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["token"] = {
-        "type": "apiKey",
-        "description": (
-            "Tokens are automatically generated for all users. You can "
-            "view yours by going to your User Details view in the "
-            "browsable API at `/api/v1/users/me` and looking for the "
-            "`auth_token` key. New user accounts do not initially "
-            "have a password and so can not log in to the browsable API. "
-            "To set a password for a user (for testing purposes), an "
-            "admin can do that in the Sensor Configuration Portal, but "
-            "only the account's token should be stored and used for "
-            "general purpose API access. "
-            'Example cURL call: `curl -kLsS -H "Authorization: Token'
-            ' 529c30e6e04b3b546f2e073e879b75fdfa147c15" '
-            "https://localhost/api/v1`"
-        ),
-        "name": "Token",
-        "in": "header",
-    }
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -319,6 +331,9 @@ if RUNNING_TESTS or RUNNING_DEMO:
             "NAME": "test.db",  # temporary workaround for https://github.com/pytest-dev/pytest-django/issues/783
         }
     }
+    DEVICE_MODEL = env("DEVICE_MODEL", default="RSA507A")
+    SIGAN_MODULE = "scos_actions.hardware.mocks.mock_sigan"
+    SIGAN_CLASS = "MockSignalAnalyzer"
 else:
     DATABASES = {
         "default": {
@@ -330,6 +345,9 @@ else:
             "PORT": "5432",
         }
     }
+    DEVICE_MODEL = env("DEVICE_MODEL", default=None)
+    SIGAN_MODULE = env.str("SIGAN_MODULE", default=None)
+    SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
 
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
@@ -371,10 +389,10 @@ LOGGING = {
     "filters": {"require_debug_true": {"()": "django.utils.log.RequireDebugTrue"}},
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "loggers": {
-        "actions": {"handlers": ["console"], "level": LOGLEVEL},
         "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "handlers": {"handlers": ["console"], "level": LOGLEVEL},
+        "initialization": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},
         "scheduler": {"handlers": ["console"], "level": LOGLEVEL},
         "sensor": {"handlers": ["console"], "level": LOGLEVEL},
@@ -384,35 +402,24 @@ LOGGING = {
         "scos_usrp": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_sensor_keysight": {"handlers": ["console"], "level": LOGLEVEL},
         "scos_tekrsa": {"handlers": ["console"], "level": LOGLEVEL},
+        "users": {"handlers": ["console"], "level": LOGLEVEL},
     },
 }
 
 
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
-# OAuth Password Flow Authentication
 CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
 CALLBACK_TIMEOUT = env.int("CALLBACK_TIMEOUT", default=3)
-CLIENT_ID = env("CLIENT_ID", default="")
-CLIENT_SECRET = env("CLIENT_SECRET", default="")
-USER_NAME = CLIENT_ID
-PASSWORD = CLIENT_SECRET
 
-OAUTH_TOKEN_URL = env("OAUTH_TOKEN_URL", default="")
 CERTS_DIR = path.join(CONFIG_DIR, "certs")
 # Sensor certificate with private key used as client cert
 PATH_TO_CLIENT_CERT = env("PATH_TO_CLIENT_CERT", default="")
 if PATH_TO_CLIENT_CERT != "":
     PATH_TO_CLIENT_CERT = path.join(CERTS_DIR, PATH_TO_CLIENT_CERT)
-# Trusted Certificate Authority certificate to verify authserver and callback URL server certificate
+# Trusted Certificate Authority certificate to verify callback URL server certificate
 PATH_TO_VERIFY_CERT = env("PATH_TO_VERIFY_CERT", default="")
 if PATH_TO_VERIFY_CERT != "":
     PATH_TO_VERIFY_CERT = path.join(CERTS_DIR, PATH_TO_VERIFY_CERT)
-# Public key to verify JWT token
-PATH_TO_JWT_PUBLIC_KEY = env.str("PATH_TO_JWT_PUBLIC_KEY", default="")
-if PATH_TO_JWT_PUBLIC_KEY != "":
-    PATH_TO_JWT_PUBLIC_KEY = path.join(CERTS_DIR, PATH_TO_JWT_PUBLIC_KEY)
-# Required role from JWT token to access API
-REQUIRED_ROLE = "ROLE_MANAGER"
 
 PRESELECTOR_CONFIG = env.str(
     "PRESELECTOR_CONFIG", default=path.join(CONFIG_DIR, "preselector_config.json")
@@ -421,9 +428,13 @@ PRESELECTOR_MODULE = env.str(
     "PRESELECTOR_MODULE", default="its_preselector.web_relay_preselector"
 )
 PRESELECTOR_CLASS = env.str("PRESELECTOR_CLASS", default="WebRelayPreselector")
-SWITCH_CONFIGS_DIR = env.str(
-    "SWITCH_CONFIGS_DIR", default=path.join(CONFIG_DIR, "switches")
+SWITCH_CONFIGS_DIR = Path(
+    env.str("SWITCH_CONFIGS_DIR", default=str(path.join(CONFIG_DIR, "switches")))
 )
+os.environ["SWITCH_CONFIGS_DIR"] = str(SWITCH_CONFIGS_DIR)
+SWITCH_CONFIGS_DIR = Path(SWITCH_CONFIGS_DIR)
 SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
+os.environ["RUNNING_TESTS"] = str(RUNNING_TESTS)
+USB_DEVICE = env("USB_DEVICE", default=None)

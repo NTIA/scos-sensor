@@ -14,7 +14,7 @@
     },
     "host": "testserver",
     "schemes": [
-        "http"
+        "https"
     ],
     "basePath": "/api",
     "consumes": [
@@ -24,14 +24,21 @@
         "application/json"
     ],
     "securityDefinitions": {
+        "cert": {
+            "type": "cert",
+            "description": "Certificate based mutual TLS authentication. AUTHENTICATION must be set to 'CERT'. This is done by the client verifying the server certificate and the server verifying the client certificate. The client certificate Common Name (CN) should contain the username of a user that exists in the database. Client certificate verification is handled by NGINX. For more information, see https://www.rfc-editor.org/rfc/rfc5246."
+        },
         "token": {
             "type": "apiKey",
-            "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. New user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can do that in the Sensor Configuration Portal, but only the account's token should be stored and used for general purpose API access. Example cURL call: `curl -kLsS -H \"Authorization: Token 529c30e6e04b3b546f2e073e879b75fdfa147c15\" https://localhost/api/v1`",
+            "description": "Tokens are automatically generated for all users. You can view yours by going to your User Details view in the browsable API at `/api/v1/users/me` and looking for the `auth_token` key. New user accounts do not initially have a password and so can not log in to the browsable API. To set a password for a user (for testing purposes), an admin can do that in the Sensor Configuration Portal, but only the account's token should be stored and used for general purpose API access. Example cURL call: `curl -kLsS -H \"Authorization: Token 529c30e6e04b3b546f2e073e879b75fdfa147c15\" https://localhost/api/v1`. AUTHENTICATION should be set to 'TOKEN'",
             "name": "Token",
             "in": "header"
         }
     },
     "security": [
+        {
+            "cert": []
+        },
         {
             "token": []
         }
@@ -642,13 +649,13 @@
             },
             "parameters": [
                 {
-                    "name": "format",
+                    "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
                     "type": "string"
                 },
                 {
-                    "name": "schedule_entry_name",
+                    "name": "format",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -753,12 +760,6 @@
             },
             "parameters": [
                 {
-                    "name": "format",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
                     "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
@@ -770,6 +771,12 @@
                     "description": "The id of the task relative to the result",
                     "required": true,
                     "type": "integer"
+                },
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 }
             ]
         },
@@ -805,12 +812,6 @@
             },
             "parameters": [
                 {
-                    "name": "format",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
                     "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
@@ -822,6 +823,12 @@
                     "description": "The id of the task relative to the result",
                     "required": true,
                     "type": "integer"
+                },
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 }
             ]
         },
@@ -911,13 +918,13 @@
             },
             "parameters": [
                 {
-                    "name": "format",
+                    "name": "schedule_entry_name",
                     "in": "path",
                     "required": true,
                     "type": "string"
                 },
                 {
-                    "name": "schedule_entry_name",
+                    "name": "format",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -1570,17 +1577,17 @@
             },
             "parameters": [
                 {
-                    "name": "format",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                },
-                {
                     "name": "id",
                     "in": "path",
                     "description": "A unique integer value identifying this user.",
                     "required": true,
                     "type": "integer"
+                },
+                {
+                    "name": "format",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
                 }
             ]
         },

@@ -3,11 +3,11 @@ import logging
 import os
 import shutil
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 from schedule.models import ScheduleEntry
-from sensor.settings import MAX_DISK_USAGE
 from tasks.consts import MAX_DETAIL_LEN
 
 UTC = timezone.timezone.utc
@@ -66,7 +66,7 @@ class TaskResult(models.Model):
         super().__init__(*args, **kwargs)
 
         # Allow Swapping max_disk_usage for testing
-        self.max_disk_usage = MAX_DISK_USAGE
+        self.max_disk_usage = settings.MAX_DISK_USAGE
 
     def save(self):
         """Limit disk usage to MAX_DISK_USAGE by removing oldest result."""

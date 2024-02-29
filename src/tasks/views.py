@@ -1,5 +1,4 @@
 import logging
-import os
 import tempfile
 from functools import partial
 
@@ -217,7 +216,7 @@ def build_sigmf_archive(fileobj, schedule_entry_name, acquisitions):
                 raw_data = acq.data.read()
                 data = fernet.decrypt(raw_data)
                 del raw_data
-                tmpdata.write(data)  # decrypted data will be stored on disk in tmp file
+                tmpdata.write(data)  # decrypted data stored in file
                 del data
             else:
                 tmpdata.write(acq.data.read())

@@ -31,10 +31,10 @@ def test_admin_get_overview(admin_client):
     assert overview["schedule_entry"]  # is non-empty string
 
 
-def test_user_delete_overview_not_allowed(admin_client):
+def test_user_delete_overview_not_allowed(user_client):
     url = reverse_results_overview()
-    response = admin_client.delete(url, **HTTPS_KWARG)
-    assert validate_response(response, status.HTTP_405_METHOD_NOT_ALLOWED)
+    response = user_client.delete(url, **HTTPS_KWARG)
+    assert validate_response(response, status.HTTP_403_FORBIDDEN)
 
 
 def test_admin_delete_overview_not_allowed(admin_client):
