@@ -99,16 +99,6 @@ def status(request, version, format=None):
         ] = (
             sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime
         )
-    if (
-        sensor_loader.sensor is not None
-        and sensor_loader.sensor.signal_analyzer is not None
-        and sensor_loader.sensor.signal_analyzer.sensor_calibration is not None
-    ):
-        status_json[
-            "software"
-        ] = (
-            sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime
-        )
     for component in status_monitor.status_components:
         component_status = component.get_status()
         if isinstance(component, WebRelay):
