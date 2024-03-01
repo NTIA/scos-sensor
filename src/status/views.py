@@ -64,7 +64,7 @@ def get_software_version():
     }
 
     if sensor_loader.sensor is not None and sensor_loader.sensor.signal_analyzer is not None:
-        if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
+        if sensor_loader.sensor.signal_analyzer.firmware_version is not None:
             software_version["sigan_firmware_version"] = sensor_loader.sensor.signal_analyzer.firmware_version
         if sensor_loader.sensor.signal_analyzer.api_version is not None:
             software_version["sigan_api_version"] = sensor_loader.sensor.signal_analyzer.api_version
