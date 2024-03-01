@@ -52,6 +52,7 @@ def get_days_up():
     fractional_day = elapsed.seconds / (60 * 60 * 24)
     return round(days + fractional_day, 4)
 
+
 def get_software_version():
     # Get software versions
     software_version = {
@@ -71,7 +72,9 @@ def get_software_version():
             software_version["scos_sigan_plugin"] = ntia_diagnostics.ScosPlugin(
                 name="scos_tekrsa", version=sensor_loader.sensor.signal_analyzer.plugin_version
             )
+
     return software_version
+
 
 @api_view()
 def status(request, version, format=None):
