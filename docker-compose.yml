@@ -61,6 +61,8 @@ services:
       - SECRET_KEY
       - SIGAN_MODULE
       - SIGAN_CLASS
+      - GPS_MODULE
+      - GPS_CLASS
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
       - RUNNING_MIGRATIONS
