@@ -12,6 +12,7 @@ from scos_actions import utils
 from scos_actions.calibration.differential_calibration import DifferentialCalibration
 from scos_actions.calibration.sensor_calibration import SensorCalibration
 from scos_actions.hardware.sensor import Sensor
+from scos_actions.hardware.sigan_iface import SIGAN_SETTINGS_KEYS
 from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
@@ -58,11 +59,6 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 sensor_loc["z"] if "z" in sensor_loc else None,
             )
         switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-        sensor_cal = get_calibration(settings.SENSOR_CALIBRATION_FILE, "sensor")
-        differential_cal = get_calibration(
-            settings.DIFFERENTIAL_CALIBRATION_FILE,
-            "differential",
-        )
         preselector = load_preselector(
             settings.PRESELECTOR_CONFIG,
             settings.PRESELECTOR_MODULE,
@@ -87,6 +83,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
     except Exception as ex:
         logger.warning(f"unable to create signal analyzer: {ex}")
 
+    # Create sensor before handling calibrations
     sensor = Sensor(
         signal_analyzer=sigan,
         # TODO GPS Not Implemented
@@ -94,9 +91,32 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         preselector=preselector,
         switches=switches,
         location=location,
-        sensor_cal=sensor_cal,
-        differential_cal=differential_cal,
+        sensor_calibration=None,
+        differential_cal=None,
     )
+
+    # Calibration loading
+    if not settings.RUNNING_TESTS:
+        # Load the onboard cal file as the sensor calibration, if it exists
+        onboard_cal = get_calibration(settings.ONBOARD_CALIBRATION_FILE, "onboard")
+        if onboard_cal is not None:
+            sensor.sensor_calibration = onboard_cal
+        else:
+            # Otherwise, try using the sensor calibration file
+            sensor_cal = get_calibration(settings.SENSOR_CALIBRATION_FILE, "sensor")
+            if sensor_cal is not None:
+                sensor.sensor_calibration = sensor_cal
+            # Now run the calibration action defined in the environment
+            # TODO
+            # This will create an onboard_cal file if needed, and set it
+            # as the sensor's sensor_calibration.
+        # Now load the differential calibration, if it exists
+        differential_cal = get_calibration(
+            settings.DIFFERENTIAL_CALIBRATION_FILE,
+            "differential",
+        )
+        sensor.differential_calibration = differential_cal
+
     return sensor
 
 
@@ -180,7 +200,7 @@ def get_calibration(
     Load calibration data from file.
 
     :param cal_file_path: Path to the JSON calibration file.
-    :param cal_type: Calibration type to load, either "sensor" or "differential"
+    :param cal_type: Calibration type to load: "onboard", "sensor" or "differential"
     :return: The ``Calibration`` object, if loaded, or ``None`` if loading failed.
     """
     try:
@@ -195,7 +215,7 @@ def get_calibration(
             logger.debug(f"Loading calibration file: {cal_file_path}")
             # Create calibration object
             cal_file_path = Path(cal_file_path)
-            if cal_type.lower() == "sensor":
+            if cal_type.lower() in ["sensor", "onboard"]:
                 cal = SensorCalibration.from_json(cal_file_path)
             elif cal_type.lower() == "differential":
                 cal = DifferentialCalibration.from_json(cal_file_path)
