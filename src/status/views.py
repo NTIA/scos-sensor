@@ -69,10 +69,9 @@ def get_software_version():
         if sensor_loader.sensor.signal_analyzer.api_version is not None:
             software_version["sigan_api_version"] = sensor_loader.sensor.signal_analyzer.api_version
         if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
-            software_version["scos_sigan_plugin"] = ntia_diagnostics.ScosPlugin(
-                name="scos_tekrsa", version=sensor_loader.sensor.signal_analyzer.plugin_version
-            )
+            software_version["scos_sigan_plugin"] = sensor_loader.sensor.signal_analyzer.plugin_version
 
+    logger.debug(software_version)
     return software_version
 
 
