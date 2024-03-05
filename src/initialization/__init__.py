@@ -20,7 +20,11 @@ status_monitor = StatusMonitor()
 
 def get_usb_device_exists() -> bool:
     logger.debug("Checking for USB...")
-    if not settings.RUNNING_TESTS and settings.USB_DEVICE is not None and not settings.MOCK_SIGAN:
+    if (
+        not settings.RUNNING_TESTS
+        and settings.USB_DEVICE is not None
+        and not settings.MOCK_SIGAN
+    ):
         usb_devices = check_output("lsusb").decode(sys.stdout.encoding)
         logger.debug("Checking for " + settings.USB_DEVICE)
         logger.debug("Found " + usb_devices)

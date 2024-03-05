@@ -17,5 +17,3 @@ def get_timestamp_from_datetime(dt: datetime) -> int:
 
 def parse_datetime_str(d: str) -> datetime:
     return datetime.strptime(d, settings.DATETIME_FORMAT)
-
-
