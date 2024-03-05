@@ -2,7 +2,7 @@ import importlib
 import logging
 from os import path
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 from django.conf import settings
 from its_preselector.configuration_exception import ConfigurationException
@@ -58,14 +58,9 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 sensor_loc["z"] if "z" in sensor_loc else None,
             )
         switches = load_switches(settings.SWITCH_CONFIGS_DIR)
-        sensor_cal = get_calibration(
-            settings.SENSOR_CALIBRATION_FILE,
-            settings.DEFAULT_SENSOR_CALIBRATION_FILE,
-            "sensor",
-        )
+        sensor_cal = get_calibration(settings.SENSOR_CALIBRATION_FILE, "sensor")
         differential_cal = get_calibration(
             settings.DIFFERENTIAL_CALIBRATION_FILE,
-            settings.DEFAULT_DIFFERENTIAL_CALIBRATION_FILE,
             "differential",
         )
         preselector = load_preselector(
@@ -179,15 +174,14 @@ def load_preselector(
 
 
 def get_calibration(
-    cal_file_path: str, default_cal_file_path: str, cal_type: str
-) -> Union[DifferentialCalibration, SensorCalibration]:
+    cal_file_path: str, cal_type: str
+) -> Optional[Union[DifferentialCalibration, SensorCalibration]]:
     """
     Load calibration data from file.
 
     :param cal_file_path: Path to the JSON calibration file.
-    :param default_cal_file_path: Path to the default calibration file.
     :param cal_type: Calibration type to load, either "sensor" or "differential"
-    :return: The ``Calibration`` object.
+    :return: The ``Calibration`` object, if loaded, or ``None`` if loading failed.
     """
     try:
         cal = None
@@ -199,32 +193,19 @@ def get_calibration(
             raise FileNotFoundError
         else:
             logger.debug(f"Loading calibration file: {cal_file_path}")
-            is_default = check_for_default_calibration(
-                cal_file_path, default_cal_file_path, cal_type
-            )
             # Create calibration object
             cal_file_path = Path(cal_file_path)
             if cal_type.lower() == "sensor":
-                cal = SensorCalibration.from_json(cal_file_path, is_default)
+                cal = SensorCalibration.from_json(cal_file_path)
             elif cal_type.lower() == "differential":
-                cal = DifferentialCalibration.from_json(cal_file_path, is_default)
+                cal = DifferentialCalibration.from_json(cal_file_path)
             else:
                 logger.error(f"Unknown calibration type: {cal_type}")
                 raise ValueError
     except Exception:
         cal = None
-        logger.exception("Unable to load calibration file, reverting to none")
+        logger.exception(
+            f"Unable to load {cal_type} calibration file, reverting to none"
+        )
     finally:
         return cal
-
-
-def check_for_default_calibration(
-    cal_file_path: str, default_cal_path: str, cal_type: str
-) -> bool:
-    default_cal = False
-    if cal_file_path == default_cal_path:
-        default_cal = True
-        logger.warning(
-            f"***************LOADING DEFAULT {cal_type} CALIBRATION***************"
-        )
-    return default_cal
