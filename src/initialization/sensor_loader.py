@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Optional, Union
 
 from django.conf import settings
+from environs import Env
 from its_preselector.configuration_exception import ConfigurationException
 from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
 from its_preselector.preselector import Preselector
@@ -17,7 +18,10 @@ from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
 
+from ..capabilities import actions_by_name
+
 logger = logging.getLogger(__name__)
+env = Env()
 
 
 class SensorLoader:
@@ -72,9 +76,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
             check_for_required_sigan_settings()
             sigan_module_setting = settings.SIGAN_MODULE
             sigan_module = importlib.import_module(sigan_module_setting)
-            logger.info(
-                "Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE
-            )
+            logger.info(f"Creating {settings.SIGAN_CLASS} from {settings.SIGAN_MODULE}")
             sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
             sigan = sigan_constructor(switches=switches)
             register_component_with_status.send(sigan, component=sigan)
@@ -106,10 +108,24 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
             sensor_cal = get_calibration(settings.SENSOR_CALIBRATION_FILE, "sensor")
             if sensor_cal is not None:
                 sensor.sensor_calibration = sensor_cal
-            # Now run the calibration action defined in the environment
-            # TODO
-            # This will create an onboard_cal file if needed, and set it
-            # as the sensor's sensor_calibration.
+
+        # Now run the calibration action defined in the environment
+        # This will create an onboard_cal file if needed, and set it
+        # as the sensor's sensor_calibration.
+        if env("CALIBRATE_ON_STARTUP") or sensor.sensor_calibration is None:
+            try:
+                cal_action = actions_by_name[env("STARTUP_CALIBRATION_ACTION")]
+                cal_action(sensor=sensor, schedule_entry=None, task_id=None)
+            except KeyError:
+                logger.exception(
+                    f"Specified startup calibration action does not exist."
+                )
+        else:
+            logger.debug(
+                "Skipping startup calibration since sensor_calibration exists and"
+                + "CALIBRATE_ON_STARTUP environment variable is False"
+            )
+
         # Now load the differential calibration, if it exists
         differential_cal = get_calibration(
             settings.DIFFERENTIAL_CALIBRATION_FILE,
