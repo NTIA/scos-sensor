@@ -70,6 +70,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         )
 
     sigan = None
+    gps = None
     try:
         if not settings.RUNNING_MIGRATIONS:
             check_for_required_sigan_settings()
@@ -83,27 +84,21 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                 sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches=switches
             )
             register_component_with_status.send(sigan, component=sigan)
+
+            if settings.GPS_MODULE and settings.GPS_CLASS:
+                gps_module_setting = settings.GPS_MODULE
+                gps_module = importlib.import_module(gps_module_setting)
+                logger.info(
+                    "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
+                )
+                gps_constructor = getattr(gps_module, settings.GPS_CLASS)
+                gps = gps_constructor(
+                    sigan=sigan
+                )
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
     except Exception as ex:
         logger.warning(f"unable to create signal analyzer: {ex}")
-
-    gps = None
-    try:
-        if not settings.RUNNING_MIGRATIONS:
-            check_for_required_gps_settings()
-            gps_module_setting = settings.GPS_MODULE
-            gps_module = importlib.import_module(gps_module_setting)
-            logger.info(
-                "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
-            )
-            gps_constructor = getattr(gps_module, settings.GPS_CLASS)
-            gps = gps_constructor()
-            register_component_with_status.send(gps, component=gps)
-        else:
-            logger.info("Running migrations. Not loading GPS.")
-    except Exception as ex:
-        logger.warning(f"unable to create GPS: {ex}")
 
     sensor = Sensor(
         signal_analyzer=sigan,
@@ -111,22 +106,9 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         preselector=preselector,
         switches=switches,
         location=location,
-        gps=gps,
+        gps=gps
     )
     return sensor
-
-
-def check_for_required_gps_settings():
-    error = ""
-    raise_exception = False
-    if settings.GPS_MODULE is None:
-        raise_exception = True
-        error = "GPS_MODULE environment variable must be set. "
-    if settings.GPS_CLASS is None:
-        raise_exception = True
-        error += "GPS_CLASS environment variable. "
-    if raise_exception:
-        raise Exception(error)
 
 
 def check_for_required_sigan_settings():
