@@ -1,9 +1,15 @@
 import importlib
 import logging
-import ray
 import time
 from pathlib import Path
+
+import ray
 from django.conf import settings
+from its_preselector.configuration_exception import ConfigurationException
+from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
+from its_preselector.preselector import Preselector
+from scos_actions import utils
+from scos_actions.hardware.utils import power_cycle_sigan
 
 from utils.signals import register_component_with_status
 
@@ -11,14 +17,8 @@ from .action_loader import ActionLoader
 from .capabilities_loader import CapabilitiesLoader
 from .sensor_loader import SensorLoader
 from .status_monitor import StatusMonitor
-from .utils import set_container_unhealthy
-from .utils import get_usb_device_exists
+from .utils import get_usb_device_exists, set_container_unhealthy
 
-from its_preselector.configuration_exception import ConfigurationException
-from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
-from its_preselector.preselector import Preselector
-from scos_actions.hardware.utils import power_cycle_sigan
-from scos_actions import utils
 logger = logging.getLogger(__name__)
 
 status_monitor = StatusMonitor()
@@ -61,6 +61,7 @@ def load_preselector(
         ps = None
     return ps
 
+
 def load_switches(switch_dir: Path) -> dict:
     logger.debug(f"Loading switches in {switch_dir}")
     switch_dict = {}
@@ -90,6 +91,7 @@ def status_registration_handler(sender, **kwargs):
     except:
         logger.exception("Error registering status component")
 
+
 try:
     sensor_loader = None
     register_component_with_status.connect(status_registration_handler)
@@ -101,12 +103,14 @@ try:
         settings.PRESELECTOR_CONFIG,
         settings.PRESELECTOR_MODULE,
         settings.PRESELECTOR_CLASS,
-        capabilities_loader.capabilities["sensor"]
+        capabilities_loader.capabilities["sensor"],
     )
 
     if get_usb_device_exists():
         logger.debug("Initializing Sensor...")
-        sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
+        sensor_loader = SensorLoader(
+            capabilities_loader.capabilities, switches, preselector
+        )
 
     else:
         logger.debug("Power cycling sigan")
@@ -117,9 +121,11 @@ try:
         set_container_unhealthy()
         time.sleep(60)
 
-
     if not settings.RUNNING_MIGRATIONS:
-        if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
+        if (
+            sensor_loader.sensor.signal_analyzer is None
+            or not sensor_loader.sensor.signal_analyzer.healthy()
+        ):
             try:
                 power_cycle_sigan(switches)
             except Exception as power_cycle_exception:
@@ -128,9 +134,9 @@ try:
             time.sleep(60)
 
         if settings.RAY_INIT and not ray.is_initialized():
-                # Dashboard is only enabled if ray[default] is installed
-                logger.debug("Initializing ray.")
-                ray.init()
+            # Dashboard is only enabled if ray[default] is installed
+            logger.debug("Initializing ray.")
+            ray.init()
 except BaseException as error:
     logger.exception(f"Error during initialization: {error}")
     set_container_unhealthy()

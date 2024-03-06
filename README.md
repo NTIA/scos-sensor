@@ -354,7 +354,7 @@ settings in the environment file:
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
-- RAY_INIT: Boolean indicating whether ray should be initialized. 
+- RAY_INIT: Boolean indicating whether ray should be initialized.
 - SCOS_SENSOR_GIT_TAG: The scos-sensor branch name. This value may be used in action
   metadata to capture the version of the software that produced the sigmf archive.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,

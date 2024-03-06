@@ -349,7 +349,10 @@ else:
     SIGAN_MODULE = env.str("SIGAN_MODULE", default=None)
     SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
     USB_DEVICE = None
-    if SIGAN_MODULE == "scos_tekrsa.hardware.tekrsa_sigan" and SIGAN_CLASS == "TekRSASigan":
+    if (
+        SIGAN_MODULE == "scos_tekrsa.hardware.tekrsa_sigan"
+        and SIGAN_CLASS == "TekRSASigan"
+    ):
         USB_DEVICE = "Tektronix"
 
 if not IN_DOCKER:

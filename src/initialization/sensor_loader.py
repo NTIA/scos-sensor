@@ -2,7 +2,6 @@ import importlib
 import logging
 from os import path
 
-
 from django.conf import settings
 from its_preselector.preselector import Preselector
 from scos_actions.calibration.calibration import Calibration, load_from_json
@@ -10,7 +9,8 @@ from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
-from .utils import set_container_unhealthy, get_usb_device_exists
+
+from .utils import get_usb_device_exists, set_container_unhealthy
 
 logger = logging.getLogger(__name__)
 
@@ -18,14 +18,18 @@ logger = logging.getLogger(__name__)
 class SensorLoader:
     _instance = None
 
-    def __init__(self, sensor_capabilities: dict, switches: dict, preselector: Preselector):
+    def __init__(
+        self, sensor_capabilities: dict, switches: dict, preselector: Preselector
+    ):
         if not hasattr(self, "sensor"):
             logger.debug("Sensor has not been loaded. Loading...")
             self._sensor = load_sensor(sensor_capabilities, switches, preselector)
         else:
             logger.debug("Already loaded sensor. ")
 
-    def __new__(cls, sensor_capabilities:dict, switches:dict, preselector:Preselector ):
+    def __new__(
+        cls, sensor_capabilities: dict, switches: dict, preselector: Preselector
+    ):
         if cls._instance is None:
             logger.debug("Creating the SensorLoader")
             cls._instance = super().__new__(cls)
@@ -36,7 +40,9 @@ class SensorLoader:
         return self._sensor
 
 
-def load_sensor(sensor_capabilities: dict, switches: dict, preselector: Preselector) -> Sensor:
+def load_sensor(
+    sensor_capabilities: dict, switches: dict, preselector: Preselector
+) -> Sensor:
     sigan_cal = None
     sensor_cal = None
     location = None
@@ -59,7 +65,6 @@ def load_sensor(sensor_capabilities: dict, switches: dict, preselector: Preselec
             settings.SIGAN_CALIBRATION_FILE, settings.DEFAULT_CALIBRATION_FILE
         )
 
-
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
@@ -68,7 +73,10 @@ def load_sensor(sensor_capabilities: dict, switches: dict, preselector: Preselec
                 sigan_module_setting = settings.SIGAN_MODULE
                 sigan_module = importlib.import_module(sigan_module_setting)
                 logger.info(
-                    "Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE
+                    "Creating "
+                    + settings.SIGAN_CLASS
+                    + " from "
+                    + settings.SIGAN_MODULE
                 )
                 sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
                 sigan = sigan_constructor(
@@ -104,9 +112,6 @@ def check_for_required_sigan_settings():
         error += "SIGAN_CLASS environment variable. "
     if raise_exception:
         raise Exception(error)
-
-
-
 
 
 def get_sigan_calibration(

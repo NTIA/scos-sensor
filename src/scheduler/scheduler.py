@@ -96,7 +96,9 @@ class Scheduler(threading.Thread):
                     if self.sensor is None or self.sensor.signal_analyzer is None:
                         if settings.IN_DOCKER:
                             Path(settings.SCHEDULER_HEALTHCHECK_FILE).touch()
-                            logger.error("Scheduler sensor is not healthy. Awaiting container restart.")
+                            logger.error(
+                                "Scheduler sensor is not healthy. Awaiting container restart."
+                            )
                     else:
                         self._consume_schedule(blocking)
 
