@@ -91,6 +91,7 @@ def status_registration_handler(sender, **kwargs):
         logger.exception("Error registering status component")
 
 try:
+    sensor_loader = None
     register_component_with_status.connect(status_registration_handler)
     usb_device_exists = get_usb_device_exists()
     action_loader = ActionLoader()
