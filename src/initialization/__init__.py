@@ -116,7 +116,7 @@ try:
             sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
     if not settings.RUNNING_MIGRATIONS:
-        if sensor_loader is None or sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
+        if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
             set_container_unhealthy()
             time.sleep(60)
 
