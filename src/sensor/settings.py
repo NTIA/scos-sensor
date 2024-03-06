@@ -350,7 +350,7 @@ else:
     SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
     USB_DEVICE = None
     if SIGAN_MODULE == "scos_tekrsa.hardware.tekrsa_sigan" and SIGAN_CLASS == "TekRSASigan":
-        USB_DEVICE = "TekRSASigan"
+        USB_DEVICE = "Tektronix"
 
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
