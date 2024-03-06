@@ -10,8 +10,7 @@ from scos_actions.hardware.sensor import Sensor
 from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
-from .utils import set_container_unhealthy
-
+from .utils import set_container_unhealthy, get_usb_device_exists
 
 logger = logging.getLogger(__name__)
 
@@ -64,17 +63,20 @@ def load_sensor(sensor_capabilities: dict, switches: dict, preselector: Preselec
     sigan = None
     try:
         if not settings.RUNNING_MIGRATIONS:
-            check_for_required_sigan_settings()
-            sigan_module_setting = settings.SIGAN_MODULE
-            sigan_module = importlib.import_module(sigan_module_setting)
-            logger.info(
-                "Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE
-            )
-            sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
-            sigan = sigan_constructor(
-                sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches=switches
-            )
-            register_component_with_status.send(sigan, component=sigan)
+            if get_usb_device_exists():
+                check_for_required_sigan_settings()
+                sigan_module_setting = settings.SIGAN_MODULE
+                sigan_module = importlib.import_module(sigan_module_setting)
+                logger.info(
+                    "Creating " + settings.SIGAN_CLASS + " from " + settings.SIGAN_MODULE
+                )
+                sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
+                sigan = sigan_constructor(
+                    sensor_cal=sensor_cal, sigan_cal=sigan_cal, switches=switches
+                )
+                register_component_with_status.send(sigan, component=sigan)
+            else:
+                logger.warning("Required USB Device does not exist.")
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
     except BaseException as ex:

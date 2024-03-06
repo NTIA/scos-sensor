@@ -113,13 +113,7 @@ try:
             logger.debug("Power cycling sigan")
             power_cycle_sigan(switches)
             time.sleep(1)
-            usb_device_exists = get_usb_device_exists()
-            if usb_device_exists:
-                logger.debug("Found USB device. Initializing sensor.")
-                sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
-            else:
-                logger.debug("Cnable to find USB device after power cycling sigan.")
-                sensor_loader = None
+            sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
     if not settings.RUNNING_MIGRATIONS:
         if sensor_loader is None or sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
