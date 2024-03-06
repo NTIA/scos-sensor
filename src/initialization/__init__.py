@@ -111,12 +111,13 @@ try:
     else:
         logger.debug("Power cycling sigan")
         power_cycle_sigan(switches)
-        time.sleep(1)
-        sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
+        set_container_unhealthy()
+        time.sleep(60)
 
 
     if not settings.RUNNING_MIGRATIONS:
         if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
+            power_cycle_sigan(switches)
             set_container_unhealthy()
             time.sleep(60)
 
