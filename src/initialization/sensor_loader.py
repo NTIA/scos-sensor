@@ -13,7 +13,6 @@ from scos_actions import utils
 from scos_actions.calibration.differential_calibration import DifferentialCalibration
 from scos_actions.calibration.sensor_calibration import SensorCalibration
 from scos_actions.hardware.sensor import Sensor
-from scos_actions.hardware.sigan_iface import SIGAN_SETTINGS_KEYS
 from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
