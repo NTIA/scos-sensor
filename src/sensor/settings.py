@@ -348,6 +348,9 @@ else:
     DEVICE_MODEL = env("DEVICE_MODEL", default=None)
     SIGAN_MODULE = env.str("SIGAN_MODULE", default=None)
     SIGAN_CLASS = env.str("SIGAN_CLASS", default=None)
+    USB_DEVICE = None
+    if SIGAN_MODULE == "scos_tekrsa.hardware.tekrsa_sigan" and SIGAN_CLASS == "TekRSASigan":
+        USB_DEVICE = "TekRSASigan"
 
 if not IN_DOCKER:
     DATABASES["default"]["HOST"] = "localhost"
@@ -437,5 +440,4 @@ SIGAN_POWER_CYCLE_STATES = env("SIGAN_POWER_CYCLE_STATES", default=None)
 SIGAN_POWER_SWITCH = env("SIGAN_POWER_SWITCH", default=None)
 MAX_FAILURES = env("MAX_FAILURES", default=2)
 os.environ["RUNNING_TESTS"] = str(RUNNING_TESTS)
-USB_DEVICE = env("USB_DEVICE", default=None)
 RAY_INIT = env.bool("RAY_INIT", default=False)
