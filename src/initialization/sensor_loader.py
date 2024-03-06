@@ -17,8 +17,6 @@ from scos_actions.metadata.utils import construct_geojson_point
 
 from utils.signals import register_component_with_status
 
-from ..capabilities import actions_by_name
-
 logger = logging.getLogger(__name__)
 env = Env()
 
@@ -26,14 +24,14 @@ env = Env()
 class SensorLoader:
     _instance = None
 
-    def __init__(self, sensor_capabilities: dict):
+    def __init__(self, sensor_capabilities: dict, sensor_actions: dict):
         if not hasattr(self, "sensor"):
             logger.debug("Sensor has not been loaded. Loading...")
-            self._sensor = load_sensor(sensor_capabilities)
+            self._sensor = load_sensor(sensor_capabilities, sensor_actions)
         else:
             logger.debug("Already loaded sensor. ")
 
-    def __new__(cls, sensor_capabilities):
+    def __new__(cls, sensor_capabilities: dict, sensor_actions: dict):
         if cls._instance is None:
             logger.debug("Creating the SensorLoader")
             cls._instance = super().__new__(cls)
@@ -44,7 +42,7 @@ class SensorLoader:
         return self._sensor
 
 
-def load_sensor(sensor_capabilities: dict) -> Sensor:
+def load_sensor(sensor_capabilities: dict, sensor_actions: dict) -> Sensor:
     switches = {}
     sensor_cal = None
     differential_cal = None
@@ -92,7 +90,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         preselector=preselector,
         switches=switches,
         location=location,
-        sensor_calibration=None,
+        sensor_cal=None,
         differential_cal=None,
     )
 
@@ -113,7 +111,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
         # as the sensor's sensor_calibration.
         if env("CALIBRATE_ON_STARTUP") or sensor.sensor_calibration is None:
             try:
-                cal_action = actions_by_name[env("STARTUP_CALIBRATION_ACTION")]
+                cal_action = sensor_actions[env("STARTUP_CALIBRATION_ACTION")]
                 cal_action(sensor=sensor, schedule_entry=None, task_id=None)
             except KeyError:
                 logger.exception(

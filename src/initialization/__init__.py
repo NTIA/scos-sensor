@@ -50,7 +50,9 @@ try:
         logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
         capabilities_loader = CapabilitiesLoader()
         logger.debug("Calling sensor loader.")
-        sensor_loader = SensorLoader(capabilities_loader.capabilities)
+        sensor_loader = SensorLoader(
+            capabilities_loader.capabilities, action_loader.actions
+        )
         if (
             not settings.RUNNING_MIGRATIONS
             and not sensor_loader.sensor.signal_analyzer.healthy()
