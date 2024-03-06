@@ -90,7 +90,6 @@ def status_registration_handler(sender, **kwargs):
     except:
         logger.exception("Error registering status component")
 
-
 try:
     register_component_with_status.connect(status_registration_handler)
     usb_device_exists = get_usb_device_exists()
@@ -105,19 +104,12 @@ try:
         capabilities_loader.capabilities["sensor"]
     )
     if usb_device_exists:
-        logger.debug("Calling sensor loader.")
-        sensor_loader = SensorLoader(capabilities_loader.capabilities,switches, preselector)
-        if (
-            not settings.RUNNING_MIGRATIONS
-            and not sensor_loader.sensor.signal_analyzer.healthy()
-        ):
-            power_cycle_sigan(switches)
-            time.sleep(1)
+        if not settings.RUNNING_MIGRATIONS:
+            logger.debug("Calling sensor loader.")
             sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
+
     else:
-        if (
-                not settings.RUNNING_MIGRATIONS
-        ):
+        if not settings.RUNNING_MIGRATIONS:
             logger.debug("Power cycling sigan")
             power_cycle_sigan(switches)
             time.sleep(1)
@@ -128,8 +120,7 @@ try:
             else:
                 logger.debug("Cnable to find USB device after power cycling sigan.")
                 sensor_loader = None
-                set_container_unhealthy()
-                time.sleep(60)
+     
 
     if  sensor_loader is None or sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
         set_container_unhealthy()
