@@ -109,18 +109,17 @@ try:
         sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
     else:
-        if not settings.RUNNING_MIGRATIONS:
-            logger.debug("Power cycling sigan")
-            power_cycle_sigan(switches)
-            time.sleep(1)
-            sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
+        logger.debug("Power cycling sigan")
+        power_cycle_sigan(switches)
+        time.sleep(1)
+        sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
-    if not settings.RUNNING_MIGRATIONS:
-        if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
-            set_container_unhealthy()
-            time.sleep(60)
 
-        if settings.RAY_INIT and not ray.is_initialized():
+    if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
+        set_container_unhealthy()
+        time.sleep(60)
+
+    if not settings.RUNNING_MIGRATIONS and settings.RAY_INIT and not ray.is_initialized():
             # Dashboard is only enabled if ray[default] is installed
             ray.init()
 except:
