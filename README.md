@@ -354,6 +354,7 @@ settings in the environment file:
 - POSTGRES_PASSWORD: Sets password for the Postgres database for the “postgres” user.
   Change in production. The env.template file sets to a randomly generated value.
 - REPO_ROOT: Root folder of the repository. Should be correctly set by default.
+- RAY_INIT: Boolean indicating whether ray should be initialized. 
 - SCOS_SENSOR_GIT_TAG: The scos-sensor branch name. This value may be used in action
   metadata to capture the version of the software that produced the sigmf archive.
 - SECRET_KEY: Used by Django to provide cryptographic signing. Change to a unique,
@@ -379,11 +380,7 @@ settings in the environment file:
   scos-sensor repository with a valid certificate in production.
 - SSL_KEY_PATH: Path to server SSL private key. Use the private key for your valid
   certificate in production.
-- USB_DEVICE: Optional string used to search for available USB devices. By default,
-  this is set to Tektronix to see if the Tektronix signal analyzer is available. If
-  the specified value is not found in the output of lsusb, scos-sensor will attempt
-  to restart the api container. If switching to a different signal analyzer, this
-  setting should be updated or removed.
+
 
 ### Sensor Definition File
 

@@ -127,9 +127,11 @@ try:
                 sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
             else:
                 logger.debug("Cnable to find USB device after power cycling sigan.")
+                sensor_loader = None
                 set_container_unhealthy()
+                time.sleep(60)
 
-    if  sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
+    if  sensor_loader is None or sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
         set_container_unhealthy()
         time.sleep(60)
 
