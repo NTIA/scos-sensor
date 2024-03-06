@@ -120,14 +120,13 @@ try:
             else:
                 logger.debug("Cnable to find USB device after power cycling sigan.")
                 sensor_loader = None
-     
 
-    if  sensor_loader is None or sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
-        set_container_unhealthy()
-        time.sleep(60)
+    if not settings.RUNNING_MIGRATIONS:
+        if sensor_loader is None or sensor_loader.sensor is None or not sensor_loader.sensor.signal_analyzer.healthy():
+            set_container_unhealthy()
+            time.sleep(60)
 
-    if not settings.RUNNING_MIGRATIONS and settings.RAY_INIT:
-        if not ray.is_initialized():
+        if settings.RAY_INIT and not ray.is_initialized():
             # Dashboard is only enabled if ray[default] is installed
             ray.init()
 except:
