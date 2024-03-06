@@ -115,13 +115,14 @@ try:
         sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
 
-    if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
-        set_container_unhealthy()
-        time.sleep(60)
+    if not settings.RUNNING_MIGRATIONS:
+        if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
+            set_container_unhealthy()
+            time.sleep(60)
 
-    if not settings.RUNNING_MIGRATIONS and settings.RAY_INIT and not ray.is_initialized():
-            # Dashboard is only enabled if ray[default] is installed
-            ray.init()
+        if settings.RAY_INIT and not ray.is_initialized():
+                # Dashboard is only enabled if ray[default] is installed
+                ray.init()
 except:
     logger.exception("Error during initialization")
     set_container_unhealthy()
