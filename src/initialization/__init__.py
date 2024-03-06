@@ -105,9 +105,8 @@ try:
         capabilities_loader.capabilities["sensor"]
     )
     if usb_device_exists:
-        if not settings.RUNNING_MIGRATIONS:
-            logger.debug("Calling sensor loader.")
-            sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
+        logger.debug("Calling sensor loader.")
+        sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
     else:
         if not settings.RUNNING_MIGRATIONS:
