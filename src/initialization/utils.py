@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def set_container_unhealthy():
     if settings.IN_DOCKER:
-        logger.warning("Signal analyzer is not healthy. Marking container for restart.")
+        logger.warning("Marking container for restart.")
         Path(settings.SDR_HEALTHCHECK_FILE).touch()
 
 

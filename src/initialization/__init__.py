@@ -93,7 +93,6 @@ def status_registration_handler(sender, **kwargs):
 try:
     sensor_loader = None
     register_component_with_status.connect(status_registration_handler)
-    usb_device_exists = get_usb_device_exists()
     action_loader = ActionLoader()
     logger.debug(f"Actions ActionLoader has {len(action_loader.actions)} actions")
     capabilities_loader = CapabilitiesLoader()
@@ -104,26 +103,34 @@ try:
         settings.PRESELECTOR_CLASS,
         capabilities_loader.capabilities["sensor"]
     )
-    if usb_device_exists:
-        logger.debug("Calling sensor loader.")
+
+    if get_usb_device_exists():
+        logger.debug("Initializing Sensor...")
         sensor_loader = SensorLoader(capabilities_loader.capabilities, switches, preselector)
 
     else:
         logger.debug("Power cycling sigan")
-        power_cycle_sigan(switches)
+        try:
+            power_cycle_sigan(switches)
+        except Exception as power_cycle_exception:
+            logger.error(f"Unable to power cycle sigan: {power_cycle_exception}")
         set_container_unhealthy()
         time.sleep(60)
 
 
     if not settings.RUNNING_MIGRATIONS:
         if sensor_loader.sensor.signal_analyzer is None or not sensor_loader.sensor.signal_analyzer.healthy():
-            power_cycle_sigan(switches)
+            try:
+                power_cycle_sigan(switches)
+            except Exception as power_cycle_exception:
+                logger.error(f"Unable to power cycle sigan: {power_cycle_exception}")
             set_container_unhealthy()
             time.sleep(60)
 
         if settings.RAY_INIT and not ray.is_initialized():
                 # Dashboard is only enabled if ray[default] is installed
+                logger.debug("Initializing ray.")
                 ray.init()
-except:
-    logger.exception("Error during initialization")
+except BaseException as error:
+    logger.exception(f"Error during initialization: {error}")
     set_container_unhealthy()
