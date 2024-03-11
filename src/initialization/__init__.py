@@ -8,7 +8,7 @@ from django.conf import settings
 from its_preselector.configuration_exception import ConfigurationException
 from its_preselector.controlbyweb_web_relay import ControlByWebWebRelay
 from its_preselector.preselector import Preselector
-from scos_actions import utils
+from scos_actions.utils import load_from_json
 from scos_actions.hardware.utils import power_cycle_sigan
 
 from utils.signals import register_component_with_status
@@ -31,7 +31,7 @@ def load_preselector_from_file(
         return None
     else:
         try:
-            preselector_config = utils.load_from_json(preselector_config_file)
+            preselector_config = load_from_json(preselector_config_file)
             return load_preselector(
                 preselector_config, preselector_module, preselector_class
             )
@@ -54,7 +54,7 @@ def load_preselector(
     if module is not None and preselector_class_name is not None:
         preselector_module = importlib.import_module(module)
         preselector_constructor = getattr(preselector_module, preselector_class_name)
-        preselector_config = utils.load_from_json(preselector_config)
+        preselector_config = load_from_json(preselector_config)
         ps = preselector_constructor(sensor_definition, preselector_config)
         register_component_with_status.send(ps, component=ps)
     else:
@@ -70,7 +70,7 @@ def load_switches(switch_dir: Path) -> dict:
             for f in switch_dir.iterdir():
                 file_path = f.resolve()
                 logger.debug(f"loading switch config {file_path}")
-                conf = utils.load_from_json(file_path)
+                conf = load_from_json(file_path)
                 try:
                     switch = ControlByWebWebRelay(conf)
                     logger.debug(f"Adding {switch.id}")
