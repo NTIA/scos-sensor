@@ -109,7 +109,7 @@ def load_sensor(sensor_capabilities: dict, sensor_actions: dict) -> Sensor:
         # Now run the calibration action defined in the environment
         # This will create an onboard_cal file if needed, and set it
         # as the sensor's sensor_calibration.
-        if settings.CALIBRATE_ON_STARTUP or sensor.sensor_calibration is None:
+        if sensor.sensor_calibration is None or sensor.sensor_calibration.expired():
             if settings.STARTUP_CALIBRATION_ACTION is None:
                 logger.error("No STARTUP_CALIBRATION_ACTION set.")
             else:
