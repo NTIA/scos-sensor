@@ -110,13 +110,11 @@ def load_sensor(sensor_capabilities: dict, sensor_actions: dict) -> Sensor:
         # This will create an onboard_cal file if needed, and set it
         # as the sensor's sensor_calibration.
         if settings.CALIBRATE_ON_STARTUP or sensor.sensor_calibration is None:
-            try:
-                cal_action = sensor_actions[env("STARTUP_CALIBRATION_ACTION")]
+            if settings.STARTUP_CALIBRATION_ACTION is None:
+                logger.error("No STARTUP_CALIBRATION_ACTION set.")
+            else:
+                cal_action = sensor_actions[settings.STARTUP_CALIBRATION_ACTION]
                 cal_action(sensor=sensor, schedule_entry=None, task_id=None)
-            except KeyError:
-                logger.exception(
-                    f"Specified startup calibration action does not exist."
-                )
         else:
             logger.debug(
                 "Skipping startup calibration since sensor_calibration exists and"
