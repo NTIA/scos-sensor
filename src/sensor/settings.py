@@ -77,10 +77,10 @@ DRIVERS_DIR = path.join(REPO_ROOT, "drivers")
 if path.exists(
     onboard_cal_path := path.join(CONFIG_DIR, "onboard_sensor_calibration.json")
 ):
-    ONBOARD_SENSOR_CALIBRATION_FILE = onboard_cal_path
+    ONBOARD_CALIBRATION_FILE = onboard_cal_path
 else:
-    ONBOARD_SENSOR_CALIBRATION_FILE = None
-os.environ["ONBOARD_SENSOR_CALIBRATION_FILE"] = onboard_cal_path
+    ONBOARD_CALIBRATION_FILE = None
+os.environ["ONBOARD_CALIBRATION_FILE"] = onboard_cal_path
 
 # Sensor calibration file; should be provided manually. Will not be
 # overwritten when calibration actions.
