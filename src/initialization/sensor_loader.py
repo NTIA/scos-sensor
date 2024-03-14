@@ -109,17 +109,18 @@ def load_sensor(sensor_capabilities: dict, sensor_actions: dict) -> Sensor:
         # Now run the calibration action defined in the environment
         # This will create an onboard_cal file if needed, and set it
         # as the sensor's sensor_calibration.
-        if sensor.sensor_calibration is None or sensor.sensor_calibration.expired():
-            if settings.STARTUP_CALIBRATION_ACTION is None:
-                logger.error("No STARTUP_CALIBRATION_ACTION set.")
+        if not settings.RUNNING_MIGRATIONS:
+            if sensor.sensor_calibration is None or sensor.sensor_calibration.expired():
+                if settings.STARTUP_CALIBRATION_ACTION is None:
+                    logger.error("No STARTUP_CALIBRATION_ACTION set.")
+                else:
+                    cal_action = sensor_actions[settings.STARTUP_CALIBRATION_ACTION]
+                    cal_action(sensor=sensor, schedule_entry=None, task_id=None)
             else:
-                cal_action = sensor_actions[settings.STARTUP_CALIBRATION_ACTION]
-                cal_action(sensor=sensor, schedule_entry=None, task_id=None)
-        else:
-            logger.debug(
-                "Skipping startup calibration since sensor_calibration exists and"
-                + "CALIBRATE_ON_STARTUP environment variable is False"
-            )
+                logger.debug(
+                    "Skipping startup calibration since sensor_calibration exists and"
+                    + "CALIBRATE_ON_STARTUP environment variable is False"
+                )
 
         # Now load the differential calibration, if it exists
         differential_cal = get_calibration(
