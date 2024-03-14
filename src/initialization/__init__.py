@@ -199,6 +199,7 @@ try:
                     if settings.STARTUP_CALIBRATION_ACTION is None:
                         logger.error("No STARTUP_CALIBRATION_ACTION set.")
                     else:
+                        logger.debug("Performing startup calibration...")
                         cal_action = action_loader.actions[settings.STARTUP_CALIBRATION_ACTION]
                         cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
                 else:
