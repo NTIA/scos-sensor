@@ -200,8 +200,6 @@ try:
             )
             sensor_loader.sensor.differential_calibration = differential_cal
 
-        calibrate_if_needed()
-
         import ray
         if settings.RAY_INIT and not ray.is_initialized():
             # Dashboard is only enabled if ray[default] is installed
