@@ -91,7 +91,7 @@ def load_actions(
     discovered_plugins = {
         name: importlib.import_module(name)
         for finder, name, ispkg in pkgutil.iter_modules()
-        if name.startswith("scos_")
+        if name.startswith("scos_")and name != "scos_actions"
     }
     logger.debug(discovered_plugins)
     actions = {}
@@ -105,6 +105,8 @@ def load_actions(
             if mock_sigan and hasattr(discover, "test_actions"):
                 logger.debug(f"loading {len(discover.test_actions)} test actions.")
                 actions.update(discover.test_actions)
+                # add scos-actions test_actions for scos-actions mock sigan
+                actions.update(test_actions)
             elif hasattr(discover, "actions"):
                 logger.debug(f"loading {len(discover.actions)} actions.")
                 actions.update(discover.actions)
