@@ -204,8 +204,7 @@ try:
                         cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
                 else:
                     logger.debug(
-                        "Skipping startup calibration since sensor_calibration exists and"
-                        + "CALIBRATE_ON_STARTUP environment variable is False"
+                        "Skipping startup calibration since sensor_calibration exists and has not expired."
                     )
 
             # Now load the differential calibration, if it exists
