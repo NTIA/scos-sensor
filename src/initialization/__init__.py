@@ -200,8 +200,11 @@ try:
                         logger.error("No STARTUP_CALIBRATION_ACTION set.")
                     else:
                         logger.debug("Performing startup calibration...")
-                        cal_action = action_loader.actions[settings.STARTUP_CALIBRATION_ACTION]
-                        cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
+                        try:
+                            cal_action = action_loader.actions[settings.STARTUP_CALIBRATION_ACTION]
+                            cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
+                        except BaseException as cal_error:
+                            logger.error(f"Error during startup calibration: {cal_error}")
                 else:
                     logger.debug(
                         "Skipping startup calibration since sensor_calibration exists and has not expired."
