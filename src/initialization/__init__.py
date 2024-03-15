@@ -137,6 +137,25 @@ def get_calibration(
     finally:
         return cal
 
+def calibrate_if_needed():
+    # Now run the calibration action defined in the environment
+    # This will create an onboard_cal file if needed, and set it
+    # as the sensor's sensor_calibration.
+    if not settings.RUNNING_MIGRATIONS:
+        if sensor_loader.sensor.sensor_calibration is None or sensor_loader.sensor.sensor_calibration.expired():
+            if settings.STARTUP_CALIBRATION_ACTION is None:
+                logger.error("No STARTUP_CALIBRATION_ACTION set.")
+            else:
+                logger.debug("Performing startup calibration...")
+                try:
+                    cal_action = action_loader.actions[settings.STARTUP_CALIBRATION_ACTION]
+                    cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
+                except BaseException as cal_error:
+                    logger.error(f"Error during startup calibration: {cal_error}")
+        else:
+            logger.debug(
+                "Skipping startup calibration since sensor_calibration exists and has not expired."
+            )
 
 try:
     sensor_loader = None
@@ -191,24 +210,6 @@ try:
                 if sensor_cal is not None:
                     sensor_loader.sensor.sensor_calibration = sensor_cal
 
-            # Now run the calibration action defined in the environment
-            # This will create an onboard_cal file if needed, and set it
-            # as the sensor's sensor_calibration.
-            if not settings.RUNNING_MIGRATIONS:
-                if sensor_loader.sensor.sensor_calibration is None or sensor_loader.sensor.sensor_calibration.expired():
-                    if settings.STARTUP_CALIBRATION_ACTION is None:
-                        logger.error("No STARTUP_CALIBRATION_ACTION set.")
-                    else:
-                        logger.debug("Performing startup calibration...")
-                        try:
-                            cal_action = action_loader.actions[settings.STARTUP_CALIBRATION_ACTION]
-                            cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
-                        except BaseException as cal_error:
-                            logger.error(f"Error during startup calibration: {cal_error}")
-                else:
-                    logger.debug(
-                        "Skipping startup calibration since sensor_calibration exists and has not expired."
-                    )
 
             # Now load the differential calibration, if it exists
             differential_cal = get_calibration(
@@ -216,6 +217,8 @@ try:
                 "differential",
             )
             sensor_loader.sensor.differential_calibration = differential_cal
+
+        calibrate_if_needed()
 
         import ray
         if settings.RAY_INIT and not ray.is_initialized():
