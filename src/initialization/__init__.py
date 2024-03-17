@@ -113,11 +113,9 @@ def get_calibration(
     try:
         cal = None
         if cal_file_path is None or cal_file_path == "":
-            logger.error("No calibration file specified.")
-            raise ValueError
+            logger.error("No calibration file specified, reverting to none.")
         elif not path.exists(cal_file_path):
-            logger.error(f"{cal_file_path} does not exist.")
-            raise FileNotFoundError
+            logger.error(f"{cal_file_path} does not exist, reverting to none.")
         else:
             logger.debug(f"Loading calibration file: {cal_file_path}")
             # Create calibration object
