@@ -4,12 +4,12 @@ import logging
 import os
 import pkgutil
 import shutil
+from typing import Dict
 
 from django.conf import settings
 from scos_actions.actions import action_classes
 from scos_actions.actions.interfaces.action import Action
 from scos_actions.discover import init, test_actions
-from typing import Dict
 
 logger = logging.getLogger(__name__)
 

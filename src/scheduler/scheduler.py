@@ -11,8 +11,7 @@ from django.utils import timezone
 from scos_actions.hardware.sensor import Sensor
 from scos_actions.signals import trigger_api_restart
 
-from initialization import sensor_loader, action_loader
-
+from initialization import action_loader, sensor_loader
 from schedule.models import ScheduleEntry
 from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
@@ -342,14 +341,23 @@ class Scheduler(threading.Thread):
         # This will create an onboard_cal file if needed, and set it
         # as the sensor's sensor_calibration.
         if not settings.RUNNING_MIGRATIONS:
-            if sensor_loader.sensor.sensor_calibration is None or sensor_loader.sensor.sensor_calibration.expired():
+            if (
+                sensor_loader.sensor.sensor_calibration is None
+                or sensor_loader.sensor.sensor_calibration.expired()
+            ):
                 if settings.STARTUP_CALIBRATION_ACTION is None:
                     logger.error("No STARTUP_CALIBRATION_ACTION set.")
                 else:
-                    logger.debug("Performing startup calibration...")
+                    logger.info("Performing startup calibration...")
                     try:
-                        cal_action = action_loader.actions[settings.STARTUP_CALIBRATION_ACTION]
-                        cal_action(sensor=sensor_loader.sensor, schedule_entry=None, task_id=None)
+                        cal_action = action_loader.actions[
+                            settings.STARTUP_CALIBRATION_ACTION
+                        ]
+                        cal_action(
+                            sensor=sensor_loader.sensor,
+                            schedule_entry=None,
+                            task_id=None,
+                        )
                     except BaseException as cal_error:
                         logger.error(f"Error during startup calibration: {cal_error}")
             else:

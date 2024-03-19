@@ -3,6 +3,7 @@ import logging
 import time
 from os import path
 from pathlib import Path
+from typing import Optional, Union
 
 from django.conf import settings
 from its_preselector.configuration_exception import ConfigurationException
@@ -12,7 +13,7 @@ from scos_actions.calibration.differential_calibration import DifferentialCalibr
 from scos_actions.calibration.sensor_calibration import SensorCalibration
 from scos_actions.hardware.utils import power_cycle_sigan
 from scos_actions.utils import load_from_json
-from typing import Optional, Union
+
 from utils.signals import register_component_with_status
 
 from .action_loader import ActionLoader
@@ -136,7 +137,6 @@ def get_calibration(
         return cal
 
 
-
 try:
     sensor_loader = None
     register_component_with_status.connect(status_registration_handler)
@@ -190,7 +190,6 @@ try:
                 if sensor_cal is not None:
                     sensor_loader.sensor.sensor_calibration = sensor_cal
 
-
             # Now load the differential calibration, if it exists
             differential_cal = get_calibration(
                 settings.DIFFERENTIAL_CALIBRATION_FILE,
@@ -199,6 +198,7 @@ try:
             sensor_loader.sensor.differential_calibration = differential_cal
 
         import ray
+
         if settings.RAY_INIT and not ray.is_initialized():
             # Dashboard is only enabled if ray[default] is installed
             logger.debug("Initializing ray.")
@@ -206,4 +206,3 @@ try:
 except BaseException as error:
     logger.exception(f"Error during initialization: {error}")
     set_container_unhealthy()
-
