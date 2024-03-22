@@ -32,8 +32,8 @@ server {
     ssl_session_tickets off;
     ssl_certificate /etc/ssl/certs/ssl-cert.pem;
     ssl_certificate_key /etc/ssl/private/ssl-cert.key;
-    ssl_protocols TLSv1.2;
-    ssl_client_certificate /etc/ssl/certs/ca.crt;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    # ssl_client_certificate /etc/ssl/certs/ca.crt;
     # ssl_verify_client on;
     # ssl_ocsp on; # Enable OCSP validation
     ssl_verify_depth 4;
@@ -49,11 +49,14 @@ server {
 
     # Pass off requests to Gunicorn
     location @proxy_to_wsgi_server {
+
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto https;
         proxy_set_header Host $http_host;
+        proxy_set_header X-SSL-CLIENT-DN $ssl_client_s_dn;
         proxy_redirect off;
         proxy_pass   http://wsgi-server;
+
     }
 
 }

@@ -2,6 +2,7 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from initialization import action_loader
 from sensor import V1
 
 from .. import get_action_with_summary, registered_actions

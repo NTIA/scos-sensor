@@ -5,14 +5,19 @@ import time
 from itertools import chain, count, islice
 
 from authentication.models import User
+from initialization import action_loader
 from schedule.models import Request, ScheduleEntry
 from scheduler.scheduler import Scheduler
 from sensor import V1
-from utils.action_registrar import registered_actions
-
-BAD_ACTION_STR = "testing expected failure"
 
 logger = logging.getLogger(__name__)
+actions = action_loader.actions
+if actions is not None:
+    logger.debug(f"Have {len(actions)} actions")
+else:
+    logger.warning("Actions is None")
+BAD_ACTION_STR = "testing expected failure"
+
 logger.debug("*************** scos-sensor/scheduler/test/utils ***********")
 
 
@@ -104,12 +109,12 @@ def create_action():
     """
     flag = threading.Event()
 
-    def cb(schedule_entry_json, task_id):
+    def cb(sensor, schedule_entry_json, task_id):
         flag.set()
         return "set flag"
 
     cb.__name__ = "testcb" + str(create_action.counter)
-    registered_actions[cb.__name__] = cb
+    actions[cb.__name__] = cb
     create_action.counter += 1
 
     return cb, flag
@@ -119,10 +124,10 @@ create_action.counter = 0
 
 
 def create_bad_action():
-    def bad_action(schedule_entry_json, task_id):
+    def bad_action(sensor, schedule_entry_json, task_id):
         raise Exception(BAD_ACTION_STR)
 
-    registered_actions["bad_action"] = bad_action
+    actions["bad_action"] = bad_action
     return bad_action
 
 

@@ -1,25 +1,30 @@
 import datetime
 import logging
+import platform
 import shutil
+import sys
 
 from drf_spectacular.utils import extend_schema
+from its_preselector import __version__ as PRESELECTOR_API_VERSION
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from scos_actions import __version__ as SCOS_ACTIONS_VERSION
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
-from scos_actions.status import status_registrar
+from scos_actions.metadata.structs import ntia_diagnostics
+from scos_actions.settings import SCOS_SENSOR_GIT_TAG
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,
 )
 
+from initialization import sensor_loader, status_monitor
 from scheduler import scheduler
 from utils.docs import API_RESPONSE_405, FORMAT_QUERY_KWARGS, view_docstring
 
-from . import sensor_cal, start_time
-from .serializers import StatusSerializer
-from .serializers.status import LocationSerializer
+from . import start_time
+from .serializers import LocationSerializer, StatusSerializer
 from .utils import get_location
 
 logger = logging.getLogger(__name__)
@@ -51,6 +56,37 @@ def get_days_up():
     return round(days + fractional_day, 4)
 
 
+def get_software_version():
+    # Get software versions
+    software_version = {
+        "system_platform": platform.platform(),
+        "python_version": sys.version.split()[0],
+        "scos_sensor_version": SCOS_SENSOR_GIT_TAG,
+        "scos_actions_version": SCOS_ACTIONS_VERSION,
+        "preselector_api_version": PRESELECTOR_API_VERSION,
+    }
+
+    if (
+        sensor_loader.sensor is not None
+        and sensor_loader.sensor.signal_analyzer is not None
+    ):
+        if sensor_loader.sensor.signal_analyzer.firmware_version is not None:
+            software_version[
+                "sigan_firmware_version"
+            ] = sensor_loader.sensor.signal_analyzer.firmware_version
+        if sensor_loader.sensor.signal_analyzer.api_version is not None:
+            software_version[
+                "sigan_api_version"
+            ] = sensor_loader.sensor.signal_analyzer.api_version
+        if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
+            software_version[
+                "scos_sigan_plugin"
+            ] = sensor_loader.sensor.signal_analyzer.plugin_version
+
+    logger.debug(software_version)
+    return software_version
+
+
 # STATUS VIEW
 status_view_desc = (
     "The `status` endpoint provides dynamic status information "
@@ -74,11 +110,21 @@ def status_view(request, version, format=None):
         "location": serialize_location(),
         "system_time": get_datetime_str_now(),
         "start_time": convert_datetime_to_millisecond_iso_format(start_time),
-        "last_calibration_datetime": sensor_cal.last_calibration_datetime,
         "disk_usage": disk_usage(),
         "days_up": get_days_up(),
+        "software": get_software_version(),
     }
-    for component in status_registrar.status_components:
+    if (
+        sensor_loader.sensor is not None
+        and sensor_loader.sensor.signal_analyzer is not None
+        and sensor_loader.sensor.signal_analyzer.sensor_calibration is not None
+    ):
+        status_json[
+            "last_calibration_datetime"
+        ] = (
+            sensor_loader.sensor.signal_analyzer.sensor_calibration.last_calibration_datetime
+        )
+    for component in status_monitor.status_components:
         component_status = component.get_status()
         if isinstance(component, WebRelay):
             if "switches" in status_json:

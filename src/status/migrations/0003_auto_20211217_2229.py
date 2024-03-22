@@ -2,13 +2,12 @@
 
 import json
 
+from django.conf import settings
 from django.db import migrations
-
-from sensor.settings import SENSOR_DEFINITION_FILE
 
 
 def load_location(apps, schema_editor):
-    with open(SENSOR_DEFINITION_FILE) as f:
+    with open(settings.SENSOR_DEFINITION_FILE) as f:
         sensor_def = json.load(f)
     if "location" in sensor_def:
         location = sensor_def["location"]

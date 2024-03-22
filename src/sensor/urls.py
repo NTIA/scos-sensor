@@ -17,16 +17,17 @@ Including another URLconf
 
 """
 
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from . import settings
 from .views import api_v1_root_view
 
 DEFAULT_API_VERSION = settings.REST_FRAMEWORK["DEFAULT_VERSION"]
+AUTHENTICATION = settings.AUTHENTICATION
 
 api_urlpatterns = format_suffix_patterns(
     (
@@ -57,6 +58,8 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/api/")),
     path("admin/", admin.site.urls),
     path("api/", RedirectView.as_view(url=f"/api/{DEFAULT_API_VERSION}/")),
-    re_path(settings.API_PREFIX_REGEX, include(api_urlpatterns)),
-    path(f"api/auth/", include("knox.urls")),
+    re_path(settings.API_PREFIX, include(api_urlpatterns)),
 ]
+
+# logout/login does not do anything if AUTHENTICATION is set to "CERT"
+urlpatterns.append(path("api/auth/", include("rest_framework.urls")))

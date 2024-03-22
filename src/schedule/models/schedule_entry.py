@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, Validat
 from django.db import models
 
 from constants import MAX_ACTION_LENGTH
-from schedule import actions
+from initialization import action_loader
 from scheduler import utils
 
 logger = logging.getLogger(__name__)
@@ -163,7 +163,7 @@ class ScheduleEntry(models.Model):
         # used by .save to detect whether to reset .next_task_times
         self.__start = self.start
         self.__interval = self.interval
-        if self.action not in actions:
+        if self.action not in action_loader.actions:
             raise ValidationError(self.action + " does not exist")
 
     def update(self, *args, **kwargs):

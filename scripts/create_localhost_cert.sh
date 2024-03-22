@@ -11,7 +11,5 @@ DNS.1 = localhost
 IP.1 = 127.0.0.1" > localhost.ext
 openssl x509 -req -passin pass:"changeme" -CA scostestca.pem -CAkey scostestca.key -in localhost.csr -out localhost.pem -days 365 -sha256 -CAcreateserial -extfile localhost.ext
 cat localhost.key localhost.pem > localhost_combined.pem
-cp scostestca.pem ../configs/certs/
-mv ../configs/certs/scostestca.pem ../configs/certs/scos_test_ca.crt
-cp localhost_combined.pem ../configs/certs/
-mv ../configs/certs/localhost_combined.pem ../configs/certs/sensor01.pem
+cp scostestca.pem ../configs/certs/scos_test_ca.crt
+cp localhost_combined.pem ../configs/certs/sensor01.pem

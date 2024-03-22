@@ -1,9 +1,11 @@
 import datetime
 import logging
 
-from scos_actions.calibration import sensor_calibration
+from initialization import sensor_loader
 
 logger = logging.getLogger(__name__)
 logger.debug("********** Initializing status **********")
-sensor_cal = sensor_calibration
-start_time = datetime.datetime.utcnow()
+if sensor_loader.sensor.signal_analyzer is not None:
+    start_time = sensor_loader.sensor.start_time
+else:
+    start_time = datetime.datetime.utcnow()

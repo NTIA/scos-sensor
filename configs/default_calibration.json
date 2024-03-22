@@ -1,0 +1,16 @@
+{
+  "calibration_data":{
+    "datetime": "1970-01-01T00:00:00.000000Z",
+    "gain": 0,
+    "noise_figure": 0.0,
+    "1db_compression_point": null,
+    "enbw": null,
+    "temperature": 26.85
+  },
+  "last_calibration_datetime": "1970-01-01T00:00:00.000000Z",
+  "calibration_parameters": [],
+  "clock_rate_lookup_by_sample_rate": [
+  ],
+  "sensor_uid": "DEFAULT CALIBRATION",
+  "calibration_reference": "noise source output"
+}
