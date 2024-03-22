@@ -23,7 +23,7 @@ services:
       interval: 6s
       timeout: 3s
       retries: 1
-    shm_size: '16gb'
+    shm_size: ${API_SHM_SIZE}
     restart: always
     depends_on:
       db:
@@ -71,7 +71,6 @@ services:
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
       - RUNNING_MIGRATIONS
-      - USB_DEVICE
     expose:
       - '8000'
     volumes:
@@ -86,7 +85,7 @@ services:
       - SYS_ADMIN  # required for ^ with NVMe drives
     devices:
       - /dev/bus/usb:/dev/bus/usb:rw
-      - /dev/nvme0n1:/dev/nvme0n1:ro
+      - ${SSD_DEVICE}:/dev/nvme0n1:ro
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh

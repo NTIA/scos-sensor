@@ -312,6 +312,8 @@ settings in the environment file:
 - ADMIN_EMAIL: Email used to generate admin user. Change in production.
 - ADMIN_NAME: Username for the admin user.
 - ADMIN_PASSWORD: Password used to generate admin user. Change in production.
+- API_SHM_SIZE: Size to allocate shared memory (`/dev/shm`) in the API container. This
+  is currently used to allocate shared memory for parallel processing of IQ data with Ray.
 - AUTHENTICATION: Authentication method used for scos-sensor. Supports `TOKEN` or
   `CERT`.
 - BASE_IMAGE: Base docker image used to build the API container. These docker
@@ -373,6 +375,9 @@ settings in the environment file:
   [WebRelay](https://github.com/NTIA/Preselector) that may be used to power cycle
   the signal analyzer if necessary. Note: specifics of power cycling behavior
   are implemented within the signal analyzer implementations or actions.
+- SSD_DEVICE: The device (e.g., `/dev/sda/`) which is mapped to `/dev/nvme0n1` within
+  the API container. This is currently only used to retrieve SSD SMART diagnostics (in
+  SCOS Actions).
 - SSL_CA_PATH: Path to a CA certificate used to verify scos-sensor client
   certificate(s) when authentication is set to CERT.
 - SSL_CERT_PATH: Path to server SSL certificate. Replace the certificate in the
