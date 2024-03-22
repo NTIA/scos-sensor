@@ -1,15 +1,32 @@
 from functools import partial
 
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from utils.docs import API_RESPONSE_405, FORMAT_QUERY_KWARGS, view_docstring
+
 from . import settings
+from .serializers import ApiRootSerializer
+
+# API ROOT VIEW
+api_root_view_desc = (
+    "The root API endpoint provides links to all other API endpoints.\n"
+    "The entire API is discoverable by following these links."
+)
 
 
-@api_view(("GET",))
-def api_v1_root(request, version, format=None):
-    """SCOS sensor API root."""
+@extend_schema(
+    description=api_root_view_desc,
+    summary="SCOS Sensor (API Root)",
+    tags=["Discover"],
+    responses={200: ApiRootSerializer(), **API_RESPONSE_405},
+    **FORMAT_QUERY_KWARGS,
+)
+@api_view()
+@view_docstring(api_root_view_desc)
+def api_v1_root_view(request, version, format=None):
     reverse_ = partial(reverse, request=request, format=format)
     list_endpoints = {
         "capabilities": reverse_("capabilities"),

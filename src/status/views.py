@@ -2,6 +2,7 @@ import datetime
 import logging
 import shutil
 
+from drf_spectacular.utils import extend_schema
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
@@ -14,13 +15,15 @@ from scos_actions.utils import (
 )
 
 from scheduler import scheduler
+from utils.docs import API_RESPONSE_405, FORMAT_QUERY_KWARGS, view_docstring
 
 from . import sensor_cal, start_time
-from .serializers import LocationSerializer
+from .serializers import StatusSerializer
+from .serializers.status import LocationSerializer
 from .utils import get_location
 
 logger = logging.getLogger(__name__)
-logger.info("Loading status/views")
+logger.debug("Loading status/views")
 
 
 def serialize_location():
@@ -33,22 +36,38 @@ def serialize_location():
 
 
 def disk_usage():
+    """Return the total disk usage as a percentage."""
     usage = shutil.disk_usage("/")
     percent_used = round(100 * usage.used / usage.total)
-    logger.info(str(percent_used) + " disk used")
+    logger.debug(str(percent_used) + " disk used")
     return round(percent_used, 2)
 
 
 def get_days_up():
+    """Return the number of days SCOS has been running."""
     elapsed = datetime.datetime.utcnow() - start_time
     days = elapsed.days
     fractional_day = elapsed.seconds / (60 * 60 * 24)
     return round(days + fractional_day, 4)
 
 
+# STATUS VIEW
+status_view_desc = (
+    "The `status` endpoint provides dynamic status information "
+    "related to the sensor and its components."
+)
+
+
+@extend_schema(
+    description=status_view_desc,
+    summary="Sensor Status",
+    tags=["Discover"],
+    responses={200: StatusSerializer(), **API_RESPONSE_405},
+    **FORMAT_QUERY_KWARGS,
+)
 @api_view()
-def status(request, version, format=None):
-    """The status overview of the sensor."""
+@view_docstring(status_view_desc)
+def status_view(request, version, format=None):
     healthy = True
     status_json = {
         "scheduler": scheduler.thread.status,

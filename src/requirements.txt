@@ -9,33 +9,20 @@ aiosignal==1.3.1
 asgiref==3.6.0
     # via django
 attrs==22.2.0
-    # via
-    #   jsonschema
-    #   ray
-bcrypt==4.0.1
-    # via paramiko
-certifi==2022.12.7
+    # via jsonschema
+certifi==2023.7.22
     # via requests
 cffi==1.15.1
-    # via
-    #   cryptography
-    #   pynacl
+    # via cryptography
 charset-normalizer==3.0.1
     # via requests
 click==8.1.3
     # via ray
-cryptography==39.0.1
-    # via
-    #   -r requirements.in
-    #   django-rest-knox
-    #   paramiko
+cryptography==41.0.6
+    # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
-distlib==0.3.6
-    # via virtualenv
-distro==1.8.0
-    # via docker-compose
-django==3.2.18
+django==3.2.23
     # via
     #   -r requirements.in
     #   django-rest-knox
@@ -52,18 +39,11 @@ django-session-timeout==0.1.0
 djangorestframework==3.14.0
     # via
     #   -r requirements.in
-    #   django-rest-knox
     #   drf-spectacular
-docker[ssh]==6.0.1
-    # via docker-compose
-docker-compose==1.29.2
-    # via -r requirements.in
-dockerpty==0.4.1
-    # via docker-compose
-docopt==0.6.2
-    # via docker-compose
-drf-spectacular[sidecar]==0.26.2
-    # via -r requirements.in
+drf-spectacular[sidecar]==0.27.0
+    # via
+    #   -r requirements.in
+    #   drf-spectacular
 drf-spectacular-sidecar==2023.5.1
     # via drf-spectacular
 environs==9.5.0
@@ -75,7 +55,6 @@ filelock==3.9.0
     # via
     #   -r requirements.in
     #   ray
-    #   virtualenv
 frozenlist==1.3.3
     # via
     #   aiosignal
@@ -88,19 +67,20 @@ idna==3.4
     # via requests
 inflection==0.5.1
     # via drf-spectacular
-its-preselector @ git+https://github.com/NTIA/Preselector@3.0.1
+its-preselector @ git+https://github.com/NTIA/Preselector@3.1.0
     # via scos-actions
 jsonfield==3.1.0
     # via -r requirements.in
 jsonschema==3.2.0
     # via
-    #   docker-compose
     #   drf-spectacular
     #   ray
 marshmallow==3.19.0
     # via environs
-msgpack==1.0.4
+msgpack==1.0.5
     # via ray
+msgspec==0.16.0
+    # via scos-actions
 numexpr==2.8.4
     # via scos-actions
 numpy==1.24.2
@@ -118,15 +98,11 @@ oauthlib==3.2.2
 packaging==23.0
     # via
     #   -r requirements.in
-    #   docker
     #   marshmallow
-paramiko==3.0.0
-    # via docker
-platformdirs==3.0.0
-    # via virtualenv
-protobuf==4.22.0
+    #   ray
+protobuf==4.23.3
     # via ray
-psutil==5.9.4
+psutil==5.9.5
     # via scos-actions
 psycopg2-binary==2.9.5
     # via -r requirements.in
@@ -134,31 +110,25 @@ pycparser==2.21
     # via cffi
 pyjwt==2.6.0
     # via -r requirements.in
-pynacl==1.5.0
-    # via paramiko
 pyrsistent==0.19.3
     # via jsonschema
 python-dateutil==2.8.2
     # via scos-actions
 python-dotenv==0.21.1
-    # via
-    #   docker-compose
-    #   environs
+    # via environs
 pytz==2022.7.1
     # via
     #   django
     #   djangorestframework
 pyyaml==5.4.1
     # via
-    #   docker-compose
+    #   -r requirements.in
     #   drf-spectacular
     #   ray
-ray==2.3.0
+ray==2.6.3
     # via scos-actions
-requests==2.28.2
+requests==2.31.0
     # via
-    #   docker
-    #   docker-compose
     #   its-preselector
     #   ray
     #   requests-mock
@@ -169,47 +139,35 @@ requests-oauthlib==1.3.1
     # via -r requirements.in
 ruamel-yaml==0.17.21
     # via scos-actions
-ruamel-yaml-clib==0.2.7
+ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos_actions @ git+https://github.com/NTIA/scos-actions@6.2.3
-    # via
-    #   -r requirements.in
-    #   scos-tekrsa
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@3.0.5
+scos-actions @ git+https://github.com/NTIA/scos-actions@7.0.0
+    # via scos-tekrsa
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@4.0.0
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
 six==1.16.0
     # via
     #   django-session-timeout
-    #   dockerpty
     #   jsonschema
     #   python-dateutil
     #   requests-mock
     #   sigmf
-    #   websocket-client
 sqlparse==0.4.4
-    # via
-    #   -r requirements.in
-    #   django
+    # via django
 tekrsa-api-wrap==1.3.2
     # via scos-tekrsa
-texttable==1.6.7
-    # via docker-compose
+typing-extensions==4.9.0
+    # via drf-spectacular
 uritemplate==4.1.1
     # via drf-spectacular
-urllib3==1.26.14
+urllib3==1.26.18
     # via
-    #   docker
+    #   -r requirements.in
     #   requests
-virtualenv==20.20.0
-    # via ray
-websocket-client==0.59.0
-    # via
-    #   docker
-    #   docker-compose
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

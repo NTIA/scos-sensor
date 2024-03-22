@@ -1,3 +1,4 @@
+from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -36,7 +37,7 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         model = ScheduleEntry
         fields = ("archive", "task_results", "task_results_available", "schedule_entry")
 
-    def get_archive(self, obj):
+    def get_archive(self, obj) -> OpenApiTypes.URI:
         # FIXME: This query can almost certiainly be optimized
         acquisitions_available = Acquisition.objects.filter(
             task_result__in=obj.task_results.all()
@@ -52,7 +53,7 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         url = reverse(route, kwargs=kws, request=request)
         return url
 
-    def get_task_results(self, obj):
+    def get_task_results(self, obj) -> OpenApiTypes.URI:
         request = self.context["request"]
         route = "task-result-list"
         kws = {"schedule_entry_name": obj.name}
@@ -60,10 +61,10 @@ class TaskResultsOverviewSerializer(serializers.HyperlinkedModelSerializer):
         url = reverse(route, kwargs=kws, request=request)
         return url
 
-    def get_task_results_available(self, obj):
+    def get_task_results_available(self, obj) -> OpenApiTypes.INT:
         return obj.task_results.count()
 
-    def get_schedule_entry(self, obj):
+    def get_schedule_entry(self, obj) -> OpenApiTypes.URI:
         request = self.context["request"]
         route = "schedule-detail"
         kws = {"pk": obj.name}
@@ -100,7 +101,7 @@ class TaskResultSerializer(serializers.HyperlinkedModelSerializer):
             "data",
         )
 
-    def get_schedule_entry(self, obj):
+    def get_schedule_entry(self, obj) -> OpenApiTypes.URI:
         request = self.context["request"]
         route = "schedule-detail"
         kws = {"pk": obj.schedule_entry.name}

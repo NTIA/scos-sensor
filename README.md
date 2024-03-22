@@ -203,7 +203,6 @@ actions.
 - entrypoints: Docker entrypoint scripts which are executed when starting a container.
 - gunicorn: Gunicorn configuration file.
 - nginx: Nginx configuration template and SSL certificates.
-- schemas: JSON schema files.
 - scripts: Various utility scripts.
 - src: Contains the scos-sensor source code.
   - actions: Code to discover actions in plugins and to perform a simple logger action.
@@ -222,7 +221,7 @@ actions.
   - manage.py: Django’s command line tool for administrative tasks.
   - requirements.txt and requirements-dev.txt: Python dependencies.
   - tox.ini: Used to configure tox.
-- docker-compose.yml: Used by docker-compose to create services from containers. This
+- docker-compose.yml: Used by Docker Compose to create services from containers. This
   is needed to run scos-sensor.
 - env.template: Template file for setting environment variables used to configure
   scos-sensor.
@@ -234,7 +233,7 @@ This section describes how to spin up a production-grade sensor in just a few co
 We currently support Ettus USRP B2xx signal analyzers out of the box, and any
 Intel-based host computer should work.
 
-1. Install `git`, `Docker`, and `docker-compose`.
+1. Install `git`, Docker, and [Docker Compose](https://github.com/docker/compose).
 
 1. Clone the repository.
 
@@ -339,14 +338,13 @@ settings in the environment file:
 This file contains information on the sensor and components being used. It is used in
 the SigMF metadata to identify the hardware used for the measurement. It should follow
 the [sigmf-ns-ntia Sensor Object format](
-<https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#11-sensor-object>
+<https://github.com/NTIA/sigmf-ns-ntia/blob/master/ntia-sensor.sigmf-ext.md#01-the-sensor-object>
 ). See an example below. Overwrite the [example
 file in scos-sensor/configs](configs/sensor_definition.json) with the information
 specific to the sensor you are using.
 
 ```json
 {
-    "id": "",
     "sensor_spec": {
         "id": "",
         "model": "greyhound"
@@ -847,33 +845,19 @@ export MOCK_SIGAN=1 MOCK_SIGAN_RANDOM=1 # if running without signal analyzer att
 ### Committing
 
 Besides running the test suite and ensuring that all tests are passed, we also expect
-all Python code that's checked in to have been run through an auto-formatter.
-
-This project uses a Python auto-formatter called Black. You probably won't like every
-decision it makes, but our continuous integration test-runner will reject your commit
-if it's not properly formatted.
-
-Additionally, import statement sorting is handled by isort.
-
-The continuous integration test-runner verifies the code is auto-formatted by checking
-that neither isort nor Black would recommend any changes to the code. Occasionally,
-this can fail if these two autoformatters disagree. The only time I've seen this happen
-is with a commented-out import statement, which isort parses, and Black treats as a
-comment. Solution: don't leave commented-out import statements in the code.
-
-There are several ways to autoformat your code before committing. First, IDE
-integration with on-save hooks is very useful. Second, there is a script,
-`scripts/autoformat_python.sh`, that will run both isort and Black over the codebase.
-Lastly, if you've already pip-installed the dev requirements from the section above,
-you already have a utility called `pre-commit` installed that will automate setting up
-this project's git pre-commit hooks. Simply type the following *once*, and each time
-you make a commit, it will be appropriately autoformatted.
+all Python code that's checked in to have been run through an auto-formatter. Included in
+the development dependencies of this repository is a set of tools which run auto-formatting
+and code-checking automatically when you make a commit. Once you've installed the
+development dependencies, set up the pre-commit tooling by running:
 
 ```bash
 pre-commit install
 ```
 
-You can manually run the pre-commit hooks using the following command.
+The pre-commit tool will auto-format Python code using [Black](https://github.com/psf/black)
+and [isort](https://github.com/pycqa/isort). Other pre-commit hooks are also enabled, and
+can be found in [`.pre-commit-config.yaml`](.pre-commit-config.yaml). You can also manually
+run the pre-commit hooks using the following command.
 
 ```bash
 pre-commit run --all-files

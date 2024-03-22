@@ -16,8 +16,6 @@ if [ -e .github ]; then
 fi
 
 rm -f .deployed
-rm -f .github
-rm -f .dockerhub
 
 # Empty environment file
 echo "" > /etc/environment

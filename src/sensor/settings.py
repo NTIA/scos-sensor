@@ -37,12 +37,17 @@ FQDN = env("FQDN", "fqdn.unset")
 
 DOCKER_TAG = env("DOCKER_TAG", default=None)
 GIT_BRANCH = env("GIT_BRANCH", default=None)
+SCOS_SENSOR_GIT_TAG = env("SCOS_SENSOR_GIT_TAG", default="Unknown")
+
 if not DOCKER_TAG or DOCKER_TAG == "latest":
     VERSION_STRING = GIT_BRANCH
 else:
     VERSION_STRING = DOCKER_TAG
     if VERSION_STRING.startswith("v"):
         VERSION_STRING = VERSION_STRING[1:]
+
+# Matches api/v1, api/v2, etc...
+API_PREFIX_REGEX = r"^api/(?P<version>v[0-9]+)/"
 
 STATIC_ROOT = path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
@@ -102,6 +107,7 @@ if not IN_DOCKER or RUNNING_TESTS:
     DEBUG = True
     ALLOWED_HOSTS = []
     ENCRYPTION_KEY = Fernet.generate_key()
+    ASYNC_CALLBACK = False
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECRET_KEY = env.str("SECRET_KEY")
@@ -109,6 +115,7 @@ else:
     ALLOWED_HOSTS = env.str("DOMAINS").split() + env.str("IPS").split()
     POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
     ENCRYPTION_KEY = env.str("ENCRYPTION_KEY")
+    ASYNC_CALLBACK = env.bool("ASYNC_CALLBACK", default=True)
 
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
@@ -264,6 +271,10 @@ else:
 
 # https://drf-spectacular.readthedocs.io/en/latest/settings.html
 SPECTACULAR_SETTINGS = {
+    "SCHEMA_PATH_PREFIX": API_PREFIX_REGEX,
+    "REDOC_UI_SETTINGS": {
+        "showObjectSchemaExamples": True,
+    },
     "REDOC_DIST": "SIDECAR",  # Self host Redoc with drf-spectacular-sidecar
     "SERVE_PUBLIC": False,  # Include only endpoints available to user
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
@@ -274,6 +285,7 @@ SPECTACULAR_SETTINGS = {
     "CONTACT": {"email": "sms@ntia.doc.gov"},
     "LICENSE": {"name": "NTIA/ITS", "url": LICENSE_URL},
     "VERSION": None,  # Render only the request version
+    "PREPROCESSING_HOOKS": ["drf_spectacular.hooks.preprocess_exclude_path_format"],
 }
 
 
@@ -366,6 +378,7 @@ LOGGING = {
 CALLBACK_SSL_VERIFICATION = env.bool("CALLBACK_SSL_VERIFICATION", default=True)
 # OAuth Password Flow Authentication
 CALLBACK_AUTHENTICATION = env("CALLBACK_AUTHENTICATION", default="")
+CALLBACK_TIMEOUT = env.int("CALLBACK_TIMEOUT", default=3)
 CLIENT_ID = env("CLIENT_ID", default="")
 CLIENT_SECRET = env("CLIENT_SECRET", default="")
 USER_NAME = CLIENT_ID

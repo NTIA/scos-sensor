@@ -4,13 +4,13 @@ from .views import (
     TaskResultInstanceViewSet,
     TaskResultListViewSet,
     TaskResultsOverviewViewSet,
-    task_root,
-    upcoming_tasks,
+    task_root_view,
+    upcoming_tasks_view,
 )
 
 urlpatterns = (
-    path("", view=task_root, name="task-root"),
-    path("upcoming/", view=upcoming_tasks, name="upcoming-tasks"),
+    path("", task_root_view, name="task-root"),
+    path("upcoming/", upcoming_tasks_view, name="upcoming-tasks"),
     path(
         "completed/",
         view=TaskResultsOverviewViewSet.as_view({"get": "list"}),

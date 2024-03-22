@@ -10,7 +10,7 @@ def get_action_with_summary(action):
     summary = get_summary(action_fn)
     action_with_summary = action
     if summary:
-        action_with_summary += " - {}".format(summary)
+        action_with_summary += f" - {summary}"
 
     return action_with_summary
 
