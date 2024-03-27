@@ -16,9 +16,11 @@ def set_container_unhealthy():
 
 def get_usb_device_exists() -> bool:
     logger.debug("Checking for USB...")
-    if not settings.RUNNING_TESTS and settings.USB_DEVICE is not None:
+    if not settings.MOCK_SIGAN and settings.USB_DEVICE is not None:
         usb_devices = check_output("lsusb").decode(sys.stdout.encoding)
         logger.debug("Checking for " + settings.USB_DEVICE)
         logger.debug("Found " + usb_devices)
         return settings.USB_DEVICE in usb_devices
+    else:
+        logger.debug("Skipping check for USB device")
     return True
