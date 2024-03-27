@@ -342,6 +342,7 @@ class Scheduler(threading.Thread):
         # as the sensor's sensor_calibration.
         if settings.MOCK_SIGAN:
             logger.debug("Skipping startup calibration when using mock sigan")
+            return
         if not settings.RUNNING_MIGRATIONS:
             if (
                 sensor_loader.sensor.sensor_calibration is None
