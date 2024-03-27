@@ -340,6 +340,8 @@ class Scheduler(threading.Thread):
         # Now run the calibration action defined in the environment
         # This will create an onboard_cal file if needed, and set it
         # as the sensor's sensor_calibration.
+        if settings.MOCK_SIGAN:
+            logger.debug("Skipping startup calibration when using mock sigan")
         if not settings.RUNNING_MIGRATIONS:
             if (
                 sensor_loader.sensor.sensor_calibration is None
