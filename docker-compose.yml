@@ -1,6 +1,4 @@
-﻿name: scos-sensor
-
-services:
+﻿services:
   db:
     image: postgres:15-alpine
     restart: always
