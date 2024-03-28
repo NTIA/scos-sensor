@@ -4,21 +4,21 @@ import platform
 import shutil
 import sys
 
-from initialization import sensor_loader, status_monitor
+from django.conf import settings
 from its_preselector import __version__ as PRESELECTOR_API_VERSION
 from its_preselector.preselector import Preselector
 from its_preselector.web_relay import WebRelay
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from scheduler import scheduler
 from scos_actions import __version__ as SCOS_ACTIONS_VERSION
 from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
-from scos_actions.metadata.structs import ntia_diagnostics
-from scos_actions.settings import SCOS_SENSOR_GIT_TAG
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,
 )
+
+from initialization import sensor_loader, status_monitor
+from scheduler import scheduler
 
 from . import start_time
 from .serializers import LocationSerializer
@@ -58,18 +58,27 @@ def get_software_version():
     software_version = {
         "system_platform": platform.platform(),
         "python_version": sys.version.split()[0],
-        "scos_sensor_version": SCOS_SENSOR_GIT_TAG,
+        "scos_sensor_version": settings.SCOS_SENSOR_GIT_TAG,
         "scos_actions_version": SCOS_ACTIONS_VERSION,
         "preselector_api_version": PRESELECTOR_API_VERSION,
     }
 
-    if sensor_loader.sensor is not None and sensor_loader.sensor.signal_analyzer is not None:
+    if (
+        sensor_loader.sensor is not None
+        and sensor_loader.sensor.signal_analyzer is not None
+    ):
         if sensor_loader.sensor.signal_analyzer.firmware_version is not None:
-            software_version["sigan_firmware_version"] = sensor_loader.sensor.signal_analyzer.firmware_version
+            software_version[
+                "sigan_firmware_version"
+            ] = sensor_loader.sensor.signal_analyzer.firmware_version
         if sensor_loader.sensor.signal_analyzer.api_version is not None:
-            software_version["sigan_api_version"] = sensor_loader.sensor.signal_analyzer.api_version
+            software_version[
+                "sigan_api_version"
+            ] = sensor_loader.sensor.signal_analyzer.api_version
         if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
-            software_version["scos_sigan_plugin"] = sensor_loader.sensor.signal_analyzer.plugin_version
+            software_version[
+                "scos_sigan_plugin"
+            ] = sensor_loader.sensor.signal_analyzer.plugin_version
 
     logger.debug(software_version)
     return software_version
