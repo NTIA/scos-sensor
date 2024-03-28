@@ -79,7 +79,7 @@ ONBOARD_CALIBRATION_FILE = path.join(CONFIG_DIR, "onboard_sensor_calibration.jso
 os.environ["ONBOARD_CALIBRATION_FILE"] = ONBOARD_CALIBRATION_FILE
 
 # Sensor calibration file; should be provided manually. Will not be
-# overwritten when calibration actions.
+# overwritten by calibration actions.
 if path.exists(sensor_cal_path := path.join(CONFIG_DIR, "sensor_calibration.json")):
     SENSOR_CALIBRATION_FILE = sensor_cal_path
 else:
