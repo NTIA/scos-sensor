@@ -43,8 +43,6 @@ class SensorLoader:
 def load_sensor(
     sensor_capabilities: dict, switches: dict, preselector: Preselector
 ) -> Sensor:
-    sensor_cal = None
-    differential_cal = None
     location = None
     if not settings.RUNNING_TESTS:
         # Remove location from sensor definition and convert to geojson.
