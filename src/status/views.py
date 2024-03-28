@@ -68,17 +68,17 @@ def get_software_version():
         and sensor_loader.sensor.signal_analyzer is not None
     ):
         if sensor_loader.sensor.signal_analyzer.firmware_version is not None:
-            software_version[
-                "sigan_firmware_version"
-            ] = sensor_loader.sensor.signal_analyzer.firmware_version
+            software_version["sigan_firmware_version"] = (
+                sensor_loader.sensor.signal_analyzer.firmware_version
+            )
         if sensor_loader.sensor.signal_analyzer.api_version is not None:
-            software_version[
-                "sigan_api_version"
-            ] = sensor_loader.sensor.signal_analyzer.api_version
+            software_version["sigan_api_version"] = (
+                sensor_loader.sensor.signal_analyzer.api_version
+            )
         if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
-            software_version[
-                "scos_sigan_plugin"
-            ] = sensor_loader.sensor.signal_analyzer.plugin_version
+            software_version["scos_sigan_plugin"] = (
+                sensor_loader.sensor.signal_analyzer.plugin_version
+            )
 
     logger.debug(software_version)
     return software_version
@@ -101,9 +101,9 @@ def status(request, version, format=None):
         sensor_loader.sensor is not None
         and sensor_loader.sensor.sensor_calibration is not None
     ):
-        status_json[
-            "last_calibration_datetime"
-        ] = sensor_loader.sensor.sensor_calibration.last_calibration_datetime
+        status_json["last_calibration_datetime"] = (
+            sensor_loader.sensor.sensor_calibration.last_calibration_datetime
+        )
     for component in status_monitor.status_components:
         component_status = component.get_status()
         if isinstance(component, WebRelay):
