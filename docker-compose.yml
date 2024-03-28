@@ -1,4 +1,4 @@
-﻿version: '3'
+﻿name: scos-sensor
 
 services:
   db:
@@ -16,6 +16,8 @@ services:
       timeout: 3s
       retries: 1
       start_period: 30s
+    logging:
+      driver: local
 
   api:
     healthcheck:
@@ -90,6 +92,8 @@ services:
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     command: /entrypoints/api_entrypoint.sh
+    logging:
+      driver: local
 
   nginx:
     image: smsntia/nginx:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
@@ -115,6 +119,8 @@ services:
       - ./configs/certs/${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
+    logging:
+      driver: local
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
@@ -133,3 +139,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./entrypoints/autoheal_entrypoint.sh:/entrypoints/autoheal_entrypoint.sh:ro
     command: /entrypoints/autoheal_entrypoint.sh
+    logging:
+      driver: local
