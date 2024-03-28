@@ -15,6 +15,7 @@ from scos_actions.hardware.sigan_iface import SignalAnalyzerInterface
 from scos_actions.utils import (
     convert_datetime_to_millisecond_iso_format,
     get_datetime_str_now,
+    get_disk_usage,
 )
 
 from initialization import sensor_loader, status_monitor
@@ -35,14 +36,6 @@ def serialize_location():
         return LocationSerializer(location).data
     else:
         return None
-
-
-def disk_usage():
-    """Return the total disk usage as a percentage."""
-    usage = shutil.disk_usage("/")
-    percent_used = round(100 * usage.used / usage.total)
-    logger.debug(str(percent_used) + " disk used")
-    return round(percent_used, 2)
 
 
 def get_days_up():
@@ -93,7 +86,7 @@ def status(request, version, format=None):
         "location": serialize_location(),
         "system_time": get_datetime_str_now(),
         "start_time": convert_datetime_to_millisecond_iso_format(start_time),
-        "disk_usage": disk_usage(),
+        "disk_usage": get_disk_usage(),
         "days_up": get_days_up(),
         "software": get_software_version(),
     }
