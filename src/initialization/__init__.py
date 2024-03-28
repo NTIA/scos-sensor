@@ -108,7 +108,7 @@ def get_calibration(
     Load calibration data from file.
 
     :param cal_file_path: Path to the JSON calibration file.
-    :param cal_type: Calibration type to load: "onboard", "sensor" or "differential"
+    :param cal_type: Calibration type to load: "sensor" or "differential"
     :return: The ``Calibration`` object, if loaded, or ``None`` if loading failed.
     """
     try:
@@ -131,7 +131,8 @@ def get_calibration(
     except Exception:
         cal = None
         logger.exception(
-            f"Unable to load {cal_type} calibration file, reverting to none"
+            f"Unable to load {cal_type} calibration file from {cal_file_path}."
+            + " Reverting to none"
         )
     finally:
         return cal
@@ -181,7 +182,7 @@ try:
         # Calibration loading
         if not settings.RUNNING_TESTS:
             # Load the onboard cal file as the sensor calibration, if it exists
-            onboard_cal = get_calibration(settings.ONBOARD_CALIBRATION_FILE, "onboard")
+            onboard_cal = get_calibration(settings.ONBOARD_CALIBRATION_FILE, "sensor")
             if onboard_cal is not None:
                 sensor_loader.sensor.sensor_calibration = onboard_cal
             else:
