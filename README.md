@@ -475,47 +475,33 @@ level setting of -25.
   "calibration_parameters": [
     "sample_rate",
     "frequency",
-    "reference_level",
-    "preamp_enable",
-    "attenuation"
+    "reference_level"
   ],
   "clock_rate_lookup_by_sample_rate": [],
   "calibration_data": {
     "14000000.0": {
       "3545000000.0": {
         "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:02.882Z",
-              "gain": 30.09194805857024,
-              "noise_figure": 4.741521295220736,
-              "temperature": 15.6
-            }
-          }
+          "datetime": "2023-10-23T14:38:02.882Z",
+          "gain": 30.09194805857024,
+          "noise_figure": 4.741521295220736,
+          "temperature": 15.6
         }
       },
       "3555000000.0": {
         "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:08.022Z",
-              "gain": 30.401008416406599,
-              "noise_figure": 4.394893979804061,
-              "temperature": 15.6
-            }
-          }
+          "datetime": "2023-10-23T14:38:08.022Z",
+          "gain": 30.401008416406599,
+          "noise_figure": 4.394893979804061,
+          "temperature": 15.6
         }
       },
       "3565000000.0": {
         "-25": {
-          "true": {
-            "0": {
-              "datetime": "2023-10-23T14:38:11.922Z",
-              "gain": 30.848049817892105,
-              "noise_figure": 4.0751785215495819,
-              "temperature": 15.6
-            }
-          }
+          "datetime": "2023-10-23T14:38:11.922Z",
+          "gain": 30.848049817892105,
+          "noise_figure": 4.0751785215495819,
+          "temperature": 15.6
         }
       }
     }
