@@ -1,7 +1,6 @@
 import datetime
 import logging
 import platform
-import shutil
 import sys
 
 from django.conf import settings
