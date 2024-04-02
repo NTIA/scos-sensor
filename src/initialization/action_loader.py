@@ -115,6 +115,9 @@ def load_actions(
     yaml_actions, yaml_test_actions = init(
         action_classes=action_classes, yaml_dir=action_dir
     )
-    actions.update(yaml_actions)
+    if mock_sigan or running_tests:
+        actions.update(yaml_test_actions)
+    else:
+        actions.update(yaml_actions)
     logger.debug("Finished loading  and registering actions")
     return actions
