@@ -24,7 +24,7 @@ cryptography==42.0.4
     # via -r requirements.in
 defusedxml==0.7.1
     # via its-preselector
-django==3.2.24
+django==3.2.25
     # via
     #   -r requirements.in
     #   django-session-timeout
