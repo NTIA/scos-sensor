@@ -92,7 +92,7 @@ def load_sensor(sensor_capabilities: dict) -> Sensor:
                     "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
                 )
                 gps_constructor = getattr(gps_module, settings.GPS_CLASS)
-                gps = gps_constructor(sigan=sigan)
+                gps = gps_constructor()
         else:
             logger.info("Running migrations. Not loading signal analyzer.")
     except Exception as ex:
