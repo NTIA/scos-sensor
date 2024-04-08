@@ -70,7 +70,7 @@ def get_software_version():
         if sensor_loader.sensor.signal_analyzer.plugin_version is not None:
             software_version["scos_sigan_plugin"] = {
                 "name": sensor_loader.sensor.signal_analyzer.plugin_name,
-                "version": sensor_loader.sensor.signal_analyzer.plugin_version
+                "version": sensor_loader.sensor.signal_analyzer.plugin_version,
             }
 
     logger.debug(software_version)

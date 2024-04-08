@@ -75,7 +75,10 @@ def load_sensor(
                     gps_module_setting = settings.GPS_MODULE
                     gps_module = importlib.import_module(gps_module_setting)
                     logger.info(
-                        "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
+                        "Creating "
+                        + settings.GPS_CLASS
+                        + " from "
+                        + settings.GPS_MODULE
                     )
                     gps_constructor = getattr(gps_module, settings.GPS_CLASS)
                     gps = gps_constructor()

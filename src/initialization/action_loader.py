@@ -91,7 +91,7 @@ def load_actions(
     discovered_plugins = {
         name: importlib.import_module(name)
         for finder, name, ispkg in pkgutil.iter_modules()
-        if name.startswith("scos_")and name != "scos_actions"
+        if name.startswith("scos_") and name != "scos_actions"
     }
     logger.debug(discovered_plugins)
     actions = {}
@@ -99,14 +99,17 @@ def load_actions(
         logger.debug(f"Loading {len(test_actions)} test actions.")
         actions.update(test_actions)
     else:
+        # load scos-actions test_actions
+        if mock_sigan:
+            logger.debug(f"Loading {len(test_actions)} test actions.")
+            actions.update(test_actions)
+        # load other plugin actions
         for name, module in discovered_plugins.items():
             logger.debug("Looking for actions in " + name + ": " + str(module))
             discover = importlib.import_module(name + ".discover")
             if mock_sigan and hasattr(discover, "test_actions"):
                 logger.debug(f"loading {len(discover.test_actions)} test actions.")
                 actions.update(discover.test_actions)
-                # add scos-actions test_actions for scos-actions mock sigan
-                actions.update(test_actions)
             elif hasattr(discover, "actions"):
                 logger.debug(f"loading {len(discover.actions)} actions.")
                 actions.update(discover.actions)
@@ -116,10 +119,15 @@ def load_actions(
             ):
                 action_classes.update(discover.action_classes)
 
+    # load scos-sensor configs/actions
     logger.debug(f"Loading actions in {action_dir}")
     yaml_actions, yaml_test_actions = init(
         action_classes=action_classes, yaml_dir=action_dir
     )
+    if mock_sigan:
+        actions.update(yaml_test_actions)
+    else:
+        actions.update(yaml_actions)
     actions.update(yaml_actions)
-    logger.debug("Finished loading  and registering actions")
+    logger.debug("Finished loading and registering actions")
     return actions
