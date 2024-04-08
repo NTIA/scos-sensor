@@ -70,18 +70,6 @@ def load_sensor(
                 sigan_constructor = getattr(sigan_module, settings.SIGAN_CLASS)
                 sigan = sigan_constructor(switches=switches)
                 register_component_with_status.send(sigan, component=sigan)
-
-                if settings.GPS_MODULE and settings.GPS_CLASS:
-                    gps_module_setting = settings.GPS_MODULE
-                    gps_module = importlib.import_module(gps_module_setting)
-                    logger.info(
-                        "Creating "
-                        + settings.GPS_CLASS
-                        + " from "
-                        + settings.GPS_MODULE
-                    )
-                    gps_constructor = getattr(gps_module, settings.GPS_CLASS)
-                    gps = gps_constructor()
             else:
                 logger.warning("Required USB Device does not exist.")
         else:
@@ -89,6 +77,20 @@ def load_sensor(
     except BaseException as ex:
         logger.warning(f"unable to create signal analyzer: {ex}")
         set_container_unhealthy()
+
+    try:
+        if settings.GPS_MODULE and settings.GPS_CLASS:
+            gps_module_setting = settings.GPS_MODULE
+            gps_module = importlib.import_module(gps_module_setting)
+            logger.info(
+                "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
+            )
+            gps_constructor = getattr(gps_module, settings.GPS_CLASS)
+            gps = gps_constructor()
+        else:
+            logger.info("GPS_MODULE and/or GPS_CLASS not specified. Not loading GPS.")
+    except BaseException as ex:
+        logger.warning(f"unable to create GPS: {ex}")
 
     # Create sensor before handling calibrations
     sensor = Sensor(
