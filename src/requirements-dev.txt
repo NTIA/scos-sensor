@@ -28,8 +28,6 @@ attrs==23.1.0
     #   aiohttp
     #   jsonschema
     #   referencing
-blessed==1.20.0
-    # via gpustat
 cachetools==5.3.2
     # via
     #   google-auth
@@ -55,7 +53,12 @@ click==8.1.7
     #   -r requirements.txt
     #   ray
 colorama==0.4.6
-    # via tox
+    # via
+    #   -r requirements.txt
+    #   click
+    #   colorful
+    #   pytest
+    #   tox
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
@@ -109,8 +112,6 @@ google-auth==2.24.0
     # via google-api-core
 googleapis-common-protos==1.61.0
     # via google-api-core
-gpustat==1.1.1
-    # via ray
 grpcio==1.59.3
     # via
     #   -r requirements.txt
@@ -175,13 +176,10 @@ numpy==1.24.4
     # via
     #   -r requirements.txt
     #   numexpr
-    #   ray
     #   scipy
     #   scos-actions
     #   sigmf
     #   tekrsa-api-wrap
-nvidia-ml-py==12.535.133
-    # via gpustat
 oauthlib==3.2.2
     # via
     #   -r requirements.txt
@@ -224,7 +222,6 @@ protobuf==4.25.1
 psutil==5.9.6
     # via
     #   -r requirements.txt
-    #   gpustat
     #   scos-actions
 psycopg2-binary==2.9.9
     # via -r requirements.txt
@@ -272,7 +269,7 @@ pyyaml==6.0.1
     #   drf-yasg
     #   pre-commit
     #   ray
-ray[default]==2.6.3
+ray[default]==2.10.0
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -313,11 +310,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@9.0.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@ray_2.10.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@6.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@ray_2.10.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -326,7 +323,6 @@ sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
 six==1.16.0
     # via
     #   -r requirements.txt
-    #   blessed
     #   django-session-timeout
     #   python-dateutil
     #   requests-mock
@@ -367,8 +363,6 @@ virtualenv==20.21.0
     #   pre-commit
     #   ray
     #   tox
-wcwidth==0.2.12
-    # via blessed
 yarl==1.9.4
     # via aiohttp
 zipp==3.17.0

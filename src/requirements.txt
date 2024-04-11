@@ -20,6 +20,8 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via ray
+colorama==0.4.6
+    # via click
 cryptography==42.0.4
     # via -r requirements.in
 defusedxml==0.7.1
@@ -54,9 +56,7 @@ frozenlist==1.4.0
     #   aiosignal
     #   ray
 grpcio==1.59.3
-    # via
-    #   -r requirements.in
-    #   ray
+    # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.6
@@ -86,7 +86,6 @@ numexpr==2.8.6
 numpy==1.24.4
     # via
     #   numexpr
-    #   ray
     #   scipy
     #   scos-actions
     #   sigmf
@@ -123,7 +122,7 @@ pyyaml==6.0.1
     #   -r requirements.in
     #   drf-yasg
     #   ray
-ray==2.6.3
+ray==2.10.0
     # via scos-actions
 referencing==0.31.1
     # via
@@ -149,9 +148,9 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@9.0.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@ray_2.10.0
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@6.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@ray_2.10.0
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
