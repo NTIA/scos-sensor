@@ -477,7 +477,6 @@ level setting of -25.
     "frequency",
     "reference_level"
   ],
-  "clock_rate_lookup_by_sample_rate": [],
   "calibration_data": {
     "14000000.0": {
       "3545000000.0": {
