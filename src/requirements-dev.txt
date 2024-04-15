@@ -333,7 +333,7 @@ six==1.16.0
     #   sigmf
 smart-open==6.4.0
     # via ray
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via
     #   -r requirements.txt
     #   django
