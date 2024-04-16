@@ -198,12 +198,6 @@ try:
             )
             sensor_loader.sensor.differential_calibration = differential_cal
 
-        import ray
-
-        if settings.RAY_INIT and not ray.is_initialized():
-            # Dashboard is only enabled if ray[default] is installed
-            logger.debug("Initializing ray.")
-            ray.init()
 except BaseException as error:
     logger.exception(f"Error during initialization: {error}")
     set_container_unhealthy()
