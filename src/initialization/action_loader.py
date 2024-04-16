@@ -128,6 +128,5 @@ def load_actions(
         actions.update(yaml_test_actions)
     else:
         actions.update(yaml_actions)
-    actions.update(yaml_actions)
     logger.debug("Finished loading and registering actions")
     return actions
