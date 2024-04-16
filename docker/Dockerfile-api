@@ -7,8 +7,8 @@ RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive \
                    apt-get install -qy --no-install-recommends \
                    build-essential zlib1g-dev libncurses5-dev \
-                   libgdbm-dev libnss3-dev libssl-dev
-                   libreadline-dev libffi-dev libsqlite3-dev
+                   libgdbm-dev libnss3-dev libssl-dev \
+                   libreadline-dev libffi-dev libsqlite3-dev \
                    wget libbz2-dev \
                    libusb-1.0-0 libpython3.11 \
                    git smartmontools \
