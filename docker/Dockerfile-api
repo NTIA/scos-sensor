@@ -17,9 +17,9 @@ COPY ./src/requirements-dev.txt /src
 
 ARG DOCKER_GIT_CREDENTIALS
 RUN git config --global credential.helper store && echo "${DOCKER_GIT_CREDENTIALS}" > ~/.git-credentials
-RUN python3.8 -m pip install --upgrade pip
+RUN python3.9 -m pip install --upgrade pip
 ARG DEBUG
-RUN if [ "$DEBUG" = true ]; then python3.8 -m pip install --no-cache-dir -r requirements-dev.txt ; else python3.8 -m pip install --no-cache-dir -r requirements.txt ; fi
+RUN if [ "$DEBUG" = true ]; then python3.9 -m pip install --no-cache-dir -r requirements-dev.txt ; else python3.9 -m pip install --no-cache-dir -r requirements.txt ; fi
 
 COPY ./src /src
 COPY ./gunicorn /gunicorn
