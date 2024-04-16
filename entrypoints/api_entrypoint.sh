@@ -13,7 +13,7 @@ trap cleanup_demodb SIGINT
 RUNNING_MIGRATIONS="True"
 export RUNNING_MIGRATIONS
 echo "Starting Migrations"
-python3.12 manage.py migrate
+python3.11 manage.py migrate
 RUNNING_MIGRATIONS="False"
 echo "Starting Gunicorn"
 exec gunicorn sensor.wsgi -c ../gunicorn/config.py &
