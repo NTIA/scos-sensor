@@ -212,11 +212,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@multiprocessing_3.8
+scos-actions @ git+https://github.com/NTIA/scos-actions@threading
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@multiprocessing_3.8
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@threading
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
