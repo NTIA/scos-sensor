@@ -1,5 +1,6 @@
 import importlib
 import logging
+import multiprocessing as mp
 import time
 from os import path
 from pathlib import Path
@@ -197,6 +198,7 @@ try:
                 "differential",
             )
             sensor_loader.sensor.differential_calibration = differential_cal
+            mp.set_start_method('spawn')
 
 except BaseException as error:
     logger.exception(f"Error during initialization: {error}")
