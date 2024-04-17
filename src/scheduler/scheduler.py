@@ -28,6 +28,7 @@ class Scheduler(threading.Thread):
     """A memory-friendly task scheduler."""
 
     def __init__(self):
+        logger.debug("Scheduler init...")
         threading.Thread.__init__(self)
         self.task_status_lock = threading.Lock()
         self.timefn = utils.timefn
@@ -386,4 +387,5 @@ def minimum_duration(blocking):
 # The (small) price we pay for putting the scheduler thread right here instead
 # of running it in its own microservice is that we _must not_ run the
 # application server in multiple processes (multiple threads are fine).
+logger.debug("Creating new Scheduler instance")
 thread = Scheduler()
