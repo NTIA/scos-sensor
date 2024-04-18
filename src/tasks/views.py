@@ -43,7 +43,7 @@ def task_root(request, version, format=None):
 def upcoming_tasks(request, version, format=None):
     """Returns a snapshot of upcoming tasks."""
     context = {"request": request}
-    taskq = scheduler.thread.task_queue.to_list()[: settings.MAX_TASK_QUEUE]
+    taskq = scheduler.thread.get_upcoming_tasks()
     taskq_serializer = TaskSerializer(taskq, many=True, context=context)
 
     return Response(taskq_serializer.data)

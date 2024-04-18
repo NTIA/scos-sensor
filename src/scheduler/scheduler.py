@@ -19,6 +19,7 @@ from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
 from tasks.task_queue import TaskQueue
 
+
 from . import utils
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ class Scheduler(threading.Thread):
     def __init__(self):
         logger.debug("Scheduler init...")
         threading.Thread.__init__(self)
+        self.task_queue_lock = threading.Lock()
         self.task_status_lock = threading.Lock()
         self.timefn = utils.timefn
         self.delayfn = utils.delayfn
@@ -80,6 +82,11 @@ class Scheduler(threading.Thread):
         """Run the scheduler in its own thread and return control."""
         threading.Thread.start(self)
 
+    def get_upcoming_tasks(self) -> list:
+        with self.task_queue_lock:
+            return self.task_queue.to_list()[: settings.MAX_TASK_QUEUE]
+
+
     def run(self, blocking=True):
         """Run the scheduler in the current thread.
 
@@ -118,7 +125,8 @@ class Scheduler(threading.Thread):
             if not blocking or self.interrupt_flag.is_set():
                 break
         else:
-            self.task_queue.clear()
+            with self.task_queue_lock:
+                self.task_queue.clear()
             if self.running:
                 logger.info("all scheduled tasks completed")
 
@@ -126,7 +134,8 @@ class Scheduler(threading.Thread):
 
     def _queue_tasks(self, schedule_snapshot):
         pending_task_queue = self._queue_pending_tasks(schedule_snapshot)
-        self.task_queue = self._queue_upcoming_tasks(schedule_snapshot)
+        with self.task_queue_lock:
+            self.task_queue = self._queue_upcoming_tasks(schedule_snapshot)
 
         return pending_task_queue
 
