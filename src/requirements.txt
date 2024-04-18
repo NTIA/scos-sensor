@@ -105,9 +105,9 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@multiprocessing_3.8
+scos-actions @ git+https://github.com/NTIA/scos-actions@NoParallelProcessing
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@multiprocessing_3.8
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@NoParallelProcessing
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
