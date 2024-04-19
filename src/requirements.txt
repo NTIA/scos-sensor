@@ -119,7 +119,7 @@ six==1.16.0
     #   sigmf
 sqlparse==0.4.4
     # via django
-tekrsa-api-wrap==1.3.2
+tekrsa-api-wrap@ git+https://github.com/NTIA/tekrsa-api-wrap@CopyBuffer
     # via scos-tekrsa
 typing-extensions==4.8.0
     # via asgiref
