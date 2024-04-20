@@ -142,7 +142,7 @@ class Scheduler(threading.Thread):
             if settings.ASYNC_CALLBACK:
                 finalize_task_thread = threading.Thread(
                     target=self._finalize_task_result,
-                    args=(entry_name, task, started, finished, status, detail),
+                    args=(entry_name, task.task_id, started, finished, status, detail),
                     daemon=True,
                 )
                 finalize_task_thread.start()
