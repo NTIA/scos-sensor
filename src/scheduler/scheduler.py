@@ -142,7 +142,7 @@ class Scheduler(threading.Thread):
             if settings.ASYNC_CALLBACK:
                 finalize_task_thread = threading.Thread(
                     target=self._finalize_task_result,
-                    args=(task_result, started, finished, status, detail),
+                    args=(entry_name, task, started, finished, status, detail),
                     daemon=True,
                 )
                 finalize_task_thread.start()
@@ -187,7 +187,11 @@ class Scheduler(threading.Thread):
 
         return status, detail[:MAX_DETAIL_LEN]
 
-    def _finalize_task_result(self, task_result, started, finished, status, detail):
+    def _finalize_task_result(self, schedule_entry, task_id, started, finished, status, detail):
+        entry = ScheduleEntry.objects.get(name=schedule_entry)
+        logger.debug("Querying for task result.")
+        task_result = TaskResult.objects.get(schedule_entry=entry, task_id=task_id)
+        logger.debug("Found task result.")
         task_result.started = started
         task_result.finished = finished
         task_result.duration = finished - started
