@@ -150,7 +150,7 @@ scipy==1.10.1
     # via scos-actions
 scos-actions @ git+https://github.com/NTIA/scos-actions@ray_2.10.0
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@ray_2.10.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@IQSTREAM_Acquire
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions
