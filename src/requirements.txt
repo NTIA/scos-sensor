@@ -149,7 +149,7 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@revert-117-revert-110-SEA-178_test_actions_loading
+scos-actions @ git+https://github.com/NTIA/scos-actions@fix_test_cbrs_measure
     # via scos-tekrsa
 scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@SEA-178_test_actions_loading
     # via -r requirements.in
