@@ -154,7 +154,7 @@ scipy==1.10.1
     # via scos-actions
 scos-actions @ git+https://github.com/NTIA/scos-actions@7.0.1
     # via scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@scos-actions-7.0.0
+scos-usrp @ git+https://github.com/NTIA/scos-usrp@master
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions

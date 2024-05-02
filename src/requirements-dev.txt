@@ -75,9 +75,7 @@ coreschema==0.0.4
     #   coreapi
     #   drf-yasg
 coverage[toml]==7.2.1
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 cryptography==41.0.6
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -334,7 +332,7 @@ scos-actions @ git+https://github.com/NTIA/scos-actions@7.0.1
     # via
     #   -r requirements.txt
     #   scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@scos-actions-7.0.0
+scos-usrp @ git+https://github.com/NTIA/scos-usrp@master
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
