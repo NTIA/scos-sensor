@@ -328,11 +328,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@7.0.1
+scos-actions @ git+https://github.com/NTIA/scos-actions@10.0.1
     # via
     #   -r requirements.txt
     #   scos-usrp
-scos-usrp @ git+https://github.com/NTIA/scos-usrp@master
+scos-usrp @ git+https://github.com/NTIA/scos-usrp@SEA-178_test_actions_loading
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
