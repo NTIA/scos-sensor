@@ -310,7 +310,7 @@ scos-actions @ git+https://github.com/NTIA/scos-actions@10.0.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@SEA-178_test_actions_loading
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@7.0.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -330,7 +330,7 @@ sqlparse==0.4.4
     # via
     #   -r requirements.txt
     #   django
-tekrsa-api-wrap==1.3.2
+tekrsa-api-wrap==1.3.3
     # via
     #   -r requirements.txt
     #   scos-tekrsa
