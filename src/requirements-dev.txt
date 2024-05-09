@@ -16,6 +16,8 @@ aiosignal==1.3.1
     #   -r requirements.txt
     #   aiohttp
     #   ray
+ansicon==1.89.0
+    # via jinxed
 asgiref==3.7.2
     # via
     #   -r requirements.txt
@@ -55,7 +57,12 @@ click==8.1.7
     #   -r requirements.txt
     #   ray
 colorama==0.4.6
-    # via tox
+    # via
+    #   -r requirements.txt
+    #   click
+    #   colorful
+    #   pytest
+    #   tox
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
@@ -139,6 +146,8 @@ its-preselector @ git+https://github.com/NTIA/Preselector@3.1.0
     # via
     #   -r requirements.txt
     #   scos-actions
+jinxed==1.2.1
+    # via blessed
 jsonfield==3.1.0
     # via -r requirements.txt
 jsonschema==4.20.0
@@ -313,11 +322,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@9.0.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@10.0.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@6.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@scos-actions-10.0.1
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -337,7 +346,7 @@ sqlparse==0.4.4
     # via
     #   -r requirements.txt
     #   django
-tekrsa-api-wrap==1.3.2
+tekrsa-api-wrap==1.3.3
     # via
     #   -r requirements.txt
     #   scos-tekrsa
