@@ -1,7 +1,7 @@
 import logging
 import os
 
-from initialization.sensor_loader import load_preselector
+from initialization import load_preselector
 
 logger = logging.getLogger(__name__)
 

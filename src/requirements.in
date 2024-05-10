@@ -1,5 +1,5 @@
 cryptography>=42.0.4
-django>=3.2.24, <4.0
+django>=3.2.25, <4.0
 djangorestframework>=3.0, <4.0
 django-rest-knox>=4.2.0,  <5.0
 django-session-timeout>=0.1, <1.0
@@ -12,7 +12,7 @@ packaging>=23.0, <24.0
 psycopg2-binary>=2.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@5.0.0
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@6.0.0
 
 # The following are sub-dependencies for which SCOS Sensor enforces a
 # higher minimum patch version than the dependencies which require them.

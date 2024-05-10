@@ -2,7 +2,6 @@ import os
 import sys
 from multiprocessing import cpu_count
 
-
 bind = ":8000"
 workers = 1
 worker_class = "gthread"
