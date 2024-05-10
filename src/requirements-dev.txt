@@ -59,7 +59,9 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 cryptography==42.0.4
     # via -r requirements.txt
 defusedxml==0.7.1
