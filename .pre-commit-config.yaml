@@ -40,4 +40,3 @@ repos:
     hooks:
       - id: markdownlint
         types: [file, markdown]
-        exclude: GitHubRepoPublicReleaseApproval.md|LICENSE.md
