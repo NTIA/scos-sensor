@@ -1,4 +1,4 @@
-name: 'scos-sensor test'
+name: 'tests'
 
 on:
   workflow_dispatch:
