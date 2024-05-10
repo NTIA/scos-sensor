@@ -19,7 +19,7 @@
 
 SCOS Sensor is a work-in-progress reference implementation of the [IEEE 802.15.22.3
 Spectrum Characterization and Occupancy Sensing][ieee-link] (SCOS) sensor developed by
-[NTIA/ITS]. `scos-sensor` defines a RESTful application programming interface (API),
+[NTIA/ITS]. SCOS Sensor defines a RESTful application programming interface (API),
 that allows authorized users to discover capabilities, schedule actions, and acquire
 resultant data.
 
