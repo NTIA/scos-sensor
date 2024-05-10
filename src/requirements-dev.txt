@@ -59,9 +59,7 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 cryptography==42.0.4
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -117,7 +115,7 @@ grpcio==1.59.3
     # via
     #   -r requirements.txt
     #   ray
-gunicorn==20.1.0
+gunicorn==22.0.0
     # via -r requirements.txt
 identify==2.5.32
     # via pre-commit
@@ -196,6 +194,7 @@ packaging==23.2
     # via
     #   -r requirements.txt
     #   drf-yasg
+    #   gunicorn
     #   marshmallow
     #   pyproject-api
     #   pytest
