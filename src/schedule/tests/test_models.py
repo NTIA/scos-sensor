@@ -17,7 +17,7 @@ from .utils import flatten
 def test_take_until(test_input, future_t, expected):
     start, stop, interval = test_input
     entry = ScheduleEntry(
-        name="t", start=start, stop=stop, interval=interval, action="logger"
+        name="t", start=start, stop=stop, interval=interval, action="test_monitor_sigan"
     )
     initial_times = list(entry.get_remaining_times())
     r = []
@@ -32,32 +32,36 @@ def test_take_until(test_input, future_t, expected):
 
 
 def test_undefined_start_is_now():
-    entry = ScheduleEntry(name="t", action="logger")
+    entry = ScheduleEntry(name="t", action="test_monitor_sigan")
     now = utils.timefn()
     assert entry.start in (now - 1, now, now + 1)
 
 
 def test_undefined_stop_is_never():
-    entry = ScheduleEntry(name="t", action="logger", interval=1)
+    entry = ScheduleEntry(name="t", action="test_monitor_sigan", interval=1)
     assert entry.stop is None
     assert type(entry.get_remaining_times()) is itertools.count
 
 
 def test_relative_stop_becomes_absolute():
-    e = ScheduleEntry(name="t", start=20, relative_stop=10, interval=1, action="logger")
+    e = ScheduleEntry(
+        name="t", start=20, relative_stop=10, interval=1, action="test_monitor_sigan"
+    )
     assert e.start == 20
     assert e.stop == 30
     assert list(e.get_remaining_times()) == list(range(20, 30, 1))
 
 
 def test_stop_before_start():
-    e = ScheduleEntry(name="t", start=20, stop=10, interval=1, action="logger")
+    e = ScheduleEntry(
+        name="t", start=20, stop=10, interval=1, action="test_monitor_sigan"
+    )
     assert list(e.get_remaining_times()) == list(range(0))
 
 
 def test_no_interval_is_one_shot():
     """Leaving `interval` blank should indicate "one-shot" entry."""
-    e = ScheduleEntry(name="t", action="logger")
+    e = ScheduleEntry(name="t", action="test_monitor_sigan")
     remaining_times = list(e.get_remaining_times())
     assert len(remaining_times) == 1
 
@@ -72,7 +76,7 @@ def test_no_interval_is_one_shot():
 
 def test_no_interval_with_start_is_one_shot():
     """Specifying start should not affect number of times."""
-    e = ScheduleEntry(name="t", action="logger", start=1)
+    e = ScheduleEntry(name="t", action="test_monitor_sigan", start=1)
     remaining_times = list(e.get_remaining_times())
     assert len(remaining_times) == 1
 
@@ -88,17 +92,19 @@ def test_no_interval_with_start_is_one_shot():
 def test_no_interval_future_start(testclock):
     """One-shot entry should wait for start."""
     # recall current t=0 so start=1 is 1 second in the future
-    e = ScheduleEntry(name="t", action="logger", start=1)
+    e = ScheduleEntry(name="t", action="test_monitor_sigan", start=1)
     assert not e.take_pending()
 
 
 def test_bad_interval_raises():
     with pytest.raises(ValidationError):
-        ScheduleEntry(name="t", interval=-1, action="logger").clean_fields()
+        ScheduleEntry(name="t", interval=-1, action="test_monitor_sigan").clean_fields()
     with pytest.raises(ValidationError):
-        ScheduleEntry(name="t", interval=0, action="logger").clean_fields()
+        ScheduleEntry(name="t", interval=0, action="test_monitor_sigan").clean_fields()
     with pytest.raises(ValidationError):
-        ScheduleEntry(name="t", interval=0.1, action="logger").clean_fields()
+        ScheduleEntry(
+            name="t", interval=0.1, action="test_monitor_sigan"
+        ).clean_fields()
 
 
 def test_bad_action_raises():
@@ -108,22 +114,22 @@ def test_bad_action_raises():
 
 def test_bad_name_raises():
     with pytest.raises(ValidationError):  # whitespace
-        ScheduleEntry(name="test 1", action="logger").clean_fields()
+        ScheduleEntry(name="test 1", action="test_monitor_sigan").clean_fields()
     with pytest.raises(ValidationError):  # punctuation other than "_-"
-        ScheduleEntry(name="test1!", action="logger").clean_fields()
+        ScheduleEntry(name="test1!", action="test_monitor_sigan").clean_fields()
 
     # ok
-    ScheduleEntry(name="_test-Stuff123", action="logger").clean_fields()
+    ScheduleEntry(name="_test-Stuff123", action="test_monitor_sigan").clean_fields()
 
 
 def test_non_unique_name_raises(user):
-    ScheduleEntry(name="t", action="logger", owner=user).save()
+    ScheduleEntry(name="t", action="test_monitor_sigan", owner=user).save()
     with pytest.raises(ValidationError):
-        ScheduleEntry(name="t", action="logger", owner=user).full_clean()
+        ScheduleEntry(name="t", action="test_monitor_sigan", owner=user).full_clean()
 
 
 def test_defaults():
-    entry = ScheduleEntry(name="t", action="logger")
+    entry = ScheduleEntry(name="t", action="test_monitor_sigan")
     assert entry.priority == DEFAULT_PRIORITY
     assert entry.start is not None
     assert entry.stop is None
@@ -132,4 +138,4 @@ def test_defaults():
 
 
 def test_str():
-    str(ScheduleEntry(name="t", action="logger"))
+    str(ScheduleEntry(name="t", action="test_monitor_sigan"))

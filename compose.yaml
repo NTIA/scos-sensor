@@ -1,5 +1,3 @@
-﻿version: '3'
-
 services:
   db:
     image: postgres:15-alpine
@@ -10,6 +8,12 @@ services:
       - '127.0.0.1:5432:5432'
     volumes:
       - ./dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 2s
+      timeout: 3s
+      retries: 1
+      start_period: 30s
 
   api:
     healthcheck:
@@ -20,7 +24,8 @@ services:
     shm_size: '16gb'
     restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     labels:
       autoheal: "true"  # allow docker-autoheal to restart if unhealthy
     image: smsntia/scos-sensor:${DOCKER_TAG} # DOCKER_TAG will always be 'latest' for GitHub source
@@ -32,14 +37,16 @@ services:
         - DEBUG
         - DOCKER_GIT_CREDENTIALS
     environment:
+      - ADMIN_NAME
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
+      - ADDITIONAL_USER_NAMES
+      - ADDITIONAL_USER_PASSWORD
       - AUTHENTICATION
+      - CALIBRATION_EXPIRATION_LIMIT
       - CALLBACK_AUTHENTICATION
       - CALLBACK_SSL_VERIFICATION
       - CALLBACK_TIMEOUT
-      - CLIENT_ID
-      - CLIENT_SECRET
       - DEBUG
       - DOCKER_TAG
       - DOMAINS
@@ -47,21 +54,27 @@ services:
       - ENCRYPTION_KEY
       - FQDN
       - GIT_BRANCH
+      - GPS_MODULE
+      - GPS_CLASS
       - GUNICORN_LOG_LEVEL
       - IN_DOCKER=1
       - IPS
       - MAX_DISK_USAGE
-      - MOCK_SIGAN=1
-      - MOCK_SIGAN_RANDOM=1
-      - OAUTH_TOKEN_URL
+      - MOCK_SIGAN
+      - MOCK_SIGAN_RANDOM
       - PATH_TO_CLIENT_CERT
-      - PATH_TO_JWT_PUBLIC_KEY
       - PATH_TO_VERIFY_CERT
       - POSTGRES_PASSWORD
       - SCOS_SENSOR_GIT_TAG
       - SECRET_KEY
+      - SIGAN_MODULE
+      - SIGAN_CLASS
       - SIGAN_POWER_SWITCH
       - SIGAN_POWER_CYCLE_STATES
+      - STARTUP_CALIBRATION_ACTION
+      - RAY_INIT
+      - RUNNING_MIGRATIONS
+      - USB_DEVICE
     expose:
       - '8000'
     volumes:

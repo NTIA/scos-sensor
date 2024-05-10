@@ -7,12 +7,13 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import requests
+from django.conf import settings
 from django.utils import timezone
+from scos_actions.hardware.sensor import Sensor
 from scos_actions.signals import trigger_api_restart
 
-from authentication import oauth
+from initialization import action_loader, sensor_loader
 from schedule.models import ScheduleEntry
-from sensor import settings
 from tasks.consts import MAX_DETAIL_LEN
 from tasks.models import TaskResult
 from tasks.serializers import TaskResultSerializer
@@ -31,21 +32,28 @@ class Scheduler(threading.Thread):
         self.task_status_lock = threading.Lock()
         self.timefn = utils.timefn
         self.delayfn = utils.delayfn
-
         self.task_queue = TaskQueue()
-
         # scheduler looks ahead `interval_multiplier` times the shortest
         # interval in the schedule in order to keep memory-usage low
         self.interval_multiplier = 10
         self.name = "Scheduler"
         self.running = False
         self.interrupt_flag = threading.Event()
-
         # Cache the currently running task state
         self.entry = None  # ScheduleEntry that created the current task
         self.task = None  # Task object describing current task
         self.last_status = ""
         self.consecutive_failures = 0
+        self._sensor = sensor_loader.sensor
+
+    @property
+    def sensor(self):
+        return self._sensor
+
+    @sensor.setter
+    def sensor(self, sensor: Sensor):
+        logger.debug(f"Set scheduler sensor to {sensor}")
+        self._sensor = sensor
 
     @property
     def schedule(self):
@@ -84,6 +92,7 @@ class Scheduler(threading.Thread):
                 pass
 
         try:
+            self.calibrate_if_needed()
             while True:
                 with minimum_duration(blocking):
                     self._consume_schedule(blocking)
@@ -162,8 +171,10 @@ class Scheduler(threading.Thread):
         schedule_entry_json["id"] = entry_name
 
         try:
-            logger.debug(f"running task {entry_name}/{task_id}")
-            detail = self.task.action_caller(schedule_entry_json, task_id)
+            logger.debug(
+                f"running task {entry_name}/{task_id} with sigan: {self.sensor.signal_analyzer}"
+            )
+            detail = self.task.action_caller(self.sensor, schedule_entry_json, task_id)
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):
@@ -193,14 +204,15 @@ class Scheduler(threading.Thread):
                     if settings.PATH_TO_VERIFY_CERT != "":
                         verify_ssl = settings.PATH_TO_VERIFY_CERT
                 logger.debug(settings.CALLBACK_AUTHENTICATION)
-                if settings.CALLBACK_AUTHENTICATION == "OAUTH":
-                    client = oauth.get_oauth_client()
+                if settings.CALLBACK_AUTHENTICATION == "CERT":
                     headers = {"Content-Type": "application/json"}
-                    response = client.post(
+
+                    response = requests.post(
                         self.entry.callback_url,
                         data=json.dumps(result_json),
                         headers=headers,
                         verify=verify_ssl,
+                        cert=settings.PATH_TO_CLIENT_CERT,
                         timeout=settings.CALLBACK_TIMEOUT,
                     )
                     self._callback_response_handler(response, task_result)
@@ -324,6 +336,38 @@ class Scheduler(threading.Thread):
     def __repr__(self):
         s = "running" if self.running else "stopped"
         return f"<{self.__class__.__name__} status={s}>"
+
+    def calibrate_if_needed(self):
+        # Now run the calibration action defined in the environment
+        # This will create an onboard_cal file if needed, and set it
+        # as the sensor's sensor_calibration.
+        if settings.MOCK_SIGAN:
+            logger.debug("Skipping startup calibration when using mock sigan")
+            return
+        if not settings.RUNNING_MIGRATIONS:
+            if (
+                sensor_loader.sensor.sensor_calibration is None
+                or sensor_loader.sensor.sensor_calibration.expired()
+            ):
+                if settings.STARTUP_CALIBRATION_ACTION is None:
+                    logger.error("No STARTUP_CALIBRATION_ACTION set.")
+                else:
+                    logger.info("Performing startup calibration...")
+                    try:
+                        cal_action = action_loader.actions[
+                            settings.STARTUP_CALIBRATION_ACTION
+                        ]
+                        cal_action(
+                            sensor=sensor_loader.sensor,
+                            schedule_entry=None,
+                            task_id=None,
+                        )
+                    except BaseException as cal_error:
+                        logger.error(f"Error during startup calibration: {cal_error}")
+            else:
+                logger.debug(
+                    "Skipping startup calibration since sensor_calibration exists and has not expired."
+                )
 
 
 @contextmanager
