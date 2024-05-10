@@ -54,6 +54,8 @@ services:
       - ENCRYPTION_KEY
       - FQDN
       - GIT_BRANCH
+      - GPS_MODULE
+      - GPS_CLASS
       - GUNICORN_LOG_LEVEL
       - IN_DOCKER=1
       - IPS
