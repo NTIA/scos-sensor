@@ -59,8 +59,10 @@ grpcio==1.59.3
     #   ray
 gunicorn==20.1.0
     # via -r requirements.in
-idna==3.6
-    # via requests
+idna==3.7
+    # via
+    #   -r requirements.in
+    #   requests
 importlib-resources==6.1.1
     # via
     #   jsonschema
