@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.9.3
+aiohttp==3.9.4
     # via
     #   -r requirements-dev.in
     #   aiohttp-cors
@@ -117,11 +117,11 @@ grpcio==1.59.3
     # via
     #   -r requirements.txt
     #   ray
-gunicorn==20.1.0
+gunicorn==22.0.0
     # via -r requirements.txt
 identify==2.5.32
     # via pre-commit
-idna==3.6
+idna==3.7
     # via
     #   -r requirements.txt
     #   requests
@@ -196,6 +196,7 @@ packaging==23.2
     # via
     #   -r requirements.txt
     #   drf-yasg
+    #   gunicorn
     #   marshmallow
     #   pyproject-api
     #   pytest
@@ -315,11 +316,11 @@ scipy==1.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@8.0.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@9.0.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@5.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@6.0.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
@@ -335,7 +336,7 @@ six==1.16.0
     #   sigmf
 smart-open==6.4.0
     # via ray
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via
     #   -r requirements.txt
     #   django
