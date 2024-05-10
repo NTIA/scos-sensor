@@ -453,3 +453,6 @@ os.environ["RUNNING_TESTS"] = str(RUNNING_TESTS)
 USB_DEVICE = env("USB_DEVICE", default=None)
 STARTUP_CALIBRATION_ACTION = env("STARTUP_CALIBRATION_ACTION", default=None)
 RAY_INIT = env.bool("RAY_INIT", default=False)
+
+# Set default field type for Django auto-created primary keys
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
