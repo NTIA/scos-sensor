@@ -31,12 +31,12 @@ repos:
         types: [file, python]
         args: ["--profile", "black", "--filter-files", "--gitignore"]
   - repo: https://github.com/psf/black
-    rev: 24.3.0
+    rev: 24.4.2
     hooks:
       - id: black
         types: [file, python]
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.39.0
+    rev: v0.40.0
     hooks:
       - id: markdownlint
         types: [file, markdown]
