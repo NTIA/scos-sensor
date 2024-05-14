@@ -11,7 +11,7 @@ packaging>=23.0, <24.0
 psycopg2-binary>=2.0, <3.0
 requests-mock>=1.0, <2.0
 requests_oauthlib>=1.0, <2.0
-scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@6.0.0
+scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@7.0.1
 
 # The following are sub-dependencies for which SCOS Sensor enforces a
 # higher minimum patch version than the dependencies which require them.
