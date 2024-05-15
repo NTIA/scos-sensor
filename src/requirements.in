@@ -5,7 +5,7 @@ django-session-timeout>=0.1, <1.0
 drf-yasg>=1.0, <2.0
 environs>=9.0, <10.0
 filelock>=3.9, <4.0
-gunicorn>=20.0, <21.0
+gunicorn>=22.0, <23.0
 jsonfield>=3.0, <4.0
 packaging>=23.0, <24.0
 psycopg2-binary>=2.0, <3.0
@@ -15,6 +15,8 @@ scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@7.0.1
 # The following are sub-dependencies for which SCOS Sensor enforces a
 # higher minimum patch version than the dependencies which require them.
 # This is done to ensure the inclusion of specific security patches.
-pyyaml>=5.4.0         # CVE-2020-14343
+idna>=3.7             # CVE-2024-3651
 grpcio>=1.53.0        # CVE-2023-32732, CVE-2023-32731, CVE-2023-1428
+pyyaml>=5.4.0         # CVE-2020-14343
+sqlparse>=0.5.0       # CVE-2024-4340
 urllib3>=1.26.18      # CVE-2023-45803

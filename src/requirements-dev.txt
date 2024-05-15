@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.9.3
+aiohttp==3.9.4
     # via
     #   -r requirements-dev.in
     #   aiohttp-cors
@@ -59,7 +59,9 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 cryptography==42.0.4
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -115,11 +117,11 @@ grpcio==1.59.3
     # via
     #   -r requirements.txt
     #   ray
-gunicorn==20.1.0
+gunicorn==22.0.0
     # via -r requirements.txt
 identify==2.5.32
     # via pre-commit
-idna==3.6
+idna==3.7
     # via
     #   -r requirements.txt
     #   requests
@@ -190,6 +192,7 @@ packaging==23.2
     # via
     #   -r requirements.txt
     #   drf-yasg
+    #   gunicorn
     #   marshmallow
     #   pyproject-api
     #   pytest
@@ -326,7 +329,7 @@ six==1.16.0
     #   sigmf
 smart-open==6.4.0
     # via ray
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via
     #   -r requirements.txt
     #   django
