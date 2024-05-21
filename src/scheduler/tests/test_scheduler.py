@@ -21,7 +21,7 @@ from .utils import (
 @pytest.mark.django_db
 def test_populate_queue(test_scheduler):
     """An entry in the schedule should be added to a read-only task queue."""
-    create_entry("test", 1, 0, 5, 1, "logger")
+    create_entry("test", 1, 0, 5, 1, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)  # now=0, so task with time 0 is run
     assert [e.time for e in s.task_queue] == [1, 2, 3, 4]
@@ -32,8 +32,8 @@ def test_priority(test_scheduler):
     """A task with lower priority number should sort higher in task queue."""
     lopri = 20
     hipri = 10
-    create_entry("lopri", lopri, 0, 5, 1, "logger")
-    create_entry("hipri", hipri, 0, 5, 1, "logger")
+    create_entry("lopri", lopri, 0, 5, 1, "test_monitor_sigan")
+    create_entry("hipri", hipri, 0, 5, 1, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     q = s.task_queue.to_list()
@@ -45,7 +45,7 @@ def test_priority(test_scheduler):
 @pytest.mark.django_db
 def test_future_start(test_scheduler):
     """An entry with start time in future should remain in schedule."""
-    create_entry("t", 1, 50, 100, 1, "logger")
+    create_entry("t", 1, 50, 100, 1, "test_monitor_sigan")
     test_scheduler.run(blocking=False)
     s = test_scheduler
     assert len(s.task_queue) == 0
@@ -75,11 +75,11 @@ def test_calls_actions(test_scheduler):
 @pytest.mark.django_db
 def test_add_entry(test_scheduler):
     """Creating a new entry instance adds it to the current schedule."""
-    create_entry("t1", 10, 1, 100, 5, "logger")
+    create_entry("t1", 10, 1, 100, 5, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 49)
-    create_entry("t2", 20, 50, 300, 5, "logger")
+    create_entry("t2", 20, 50, 300, 5, "test_monitor_sigan")
     s.run(blocking=False)
     assert len(s.task_queue) == 20
     assert s.task_queue[0].priority == 20
@@ -88,8 +88,8 @@ def test_add_entry(test_scheduler):
 @pytest.mark.django_db
 def test_remove_entry_by_delete(test_scheduler):
     """An entry is removed from schedule if it's deleted."""
-    e1 = create_entry("t1", 10, 1, 300, 5, "logger")
-    e2 = create_entry("t2", 20, 50, 300, 5, "logger")
+    e1 = create_entry("t1", 10, 1, 300, 5, "test_monitor_sigan")
+    e2 = create_entry("t2", 20, 50, 300, 5, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 10)
@@ -102,8 +102,8 @@ def test_remove_entry_by_delete(test_scheduler):
 @pytest.mark.django_db
 def test_remove_entry_by_cancel(test_scheduler):
     """scheduler.cancel removes an entry from schedule without deleting it."""
-    e1 = create_entry("t1", 10, 1, 300, 5, "logger")
-    e2 = create_entry("t2", 20, 50, 300, 5, "logger")
+    e1 = create_entry("t1", 10, 1, 300, 5, "test_monitor_sigan")
+    e2 = create_entry("t2", 20, 50, 300, 5, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     advance_testclock(s.timefn, 10)
@@ -116,7 +116,7 @@ def test_remove_entry_by_cancel(test_scheduler):
 @pytest.mark.django_db
 def test_start_stop(test_scheduler):
     """Calling stop on started scheduler thread should cause thread exit."""
-    create_entry("t", 1, 1, 100, 5, "logger")
+    create_entry("t", 1, 1, 100, 5, "test_monitor_sigan")
     s = test_scheduler
     s.start()
     time.sleep(0.02)  # hit minimum_duration
@@ -130,7 +130,7 @@ def test_start_stop(test_scheduler):
 @pytest.mark.django_db
 def test_run_completes(test_scheduler):
     """The scheduler should return to idle state after schedule completes."""
-    create_entry("t", 1, None, None, None, "logger")
+    create_entry("t", 1, None, None, None, "test_monitor_sigan")
     s = test_scheduler
     s.start()
     time.sleep(0.1)  # hit minimum_duration
@@ -159,7 +159,7 @@ def test_survives_failed_action(test_scheduler):
 @pytest.mark.django_db
 def test_compress_past_times(test_scheduler):
     """Multiple task times in the past should be compressed to one."""
-    create_entry("t", 1, -10, 5, 1, "logger")
+    create_entry("t", 1, -10, 5, 1, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     # past times -10 through 0 are compressed and a single task is run,
@@ -170,7 +170,7 @@ def test_compress_past_times(test_scheduler):
 @pytest.mark.django_db
 def test_compress_past_times_offset(test_scheduler):
     """Multiple task times in the past should be compressed to one."""
-    create_entry("t", 1, -2, 14, 4, "logger")
+    create_entry("t", 1, -2, 14, 4, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     # past time -2 is run, then 2, 6, and 10 are queued
@@ -182,7 +182,7 @@ def test_compress_past_times_offset(test_scheduler):
 @pytest.mark.django_db
 def test_next_task_time_value_when_start_changes(test_scheduler):
     """When an entry's start value changes, update `next_task_time`."""
-    entry = create_entry("t", 1, 1, 10, 1, "logger")
+    entry = create_entry("t", 1, 1, 10, 1, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     assert entry.next_task_time == 1
@@ -218,7 +218,7 @@ def test_next_task_time_value_when_start_changes(test_scheduler):
 @pytest.mark.django_db
 def test_next_task_time_value_when_interval_changes(test_scheduler):
     """When an entry's interval value changes, update `next_task_time`."""
-    entry = create_entry("t", 1, 1, 100, 1, "logger")
+    entry = create_entry("t", 1, 1, 100, 1, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)
     assert entry.next_task_time == 1
@@ -246,7 +246,7 @@ def test_next_task_time_value_when_interval_changes(test_scheduler):
 @pytest.mark.django_db
 def test_one_shot(test_scheduler):
     """If no start or interval given, entry should be run once and removed."""
-    create_entry("t", 1, None, None, None, "logger")
+    create_entry("t", 1, None, None, None, "test_monitor_sigan")
     s = test_scheduler
     advance_testclock(s.timefn, 1)
     s.run(blocking=False)
@@ -257,7 +257,7 @@ def test_one_shot(test_scheduler):
 @pytest.mark.django_db
 def test_task_queue(test_scheduler):
     """The scheduler should maintain a queue of upcoming tasks."""
-    e = create_entry("t", 1, 1, 100, 5, "logger")
+    e = create_entry("t", 1, 1, 100, 5, "test_monitor_sigan")
     s = test_scheduler
 
     # upcoming tasks are queued
@@ -282,7 +282,7 @@ def test_task_queue(test_scheduler):
 @pytest.mark.django_db
 def test_clearing_schedule_clears_task_queue(test_scheduler):
     """The scheduler should empty task_queue when schedule is deleted."""
-    create_entry("t", 1, 1, 100, 5, "logger")
+    create_entry("t", 1, 1, 100, 5, "test_monitor_sigan")
     s = test_scheduler
     s.run(blocking=False)  # queue first 10 tasks
     assert len(s.task_queue) == 10
@@ -416,7 +416,7 @@ def test_success_posted_to_callback_url(test_scheduler, settings):
 def test_notification_failed_status_unknown_host(test_scheduler):
     with requests_mock.Mocker() as m:
         callback_url = "https://results"
-        entry = create_entry("t", 1, 1, 100, 5, "logger", callback_url)
+        entry = create_entry("t", 1, 1, 100, 5, "test_monitor_sigan", callback_url)
         entry.save()
         token = entry.owner.auth_token
         m.post(
@@ -437,7 +437,7 @@ def test_notification_failed_status_unknown_host(test_scheduler):
 
 @pytest.mark.django_db
 def test_notification_failed_status_request_ok_false(test_scheduler):
-    entry = create_entry("t", 1, 1, 100, 5, "logger")
+    entry = create_entry("t", 1, 1, 100, 5, "test_monitor_sigan")
     entry.save()
     entry.refresh_from_db()
     print("entry = " + entry.name)

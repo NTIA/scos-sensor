@@ -8,15 +8,15 @@ from sensor import V1
 
 EMPTY_SCHEDULE_RESPONSE = []
 
-TEST_SCHEDULE_ENTRY = {"name": "test", "action": "logger"}
+TEST_SCHEDULE_ENTRY = {"name": "test", "action": "test_monitor_sigan"}
 
 TEST_ALTERNATE_SCHEDULE_ENTRY = {
     "name": "test_alternate",
-    "action": "logger",
+    "action": "test_monitor_sigan",
     "priority": 5,
 }
 
-TEST_PRIVATE_SCHEDULE_ENTRY = {"name": "test_private", "action": "logger"}
+TEST_PRIVATE_SCHEDULE_ENTRY = {"name": "test_private", "action": "test_monitor_sigan"}
 
 
 def post_schedule(client, entry, expected_status=status.HTTP_201_CREATED):
