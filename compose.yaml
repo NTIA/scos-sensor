@@ -16,8 +16,9 @@ services:
       start_period: 30s
     logging:
         driver: local
-        max-file: 20
-        max-size: 10m
+        options:
+            max-file: 20
+            max-size: 10m
         
 
   api:
@@ -99,8 +100,9 @@ services:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     logging:
         driver: local
-        max-file: 20
-        max-size: 10m
+        options:
+            max-file: 20
+            max-size: 10m
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
@@ -129,8 +131,9 @@ services:
       - DOMAINS
     logging:
         driver: local
-        max-file: 20
-        max-size: 10m
+        options:
+            max-file: 20
+            max-size: 10m
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
