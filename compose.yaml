@@ -14,6 +14,12 @@ services:
       timeout: 3s
       retries: 1
       start_period: 30s
+    logging:
+        driver: local
+        options:
+            max-file: 20
+            max-size: 10m
+        
 
   api:
     healthcheck:
@@ -92,6 +98,11 @@ services:
       - /dev/nvme0n1:/dev/nvme0n1:ro
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
+    logging:
+        driver: local
+        options:
+            max-file: 20
+            max-size: 10m
     command: /entrypoints/api_entrypoint.sh
 
   nginx:
@@ -118,6 +129,11 @@ services:
       - ./configs/certs/${SSL_CA_PATH}:/etc/ssl/certs/ca.crt:ro
     environment:
       - DOMAINS
+    logging:
+        driver: local
+        options:
+            max-file: 20
+            max-size: 10m
 
   # This is a stop-gap until Docker adds the capability to restart unhealthy
   # containers natively.
