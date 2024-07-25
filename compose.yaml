@@ -19,7 +19,7 @@ services:
         options:
             max-file: 20
             max-size: 10m
-        
+
 
   api:
     healthcheck:
