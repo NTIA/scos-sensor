@@ -13,7 +13,9 @@ attrs==23.1.0
     #   jsonschema
     #   referencing
 certifi==2024.7.4
-    # via requests
+    # via
+    #   -r requirements.in
+    #   requests
 cffi==1.16.0
     # via cryptography
 charset-normalizer==3.3.2
