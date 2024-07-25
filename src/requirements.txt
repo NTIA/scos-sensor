@@ -176,4 +176,6 @@ urllib3==2.2.2
     #   -r requirements.in
     #   requests
 zipp==3.19.1
-    # via importlib-resources
+    # via
+    #   -r requirements.in
+    #   importlib-resources
