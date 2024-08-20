@@ -1,6 +1,6 @@
 exclude: src/static/.+|.+\.pem|.+\.crt|.vscode/.+|LICENSE.md
 default_language_version:
-  python: python3.8
+  python: python3.10
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -19,7 +19,7 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.16.0
+    rev: v3.17.0
     hooks:
       - id: pyupgrade
         args: ["--py38-plus"]
@@ -31,7 +31,7 @@ repos:
         types: [file, python]
         args: ["--profile", "black", "--filter-files", "--gitignore"]
   - repo: https://github.com/psf/black
-    rev: 24.4.2
+    rev: 24.8.0
     hooks:
       - id: black
         types: [file, python]
