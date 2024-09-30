@@ -129,7 +129,7 @@ pyyaml==6.0.1
     #   -r requirements.in
     #   drf-yasg
     #   ray
-ray==2.9.3
+ray==2.37.0
     # via scos-actions
 referencing==0.31.1
     # via
@@ -153,7 +153,7 @@ ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
 scipy==1.10.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@SEA-234_ubuntu22.04_python3.10
+scos-actions @ git+https://github.com/NTIA/scos-actions@SEA-234_ubuntu22.04_python3.10_ray2.10
     # via scos-tekrsa
 scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@SEA-234_ubuntu22.04_python3.10
     # via -r requirements.in
