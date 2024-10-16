@@ -126,7 +126,7 @@ idna==3.7
     #   -r requirements.txt
     #   requests
     #   yarl
-importlib-resources==6.1.1
+importlib-resources==6.4.5
     # via
     #   -r requirements.txt
     #   jsonschema
