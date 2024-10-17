@@ -57,6 +57,7 @@ def load_sensor(
             )
 
     sigan = None
+    gps = None
     try:
         if not settings.RUNNING_MIGRATIONS:
             if get_usb_device_exists():
@@ -77,6 +78,20 @@ def load_sensor(
         logger.warning(f"unable to create signal analyzer: {ex}")
         set_container_unhealthy()
 
+    try:
+        if settings.GPS_MODULE and settings.GPS_CLASS:
+            gps_module_setting = settings.GPS_MODULE
+            gps_module = importlib.import_module(gps_module_setting)
+            logger.info(
+                "Creating " + settings.GPS_CLASS + " from " + settings.GPS_MODULE
+            )
+            gps_constructor = getattr(gps_module, settings.GPS_CLASS)
+            gps = gps_constructor()
+        else:
+            logger.info("GPS_MODULE and/or GPS_CLASS not specified. Not loading GPS.")
+    except BaseException as ex:
+        logger.warning(f"unable to create GPS: {ex}")
+
     # Create sensor before handling calibrations
     sensor = Sensor(
         signal_analyzer=sigan,
@@ -85,6 +100,7 @@ def load_sensor(
         preselector=preselector,
         switches=switches,
         location=location,
+        gps=gps,
         sensor_cal=None,
         differential_cal=None,
     )
