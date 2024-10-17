@@ -4,7 +4,9 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohttp==3.9.4
+aiohappyeyeballs==2.4.0
+    # via aiohttp
+aiohttp==3.10.2
     # via
     #   -r requirements-dev.in
     #   aiohttp-cors
@@ -59,10 +61,8 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.3.2
-    # via
-    #   coverage
-    #   pytest-cov
-cryptography==42.0.4
+    # via pytest-cov
+cryptography==43.0.1
     # via -r requirements.txt
 defusedxml==0.7.1
     # via
@@ -126,7 +126,7 @@ idna==3.7
     #   -r requirements.txt
     #   requests
     #   yarl
-importlib-resources==6.1.1
+importlib-resources==6.4.5
     # via
     #   -r requirements.txt
     #   jsonschema
