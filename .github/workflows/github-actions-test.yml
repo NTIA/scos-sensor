@@ -76,8 +76,8 @@ jobs:
           export MOCK_SIGAN=1
           export MOCK_SIGAN_RANDOM=1
           export SSD_DEVICE=/dev/nvme0n1
-          docker-compose build --no-cache
-          docker-compose up -d
+          docker compose build --no-cache
+          docker compose up -d
 
       - name: Wait for containers # wait for containers to finish starting
         run: sleep 45
