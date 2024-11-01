@@ -154,7 +154,15 @@ class Scheduler(threading.Thread):
         """Initalize an 'in-progress' result so it exists when action runs."""
         tid = self.task.task_id
         task_result = TaskResult(schedule_entry=self.entry, task_id=tid)
+        logger.debug(f"Creating task result with task id = {tid}")
         task_result.save()
+        if tid > 1:
+            last_task_id_exists = TaskResult.objects.exists(task_id=tid-1)
+            if not last_task_id_exists:
+                logger.debug(f"TaskResult for tid = {tid-1} does not exist. Stopping schedule.")
+                self.entry.is_active = False
+                self.entry.save()
+                raise Exception(f"Task ID Mismatch! last task id = {tid-1} current task id = {tid}")
         return task_result
 
     def _call_task_action(self):
@@ -268,7 +276,9 @@ class Scheduler(threading.Thread):
                 continue
 
             task_id = entry.get_next_task_id()
+            logger.debug(f"Updating schedule entry next task id, task_id = {task_id}")
             entry.save(update_fields=("next_task_id",))
+            logger.debug(f"entry.next_task_id = {entry.next_task_id}")
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
