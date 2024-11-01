@@ -157,7 +157,7 @@ class Scheduler(threading.Thread):
         logger.debug(f"Creating task result with task id = {tid}")
         task_result.save()
         if tid > 1:
-            last_task_id_exists = TaskResult.objects.exists(task_id=tid-1)
+            last_task_id_exists = TaskResult.objects.filter(task_id=tid-1).exists()
             if not last_task_id_exists:
                 logger.debug(f"TaskResult for tid = {tid-1} does not exist. Stopping schedule.")
                 self.entry.is_active = False
