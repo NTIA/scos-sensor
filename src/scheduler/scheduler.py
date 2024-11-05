@@ -245,6 +245,7 @@ class Scheduler(threading.Thread):
             task_result.save()
 
         with self.task_status_lock:
+            self.last_status = status
             if status == "failure" and self.last_status == "failure":
                 self.consecutive_failures = self.consecutive_failures + 1
             elif status == "failure":
@@ -253,8 +254,10 @@ class Scheduler(threading.Thread):
                 self.consecutive_failures = 0
             if self.consecutive_failures >= settings.MAX_FAILURES:
                 trigger_api_restart.send(sender=self.__class__)
-
-            self.last_status = status
+                # prevent more tasks from being run
+                # restart can cause missing db task result ids
+                # if tasks continue to run waiting for restart
+                thread.stop()
 
     @staticmethod
     def _callback_response_handler(resp, task_result):
