@@ -5,6 +5,7 @@ import logging
 import threading
 from contextlib import contextmanager
 from pathlib import Path
+from time import perf_counter
 
 import requests
 from django.conf import settings
@@ -174,7 +175,10 @@ class Scheduler(threading.Thread):
             logger.debug(
                 f"running task {entry_name}/{task_id} with sigan: {self.sensor.signal_analyzer}"
             )
+            start = perf_counter()
             detail = self.task.action_caller(self.sensor, schedule_entry_json, task_id)
+            stop = perf_counter()
+            logger.debug(f"Action completed in {stop-start:.2f} s")
             self.delayfn(0)  # let other threads run
             status = "success"
             if not isinstance(detail, str):
