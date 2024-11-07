@@ -1,6 +1,4 @@
 exclude: src/static/.+|.+\.pem|.+\.crt|.vscode/.+|LICENSE.md
-default_language_version:
-  python: python3.10
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
