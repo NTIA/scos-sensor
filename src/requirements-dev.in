@@ -2,7 +2,7 @@
 
 pre-commit>=4.0, <5.0
 pytest-cov>=6.0, <7.0
-pytest-django>=4.0, <5.0
+pytest-django>=4.6, <5.0
 ray[default]>=2.10.0
 tox>=4.0,<5.0
 
