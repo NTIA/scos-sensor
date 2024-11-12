@@ -93,6 +93,7 @@ class Scheduler(threading.Thread):
 
         try:
             self.calibrate_if_needed()
+            self.reset_next_task_id()
             while True:
                 with minimum_duration(blocking):
                     self._consume_schedule(blocking)
@@ -278,15 +279,19 @@ class Scheduler(threading.Thread):
             if task_time is None:
                 continue
 
-            current_task_id = entry.next_task_id
-            if  TaskResult.objects.filter(schedule_entry=entry, task_id=current_task_id).count() == 0:
-                task_id = current_task_id
-                logger.debug(f"Not task result exists for {current_task_id} using {task_id} for next task id.")
-            else:
-                task_id = entry.get_next_task_id()
-                logger.debug(f"Updating schedule entry next task id, task_id = {task_id}")
-                entry.save(update_fields=("next_task_id",))
-                logger.debug(f"entry.next_task_id = {entry.next_task_id}")
+            # count = TaskResult.objects.filter(schedule_entry=entry).count()
+            # if count > 0:
+            #     last_task_id = TaskResult.objects.filter(schedule_entry=entry).order_by("task_id")[count-1].task_id
+            #     entry.next_task_id = last_task_id + 1
+            # current_task_id = entry.next_task_id
+            # if  TaskResult.objects.filter(schedule_entry=entry, task_id=current_task_id).count() == 0:
+            #     task_id = current_task_id
+            #     logger.debug(f"Not task result exists for {current_task_id} using {task_id} for next task id.")
+            # else:
+            task_id = entry.get_next_task_id()
+            logger.debug(f"Updating schedule entry next task id, task_id = {task_id}")
+            entry.save(update_fields=("next_task_id",))
+            logger.debug(f"entry.next_task_id = {entry.next_task_id}")
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
@@ -386,6 +391,15 @@ class Scheduler(threading.Thread):
                 logger.debug(
                     "Skipping startup calibration since sensor_calibration exists and has not expired."
                 )
+
+    def reset_next_task_id(self):
+        # reset next task id
+        for entry in self.schedule:
+            count = TaskResult.objects.filter(schedule_entry=entry).count()
+            if count > 0:
+                last_task_id = TaskResult.objects.filter(schedule_entry=entry).order_by("task_id")[count-1].task_id
+                entry.next_task_id = last_task_id + 1
+                entry.save(update_fields=("next_task_id",))
 
 
 @contextmanager
