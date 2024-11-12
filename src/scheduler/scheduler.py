@@ -278,10 +278,15 @@ class Scheduler(threading.Thread):
             if task_time is None:
                 continue
 
-            task_id = entry.get_next_task_id()
-            logger.debug(f"Updating schedule entry next task id, task_id = {task_id}")
-            entry.save(update_fields=("next_task_id",))
-            logger.debug(f"entry.next_task_id = {entry.next_task_id}")
+            current_task_id = entry.next_task_id
+            if  TaskResult.objects.filter(schedule_entry=entry, task_id=current_task_id).count() == 0:
+                task_id = current_task_id
+                logger.debug(f"Not task result exists for {current_task_id} using {task_id} for next task id.")
+            else:
+                task_id = entry.get_next_task_id()
+                logger.debug(f"Updating schedule entry next task id, task_id = {task_id}")
+                entry.save(update_fields=("next_task_id",))
+                logger.debug(f"entry.next_task_id = {entry.next_task_id}")
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
