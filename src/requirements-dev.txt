@@ -4,10 +4,8 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohappyeyeballs==2.3.6
-    # via
-    #   -r requirements.txt
-    #   aiohttp
+aiohappyeyeballs==2.4.0
+    # via aiohttp
 aiohttp==3.10.3
     # via
     #   -r requirements-dev.in
@@ -127,6 +125,11 @@ idna==3.7
     #   -r requirements.txt
     #   requests
     #   yarl
+importlib-resources==6.4.5
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+    #   jsonschema-specifications
 inflection==0.5.1
     # via
     #   -r requirements.txt

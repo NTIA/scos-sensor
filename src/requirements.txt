@@ -74,6 +74,10 @@ idna==3.7
     #   -r requirements.in
     #   requests
     #   yarl
+importlib-resources==6.4.5
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
 inflection==0.5.1
     # via drf-yasg
 its-preselector @ git+https://github.com/NTIA/Preselector@3.1.0
