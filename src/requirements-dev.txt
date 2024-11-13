@@ -187,7 +187,7 @@ numexpr==2.8.6
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   scos-actions
-numpy==2.1.3
+numpy==1.26.4
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   numexpr
