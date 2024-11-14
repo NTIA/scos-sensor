@@ -10,8 +10,8 @@ aiohappyeyeballs==2.4.0
     #   aiohttp
 aiohttp==3.10.3
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
+    #   -r requirements-dev.in
     #   aiohttp-cors
     #   ray
 aiohttp-cors==0.7.0
@@ -187,7 +187,7 @@ numexpr==2.10.1
     # via
     #   -r requirements.txt
     #   scos-actions
-numpy==2.1.3
+numpy==1.26.4
     # via
     #   -r requirements.txt
     #   numexpr
@@ -280,8 +280,8 @@ pyyaml==6.0.1
     #   ray
 ray[default]==2.37.0
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
+    #   -r requirements-dev.in
     #   scos-actions
 referencing==0.31.1
     # via
@@ -320,7 +320,7 @@ scipy==1.14.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@master
+scos-actions @ git+https://github.com/NTIA/scos-actions@11.0.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
