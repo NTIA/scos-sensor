@@ -23,6 +23,7 @@ jobs:
         py:
           - "3.9"
           - "3.10"
+          - "3.11"
     steps:
       - name: Set up Python ${{ matrix.py }}
         uses: actions/setup-python@v4
