@@ -1,4 +1,4 @@
-FROM nginx:1.27-alpine
+FROM nginx:1.26-alpine
 
 RUN mkdir -p /var/www/scos-sensor/static
 COPY --chown=nginx:nginx ./src/static/ /var/www/scos-sensor/static/
