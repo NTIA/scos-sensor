@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-aiohappyeyeballs==2.3.6
+aiohappyeyeballs==2.4.0
     # via aiohttp
 aiohttp==3.10.3
     # via -r requirements.in
@@ -94,7 +94,7 @@ multidict==6.0.5
     # via
     #   aiohttp
     #   yarl
-numexpr==2.8.6
+numexpr==2.10.1
     # via scos-actions
 numpy==1.26.4
     # via
@@ -151,11 +151,11 @@ ruamel-yaml==0.18.5
     # via scos-actions
 ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
-scipy==1.14.1
+scipy==1.13.1
     # via scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@cal_NAN_prevention
+scos-actions @ git+https://github.com/NTIA/scos-actions@11.0.0
     # via scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@cal_NAN_prevention
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.0.0
     # via -r requirements.in
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via scos-actions

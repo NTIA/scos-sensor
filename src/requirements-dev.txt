@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-aiohappyeyeballs==2.3.6
+aiohappyeyeballs==2.4.0
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   aiohttp
@@ -183,7 +183,7 @@ multidict==6.0.5
     #   yarl
 nodeenv==1.8.0
     # via pre-commit
-numexpr==2.8.6
+numexpr==2.10.1
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   scos-actions
@@ -316,16 +316,16 @@ ruamel-yaml-clib==0.2.8
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   ruamel-yaml
-scipy==1.14.1
+scipy==1.13.1
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@cal_NAN_prevention
+scos-actions @ git+https://github.com/NTIA/scos-actions@11.0.0
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@cal_NAN_prevention
-    # via -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.0.0
+    # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
     #   -r /home/deploy/temp-anthony/scos-sensor/src/requirements.txt
