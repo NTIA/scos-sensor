@@ -6,8 +6,8 @@
 [![GitHub issues][github-issue-count-badge]][github-issues]
 [![Code style: black][code-style-badge]][code-style-repo]
 
-[github-actions-test-link]: https://github.com/NTIA/scos-sensor/actions/workflows/github-actions-test.yml
-[github-actions-test-badge]: https://github.com/NTIA/scos-sensor/actions/workflows/github-actions-test.yml/badge.svg
+[github-actions-test-link]: https://github.com/NTIA/scos-sensor/actions/workflows/tox.yaml
+[github-actions-test-badge]: https://github.com/NTIA/scos-sensor/actions/workflows/tox.yaml/badge.svg
 [code-style-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
 [code-style-repo]: https://github.com/psf/black
 [latest-release-semver-badge]: https://img.shields.io/github/v/release/NTIA/scos-sensor?display_name=tag&sort=semver
