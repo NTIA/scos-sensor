@@ -4,7 +4,6 @@ import logging
 import os
 import pkgutil
 import shutil
-from typing import Dict
 
 from django.conf import settings
 from scos_actions.actions import action_classes
@@ -46,7 +45,7 @@ class ActionLoader:
         return cls._instance
 
     @property
-    def actions(self) -> Dict[str, Action]:
+    def actions(self) -> dict[str, Action]:
         """
         Returns all sensor actions configured in the system.
         """

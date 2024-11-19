@@ -43,13 +43,5 @@ See [LICENSE](LICENSE.md).
 
 ## Contact
 
-For technical questions about SCOS Sensor, contact the NTIA/ITS Spectrum Monitoring
-group, <sms@ntia.gov>
-
-## Disclaimer
-
-Certain commercial equipment, instruments, or materials are identified in this project
-were used for the convenience of the developers. In no case does such identification imply
-recommendation or endorsement by the National Telecommunications and Information Administration,
-nor does it imply that the material or equipment identified is necessarily the best
-available for the purpose.
+For technical questions about SCOS Sensor, contact the
+[ITS Spectrum Monitoring Team](mailto:spectrummonitoring@ntia.gov).
