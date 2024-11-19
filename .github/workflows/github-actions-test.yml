@@ -1,4 +1,4 @@
-name: 'Tox'
+name: 'tests'
 
 on:
   workflow_dispatch:
