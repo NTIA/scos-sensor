@@ -1059,4 +1059,5 @@ See [LICENSE](LICENSE.md).
 
 ## Contact
 
-For technical questions about scos-sensor, contact Justin Haze, <jhaze@ntia.gov>
+For technical questions about scos-sensor, contact the
+[ITS Spectrum Monitoring Team](mailto:spectrummonitoring@ntia.gov).
