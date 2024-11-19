@@ -17,7 +17,7 @@ scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.0.0
 # The following are sub-dependencies for which SCOS Sensor enforces a
 # higher minimum patch version than the dependencies which require them.
 # This is done to ensure the inclusion of specific security patches.
-aiohttp>=3.10.2       # CVE-2024-42367
+aiohttp>=3.10.11      # CVE-2024-52304
 certifi>=2024.7.4     # CVE-2024-39689
 idna>=3.7             # CVE-2024-3651
 grpcio>=1.53.0        # CVE-2023-32732, CVE-2023-32731, CVE-2023-1428
