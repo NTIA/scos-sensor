@@ -17,7 +17,7 @@
     {% if user.is_staff %}
       <li><a href={% url "admin:index" %}>Configuration</a></li>
     {% endif %}
-    {% optional_logout request user %}
+    {% optional_logout request user csrf_token %}
   {% else %}
     {% optional_login request %}
   {% endif %}
