@@ -161,10 +161,11 @@ class Scheduler(threading.Thread):
         if tid > 1:
             last_task_id_exists = TaskResult.objects.filter(task_id=tid-1).exists()
             if not last_task_id_exists:
-                logger.debug(f"TaskResult for tid = {tid-1} does not exist. Stopping schedule.")
-                self.entry.is_active = False
-                self.entry.save()
-                raise Exception(f"Task ID Mismatch! last task id = {tid-1} current task id = {tid}")
+                logger.warning(f"TaskResult for previous task id ({tid-1}) does not exist. Current task_id = {tid}")
+                # commented out code useful for debugging if this warning occurs
+                # self.entry.is_active = False
+                # self.entry.save()
+                # raise Exception(f"Task ID Mismatch! last task id = {tid-1} current task id = {tid}")
         return task_result
 
     def _call_task_action(self):
@@ -283,19 +284,8 @@ class Scheduler(threading.Thread):
             if task_time is None:
                 continue
 
-            # count = TaskResult.objects.filter(schedule_entry=entry).count()
-            # if count > 0:
-            #     last_task_id = TaskResult.objects.filter(schedule_entry=entry).order_by("task_id")[count-1].task_id
-            #     entry.next_task_id = last_task_id + 1
-            # current_task_id = entry.next_task_id
-            # if  TaskResult.objects.filter(schedule_entry=entry, task_id=current_task_id).count() == 0:
-            #     task_id = current_task_id
-            #     logger.debug(f"Not task result exists for {current_task_id} using {task_id} for next task id.")
-            # else:
             task_id = entry.get_next_task_id()
-            logger.debug(f"Updating schedule entry next task id, task_id = {task_id}")
             entry.save(update_fields=("next_task_id",))
-            logger.debug(f"entry.next_task_id = {entry.next_task_id}")
             pri = entry.priority
             action = entry.action
             pending_queue.enter(task_time, pri, action, entry.name, task_id)
@@ -403,7 +393,7 @@ class Scheduler(threading.Thread):
             if count > 0:
                 last_task_id = TaskResult.objects.filter(schedule_entry=entry).order_by("task_id")[count-1].task_id
                 if entry.next_task_id != last_task_id + 1:
-                    logger.debug(f"Changing next_task_id from {entry.next_task_id} to {last_task_id + 1}")
+                    logger.info(f"Changing next_task_id from {entry.next_task_id} to {last_task_id + 1}")
                     entry.next_task_id = last_task_id + 1
                     entry.save(update_fields=("next_task_id",))
 
