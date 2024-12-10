@@ -251,13 +251,13 @@ class Scheduler(threading.Thread):
             task_result.save()
 
         with self.task_status_lock:
-            self.last_status = status
             if status == "failure" and self.last_status == "failure":
                 self.consecutive_failures = self.consecutive_failures + 1
             elif status == "failure":
                 self.consecutive_failures = 1
             else:
                 self.consecutive_failures = 0
+            self.last_status = status
             if self.consecutive_failures >= settings.MAX_FAILURES:
                 trigger_api_restart.send(sender=self.__class__)
                 # prevent more tasks from being run
