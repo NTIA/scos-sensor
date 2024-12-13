@@ -80,6 +80,7 @@ services:
       - STARTUP_CALIBRATION_ACTION
       - RAY_INIT
       - RUNNING_MIGRATIONS
+      - USB_DEVICE
     expose:
       - '8000'
     volumes:
