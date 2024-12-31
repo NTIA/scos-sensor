@@ -388,14 +388,15 @@ class Scheduler(threading.Thread):
 
     def reset_next_task_id(self):
         # reset next task id
-        for entry in self.schedule:
-            count = TaskResult.objects.filter(schedule_entry=entry).count()
-            if count > 0:
-                last_task_id = TaskResult.objects.filter(schedule_entry=entry).order_by("task_id")[count-1].task_id
-                if entry.next_task_id != last_task_id + 1:
-                    logger.info(f"Changing next_task_id from {entry.next_task_id} to {last_task_id + 1}")
-                    entry.next_task_id = last_task_id + 1
-                    entry.save(update_fields=("next_task_id",))
+        # for entry in self.schedule:
+        #     count = TaskResult.objects.filter(schedule_entry=entry).count()
+        #     if count > 0:
+        #         last_task_id = TaskResult.objects.filter(schedule_entry=entry).order_by("task_id")[count-1].task_id
+        #         if entry.next_task_id != last_task_id + 1:
+        #             logger.info(f"Changing next_task_id from {entry.next_task_id} to {last_task_id + 1}")
+        #             entry.next_task_id = last_task_id + 1
+        #             entry.save(update_fields=("next_task_id",))
+        pass
 
 
 @contextmanager
