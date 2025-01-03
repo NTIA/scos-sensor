@@ -64,7 +64,9 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.6.4
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 cryptography==43.0.1
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -325,11 +327,11 @@ scipy==1.13.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@11.0.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@11.1.0
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.0.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.1.0
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
