@@ -64,7 +64,9 @@ colorama==0.4.6
 colorful==0.5.5
     # via ray
 coverage[toml]==7.6.4
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 cryptography==43.0.1
     # via -r requirements.txt
 defusedxml==0.7.1
@@ -138,7 +140,9 @@ its-preselector @ git+https://github.com/NTIA/Preselector@3.1.0
     #   -r requirements.txt
     #   scos-actions
 jinja2==3.1.5
-    # via memray
+    # via
+    #   -r requirements.txt
+    #   memray
 jsonfield==3.1.0
     # via -r requirements.txt
 jsonschema==4.20.0
@@ -156,8 +160,10 @@ markdown-it-py[linkify,plugins]==3.0.0
     #   mdit-py-plugins
     #   rich
     #   textual
-markupsafe==2.1.5
-    # via jinja2
+markupsafe==3.0.2
+    # via
+    #   -r requirements.txt
+    #   jinja2
 marshmallow==3.20.1
     # via
     #   -r requirements.txt
