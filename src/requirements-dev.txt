@@ -75,7 +75,7 @@ defusedxml==0.7.1
     #   its-preselector
 distlib==0.3.7
     # via virtualenv
-django==4.2.16
+django==4.2.17
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -139,8 +139,10 @@ its-preselector @ git+https://github.com/NTIA/Preselector@3.1.0
     # via
     #   -r requirements.txt
     #   scos-actions
-jinja2==3.1.4
-    # via memray
+jinja2==3.1.5
+    # via
+    #   -r requirements.txt
+    #   memray
 jsonfield==3.1.0
     # via -r requirements.txt
 jsonschema==4.20.0
@@ -158,8 +160,10 @@ markdown-it-py[linkify,plugins]==3.0.0
     #   mdit-py-plugins
     #   rich
     #   textual
-markupsafe==2.1.5
-    # via jinja2
+markupsafe==3.0.2
+    # via
+    #   -r requirements.txt
+    #   jinja2
 marshmallow==3.20.1
     # via
     #   -r requirements.txt

@@ -1,5 +1,5 @@
 cryptography>=43.0.1
-django>=4.2.16, <5.0
+django>=4.2.17, <5.0
 djangorestframework>=3.15.2, <4.0
 django-session-timeout>=0.1, <1.0
 drf-yasg>=1.0, <2.0
@@ -21,6 +21,7 @@ aiohttp>=3.10.11      # CVE-2024-52304
 certifi>=2024.7.4     # CVE-2024-39689
 idna>=3.7             # CVE-2024-3651
 grpcio>=1.53.0        # CVE-2023-32732, CVE-2023-32731, CVE-2023-1428
+jinja2>=3.1.5         # CVE-2024-56201, CVE-2024-56326
 pyyaml>=5.4.0         # CVE-2020-14343
 sqlparse>=0.5.0       # CVE-2024-4340
 urllib3>=2.2.2        # CVE-2024-37891
