@@ -54,7 +54,7 @@ def load_preselector(
     logger.debug(
         f"loading {preselector_class_name} from {module} with config: {preselector_config}"
     )
-    if module is not None and preselector_class_name is not None:
+    if module and preselector_class_name:
         preselector_module = importlib.import_module(module)
         preselector_constructor = getattr(preselector_module, preselector_class_name)
         preselector_config = load_from_json(preselector_config)
