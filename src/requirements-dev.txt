@@ -331,11 +331,11 @@ scipy==1.13.1
     # via
     #   -r requirements.txt
     #   scos-actions
-scos-actions @ git+https://github.com/NTIA/scos-actions@11.1.0
+scos-actions @ git+https://github.com/NTIA/scos-actions@11.1.1
     # via
     #   -r requirements.txt
     #   scos-tekrsa
-scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.1.0
+scos-tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.1.1
     # via -r requirements.txt
 sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
     # via
