@@ -78,7 +78,7 @@ inflection==0.5.1
     # via drf-yasg
 its-preselector @ git+https://github.com/NTIA/Preselector@3.1.0
     # via scos-actions
-jinja2==3.1.5
+jinja2==3.1.6
     # via -r requirements.in
 jsonfield==3.1.0
     # via -r requirements.in
