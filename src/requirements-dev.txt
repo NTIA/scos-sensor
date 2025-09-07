@@ -120,7 +120,7 @@ grpcio==1.59.3
     # via
     #   -r requirements.txt
     #   ray
-gunicorn==22.0.0
+gunicorn==23.0.0
     # via -r requirements.txt
 identify==2.5.32
     # via pre-commit
