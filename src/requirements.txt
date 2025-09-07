@@ -65,7 +65,7 @@ frozenlist==1.4.0
     #   aiohttp
     #   aiosignal
     #   ray
-grpcio==1.59.3
+grpcio==1.59.5
     # via -r requirements.in
 gunicorn==22.0.0
     # via -r requirements.in
