@@ -53,6 +53,13 @@ services:
       - CALLBACK_AUTHENTICATION
       - CALLBACK_SSL_VERIFICATION
       - CALLBACK_TIMEOUT
+      - CRFS_API_URL
+      - CRFS_API_USER
+      - CRFS_API_PASSWORD
+      - CRFS_HOST
+      - CRFS_HOST_PASSWORD
+      - CRFS_HOST_USER
+      - CRFS_HOST_PASSWORD
       - DEBUG
       - DOCKER_TAG
       - DOMAINS
@@ -93,9 +100,6 @@ services:
       - SYS_PTRACE
       - SYS_RAWIO  # required for smartctl SMART disk health checks
       - SYS_ADMIN  # required for ^ with NVMe drives
-    devices:
-      - /dev/bus/usb:/dev/bus/usb:rw
-      - ${SSD_DEVICE}:/dev/nvme0n1:ro
     extra_hosts:
       - "${MANAGER_FQDN}:${MANAGER_IP}"
     logging:
