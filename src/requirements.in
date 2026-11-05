@@ -7,11 +7,12 @@ environs>=9.0, <10.0
 filelock>=3.9, <4.0
 gunicorn>=22.0, <23.0
 jsonfield>=3.0, <4.0
-packaging>=23.0, <24.0
+packaging==26.3
 psycopg2-binary>=2.0, <3.0
 tzdata # https://code.djangoproject.com/ticket/33814
 requests>=2.32.0
 requests-mock>=1.0, <2.0
+setuptools<=81
 scos_tekrsa @ git+https://github.com/NTIA/scos-tekrsa@8.1.1
 
 # The following are sub-dependencies for which SCOS Sensor enforces a
