@@ -67,7 +67,7 @@ frozenlist==1.4.0
     #   ray
 grpcio==1.59.3
     # via -r requirements.in
-gunicorn==22.0.0
+gunicorn==26.2.0
     # via -r requirements.in
 idna==3.7
     # via
@@ -111,7 +111,6 @@ packaging==26.3
     # via
     #   -r requirements.in
     #   drf-yasg
-    #   gunicorn
     #   marshmallow
     #   ray
 propcache==0.2.0

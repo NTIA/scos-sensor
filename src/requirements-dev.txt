@@ -117,7 +117,7 @@ grpcio==1.59.3
     # via
     #   -r requirements.txt
     #   ray
-gunicorn==22.0.0
+gunicorn==26.2.0
     # via -r requirements.txt
 identify==2.5.32
     # via pre-commit
@@ -191,7 +191,6 @@ packaging==26.3
     # via
     #   -r requirements.txt
     #   drf-yasg
-    #   gunicorn
     #   marshmallow
     #   pyproject-api
     #   pytest
