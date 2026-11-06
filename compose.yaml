@@ -43,6 +43,13 @@ services:
         - DEBUG
         - DOCKER_GIT_CREDENTIALS
     environment:
+      - API_URL
+      - AUTH_PASSWORD
+      - AUTH_USER
+      - SSH_HOST
+      - SSH_USER
+      - SSH_PASSWORD
+      - DOCKER_GIT_CREDENTIALS
       - ADMIN_NAME
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
@@ -53,13 +60,6 @@ services:
       - CALLBACK_AUTHENTICATION
       - CALLBACK_SSL_VERIFICATION
       - CALLBACK_TIMEOUT
-      - CRFS_API_URL
-      - CRFS_API_USER
-      - CRFS_API_PASSWORD
-      - CRFS_HOST
-      - CRFS_HOST_PASSWORD
-      - CRFS_HOST_USER
-      - CRFS_HOST_PASSWORD
       - DEBUG
       - DOCKER_TAG
       - DOMAINS

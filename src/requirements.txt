@@ -41,7 +41,7 @@ cryptography==43.0.1
     #   paramiko
 defusedxml==0.7.1
     # via its-preselector
-django==4.2.17
+django==4.2.30
     # via
     #   -r requirements.in
     #   django-session-timeout
@@ -86,7 +86,7 @@ inflection==0.5.1
     # via drf-yasg
 invoke==3.0.3
     # via paramiko
-its-preselector @ git+https://github.com/NTIA/Preselector@python312
+its-preselector @ git+https://github.com/NTIA/Preselector@3.2.0
     # via scos-actions
 jinja2==3.1.5
     # via -r requirements.in
@@ -126,7 +126,9 @@ packaging==26.3
     #   marshmallow
     #   ray
 paramiko==5.1.0
-    # via scos-crfs
+    # via
+    #   scos-crfs
+    #   scp
 propcache==0.2.0
     # via
     #   aiohttp
@@ -152,8 +154,10 @@ pyyaml==6.0.1
     #   -r requirements.in
     #   drf-yasg
     #   ray
-ray==2.37.0
-    # via scos-actions
+ray==2.43.0
+    # via
+    #   -r requirements.in
+    #   scos-actions
 referencing==0.31.1
     # via
     #   jsonschema
@@ -164,6 +168,7 @@ requests==2.32.3
     #   its-preselector
     #   ray
     #   requests-mock
+    #   scos-crfs
 requests-mock==1.11.0
     # via -r requirements.in
 rpds-py==0.13.2
@@ -174,15 +179,15 @@ ruamel-yaml==0.18.5
     # via scos-actions
 ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
-setuptools<=81
-
 scipy==1.13.1
     # via scos-actions
 scos-actions @ git+https://github.com/NTIA/scos-actions@BitWidth
     # via scos-crfs
-scos-crfs @ git+https://github.com/NTIA/scos-crfs@test
+scos-crfs @ git+https://github.com/NTIA/scos-crfs@sensor_integrate
     # via -r requirements.in
-sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
+scp==0.16.2
+    # via scos-crfs
+sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive-toml
     # via scos-actions
 six==1.16.0
     # via

@@ -81,7 +81,7 @@ defusedxml==0.7.1
     #   its-preselector
 distlib==0.3.7
     # via virtualenv
-django==4.2.17
+django==4.2.30
     # via
     #   -r requirements.txt
     #   django-session-timeout
@@ -147,7 +147,7 @@ invoke==3.0.3
     # via
     #   -r requirements.txt
     #   paramiko
-its-preselector @ git+https://github.com/NTIA/Preselector@python312
+its-preselector @ git+https://github.com/NTIA/Preselector@3.2.0
     # via
     #   -r requirements.txt
     #   scos-actions
@@ -217,6 +217,7 @@ paramiko==5.1.0
     # via
     #   -r requirements.txt
     #   scos-crfs
+    #   scp
 platformdirs==3.11.0
     # via
     #   tox
@@ -246,7 +247,7 @@ psutil==5.9.6
     #   scos-actions
 psycopg2-binary==2.9.9
     # via -r requirements.txt
-py-spy==0.3.14
+py-spy==0.4.3
     # via ray
 pyasn1==0.5.1
     # via
@@ -292,7 +293,7 @@ pyyaml==6.0.1
     #   drf-yasg
     #   pre-commit
     #   ray
-ray[default]==2.37.0
+ray[default]==2.43.0
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
@@ -309,6 +310,7 @@ requests==2.32.3
     #   its-preselector
     #   ray
     #   requests-mock
+    #   scos-crfs
 requests-mock==1.11.0
     # via -r requirements.txt
 rpds-py==0.13.2
@@ -334,9 +336,13 @@ scos-actions @ git+https://github.com/NTIA/scos-actions@BitWidth
     # via
     #   -r requirements.txt
     #   scos-crfs
-scos-crfs @ git+https://github.com/NTIA/scos-crfs@test
+scos-crfs @ git+https://github.com/NTIA/scos-crfs@sensor_integrate
     # via -r requirements.txt
-sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive
+scp==0.16.2
+    # via
+    #   -r requirements.txt
+    #   scos-crfs
+sigmf @ git+https://github.com/NTIA/SigMF@multi-recording-archive-toml
     # via
     #   -r requirements.txt
     #   scos-actions
